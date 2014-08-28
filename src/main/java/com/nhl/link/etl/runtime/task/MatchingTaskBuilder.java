@@ -29,6 +29,7 @@ import com.nhl.link.etl.transform.MultiAttributeMatcher;
 import com.nhl.link.etl.transform.PrimaryKeyMatcher;
 import com.nhl.link.etl.transform.RelationshipInfo;
 import com.nhl.link.etl.transform.RelationshipType;
+import com.nhl.link.etl.transform.TransformFilter;
 import com.nhl.link.etl.transform.TransformListener;
 
 import org.apache.cayenne.DataObject;
@@ -54,6 +55,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private int batchSize;
 	private List<RelationshipInfo> relationships;
 	private List<TransformListener<T>> transformListeners;
+	private List<TransformFilter> transformFilters;
 
 	private CayenneMatcher<T> matcher;
 	private boolean pk;
@@ -69,6 +71,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		this.tokenManager = tokenManager;
 		this.relationships = new ArrayList<>();
 		this.transformListeners = new ArrayList<>();
+		this.transformFilters = new ArrayList<>();
 		this.keyBuilderFactory = keyBuilderFactory;
 	}
 
@@ -84,9 +87,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.14
-	 */
 	public MatchingTaskBuilder<T> matchBy(String matchAttribute) {
 		this.pk = false;
 		this.matcher = null;
@@ -94,9 +94,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.14
-	 */
 	public MatchingTaskBuilder<T> matchByPrimaryKey(String matchPKAttribute) {
 		this.pk = true;
 		this.matcher = null;
@@ -104,9 +101,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> matchBy(String... matchAttributes) {
 		this.pk = false;
 		this.matcher = null;
@@ -141,9 +135,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 	                                                    String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
@@ -151,9 +142,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 	                                                     String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
@@ -161,11 +149,16 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> withListener(TransformListener<T> listener) {
 		this.transformListeners.add(listener);
+		return this;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public MatchingTaskBuilder<T> withFilter(TransformFilter filter) {
+		this.transformFilters.add(filter);
 		return this;
 	}
 
@@ -249,7 +242,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 					// processor is stateful and is not thread-safe, so creating
 					// it every time...
 					CayenneCreateOrUpdateTransformer<T> processor = new CayenneCreateOrUpdateTransformer<>(type,
-							execution, matcher, createOrUpdateStrategy, transformListeners, context);
+							execution, matcher, createOrUpdateStrategy, transformListeners, transformFilters, context);
 
 					ExtractorParameters extractorParams = new ExtractorParameters();
 					SyncToken startToken = tokenManager.previousToken(token);

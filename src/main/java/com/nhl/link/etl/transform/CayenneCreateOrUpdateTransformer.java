@@ -20,8 +20,9 @@ public class CayenneCreateOrUpdateTransformer<T extends DataObject> extends Crea
 	                                        CayenneMatcher<T> cayenneMatcher,
 	                                        CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy,
 	                                        List<TransformListener<T>> transformListeners,
+	                                        List<TransformFilter> transformFilters,
 	                                        ObjectContext context) {
-		super(type, cayenneMatcher, transformListeners);
+		super(type, cayenneMatcher, transformListeners, transformFilters);
 		this.context = context;
 		this.execution = execution;
 		this.targetMatcher = cayenneMatcher;
