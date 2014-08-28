@@ -1,7 +1,7 @@
 package com.nhl.link.etl.runtime.xml;
 
 import com.nhl.link.etl.runtime.extract.BaseExtractorFactoryTest;
-import com.nhl.link.etl.runtime.http.IHttpConnector;
+import com.nhl.link.etl.runtime.http.HttpConnector;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
-public class HttpXmlExtractorFactoryTest extends BaseExtractorFactoryTest<IHttpConnector, HttpXmlExtractorFactory> {
+public class HttpXmlExtractorFactoryTest extends BaseExtractorFactoryTest<HttpConnector, HttpXmlExtractorFactory> {
 	private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<test></test>";
 
 	@Override
@@ -19,8 +19,8 @@ public class HttpXmlExtractorFactoryTest extends BaseExtractorFactoryTest<IHttpC
 	}
 
 	@Override
-	protected Class<IHttpConnector> getConnectorType() {
-		return IHttpConnector.class;
+	protected Class<HttpConnector> getConnectorType() {
+		return HttpConnector.class;
 	}
 
 	@Override
