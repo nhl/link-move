@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-public class DefaultHttpConnector implements IHttpConnector {
+public class DefaultHttpConnector implements HttpConnector {
 
 	private final URI uri;
 	private HttpClient httpClient;
