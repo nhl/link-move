@@ -16,18 +16,25 @@ public abstract class CreateOrUpdateTransformer<T> implements BatchProcessor<Map
 	protected final Class<T> type;
 	protected final Matcher<T> matcher;
 	protected final List<TransformListener<T>> transformListeners;
+	protected final List<TransformFilter> transformFilters;
 
 	protected CreateOrUpdateTransformer(Class<T> type, Matcher<T> matcher) {
-		this(type, matcher, Collections.<TransformListener<T>>emptyList());
+		this(type, matcher, Collections.<TransformListener<T>>emptyList(), Collections.<TransformFilter>emptyList());
+	}
+
+	public CreateOrUpdateTransformer(Class<T> type, Matcher<T> matcher, List<TransformListener<T>> transformListeners) {
+		this(type, matcher, transformListeners, Collections.<TransformFilter>emptyList());
 	}
 
 	/**
-	 * @since 6.16
+	 * @since 1.1
 	 */
-	public CreateOrUpdateTransformer(Class<T> type, Matcher<T> matcher, List<TransformListener<T>> transformListeners) {
+	protected CreateOrUpdateTransformer(Class<T> type, Matcher<T> matcher, List<TransformListener<T>> transformListeners,
+	                                    List<TransformFilter> transformFilters) {
 		this.type = type;
 		this.matcher = matcher;
 		this.transformListeners = transformListeners;
+		this.transformFilters = transformFilters;
 	}
 
 	protected abstract T create(Map<String, Object> source);
@@ -44,15 +51,23 @@ public abstract class CreateOrUpdateTransformer<T> implements BatchProcessor<Map
 
 	protected void createOrUpdateTargets(List<Map<String, Object>> sources) {
 		for (Map<String, Object> source : sources) {
-			T target = matcher.find(source);
+			Map<String, Object> filteredSource = applyFilters(source);
+			T target = matcher.find(filteredSource);
 			if (target != null) {
-				update(source, target);
-				fireTargetUpdated(source, target);
+				update(filteredSource, target);
+				fireTargetUpdated(filteredSource, target);
 			} else {
-				target = create(source);
-				fireTargetCreated(source, target);
+				target = create(filteredSource);
+				fireTargetCreated(filteredSource, target);
 			}
 		}
+	}
+
+	private Map<String, Object> applyFilters(Map<String, Object> source) {
+		for (TransformFilter filter : transformFilters) {
+			source = filter.doFilter(source);
+		}
+		return source;
 	}
 
 	private void fireTargetCreated(Map<String, Object> source, T target) {
