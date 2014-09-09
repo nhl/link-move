@@ -2,8 +2,8 @@ package com.nhl.link.etl.runtime.xml;
 
 import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.RowReader;
+import com.nhl.link.etl.connect.StreamConnector;
 import com.nhl.link.etl.extract.ExtractorParameters;
-import com.nhl.link.etl.runtime.http.HttpConnector;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -25,7 +25,7 @@ public class XmlExtractorTest {
 
 	private XmlExtractor xmlExtractor;
 
-	private HttpConnector httpConnectorMock;
+	private StreamConnector streamConnectorMock;
 
 	private InputStream inputStreamMock;
 
@@ -34,10 +34,10 @@ public class XmlExtractorTest {
 	@Before
 	public void setUpXmlExtractor() throws IOException {
 		inputStreamMock = mock(InputStream.class);
-		httpConnectorMock = mock(HttpConnector.class);
-		when(httpConnectorMock.getInputStream()).thenReturn(inputStreamMock);
+		streamConnectorMock = mock(StreamConnector.class);
+		when(streamConnectorMock.getInputStream()).thenReturn(inputStreamMock);
 		xPathExpressionMock = mock(XPathExpression.class);
-		xmlExtractor = new XmlExtractor(httpConnectorMock, new RowAttribute[0], xPathExpressionMock);
+		xmlExtractor = new XmlExtractor(streamConnectorMock, new RowAttribute[0], xPathExpressionMock);
 	}
 
 	@Test

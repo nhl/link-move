@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -29,7 +30,6 @@ import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.TaskService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.runtime.token.InMemoryTokenManager;
-import com.nhl.link.etl.runtime.xml.HttpXmlExtractorFactory;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -41,7 +41,7 @@ public class EtlRuntimeBuilder {
 	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.etl.extractor.factories";
 
 	public static final String JDBC_EXTRACTOR_TYPE = "jdbc";
-	public static final String HTTP_XML_EXTRACTOR_TYPE = "httpXml";
+	public static final String XML_EXTRACTOR_TYPE = "xml";
 
 	public static final String START_TOKEN_VAR = "startToken";
 	public static final String END_TOKEN_VAR = "endToken";
@@ -64,7 +64,7 @@ public class EtlRuntimeBuilder {
 
 		// always add JDBC extractors...
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
-		extractorFactoryTypes.put(HTTP_XML_EXTRACTOR_TYPE, HttpXmlExtractorFactory.class);
+		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
 	}
 
 	/**
