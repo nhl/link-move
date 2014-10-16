@@ -1,17 +1,16 @@
 package com.nhl.link.etl.transform;
 
-import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.keybuilder.KeyBuilder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.keybuilder.KeyBuilder;
 
 public class MultiAttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements CayenneMatcher<T> {
 	private final List<String> keyAttributes;
