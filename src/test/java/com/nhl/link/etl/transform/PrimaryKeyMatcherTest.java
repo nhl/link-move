@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class PrimaryKeyMatcherTest extends CayenneMatcherTest {
+public class PrimaryKeyMatcherTest extends BaseMatcherTest {
 
 	private PrimaryKeyMatcher<DataObject> matcher;
 	private List<DataObject> targets;

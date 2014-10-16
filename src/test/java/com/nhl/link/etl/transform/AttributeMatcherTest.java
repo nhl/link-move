@@ -1,5 +1,15 @@
 package com.nhl.link.etl.transform;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.parser.ASTObjPath;
 import org.apache.cayenne.query.SelectQuery;
@@ -8,20 +18,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.nhl.link.etl.transform.AttributeMatcher;
-import com.nhl.link.etl.transform.BaseMatcher;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-public class AttributeMatcherTest extends CayenneMatcherTest {
+public class AttributeMatcherTest extends BaseMatcherTest {
 	private AttributeMatcher<DataObject> matcher;
 
 	private List<DataObject> targets;
