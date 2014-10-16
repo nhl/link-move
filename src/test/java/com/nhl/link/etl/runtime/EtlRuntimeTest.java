@@ -116,7 +116,7 @@ public class EtlRuntimeTest extends DerbySrcTargetTest {
 				"INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3), ('b', NULL)", false));
 
 		EtlTask task = runtime.getTaskService().createTaskBuilder(Etl1t.class).withExtractor(FULL_EXTRACTOR)
-				.matchBy(Etl1t.NAME.getName()).task();
+				.matchBy(Etl1t.NAME).task();
 
 		Execution e1 = task.run(SyncToken.nullToken());
 		LOGGER.info(e1.toString());
@@ -177,7 +177,7 @@ public class EtlRuntimeTest extends DerbySrcTargetTest {
 				false));
 
 		EtlTask task = runtime.getTaskService().createTaskBuilder(Etl1t.class).withExtractor(RANGE_EXTRACTOR)
-				.matchBy(Etl1t.NAME.getName()).task();
+				.matchBy(Etl1t.NAME).task();
 
 		Execution e1 = task.run(new IntToken("testIncrementalTableSync", 2));
 		LOGGER.info(e1.toString());

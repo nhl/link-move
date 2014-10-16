@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 
@@ -83,24 +84,24 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> matchBy(String matchAttribute) {
+	public MatchingTaskBuilder<T> matchBy(String... matchAttributes) {
 		this.pk = false;
 		this.matcher = null;
-		this.matchAttributes = Collections.singletonList(matchAttribute);
+		this.matchAttributes = Arrays.asList(matchAttributes);
 		return this;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public MatchingTaskBuilder<T> matchBy(Property<?> matchAttribute) {
+		return matchBy(matchAttribute.getName());
 	}
 
 	public MatchingTaskBuilder<T> matchByPrimaryKey(String matchPKAttribute) {
 		this.pk = true;
 		this.matcher = null;
 		this.matchAttributes = Collections.singletonList(matchPKAttribute);
-		return this;
-	}
-
-	public MatchingTaskBuilder<T> matchBy(String... matchAttributes) {
-		this.pk = false;
-		this.matcher = null;
-		this.matchAttributes = Arrays.asList(matchAttributes);
 		return this;
 	}
 
