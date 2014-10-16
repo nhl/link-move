@@ -12,7 +12,7 @@ import org.apache.cayenne.query.SelectQuery;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.map.key.KeyMapAdapter;
 
-public class MultiAttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements CayenneMatcher<T> {
+public class MultiAttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements Matcher<T> {
 	private final List<String> keyAttributes;
 
 	public MultiAttributeMatcher(KeyMapAdapter keyBuilder, List<String> keyAttributes) {

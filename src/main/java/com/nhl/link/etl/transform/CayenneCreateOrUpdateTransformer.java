@@ -1,26 +1,24 @@
 package com.nhl.link.etl.transform;
 
-import com.nhl.link.etl.Execution;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.SelectQuery;
 
-import java.util.List;
-import java.util.Map;
+import com.nhl.link.etl.Execution;
 
 public class CayenneCreateOrUpdateTransformer<T extends DataObject> extends CreateOrUpdateTransformer<T> {
 
 	protected final ObjectContext context;
 	protected final Execution execution;
-	protected final CayenneMatcher<T> targetMatcher;
+	protected final Matcher<T> targetMatcher;
 	protected final CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy;
 
-	public CayenneCreateOrUpdateTransformer(Class<T> type, Execution execution,
-	                                        CayenneMatcher<T> cayenneMatcher,
-	                                        CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy,
-	                                        List<TransformListener<T>> transformListeners,
-	                                        ObjectContext context) {
+	public CayenneCreateOrUpdateTransformer(Class<T> type, Execution execution, Matcher<T> cayenneMatcher,
+			CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy, List<TransformListener<T>> transformListeners,
+			ObjectContext context) {
 		super(type, cayenneMatcher, transformListeners);
 		this.context = context;
 		this.execution = execution;

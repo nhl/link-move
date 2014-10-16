@@ -10,7 +10,7 @@ import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.map.key.KeyMapAdapter;
 
-public class PrimaryKeyMatcher<T extends DataObject> extends BaseMatcher<T> implements CayenneMatcher<T> {
+public class PrimaryKeyMatcher<T extends DataObject> extends BaseMatcher<T> implements Matcher<T> {
 	private final String pkAttribute;
 
 	public PrimaryKeyMatcher(KeyMapAdapter keyBuilder, String primaryKeyAttribute) {

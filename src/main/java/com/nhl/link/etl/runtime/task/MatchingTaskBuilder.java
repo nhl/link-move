@@ -28,8 +28,8 @@ import com.nhl.link.etl.transform.AttributeMatcher;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateTransformer;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateWithPKStrategy;
-import com.nhl.link.etl.transform.CayenneMatcher;
 import com.nhl.link.etl.transform.DefaultCayenneCreateOrUpdateStrategy;
+import com.nhl.link.etl.transform.Matcher;
 import com.nhl.link.etl.transform.MultiAttributeMatcher;
 import com.nhl.link.etl.transform.PrimaryKeyMatcher;
 import com.nhl.link.etl.transform.RelationshipInfo;
@@ -55,7 +55,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private List<RelationshipInfo> relationships;
 	private List<TransformListener<T>> transformListeners;
 
-	private CayenneMatcher<T> matcher;
+	private Matcher<T> matcher;
 	private boolean pk;
 	private List<String> matchAttributes;
 
@@ -77,7 +77,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> matchBy(CayenneMatcher<T> matcher) {
+	public MatchingTaskBuilder<T> matchBy(Matcher<T> matcher) {
 		this.pk = false;
 		this.matcher = matcher;
 		this.matchAttributes = null;
@@ -178,7 +178,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 			throw new IllegalStateException("Required 'extractorName' is not set");
 		}
 
-		final CayenneMatcher<T> matcher;
+		final Matcher<T> matcher;
 
 		if (this.matcher != null) {
 			matcher = this.matcher;
