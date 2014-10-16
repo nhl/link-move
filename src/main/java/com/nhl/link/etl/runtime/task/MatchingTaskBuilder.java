@@ -5,9 +5,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.map.ObjAttribute;
+import org.apache.cayenne.map.ObjEntity;
+
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchRunner;
@@ -30,11 +34,6 @@ import com.nhl.link.etl.transform.PrimaryKeyMatcher;
 import com.nhl.link.etl.transform.RelationshipInfo;
 import com.nhl.link.etl.transform.RelationshipType;
 import com.nhl.link.etl.transform.TransformListener;
-
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.map.ObjAttribute;
-import org.apache.cayenne.map.ObjEntity;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -84,9 +83,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.14
-	 */
 	public MatchingTaskBuilder<T> matchBy(String matchAttribute) {
 		this.pk = false;
 		this.matcher = null;
@@ -94,9 +90,6 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.14
-	 */
 	public MatchingTaskBuilder<T> matchByPrimaryKey(String matchPKAttribute) {
 		this.pk = true;
 		this.matcher = null;
@@ -104,24 +97,11 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> matchBy(String... matchAttributes) {
 		this.pk = false;
 		this.matcher = null;
 		this.matchAttributes = Arrays.asList(matchAttributes);
 		return this;
-	}
-
-	/**
-	 * @deprecated since 6.14 - since we only care about target key name in the
-	 *             matcher, matching by RowAttribute is not needed. Use
-	 *             {@link #matchBy(String)} instead.
-	 */
-	public MatchingTaskBuilder<T> matchBy(RowAttribute matchAttribute) {
-		return matchBy(new AttributeMatcher<T>(keyBuilderFactory.keyBuilder(matchAttribute.type()),
-				matchAttribute.targetName()));
 	}
 
 	public MatchingTaskBuilder<T> withBatchSize(int batchSize) {
@@ -141,29 +121,20 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
-	                                                    String keyAttribute, String relationshipKeyAttribute) {
+			String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
 				relationshipKeyAttribute));
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
-	                                                     String keyAttribute, String relationshipKeyAttribute) {
+			String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
 				relationshipKeyAttribute));
 		return this;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public MatchingTaskBuilder<T> withListener(TransformListener<T> listener) {
 		this.transformListeners.add(listener);
 		return this;
@@ -266,5 +237,4 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 			}
 		};
 	}
-
 }

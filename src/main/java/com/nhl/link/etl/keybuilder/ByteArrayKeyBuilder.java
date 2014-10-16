@@ -1,8 +1,5 @@
 package com.nhl.link.etl.keybuilder;
 
-/**
- * @since 6.14
- */
 public class ByteArrayKeyBuilder implements KeyBuilder {
 
 	@Override

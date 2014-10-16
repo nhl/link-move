@@ -13,18 +13,13 @@ public class RelationshipInfo {
 
 	private final String relationshipKeyAttribute;
 
-
-	public RelationshipInfo(String name, String keyAttribute,
-	                        RelationshipType type, Class<? extends DataObject> objectType) {
+	public RelationshipInfo(String name, String keyAttribute, RelationshipType type,
+			Class<? extends DataObject> objectType) {
 		this(name, keyAttribute, type, objectType, null);
 	}
 
-	/**
-	 * @since 6.16
-	 */
-	public RelationshipInfo(String name, String keyAttribute,
-	                        RelationshipType type, Class<? extends DataObject> objectType,
-	                        String relationshipKeyAttribute) {
+	public RelationshipInfo(String name, String keyAttribute, RelationshipType type,
+			Class<? extends DataObject> objectType, String relationshipKeyAttribute) {
 		this.name = name;
 		this.keyAttribute = keyAttribute;
 		this.type = type;
@@ -48,9 +43,6 @@ public class RelationshipInfo {
 		return objectType;
 	}
 
-	/**
-	 * @since 6.16
-	 */
 	public String getRelationshipKeyAttribute() {
 		return relationshipKeyAttribute;
 	}

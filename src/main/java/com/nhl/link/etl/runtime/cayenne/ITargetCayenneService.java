@@ -7,8 +7,5 @@ public interface ITargetCayenneService {
 
 	ObjectContext newContext();
 
-	/**
-	 * @since 6.14
-	 */
 	EntityResolver entityResolver();
 }
