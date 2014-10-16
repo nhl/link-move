@@ -5,8 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ import org.apache.cayenne.exp.parser.ASTList;
 import org.apache.cayenne.exp.parser.ASTPath;
 import org.apache.cayenne.query.SelectQuery;
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -68,29 +65,6 @@ public abstract class BaseMatcherTest {
 				return invocation.getArguments()[0];
 			}
 		});
-	}
-
-	protected abstract BaseMatcher<DataObject> getMatcher();
-
-	protected abstract List<DataObject> getTargets();
-
-	protected abstract void verifyGetTargetKey(DataObject t);
-
-	@Test
-	public void testFind() {
-		Map<String, Object> source = sources.get(0);
-		BaseMatcher<DataObject> matcher = getMatcher();
-		List<DataObject> targets = getTargets();
-
-		matcher.setTargets(targets);
-		DataObject target = matcher.find(source);
-		for (String attr : source.keySet()) {
-			assertEquals(source.get(attr), target.readProperty(attr));
-		}
-		verify(keyMapAdapterMock, times(targets.size() + 1)).toMapKey(anyObject());
-		for (DataObject t : targets) {
-			verifyGetTargetKey(t);
-		}
 	}
 
 	protected void checkInExpression(SelectQuery<DataObject> query, Class<? extends ASTPath> pathClass) {

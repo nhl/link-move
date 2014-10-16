@@ -1,7 +1,10 @@
 package com.nhl.link.etl.transform;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,19 +48,19 @@ public class PrimaryKeyMatcherTest extends BaseMatcherTest {
 		}
 	}
 
-	@Override
-	protected BaseMatcher<DataObject> getMatcher() {
-		return matcher;
-	}
+	@Test
+	public void testFind() {
+		Map<String, Object> source = sources.get(0);
 
-	@Override
-	protected List<DataObject> getTargets() {
-		return targets;
-	}
-
-	@Override
-	protected void verifyGetTargetKey(DataObject target) {
-		verify(target).getObjectId();
+		matcher.setTargets(targets);
+		DataObject target = matcher.find(source);
+		for (String attr : source.keySet()) {
+			assertEquals(source.get(attr), target.readProperty(attr));
+		}
+		verify(keyMapAdapterMock, times(targets.size() + 1)).toMapKey(anyObject());
+		for (DataObject t : targets) {
+			verify(t).getObjectId();
+		}
 	}
 
 	@Test
