@@ -1,5 +1,14 @@
 package com.nhl.link.etl.transform;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectId;
 import org.apache.cayenne.exp.parser.ASTDbPath;
@@ -9,21 +18,9 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.nhl.link.etl.transform.BaseMatcher;
-import com.nhl.link.etl.transform.PrimaryKeyMatcher;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 public class PrimaryKeyMatcherTest extends CayenneMatcherTest {
-	private PrimaryKeyMatcher<DataObject> matcher;
 
+	private PrimaryKeyMatcher<DataObject> matcher;
 	private List<DataObject> targets;
 
 	@Before
@@ -36,12 +33,7 @@ public class PrimaryKeyMatcherTest extends CayenneMatcherTest {
 		targets = new ArrayList<>();
 		for (final Map<String, Object> source : sources) {
 			DataObject target = mock(DataObject.class);
-			when(target.getObjectId()).thenAnswer(new Answer<Object>() {
-				@Override
-				public Object answer(InvocationOnMock invocation) throws Throwable {
-					return new ObjectId(null, SOURCE_KEY, source.get(SOURCE_KEY));
-				}
-			});
+			when(target.getObjectId()).thenReturn(new ObjectId(null, SOURCE_KEY, source.get(SOURCE_KEY)));
 			when(target.readProperty(anyString())).thenAnswer(new Answer<Object>() {
 				@Override
 				public Object answer(InvocationOnMock invocation) throws Throwable {

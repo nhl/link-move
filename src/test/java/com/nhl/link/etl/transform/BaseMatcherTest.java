@@ -1,37 +1,24 @@
 package com.nhl.link.etl.transform;
 
-import com.nhl.link.etl.keybuilder.KeyBuilder;
-import com.nhl.link.etl.transform.BaseMatcher;
-
-import junit.framework.Assert;
-
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.exp.parser.ASTIn;
-import org.apache.cayenne.exp.parser.ASTList;
-import org.apache.cayenne.exp.parser.ASTObjPath;
-import org.apache.cayenne.exp.parser.ASTPath;
-import org.apache.cayenne.query.SelectQuery;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.anyObject;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.cayenne.DataObject;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import com.nhl.link.etl.keybuilder.KeyBuilder;
 
 public abstract class BaseMatcherTest<T extends DataObject> {
 	protected List<Map<String, Object>> sources;
@@ -47,9 +34,9 @@ public abstract class BaseMatcherTest<T extends DataObject> {
 	@Before
 	public void setUpSources() {
 		sources = new ArrayList<>();
-		Map<String, Object> source;
+
 		for (int i = 0; i <= 9; i++) {
-			source = new HashMap<>();
+			Map<String, Object> source = new HashMap<>();
 			sources.add(source);
 			for (int j = 0; j <= 2; j++) {
 				source.put(SOURCE_ATTRIBUTE_PREFIX + j, SOURCE_VALUE_PREFIX + j + i);
