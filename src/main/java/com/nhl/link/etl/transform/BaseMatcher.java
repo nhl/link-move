@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
+import com.nhl.link.etl.map.key.KeyMapAdapter;
 
 public abstract class BaseMatcher<T> implements Matcher<T> {
 

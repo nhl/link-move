@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.transform.key;
+package com.nhl.link.etl.map.key;
 
 /**
  * Ensures that a given object can be used as a map key. The key may be wrapped

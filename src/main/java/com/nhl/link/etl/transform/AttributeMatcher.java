@@ -8,7 +8,7 @@ import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
+import com.nhl.link.etl.map.key.KeyMapAdapter;
 
 public class AttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements CayenneMatcher<T> {
 

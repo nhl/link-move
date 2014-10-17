@@ -5,8 +5,8 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.runtime.transform.key.IKeyMapAdapterFactory;
 
 public class TaskService implements ITaskService {
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.transform.key;
+package com.nhl.link.etl.map.key;
 
 public class ByteArrayKeyMapAdapter implements KeyMapAdapter {
 

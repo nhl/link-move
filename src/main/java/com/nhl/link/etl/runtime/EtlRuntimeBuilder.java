@@ -23,12 +23,12 @@ import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extract.IExtractorFactory;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.jdbc.JdbcExtractorFactory;
+import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
+import com.nhl.link.etl.runtime.map.key.KeyMapAdapterFactory;
 import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.TaskService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.runtime.token.InMemoryTokenManager;
-import com.nhl.link.etl.runtime.transform.key.IKeyMapAdapterFactory;
-import com.nhl.link.etl.runtime.transform.key.KeyMapAdapterFactory;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.

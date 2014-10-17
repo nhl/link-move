@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
+import com.nhl.link.etl.map.key.KeyMapAdapter;
 
 public abstract class BaseMatcherTest<T extends DataObject> {
 	protected List<Map<String, Object>> sources;

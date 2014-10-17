@@ -1,7 +1,10 @@
-package com.nhl.link.etl.runtime.transform.key;
+package com.nhl.link.etl.runtime.map.key;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.nhl.link.etl.map.key.ByteArrayKeyMapAdapter;
+import com.nhl.link.etl.map.key.KeyMapAdapter;
 
 public class KeyMapAdapterFactory implements IKeyMapAdapterFactory {
 

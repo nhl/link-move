@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
 import com.nhl.link.etl.runtime.task.MatchingTaskBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.runtime.transform.key.IKeyMapAdapterFactory;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
 public class MatchingTaskBuilderTest {
