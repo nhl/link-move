@@ -3,20 +3,20 @@ package com.nhl.link.etl.runtime.task;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
 
-import com.nhl.link.etl.keybuilder.IKeyBuilderFactory;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
+import com.nhl.link.etl.runtime.transform.key.IKeyMapAdapterFactory;
 
 public class TaskService implements ITaskService {
 
 	private IExtractorService extractorService;
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
-	private IKeyBuilderFactory keyBuilderFactory;
+	private IKeyMapAdapterFactory keyBuilderFactory;
 
 	public TaskService(@Inject IExtractorService extractorService, @Inject ITargetCayenneService targetCayenneService,
-			@Inject ITokenManager tokenManager, @Inject IKeyBuilderFactory keyBuilderFactory) {
+			@Inject ITokenManager tokenManager, @Inject IKeyMapAdapterFactory keyBuilderFactory) {
 		this.extractorService = extractorService;
 		this.targetCayenneService = targetCayenneService;
 		this.tokenManager = tokenManager;

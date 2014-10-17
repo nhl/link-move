@@ -18,12 +18,12 @@ import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.extract.MapConverter;
-import com.nhl.link.etl.keybuilder.IKeyBuilderFactory;
-import com.nhl.link.etl.keybuilder.KeyBuilder;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
+import com.nhl.link.etl.runtime.transform.key.IKeyMapAdapterFactory;
+import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
 import com.nhl.link.etl.transform.AttributeMatcher;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateTransformer;
@@ -47,7 +47,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private ITargetCayenneService targetCayenneService;
 
 	private ITokenManager tokenManager;
-	private IKeyBuilderFactory keyBuilderFactory;
+	private IKeyMapAdapterFactory keyBuilderFactory;
 
 	private Class<T> type;
 	private String extractorName;
@@ -60,7 +60,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private List<String> matchAttributes;
 
 	MatchingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
-			ITokenManager tokenManager, IKeyBuilderFactory keyBuilderFactory) {
+			ITokenManager tokenManager, IKeyMapAdapterFactory keyBuilderFactory) {
 
 		super(extractorService);
 		this.batchSize = DEFAULT_BATCH_SIZE;
@@ -183,12 +183,12 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		if (this.matcher != null) {
 			matcher = this.matcher;
 		} else if (matchAttributes != null) {
-			KeyBuilder keyBuilder;
+			KeyMapAdapter keyBuilder;
 			if (matchAttributes.size() > 1) {
-				keyBuilder = keyBuilderFactory.keyBuilder(List.class);
+				keyBuilder = keyBuilderFactory.adapter(List.class);
 			} else {
 				ObjAttribute attribute = getMatchAttribute();
-				keyBuilder = keyBuilderFactory.keyBuilder(attribute.getJavaClass());
+				keyBuilder = keyBuilderFactory.adapter(attribute.getJavaClass());
 			}
 
 			if (pk) {

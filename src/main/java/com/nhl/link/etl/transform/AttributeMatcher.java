@@ -8,13 +8,13 @@ import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.keybuilder.KeyBuilder;
+import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
 
 public class AttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements CayenneMatcher<T> {
 
 	private final String keyAttribute;
 
-	public AttributeMatcher(KeyBuilder keyBuilder, String keyAttribute) {
+	public AttributeMatcher(KeyMapAdapter keyBuilder, String keyAttribute) {
 		super(keyBuilder);
 		this.keyAttribute = keyAttribute;
 	}

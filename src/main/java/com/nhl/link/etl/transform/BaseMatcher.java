@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.keybuilder.KeyBuilder;
+import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
 
 public abstract class BaseMatcher<T> implements Matcher<T> {
 
 	private Map<Object, T> targetsMap;
-	private KeyBuilder keyBuilder;
+	private KeyMapAdapter keyBuilder;
 
-	public BaseMatcher(KeyBuilder keyBuilder) {
+	public BaseMatcher(KeyMapAdapter keyBuilder) {
 		this.keyBuilder = keyBuilder;
 	}
 
@@ -39,13 +39,13 @@ public abstract class BaseMatcher<T> implements Matcher<T> {
 			if (targetKey == null) {
 				throw new EtlRuntimeException("Null target key");
 			}
-			targetsMap.put(keyBuilder.toKey(targetKey), target);
+			targetsMap.put(keyBuilder.toMapKey(targetKey), target);
 		}
 	}
 
 	@Override
 	public T find(Map<String, Object> source) {
 		Object sourceKey = getSourceKey(source);
-		return targetsMap.get(keyBuilder.toKey(sourceKey));
+		return targetsMap.get(keyBuilder.toMapKey(sourceKey));
 	}
 }

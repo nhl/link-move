@@ -18,12 +18,12 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.nhl.link.etl.keybuilder.KeyBuilder;
+import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
 
 public abstract class BaseMatcherTest<T extends DataObject> {
 	protected List<Map<String, Object>> sources;
 
-	protected KeyBuilder keyBuilderMock;
+	protected KeyMapAdapter keyBuilderMock;
 
 	protected static final String SOURCE_KEY = "attr1";
 
@@ -46,8 +46,8 @@ public abstract class BaseMatcherTest<T extends DataObject> {
 
 	@Before
 	public void setUpKeyBuilderMock() {
-		keyBuilderMock = mock(KeyBuilder.class);
-		when(keyBuilderMock.toKey(anyObject())).thenAnswer(new Answer<Object>() {
+		keyBuilderMock = mock(KeyMapAdapter.class);
+		when(keyBuilderMock.toMapKey(anyObject())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				return invocation.getArguments()[0];
@@ -72,7 +72,7 @@ public abstract class BaseMatcherTest<T extends DataObject> {
 		for (String attr : source.keySet()) {
 			assertEquals(source.get(attr), target.readProperty(attr));
 		}
-		verify(keyBuilderMock, times(targets.size() + 1)).toKey(anyObject());
+		verify(keyBuilderMock, times(targets.size() + 1)).toMapKey(anyObject());
 		for (T t : targets) {
 			verifyGetTargetKey(t);
 		}

@@ -12,8 +12,6 @@ import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
 
 import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.keybuilder.IKeyBuilderFactory;
-import com.nhl.link.etl.keybuilder.KeyBuilderFactory;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.etl.runtime.connect.ConnectorService;
@@ -29,6 +27,8 @@ import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.TaskService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.runtime.token.InMemoryTokenManager;
+import com.nhl.link.etl.runtime.transform.key.IKeyMapAdapterFactory;
+import com.nhl.link.etl.runtime.transform.key.KeyMapAdapterFactory;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -183,7 +183,7 @@ public class EtlRuntimeBuilder {
 				binder.bind(IConnectorService.class).to(ConnectorService.class);
 				binder.bind(ITaskService.class).to(TaskService.class);
 				binder.bind(ITokenManager.class).toInstance(tokenManager);
-				binder.bind(IKeyBuilderFactory.class).to(KeyBuilderFactory.class);
+				binder.bind(IKeyMapAdapterFactory.class).to(KeyMapAdapterFactory.class);
 			}
 		};
 

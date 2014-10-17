@@ -1,10 +1,15 @@
-package com.nhl.link.etl.keybuilder;
+package com.nhl.link.etl.runtime.transform.key;
 
-public class ByteArrayKeyBuilder implements KeyBuilder {
+public class ByteArrayKeyMapAdapter implements KeyMapAdapter {
 
 	@Override
-	public Object toKey(Object rawKey) {
+	public Object toMapKey(Object rawKey) {
 		return new ByteArrayKey((byte[]) rawKey);
+	}
+
+	@Override
+	public Object fromMapKey(Object mapKey) {
+		return ((ByteArrayKey) mapKey).bytes;
 	}
 
 	class ByteArrayKey {

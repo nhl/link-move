@@ -10,12 +10,12 @@ import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.keybuilder.KeyBuilder;
+import com.nhl.link.etl.runtime.transform.key.KeyMapAdapter;
 
 public class MultiAttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements CayenneMatcher<T> {
 	private final List<String> keyAttributes;
 
-	public MultiAttributeMatcher(KeyBuilder keyBuilder, List<String> keyAttributes) {
+	public MultiAttributeMatcher(KeyMapAdapter keyBuilder, List<String> keyAttributes) {
 		super(keyBuilder);
 		this.keyAttributes = keyAttributes;
 	}
