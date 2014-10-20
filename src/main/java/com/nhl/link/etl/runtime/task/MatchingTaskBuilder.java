@@ -56,7 +56,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private List<TransformListener<T>> transformListeners;
 
 	private Matcher<T> matcher;
-	private boolean pk;
+	private boolean byId;
 	private List<String> matchAttributes;
 
 	MatchingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
@@ -78,14 +78,14 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	}
 
 	public MatchingTaskBuilder<T> matchBy(Matcher<T> matcher) {
-		this.pk = false;
+		this.byId = false;
 		this.matcher = matcher;
 		this.matchAttributes = null;
 		return this;
 	}
 
 	public MatchingTaskBuilder<T> matchBy(String... matchAttributes) {
-		this.pk = false;
+		this.byId = false;
 		this.matcher = null;
 		this.matchAttributes = Arrays.asList(matchAttributes);
 		return this;
@@ -110,7 +110,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	 * @since 1.1
 	 */
 	public MatchingTaskBuilder<T> matchById(String idProperty) {
-		this.pk = true;
+		this.byId = true;
 		this.matcher = null;
 		this.matchAttributes = Collections.singletonList(idProperty);
 		return this;
@@ -170,7 +170,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 			throw new IllegalStateException("Type " + type.getName() + " is not mapped in Cayenne");
 		}
 
-		if (pk) {
+		if (byId) {
 			return entity.getPrimaryKeys().iterator().next();
 		} else {
 			String matchAttribute = getSingleMatchAttribute();
@@ -202,7 +202,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 				keyBuilder = keyBuilderFactory.adapter(attribute.getJavaClass());
 			}
 
-			if (pk) {
+			if (byId) {
 				matcher = new IdMatcher<>(keyBuilder, getSingleMatchAttribute());
 			} else if (matchAttributes.size() > 1) {
 				matcher = new MultiAttributeMatcher<>(keyBuilder, matchAttributes);
@@ -222,7 +222,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 					ObjectContext context = targetCayenneService.newContext();
 
 					CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy;
-					if (pk) {
+					if (byId) {
 						createOrUpdateStrategy = new CayenneCreateOrUpdateWithPKStrategy<>(relationships,
 								getSingleMatchAttribute());
 					} else {
