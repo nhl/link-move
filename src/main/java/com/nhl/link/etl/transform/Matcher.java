@@ -1,15 +1,17 @@
 package com.nhl.link.etl.transform;
 
-import java.util.List;
 import java.util.Map;
 
-import org.apache.cayenne.query.SelectQuery;
+import org.apache.cayenne.exp.Expression;
 
+/**
+ * A strategy object for calculating a "key" from source and target objects of the ETL. The key is then used for 
+ */
 public interface Matcher<T> {
 
-	void setTargets(List<T> targets);
+	Object keyForTarget(T target);
 
-	T find(Map<String, Object> source);
+	Object keyForSource(Map<String, Object> source);
 
-	void apply(SelectQuery<T> query, List<Map<String, Object>> sources);
+	Expression expressionForKey(Object key);
 }

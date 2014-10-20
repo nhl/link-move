@@ -1,6 +1,7 @@
 Release 1.1
 
 #8 'MatchingTaskBuilder.matchBy' to take Property<?> instead of String
+#9 Matcher refactoring
 #10 KeyBuilder refactoring - renaming to KeyMapAdapter
 #11 Rename MatchingTaskBuilder.matchByPrimaryKey to matchById
 

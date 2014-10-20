@@ -1,40 +1,32 @@
 package com.nhl.link.etl.transform;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.DataObject;
+import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.query.SelectQuery;
 
-import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.map.key.KeyMapAdapter;
+public class AttributeMatcher<T extends DataObject> implements Matcher<T> {
 
-public class AttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements Matcher<T> {
+	private final String keyProperty;
 
-	private final String keyAttribute;
-
-	public AttributeMatcher(KeyMapAdapter keyBuilder, String keyAttribute) {
-		super(keyBuilder);
-		this.keyAttribute = keyAttribute;
+	public AttributeMatcher(String keyProperty) {
+		this.keyProperty = keyProperty;
 	}
 
 	@Override
-	public void apply(SelectQuery<T> query, List<Map<String, Object>> sources) {
-		query.andQualifier(ExpressionFactory.inExp(keyAttribute, getSourceKeys(sources)));
+	public Expression expressionForKey(Object key) {
+		// allowing nulls here
+		return ExpressionFactory.matchExp(keyProperty, key);
 	}
 
 	@Override
-	protected Object getSourceKey(Map<String, Object> source) {
-		Object key = source.get(keyAttribute);
-		if (key == null) {
-			throw new EtlRuntimeException("Null source key for " + keyAttribute);
-		}
-		return key;
+	public Object keyForSource(Map<String, Object> source) {
+		return source.get(keyProperty);
 	}
 
 	@Override
-	protected Object getTargetKey(T target) {
-		return target.readProperty(keyAttribute);
+	public Object keyForTarget(T target) {
+		return target.readProperty(keyProperty);
 	}
 }

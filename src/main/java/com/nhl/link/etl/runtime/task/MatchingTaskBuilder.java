@@ -2,6 +2,7 @@ package com.nhl.link.etl.runtime.task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 
+import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.RowReader;
@@ -29,11 +31,12 @@ import com.nhl.link.etl.transform.CayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateTransformer;
 import com.nhl.link.etl.transform.CayenneCreateOrUpdateWithPKStrategy;
 import com.nhl.link.etl.transform.DefaultCayenneCreateOrUpdateStrategy;
+import com.nhl.link.etl.transform.IdMatcher;
 import com.nhl.link.etl.transform.Matcher;
 import com.nhl.link.etl.transform.MultiAttributeMatcher;
-import com.nhl.link.etl.transform.IdMatcher;
 import com.nhl.link.etl.transform.RelationshipInfo;
 import com.nhl.link.etl.transform.RelationshipType;
+import com.nhl.link.etl.transform.SafeMapKeyMatcher;
 import com.nhl.link.etl.transform.TransformListener;
 
 /**
@@ -47,7 +50,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private ITargetCayenneService targetCayenneService;
 
 	private ITokenManager tokenManager;
-	private IKeyMapAdapterFactory keyBuilderFactory;
+	private IKeyMapAdapterFactory keyMapAdapterFactory;
 
 	private Class<T> type;
 	private String extractorName;
@@ -60,7 +63,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private List<String> matchAttributes;
 
 	MatchingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
-			ITokenManager tokenManager, IKeyMapAdapterFactory keyBuilderFactory) {
+			ITokenManager tokenManager, IKeyMapAdapterFactory keyMapAdapterFactory) {
 
 		super(extractorService);
 		this.batchSize = DEFAULT_BATCH_SIZE;
@@ -69,7 +72,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		this.tokenManager = tokenManager;
 		this.relationships = new ArrayList<>();
 		this.transformListeners = new ArrayList<>();
-		this.keyBuilderFactory = keyBuilderFactory;
+		this.keyMapAdapterFactory = keyMapAdapterFactory;
 	}
 
 	public MatchingTaskBuilder<T> withExtractor(String extractorName) {
@@ -105,7 +108,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	public MatchingTaskBuilder<T> matchByPrimaryKey(String idProperty) {
 		return matchById(idProperty);
 	}
-	
+
 	/**
 	 * @since 1.1
 	 */
@@ -183,35 +186,65 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		}
 	}
 
+	private Matcher<T> createMatcher() {
+
+		// not wrapping custom matcher, presuming the user knows what's he's
+		// doing and his matcher generates proper keys
+		if (this.matcher != null) {
+			return this.matcher;
+		}
+
+		if (matchAttributes == null) {
+			throw new IllegalStateException("'matcher' or 'matchAttribute' must be set");
+		}
+
+		Matcher<T> matcher;
+
+		if (byId) {
+			matcher = new IdMatcher<>(pkAttribute(), getSingleMatchAttribute());
+		} else if (matchAttributes.size() > 1) {
+			matcher = new MultiAttributeMatcher<>(matchAttributes);
+		} else {
+			matcher = new AttributeMatcher<>(getSingleMatchAttribute());
+		}
+
+		KeyMapAdapter keyAdapter;
+
+		// TODO: mapping keyMapAdapters by type doesn't take into account
+		// composition and hierarchy of the keys ... need a different approach.
+		// for now resorting to the hacks below
+		if (matchAttributes.size() > 1) {
+			keyAdapter = keyMapAdapterFactory.adapter(List.class);
+		} else {
+			ObjAttribute attribute = getMatchAttribute();
+			keyAdapter = keyMapAdapterFactory.adapter(attribute.getJavaClass());
+		}
+
+		return new SafeMapKeyMatcher<>(matcher, keyAdapter);
+	}
+
+	private String pkAttribute() {
+		ObjEntity oe = targetCayenneService.entityResolver().getObjEntity(type);
+		if (oe == null) {
+			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+		}
+
+		Collection<String> pks = oe.getPrimaryKeyNames();
+		if (pks.size() != 1) {
+			throw new EtlRuntimeException("Only single-column PK is supported for now. Got " + pks.size()
+					+ " for entity: " + oe.getName());
+		}
+
+		return pks.iterator().next();
+	}
+
 	public EtlTask task() throws IllegalStateException {
 
 		if (extractorName == null) {
 			throw new IllegalStateException("Required 'extractorName' is not set");
 		}
 
-		final Matcher<T> matcher;
-
-		if (this.matcher != null) {
-			matcher = this.matcher;
-		} else if (matchAttributes != null) {
-			KeyMapAdapter keyBuilder;
-			if (matchAttributes.size() > 1) {
-				keyBuilder = keyBuilderFactory.adapter(List.class);
-			} else {
-				ObjAttribute attribute = getMatchAttribute();
-				keyBuilder = keyBuilderFactory.adapter(attribute.getJavaClass());
-			}
-
-			if (byId) {
-				matcher = new IdMatcher<>(keyBuilder, getSingleMatchAttribute());
-			} else if (matchAttributes.size() > 1) {
-				matcher = new MultiAttributeMatcher<>(keyBuilder, matchAttributes);
-			} else {
-				matcher = new AttributeMatcher<>(keyBuilder, getSingleMatchAttribute());
-			}
-		} else {
-			throw new IllegalStateException("'matcher' or 'matchAttribute' must be set");
-		}
+		final Matcher<T> matcher = createMatcher();
 
 		return new EtlTask() {
 

@@ -1,66 +1,60 @@
 package com.nhl.link.etl.transform;
 
+import static org.apache.cayenne.exp.ExpressionFactory.joinExp;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.query.SelectQuery;
 
-import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.map.key.KeyMapAdapter;
+public class MultiAttributeMatcher<T extends DataObject> implements Matcher<T> {
 
-public class MultiAttributeMatcher<T extends DataObject> extends BaseMatcher<T> implements Matcher<T> {
-	private final List<String> keyAttributes;
+	private final List<String> keyProperties;
 
-	public MultiAttributeMatcher(KeyMapAdapter keyBuilder, List<String> keyAttributes) {
-		super(keyBuilder);
-		this.keyAttributes = keyAttributes;
+	public MultiAttributeMatcher(List<String> keyProperties) {
+		this.keyProperties = keyProperties;
 	}
 
 	@Override
-	protected Object getSourceKey(Map<String, Object> source) {
-		List<Object> compoundSourceKey = new ArrayList<>();
-		for (String keyAttribute : keyAttributes) {
-			Object key = source.get(keyAttribute);
-			if (key == null) {
-				throw new EtlRuntimeException("Null source key for " + keyAttribute);
-			}
-			compoundSourceKey.add(key);
+	public Expression expressionForKey(Object key) {
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> keyMap = (Map<String, Object>) key;
+
+		List<Expression> clauses = new ArrayList<>(keyProperties.size());
+
+		for (String property : keyProperties) {
+			Object value = keyMap.get(property);
+			clauses.add(ExpressionFactory.matchExp(property, value));
 		}
-		return compoundSourceKey;
+
+		return joinExp(Expression.AND, clauses);
 	}
 
 	@Override
-	protected Object getTargetKey(T target) {
-		List<Object> compoundTargetKey = new ArrayList<>();
-		for (String keyAttribute : keyAttributes) {
-			compoundTargetKey.add(target.readProperty(keyAttribute));
+	public Object keyForSource(Map<String, Object> source) {
+
+		Map<String, Object> keyMap = new HashMap<String, Object>(keyProperties.size() * 2);
+		for (String property : keyProperties) {
+			// null keys are ok (I guess?)
+			keyMap.put(property, source.get(property));
 		}
-		return compoundTargetKey;
+
+		return keyMap;
 	}
 
 	@Override
-	public void apply(SelectQuery<T> query, List<Map<String, Object>> sources) {
-		Expression fullExpression = null;
-		for (Map<String, Object> source : sources) {
-			Expression compoundKeyExpression = null;
-			for (String keyAttribute : keyAttributes) {
-				Expression keyExpression = ExpressionFactory.matchExp(keyAttribute, source.get(keyAttribute));
-				if (compoundKeyExpression == null) {
-					compoundKeyExpression = keyExpression;
-				} else {
-					compoundKeyExpression = compoundKeyExpression.andExp(keyExpression);
-				}
-			}
-			if (fullExpression == null) {
-				fullExpression = compoundKeyExpression;
-			} else {
-				fullExpression = fullExpression.orExp(compoundKeyExpression);
-			}
+	public Object keyForTarget(T target) {
+		Map<String, Object> keyMap = new HashMap<String, Object>(keyProperties.size() * 2);
+
+		for (String property : keyProperties) {
+			// null keys are ok (I guess?)
+			keyMap.put(property, target.readProperty(property));
 		}
-		query.andQualifier(fullExpression);
+		return keyMap;
 	}
 }

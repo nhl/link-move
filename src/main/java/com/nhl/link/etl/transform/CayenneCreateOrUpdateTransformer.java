@@ -1,10 +1,15 @@
 package com.nhl.link.etl.transform;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.exp.Expression;
+import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.Execution;
@@ -51,9 +56,31 @@ public class CayenneCreateOrUpdateTransformer<T extends DataObject> extends Crea
 	}
 
 	@Override
-	protected List<T> getTargets(List<Map<String, Object>> sources) {
-		SelectQuery<T> select = SelectQuery.query(type);
-		targetMatcher.apply(select, sources);
-		return context.select(select);
+	protected List<T> getTargets(Collection<Object> keys) {
+
+		// TODO: split query in batches:
+		// respect Constants.SERVER_MAX_ID_QUALIFIER_SIZE_PROPERTY
+		// property of Cayenne , breaking query into subqueries.
+		// Otherwise this operation will not scale.. Though I guess since we are
+		// not using streaming API to read data from Cayenne, we are already
+		// limited in how much data can fit in the memory map.
+
+		List<Expression> expressions = new ArrayList<>(keys.size());
+		for (Object key : keys) {
+
+			Expression e = matcher.expressionForKey(key);
+			if (e != null) {
+				expressions.add(e);
+			}
+		}
+
+		// no keys (?)
+		if (expressions.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		SelectQuery<T> query = SelectQuery.query(type);
+		query.setQualifier(ExpressionFactory.joinExp(Expression.OR, expressions));
+		return context.select(query);
 	}
 }

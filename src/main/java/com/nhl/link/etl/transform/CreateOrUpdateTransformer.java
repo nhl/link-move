@@ -1,9 +1,13 @@
 package com.nhl.link.etl.transform;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.batch.BatchProcessor;
 
 /**
@@ -31,25 +35,46 @@ public abstract class CreateOrUpdateTransformer<T> implements BatchProcessor<Map
 
 	protected abstract void update(Map<String, Object> source, T target);
 
-	protected abstract List<T> getTargets(List<Map<String, Object>> source);
+	protected abstract List<T> getTargets(Collection<Object> keys);
 
 	@Override
 	public void process(List<Map<String, Object>> segment) {
-		matcher.setTargets(getTargets(segment));
-		createOrUpdateTargets(segment);
+
+		Map<Object, Map<String, Object>> mutableSrcMap = mutableSrcMap(segment);
+		List<T> targets = getTargets(mutableSrcMap.keySet());
+		for (T t : targets) {
+
+			Object key = matcher.keyForTarget(t);
+
+			Map<String, Object> src = mutableSrcMap.remove(key);
+
+			// a null can only mean some algorithm malfunction, as keys are all
+			// coming from a known set of sources
+			if (src == null) {
+				throw new EtlRuntimeException("Invalid key: " + key);
+			}
+
+			update(src, t);
+			fireTargetUpdated(src, t);
+		}
+
+		// everything that's left are new objects
+		for (Entry<Object, Map<String, Object>> e : mutableSrcMap.entrySet()) {
+
+			T t = create(e.getValue());
+			fireTargetCreated(e.getValue(), t);
+		}
 	}
 
-	protected void createOrUpdateTargets(List<Map<String, Object>> sources) {
-		for (Map<String, Object> source : sources) {
-			T target = matcher.find(source);
-			if (target != null) {
-				update(source, target);
-				fireTargetUpdated(source, target);
-			} else {
-				target = create(source);
-				fireTargetCreated(source, target);
-			}
+	private Map<Object, Map<String, Object>> mutableSrcMap(List<Map<String, Object>> segment) {
+		Map<Object, Map<String, Object>> byKey = new HashMap<>();
+
+		for (Map<String, Object> s : segment) {
+			// TODO: report dupes?
+			byKey.put(matcher.keyForSource(s), s);
 		}
+
+		return byKey;
 	}
 
 	private void fireTargetCreated(Map<String, Object> source, T target) {
