@@ -10,10 +10,13 @@ import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.map.key.KeyMapAdapter;
 
-public class PrimaryKeyMatcher<T extends DataObject> extends BaseMatcher<T> implements Matcher<T> {
+/**
+ * @since 1.1
+ */
+public class IdMatcher<T extends DataObject> extends BaseMatcher<T> implements Matcher<T> {
 	private final String pkAttribute;
 
-	public PrimaryKeyMatcher(KeyMapAdapter keyBuilder, String primaryKeyAttribute) {
+	public IdMatcher(KeyMapAdapter keyBuilder, String primaryKeyAttribute) {
 		super(keyBuilder);
 		this.pkAttribute = primaryKeyAttribute;
 	}

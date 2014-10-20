@@ -31,7 +31,7 @@ import com.nhl.link.etl.transform.CayenneCreateOrUpdateWithPKStrategy;
 import com.nhl.link.etl.transform.DefaultCayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.transform.Matcher;
 import com.nhl.link.etl.transform.MultiAttributeMatcher;
-import com.nhl.link.etl.transform.PrimaryKeyMatcher;
+import com.nhl.link.etl.transform.IdMatcher;
 import com.nhl.link.etl.transform.RelationshipInfo;
 import com.nhl.link.etl.transform.RelationshipType;
 import com.nhl.link.etl.transform.TransformListener;
@@ -98,10 +98,21 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return matchBy(matchAttribute.getName());
 	}
 
-	public MatchingTaskBuilder<T> matchByPrimaryKey(String matchPKAttribute) {
+	/**
+	 * @deprecated since 1.1 use {@link #matchById(String)}.
+	 */
+	@Deprecated
+	public MatchingTaskBuilder<T> matchByPrimaryKey(String idProperty) {
+		return matchById(idProperty);
+	}
+	
+	/**
+	 * @since 1.1
+	 */
+	public MatchingTaskBuilder<T> matchById(String idProperty) {
 		this.pk = true;
 		this.matcher = null;
-		this.matchAttributes = Collections.singletonList(matchPKAttribute);
+		this.matchAttributes = Collections.singletonList(idProperty);
 		return this;
 	}
 
@@ -192,7 +203,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 			}
 
 			if (pk) {
-				matcher = new PrimaryKeyMatcher<>(keyBuilder, getSingleMatchAttribute());
+				matcher = new IdMatcher<>(keyBuilder, getSingleMatchAttribute());
 			} else if (matchAttributes.size() > 1) {
 				matcher = new MultiAttributeMatcher<>(keyBuilder, matchAttributes);
 			} else {

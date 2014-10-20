@@ -21,14 +21,14 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class PrimaryKeyMatcherTest extends BaseMatcherTest {
+public class IdMatcherTest extends BaseMatcherTest {
 
-	private PrimaryKeyMatcher<DataObject> matcher;
+	private IdMatcher<DataObject> matcher;
 	private List<DataObject> targets;
 
 	@Before
 	public void setUpMatcher() {
-		matcher = new PrimaryKeyMatcher<>(keyMapAdapterMock, SOURCE_KEY);
+		matcher = new IdMatcher<>(keyMapAdapterMock, SOURCE_KEY);
 	}
 
 	@Before
