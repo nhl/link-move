@@ -1,18 +1,21 @@
 package com.nhl.link.etl.runtime;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.apache.cayenne.CayenneDataObject;
 import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.di.Binder;
 import org.junit.Test;
 
-import com.nhl.link.etl.runtime.EtlRuntime;
-import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
+import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.task.ITaskService;
 
-public class EtlServiceBuilderTest {
+public class EtlRuntimeBuilderTest {
 
 	@Test
 	public void testBuild_DefaultConfigLoader() {
@@ -42,6 +45,18 @@ public class EtlServiceBuilderTest {
 		ITaskService taskService = runtime.getTaskService();
 		assertNotNull(taskService);
 		assertNotNull(taskService.createTaskBuilder(CayenneDataObject.class));
+	}
+
+	@Test
+	public void testAdapter() {
+
+		LinkEtlAdapter adapter = mock(LinkEtlAdapter.class);
+		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(mock(ServerRuntime.class)).adapter(
+				adapter);
+
+		verifyZeroInteractions(adapter);
+		builder.build();
+		verify(adapter).contributeToRuntime(any(Binder.class));
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.nhl.link.etl.runtime;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +14,7 @@ import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
 
 import com.nhl.link.etl.connect.Connector;
+import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.etl.runtime.connect.ConnectorService;
@@ -52,6 +55,7 @@ public class EtlRuntimeBuilder {
 	private IExtractorConfigLoader extractorConfigLoader;
 	private ITokenManager tokenManager;
 	private ServerRuntime targetRuntime;
+	private Collection<LinkEtlAdapter> adapters;
 
 	public EtlRuntimeBuilder() {
 		this.connectors = new HashMap<>();
@@ -59,9 +63,20 @@ public class EtlRuntimeBuilder {
 		this.connectorFactoryTypes = new HashMap<>();
 		this.extractorFactories = new HashMap<>();
 		this.extractorFactoryTypes = new HashMap<>();
+		this.adapters = new ArrayList<>();
 
 		// always add JDBC extractors...
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
+	}
+
+	/**
+	 * Adds an adapter that can override existing DI services or add new ones.
+	 * 
+	 * @since 1.1
+	 */
+	public EtlRuntimeBuilder adapter(LinkEtlAdapter adapter) {
+		this.adapters.add(adapter);
+		return this;
 	}
 
 	/**
@@ -184,6 +199,11 @@ public class EtlRuntimeBuilder {
 				binder.bind(ITaskService.class).to(TaskService.class);
 				binder.bind(ITokenManager.class).toInstance(tokenManager);
 				binder.bind(IKeyMapAdapterFactory.class).to(KeyMapAdapterFactory.class);
+
+				// apply adapter-contributed bindings
+				for (LinkEtlAdapter a : adapters) {
+					a.contributeToRuntime(binder);
+				}
 			}
 		};
 
