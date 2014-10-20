@@ -1,8 +1,13 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load;
 
 import java.util.Map;
 
-public interface TransformListener<T> {
+/**
+ * A listener for load-stage events.
+ * 
+ * @since 1.1
+ */
+public interface LoadListener<T> {
 
 	void targetCreated(Map<String, Object> source, T target);
 

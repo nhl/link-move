@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load.matcher;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -10,6 +10,8 @@ import java.util.Map;
 import org.apache.cayenne.DataObject;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.nhl.link.etl.load.matcher.AttributeMatcher;
 
 public class AttributeMatcherTest {
 

@@ -5,6 +5,7 @@ Release 1.1
 #10 KeyBuilder refactoring - renaming to KeyMapAdapter
 #11 Rename MatchingTaskBuilder.matchByPrimaryKey to matchById
 #13 EtlAdapter to package extensions to LinkETL
+#14 Rename "transform" package to "load"
 
 Release 1.0 2014-08-13
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load;
 
 import org.apache.cayenne.DataObject;
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load.matcher;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -11,6 +11,8 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.nhl.link.etl.load.matcher.IdMatcher;
 
 public class IdMatcherTest {
 

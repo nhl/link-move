@@ -20,24 +20,24 @@ import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.extract.MapConverter;
+import com.nhl.link.etl.load.RelationshipInfo;
+import com.nhl.link.etl.load.RelationshipType;
+import com.nhl.link.etl.load.LoadListener;
+import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateLoader;
+import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateStrategy;
+import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateWithPKStrategy;
+import com.nhl.link.etl.load.cayenne.DefaultCayenneCreateOrUpdateStrategy;
+import com.nhl.link.etl.load.matcher.AttributeMatcher;
+import com.nhl.link.etl.load.matcher.IdMatcher;
+import com.nhl.link.etl.load.matcher.Matcher;
+import com.nhl.link.etl.load.matcher.MultiAttributeMatcher;
+import com.nhl.link.etl.load.matcher.SafeMapKeyMatcher;
 import com.nhl.link.etl.map.key.KeyMapAdapter;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.transform.AttributeMatcher;
-import com.nhl.link.etl.transform.CayenneCreateOrUpdateStrategy;
-import com.nhl.link.etl.transform.CayenneCreateOrUpdateTransformer;
-import com.nhl.link.etl.transform.CayenneCreateOrUpdateWithPKStrategy;
-import com.nhl.link.etl.transform.DefaultCayenneCreateOrUpdateStrategy;
-import com.nhl.link.etl.transform.IdMatcher;
-import com.nhl.link.etl.transform.Matcher;
-import com.nhl.link.etl.transform.MultiAttributeMatcher;
-import com.nhl.link.etl.transform.RelationshipInfo;
-import com.nhl.link.etl.transform.RelationshipType;
-import com.nhl.link.etl.transform.SafeMapKeyMatcher;
-import com.nhl.link.etl.transform.TransformListener;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -56,7 +56,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private String extractorName;
 	private int batchSize;
 	private List<RelationshipInfo> relationships;
-	private List<TransformListener<T>> transformListeners;
+	private List<LoadListener<T>> transformListeners;
 
 	private Matcher<T> matcher;
 	private boolean byId;
@@ -150,7 +150,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withListener(TransformListener<T> listener) {
+	public MatchingTaskBuilder<T> withListener(LoadListener<T> listener) {
 		this.transformListeners.add(listener);
 		return this;
 	}
@@ -264,7 +264,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 
 					// processor is stateful and is not thread-safe, so creating
 					// it every time...
-					CayenneCreateOrUpdateTransformer<T> processor = new CayenneCreateOrUpdateTransformer<>(type,
+					CayenneCreateOrUpdateLoader<T> processor = new CayenneCreateOrUpdateLoader<>(type,
 							execution, matcher, createOrUpdateStrategy, transformListeners, context);
 
 					ExtractorParameters extractorParams = new ExtractorParameters();

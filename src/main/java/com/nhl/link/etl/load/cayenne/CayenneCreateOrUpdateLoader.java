@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load.cayenne;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,16 +13,19 @@ import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
 import com.nhl.link.etl.Execution;
+import com.nhl.link.etl.load.CreateOrUpdateLoader;
+import com.nhl.link.etl.load.LoadListener;
+import com.nhl.link.etl.load.matcher.Matcher;
 
-public class CayenneCreateOrUpdateTransformer<T extends DataObject> extends CreateOrUpdateTransformer<T> {
+public class CayenneCreateOrUpdateLoader<T extends DataObject> extends CreateOrUpdateLoader<T> {
 
 	protected final ObjectContext context;
 	protected final Execution execution;
 	protected final Matcher<T> targetMatcher;
 	protected final CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy;
 
-	public CayenneCreateOrUpdateTransformer(Class<T> type, Execution execution, Matcher<T> cayenneMatcher,
-			CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy, List<TransformListener<T>> transformListeners,
+	public CayenneCreateOrUpdateLoader(Class<T> type, Execution execution, Matcher<T> cayenneMatcher,
+			CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy, List<LoadListener<T>> transformListeners,
 			ObjectContext context) {
 		super(type, cayenneMatcher, transformListeners);
 		this.context = context;

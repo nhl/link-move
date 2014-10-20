@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,23 +9,24 @@ import java.util.Map.Entry;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.batch.BatchProcessor;
+import com.nhl.link.etl.load.matcher.Matcher;
 
 /**
  * A stateful processor that matches a list of source data maps with target
  * Cayenne objects with a provided matcher. Targets are created if missing or
  * updated if present.
  */
-public abstract class CreateOrUpdateTransformer<T> implements BatchProcessor<Map<String, Object>> {
+public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<String, Object>> {
 
 	protected final Class<T> type;
 	protected final Matcher<T> matcher;
-	protected final List<TransformListener<T>> transformListeners;
+	protected final List<LoadListener<T>> transformListeners;
 
-	protected CreateOrUpdateTransformer(Class<T> type, Matcher<T> matcher) {
-		this(type, matcher, Collections.<TransformListener<T>> emptyList());
+	protected CreateOrUpdateLoader(Class<T> type, Matcher<T> matcher) {
+		this(type, matcher, Collections.<LoadListener<T>> emptyList());
 	}
 
-	public CreateOrUpdateTransformer(Class<T> type, Matcher<T> matcher, List<TransformListener<T>> transformListeners) {
+	public CreateOrUpdateLoader(Class<T> type, Matcher<T> matcher, List<LoadListener<T>> transformListeners) {
 		this.type = type;
 		this.matcher = matcher;
 		this.transformListeners = transformListeners;
@@ -78,13 +79,13 @@ public abstract class CreateOrUpdateTransformer<T> implements BatchProcessor<Map
 	}
 
 	private void fireTargetCreated(Map<String, Object> source, T target) {
-		for (TransformListener<T> listener : transformListeners) {
+		for (LoadListener<T> listener : transformListeners) {
 			listener.targetCreated(source, target);
 		}
 	}
 
 	private void fireTargetUpdated(Map<String, Object> source, T target) {
-		for (TransformListener<T> listener : transformListeners) {
+		for (LoadListener<T> listener : transformListeners) {
 			listener.targetUpdated(source, target);
 		}
 	}

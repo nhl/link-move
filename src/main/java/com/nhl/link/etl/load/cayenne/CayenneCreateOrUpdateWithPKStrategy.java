@@ -1,9 +1,11 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.load.cayenne;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.ObjectId;
 import org.apache.cayenne.map.ObjEntity;
+
+import com.nhl.link.etl.load.RelationshipInfo;
 
 import java.util.List;
 import java.util.Map;
