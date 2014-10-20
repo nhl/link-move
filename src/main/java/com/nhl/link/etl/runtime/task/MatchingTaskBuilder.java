@@ -19,7 +19,6 @@ import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.ExtractorParameters;
-import com.nhl.link.etl.extract.MapConverter;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateLoader;
 import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateStrategy;
@@ -38,6 +37,7 @@ import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.matcher.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
+import com.nhl.link.etl.transform.MapTransformer;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -273,7 +273,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 					extractorParams.add(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
 
 					try (RowReader data = getRowReader(execution, extractorName, extractorParams)) {
-						BatchRunner.create(processor).withBatchSize(batchSize).run(data, MapConverter.instance());
+						BatchRunner.create(processor).withBatchSize(batchSize).run(data, MapTransformer.instance());
 						tokenManager.saveToken(token);
 					}
 
