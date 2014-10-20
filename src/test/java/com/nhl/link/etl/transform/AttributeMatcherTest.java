@@ -25,7 +25,7 @@ public class AttributeMatcherTest extends BaseMatcherTest {
 
 	@Before
 	public void setUpMatcher() {
-		matcher = new AttributeMatcher<>(keyBuilderMock, SOURCE_KEY);
+		matcher = new AttributeMatcher<>(keyMapAdapterMock, SOURCE_KEY);
 	}
 
 	@Before

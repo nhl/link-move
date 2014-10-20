@@ -31,7 +31,7 @@ import com.nhl.link.etl.map.key.KeyMapAdapter;
 public abstract class BaseMatcherTest {
 	protected List<Map<String, Object>> sources;
 
-	protected KeyMapAdapter keyBuilderMock;
+	protected KeyMapAdapter keyMapAdapterMock;
 
 	protected static final String SOURCE_KEY = "attr1";
 
@@ -53,9 +53,16 @@ public abstract class BaseMatcherTest {
 	}
 
 	@Before
-	public void setUpKeyBuilderMock() {
-		keyBuilderMock = mock(KeyMapAdapter.class);
-		when(keyBuilderMock.toMapKey(anyObject())).thenAnswer(new Answer<Object>() {
+	public void setUpKeyMapAdapterMock() {
+		keyMapAdapterMock = mock(KeyMapAdapter.class);
+		when(keyMapAdapterMock.toMapKey(anyObject())).thenAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				return invocation.getArguments()[0];
+			}
+		});
+
+		when(keyMapAdapterMock.fromMapKey(anyObject())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable {
 				return invocation.getArguments()[0];
@@ -80,12 +87,12 @@ public abstract class BaseMatcherTest {
 		for (String attr : source.keySet()) {
 			assertEquals(source.get(attr), target.readProperty(attr));
 		}
-		verify(keyBuilderMock, times(targets.size() + 1)).toMapKey(anyObject());
+		verify(keyMapAdapterMock, times(targets.size() + 1)).toMapKey(anyObject());
 		for (DataObject t : targets) {
 			verifyGetTargetKey(t);
 		}
 	}
-	
+
 	protected void checkInExpression(SelectQuery<DataObject> query, Class<? extends ASTPath> pathClass) {
 		assertEquals(ASTIn.class, query.getQualifier().getClass());
 

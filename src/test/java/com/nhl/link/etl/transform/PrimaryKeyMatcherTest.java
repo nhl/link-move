@@ -25,7 +25,7 @@ public class PrimaryKeyMatcherTest extends BaseMatcherTest {
 
 	@Before
 	public void setUpMatcher() {
-		matcher = new PrimaryKeyMatcher<>(keyBuilderMock, SOURCE_KEY);
+		matcher = new PrimaryKeyMatcher<>(keyMapAdapterMock, SOURCE_KEY);
 	}
 
 	@Before
