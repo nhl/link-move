@@ -5,8 +5,6 @@ import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.ObjectId;
 import org.apache.cayenne.map.ObjEntity;
 
-import com.nhl.link.etl.load.RelationshipInfo;
-
 import java.util.List;
 import java.util.Map;
 

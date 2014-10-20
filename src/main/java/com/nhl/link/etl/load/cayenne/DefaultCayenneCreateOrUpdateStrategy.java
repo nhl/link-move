@@ -1,8 +1,6 @@
 package com.nhl.link.etl.load.cayenne;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.load.RelationshipInfo;
-import com.nhl.link.etl.load.RelationshipType;
 
 import org.apache.cayenne.Cayenne;
 import org.apache.cayenne.DataObject;
