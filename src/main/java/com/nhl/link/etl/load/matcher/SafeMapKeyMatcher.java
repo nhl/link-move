@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.apache.cayenne.exp.Expression;
 
-import com.nhl.link.etl.map.key.KeyMapAdapter;
-
 /**
  * A matcher that does transparent conversion between object key value and a
  * map-friendly key.
@@ -15,9 +13,9 @@ import com.nhl.link.etl.map.key.KeyMapAdapter;
 public class SafeMapKeyMatcher<T> implements Matcher<T> {
 
 	private Matcher<T> delegate;
-	private KeyMapAdapter keyAdapter;
+	private KeyAdapter keyAdapter;
 
-	public SafeMapKeyMatcher(Matcher<T> delegate, KeyMapAdapter keyAdapter) {
+	public SafeMapKeyMatcher(Matcher<T> delegate, KeyAdapter keyAdapter) {
 		this.delegate = delegate;
 		this.keyAdapter = keyAdapter;
 	}

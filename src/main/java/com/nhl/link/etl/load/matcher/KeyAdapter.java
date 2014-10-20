@@ -1,4 +1,4 @@
-package com.nhl.link.etl.map.key;
+package com.nhl.link.etl.load.matcher;
 
 /**
  * Ensures that a given object can be used as a map key. The key may be wrapped
@@ -7,7 +7,7 @@ package com.nhl.link.etl.map.key;
  * 
  * @since 1.1
  */
-public interface KeyMapAdapter {
+public interface KeyAdapter {
 
 	Object toMapKey(Object rawKey);
 	

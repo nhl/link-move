@@ -26,8 +26,8 @@ import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extract.IExtractorFactory;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.jdbc.JdbcExtractorFactory;
-import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
-import com.nhl.link.etl.runtime.map.key.KeyMapAdapterFactory;
+import com.nhl.link.etl.runtime.matcher.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.matcher.KeyAdapterFactory;
 import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.TaskService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
@@ -198,7 +198,7 @@ public class EtlRuntimeBuilder {
 				binder.bind(IConnectorService.class).to(ConnectorService.class);
 				binder.bind(ITaskService.class).to(TaskService.class);
 				binder.bind(ITokenManager.class).toInstance(tokenManager);
-				binder.bind(IKeyMapAdapterFactory.class).to(KeyMapAdapterFactory.class);
+				binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
 
 				// apply adapter-contributed bindings
 				for (LinkEtlAdapter a : adapters) {

@@ -5,7 +5,7 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
-import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
+import com.nhl.link.etl.runtime.matcher.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 public class TaskService implements ITaskService {
@@ -13,10 +13,10 @@ public class TaskService implements ITaskService {
 	private IExtractorService extractorService;
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
-	private IKeyMapAdapterFactory keyBuilderFactory;
+	private IKeyAdapterFactory keyBuilderFactory;
 
 	public TaskService(@Inject IExtractorService extractorService, @Inject ITargetCayenneService targetCayenneService,
-			@Inject ITokenManager tokenManager, @Inject IKeyMapAdapterFactory keyBuilderFactory) {
+			@Inject ITokenManager tokenManager, @Inject IKeyAdapterFactory keyBuilderFactory) {
 		this.extractorService = extractorService;
 		this.targetCayenneService = targetCayenneService;
 		this.tokenManager = tokenManager;

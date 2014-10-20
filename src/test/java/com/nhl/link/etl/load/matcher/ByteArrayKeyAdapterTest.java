@@ -1,4 +1,4 @@
-package com.nhl.link.etl.map.key;
+package com.nhl.link.etl.load.matcher;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,13 +7,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.nhl.link.etl.map.key.ByteArrayKeyMapAdapter;
+import com.nhl.link.etl.load.matcher.ByteArrayKeyAdapter;
 
-public class ByteArrayKeyMapAdapterTest {
+public class ByteArrayKeyAdapterTest {
 	
 	@Test
 	public void testToFrom() {
-		ByteArrayKeyMapAdapter builder = new ByteArrayKeyMapAdapter();
+		ByteArrayKeyAdapter builder = new ByteArrayKeyAdapter();
 
 		byte[] b1 = new byte[] { 1, 2 };
 		Object k1 = builder.toMapKey(b1);
@@ -23,7 +23,7 @@ public class ByteArrayKeyMapAdapterTest {
 
 	@Test
 	public void testEquals() {
-		ByteArrayKeyMapAdapter builder = new ByteArrayKeyMapAdapter();
+		ByteArrayKeyAdapter builder = new ByteArrayKeyAdapter();
 
 		byte[] b1 = new byte[] { 1, 2 };
 		assertTrue(builder.toMapKey(b1).equals(builder.toMapKey(b1)));
@@ -40,7 +40,7 @@ public class ByteArrayKeyMapAdapterTest {
 
 	@Test
 	public void testHashCode() {
-		ByteArrayKeyMapAdapter builder = new ByteArrayKeyMapAdapter();
+		ByteArrayKeyAdapter builder = new ByteArrayKeyAdapter();
 
 		byte[] b1 = new byte[] { 1, 2 };
 		assertEquals(builder.toMapKey(b1).hashCode(), builder.toMapKey(b1).hashCode());

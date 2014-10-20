@@ -29,14 +29,14 @@ import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateWithPKStrategy;
 import com.nhl.link.etl.load.cayenne.DefaultCayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.load.matcher.AttributeMatcher;
 import com.nhl.link.etl.load.matcher.IdMatcher;
+import com.nhl.link.etl.load.matcher.KeyAdapter;
 import com.nhl.link.etl.load.matcher.Matcher;
 import com.nhl.link.etl.load.matcher.MultiAttributeMatcher;
 import com.nhl.link.etl.load.matcher.SafeMapKeyMatcher;
-import com.nhl.link.etl.map.key.KeyMapAdapter;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
-import com.nhl.link.etl.runtime.map.key.IKeyMapAdapterFactory;
+import com.nhl.link.etl.runtime.matcher.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
@@ -50,7 +50,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private ITargetCayenneService targetCayenneService;
 
 	private ITokenManager tokenManager;
-	private IKeyMapAdapterFactory keyMapAdapterFactory;
+	private IKeyAdapterFactory keyMapAdapterFactory;
 
 	private Class<T> type;
 	private String extractorName;
@@ -63,7 +63,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private List<String> matchAttributes;
 
 	MatchingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
-			ITokenManager tokenManager, IKeyMapAdapterFactory keyMapAdapterFactory) {
+			ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
 		super(extractorService);
 		this.batchSize = DEFAULT_BATCH_SIZE;
@@ -208,7 +208,7 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 			matcher = new AttributeMatcher<>(getSingleMatchAttribute());
 		}
 
-		KeyMapAdapter keyAdapter;
+		KeyAdapter keyAdapter;
 
 		// TODO: mapping keyMapAdapters by type doesn't take into account
 		// composition and hierarchy of the keys ... need a different approach.

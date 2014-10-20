@@ -1,6 +1,6 @@
-package com.nhl.link.etl.map.key;
+package com.nhl.link.etl.load.matcher;
 
-public class ByteArrayKeyMapAdapter implements KeyMapAdapter {
+public class ByteArrayKeyAdapter implements KeyAdapter {
 
 	@Override
 	public Object toMapKey(Object rawKey) {
