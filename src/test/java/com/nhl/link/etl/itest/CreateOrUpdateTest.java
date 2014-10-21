@@ -123,7 +123,7 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (45, 'a', 67)");
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (11, 'b', 4)");
 
-		task.run(SyncToken.nullToken());
+		task.run();
 	}
 
 	@Test
