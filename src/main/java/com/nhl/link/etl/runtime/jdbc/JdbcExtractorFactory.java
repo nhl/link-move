@@ -34,6 +34,9 @@ public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
 			throw new IllegalArgumentException("Missing required property for key '" + SQL_TEMPLATE_PROPERTY + "'");
 		}
 
+		// trim spaces coming from XML for cleaner output
+		sqlTemplate = sqlTemplate.trim();
+
 		CapsStrategy capsStrategy = CapsStrategy.DEFAULT;
 
 		String capsStrategyString = config.getProperties().get(SQL_TEMPLATE_CAPS_PROPERTY);
