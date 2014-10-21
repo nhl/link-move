@@ -39,12 +39,37 @@ public class CayenneCreateOrUpdateLoader<T extends DataObject> extends CreateOrU
 
 		// store counts before commit; update the execution after commit
 		int created = context.newObjects().size();
-		int updated = context.modifiedObjects().size();
+
+		// exclude phantom mods of related objects...
+		int updated = filterRootTypes(context.modifiedObjects()).size();
 
 		context.commitChanges();
 
 		execution.incrementCreated(created);
 		execution.incrementUpdated(updated);
+	}
+
+	private Collection<?> filterRootTypes(Collection<?> updated) {
+
+		Collection<Object> filtered = null;
+		for (Object o : updated) {
+
+			// TODO: this is weak... what if there's inheritance involved? what
+			// if the root object mod is phantom?
+			// we have a better chance of catching the right objects via a
+			// listener
+
+			if (type.isAssignableFrom(o.getClass())) {
+
+				if (filtered == null) {
+					filtered = new ArrayList<>();
+				}
+
+				filtered.add(o);
+			}
+		}
+
+		return filtered != null ? filtered : Collections.emptyList();
 	}
 
 	@Override
