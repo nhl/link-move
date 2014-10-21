@@ -2,6 +2,8 @@ package com.nhl.link.etl.load;
 
 import java.util.Map;
 
+import com.nhl.link.etl.Execution;
+
 /**
  * A listener for load-stage events.
  * 
@@ -9,7 +11,7 @@ import java.util.Map;
  */
 public interface LoadListener<T> {
 
-	void targetCreated(Map<String, Object> source, T target);
+	void targetCreated(Execution e, Map<String, Object> source, T target);
 
-	void targetUpdated(Map<String, Object> source, T target);
+	void targetUpdated(Execution e, Map<String, Object> source, T target);
 }

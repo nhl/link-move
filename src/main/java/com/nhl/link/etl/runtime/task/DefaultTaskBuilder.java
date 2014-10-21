@@ -65,6 +65,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	private boolean byId;
 	private List<String> keyAttributes;
 
+	@SuppressWarnings("unchecked")
 	DefaultTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
 			ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
@@ -74,8 +75,12 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 		this.targetCayenneService = targetCayenneService;
 		this.tokenManager = tokenManager;
 		this.relationships = new ArrayList<>();
-		this.transformListeners = new ArrayList<>();
 		this.keyMapAdapterFactory = keyMapAdapterFactory;
+
+		this.transformListeners = new ArrayList<>();
+
+		// always add stats listener..
+		transformListeners.add(StatsLoadListener.instance());
 	}
 
 	@Override

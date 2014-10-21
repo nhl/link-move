@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.PersistenceState;
+
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.load.mapper.Mapper;
 
@@ -16,19 +20,22 @@ import com.nhl.link.etl.load.mapper.Mapper;
  * Cayenne objects with a provided matcher. Targets are created if missing or
  * updated if present.
  */
-public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<String, Object>> {
+public abstract class CreateOrUpdateLoader<T extends DataObject> implements BatchProcessor<Map<String, Object>> {
 
 	protected final Class<T> type;
+	protected final Execution execution;
 	protected final Mapper<T> mapper;
 	protected final List<LoadListener<T>> transformListeners;
 
-	protected CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper) {
-		this(type, mapper, Collections.<LoadListener<T>> emptyList());
+	protected CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper, Execution execution) {
+		this(type, mapper, execution, Collections.<LoadListener<T>> emptyList());
 	}
 
-	public CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper, List<LoadListener<T>> transformListeners) {
+	public CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper, Execution execution,
+			List<LoadListener<T>> transformListeners) {
 		this.type = type;
 		this.mapper = mapper;
+		this.execution = execution;
 		this.transformListeners = transformListeners;
 	}
 
@@ -80,13 +87,17 @@ public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<Stri
 
 	private void fireTargetCreated(Map<String, Object> source, T target) {
 		for (LoadListener<T> listener : transformListeners) {
-			listener.targetCreated(source, target);
+			listener.targetCreated(execution, source, target);
 		}
 	}
 
 	private void fireTargetUpdated(Map<String, Object> source, T target) {
-		for (LoadListener<T> listener : transformListeners) {
-			listener.targetUpdated(source, target);
+
+		// prevent phantom events
+		if (target.getPersistenceState() == PersistenceState.MODIFIED) {
+			for (LoadListener<T> listener : transformListeners) {
+				listener.targetUpdated(execution, source, target);
+			}
 		}
 	}
 }
