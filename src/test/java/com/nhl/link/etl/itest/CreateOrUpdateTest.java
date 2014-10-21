@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.SyncToken;
@@ -81,5 +82,17 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 
 		Execution e4 = task.run(SyncToken.nullToken());
 		assertExec(2, 0, 0, e4);
+	}
+
+	@Test(expected = EtlRuntimeException.class)
+	public void test_ById_Autoincrement() {
+
+		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
+				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_byid.xml").matchById(Etl1t.ID_PK_COLUMN).task();
+
+		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (45, 'a', 67)");
+		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (11, 'b', 4)");
+
+		task.run(SyncToken.nullToken());
 	}
 }
