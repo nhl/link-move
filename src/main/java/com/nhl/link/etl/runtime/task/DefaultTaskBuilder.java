@@ -275,6 +275,11 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 		return new EtlTask() {
 
 			@Override
+			public Execution run() {
+				return run(SyncToken.nullToken());
+			}
+
+			@Override
 			public Execution run(SyncToken token) {
 
 				try (Execution execution = new Execution(token);) {
