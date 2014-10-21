@@ -21,8 +21,7 @@ public class ClasspathExtractorConfigLoader extends AbstractXmlExtractorConfigLo
 
 		URL resource = ClasspathExtractorConfigLoader.class.getClassLoader().getResource(name);
 		if (resource == null) {
-			String path = ClasspathExtractorConfigLoader.class.getPackage().getName().replace('.', '/');
-			throw new EtlRuntimeException("Extractor config not found in classpath: " + path + "/" + name);
+			throw new EtlRuntimeException("Extractor config not found in classpath: " + name);
 		}
 
 		return new InputStreamReader(resource.openStream(), "UTF-8");
