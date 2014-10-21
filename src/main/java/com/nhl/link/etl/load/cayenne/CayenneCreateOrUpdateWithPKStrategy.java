@@ -1,12 +1,10 @@
 package com.nhl.link.etl.load.cayenne;
 
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.ObjectId;
-import org.apache.cayenne.map.ObjEntity;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.ObjectContext;
 
 public class CayenneCreateOrUpdateWithPKStrategy<T extends DataObject> extends DefaultCayenneCreateOrUpdateStrategy<T> {
 	private final String primaryKeyAttribute;
@@ -21,8 +19,7 @@ public class CayenneCreateOrUpdateWithPKStrategy<T extends DataObject> extends D
 		Object primaryKey = source.get(primaryKeyAttribute);
 		T target = context.newObject(type);
 		update(context, source, target);
-		ObjEntity objEntity = context.getEntityResolver().getObjEntity(type);
-		target.setObjectId(new ObjectId(objEntity.getName(), primaryKeyAttribute, primaryKey));
+		target.getObjectId().getReplacementIdMap().put(primaryKeyAttribute, primaryKey);
 		return target;
 	}
 

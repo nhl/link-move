@@ -6,7 +6,9 @@ Release 1.1
 #11 Rename MatchingTaskBuilder.matchByPrimaryKey to matchById
 #13 EtlAdapter to package extensions to LinkETL
 #14 Rename "transform" package to "load"
+#15 Rename Matchers to Mappers
 #16 ClasspathExtractorConfigLoader incorrectly resolves resource URLs
+
 
 Release 1.0 2014-08-13
 
