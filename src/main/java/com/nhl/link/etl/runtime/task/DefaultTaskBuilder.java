@@ -104,8 +104,19 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	 * @since 1.1
 	 */
 	@Override
-	public DefaultTaskBuilder<T> matchBy(Property<?> matchAttribute) {
-		return matchBy(matchAttribute.getName());
+	public DefaultTaskBuilder<T> matchBy(Property<?>... matchAttributes) {
+
+		// it will fail later on 'build'; TODO: should we do early argument
+		// checking?
+		if (matchAttributes == null) {
+			return this;
+		}
+		String[] names = new String[matchAttributes.length];
+		for (int i = 0; i < matchAttributes.length; i++) {
+			names[i] = matchAttributes[i].getName();
+		}
+
+		return matchBy(names);
 	}
 
 	/**

@@ -23,7 +23,7 @@ public interface TaskBuilder<T> {
 
 	TaskBuilder<T> matchBy(String... keyAttributes);
 
-	TaskBuilder<T> matchBy(Property<?> keyAttribute);
+	TaskBuilder<T> matchBy(Property<?>... keyAttributes);
 
 	/**
 	 * @deprecated since 1.1 use {@link #matchById(String)}
