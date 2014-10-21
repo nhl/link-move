@@ -7,7 +7,6 @@ import org.junit.Test;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 import com.nhl.link.etl.unit.cayenne.t.Etl5t;
