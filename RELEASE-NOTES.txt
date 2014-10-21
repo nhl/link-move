@@ -9,6 +9,8 @@ Release 1.1
 #15 Rename Matchers to Mappers
 #16 ClasspathExtractorConfigLoader incorrectly resolves resource URLs
 #17 Disallow ID updates for auto-generated IDs
+#18 JdbcExtractorFactory - trim SQL and other properties comping from XML
+#19 Task update count includes related objects
 
 Release 1.0 2014-08-13
 
