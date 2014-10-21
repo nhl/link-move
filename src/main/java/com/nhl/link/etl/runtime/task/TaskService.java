@@ -5,7 +5,7 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
-import com.nhl.link.etl.runtime.matcher.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 public class TaskService implements ITaskService {
@@ -24,8 +24,8 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public <T extends DataObject> MatchingTaskBuilder<T> createTaskBuilder(Class<T> type) {
-		return new MatchingTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager, keyBuilderFactory);
+	public <T extends DataObject> TaskBuilder<T> createTaskBuilder(Class<T> type) {
+		return new DefaultTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager, keyBuilderFactory);
 	}
 
 }

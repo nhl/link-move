@@ -4,6 +4,5 @@ import org.apache.cayenne.DataObject;
 
 public interface ITaskService {
 
-	<T extends DataObject> MatchingTaskBuilder<T> createTaskBuilder(Class<T> type);
-
+	<T extends DataObject> TaskBuilder<T> createTaskBuilder(Class<T> type);
 }

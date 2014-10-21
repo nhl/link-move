@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.batch.BatchProcessor;
-import com.nhl.link.etl.load.matcher.Matcher;
+import com.nhl.link.etl.load.mapper.Mapper;
 
 /**
  * A stateful processor that matches a list of source data maps with target
@@ -19,16 +19,16 @@ import com.nhl.link.etl.load.matcher.Matcher;
 public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<String, Object>> {
 
 	protected final Class<T> type;
-	protected final Matcher<T> matcher;
+	protected final Mapper<T> mapper;
 	protected final List<LoadListener<T>> transformListeners;
 
-	protected CreateOrUpdateLoader(Class<T> type, Matcher<T> matcher) {
-		this(type, matcher, Collections.<LoadListener<T>> emptyList());
+	protected CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper) {
+		this(type, mapper, Collections.<LoadListener<T>> emptyList());
 	}
 
-	public CreateOrUpdateLoader(Class<T> type, Matcher<T> matcher, List<LoadListener<T>> transformListeners) {
+	public CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper, List<LoadListener<T>> transformListeners) {
 		this.type = type;
-		this.matcher = matcher;
+		this.mapper = mapper;
 		this.transformListeners = transformListeners;
 	}
 
@@ -45,7 +45,7 @@ public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<Stri
 		List<T> targets = getTargets(mutableSrcMap.keySet());
 		for (T t : targets) {
 
-			Object key = matcher.keyForTarget(t);
+			Object key = mapper.keyForTarget(t);
 
 			Map<String, Object> src = mutableSrcMap.remove(key);
 
@@ -72,7 +72,7 @@ public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<Stri
 
 		for (Map<String, Object> s : segment) {
 			// TODO: report dupes?
-			byKey.put(matcher.keyForSource(s), s);
+			byKey.put(mapper.keyForSource(s), s);
 		}
 
 		return byKey;

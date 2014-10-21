@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -8,41 +8,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.cayenne.DataObject;
+import org.apache.cayenne.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.etl.load.matcher.AttributeMatcher;
+import com.nhl.link.etl.load.mapper.IdMapper;
 
-public class AttributeMatcherTest {
+public class IdMapperTest {
 
-	private AttributeMatcher<DataObject> matcher;
+	private IdMapper<DataObject> mapper;
 
 	@Before
-	public void setUpMatcher() {
-		matcher = new AttributeMatcher<>("abc");
+	public void setUpMapper() {
+		mapper = new IdMapper<>("TID", "SID");
 	}
 
 	@Test
 	public void testKeyForSource() {
 
 		Map<String, Object> src = new HashMap<String, Object>();
-		src.put("a", "A");
+		src.put("SID", 34);
 		src.put("abc", "ABC");
 
-		assertEquals("ABC", matcher.keyForSource(src));
+		assertEquals(34, mapper.keyForSource(src));
 	}
 
 	@Test
 	public void testKeyForTarget() {
 
+		ObjectId id = new ObjectId("dummy", "TID", 55);
 		DataObject t = mock(DataObject.class);
-		when(t.readProperty("abc")).thenReturn(44);
+		when(t.getObjectId()).thenReturn(id);
 
-		assertEquals(44, matcher.keyForTarget(t));
+		assertEquals(55, mapper.keyForTarget(t));
 	}
 
 	@Test
 	public void testExpressionForKey() {
-		assertEquals("abc = \"a\"", matcher.expressionForKey("a").toString());
+		assertEquals("db:TID = 55", mapper.expressionForKey(55).toString());
 	}
 }

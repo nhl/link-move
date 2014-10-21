@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.nhl.link.etl.load.matcher.ByteArrayKeyAdapter;
+import com.nhl.link.etl.load.mapper.ByteArrayKeyAdapter;
 
 public class ByteArrayKeyAdapterTest {
 	

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 import static org.apache.cayenne.exp.ExpressionFactory.joinExp;
 
@@ -11,11 +11,11 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
-public class MultiAttributeMatcher<T extends DataObject> implements Matcher<T> {
+public class MultiAttributeMapper<T extends DataObject> implements Mapper<T> {
 
 	private final List<String> keyProperties;
 
-	public MultiAttributeMatcher(List<String> keyProperties) {
+	public MultiAttributeMapper(List<String> keyProperties) {
 		this.keyProperties = keyProperties;
 	}
 

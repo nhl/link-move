@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 import static org.apache.cayenne.exp.ExpressionFactory.matchDbExp;
 
@@ -11,12 +11,12 @@ import org.apache.cayenne.exp.Expression;
 /**
  * @since 1.1
  */
-public class IdMatcher<T extends DataObject> implements Matcher<T> {
+public class IdMapper<T extends DataObject> implements Mapper<T> {
 
 	private String targetIdColumn;
 	private final String sourceIdName;
 
-	public IdMatcher(String targetIdColumn, String sourceIdName) {
+	public IdMapper(String targetIdColumn, String sourceIdName) {
 		this.targetIdColumn = targetIdColumn;
 		this.sourceIdName = sourceIdName;
 	}

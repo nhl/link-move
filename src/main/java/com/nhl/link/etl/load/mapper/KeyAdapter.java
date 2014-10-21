@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 /**
  * Ensures that a given object can be used as a map key. The key may be wrapped

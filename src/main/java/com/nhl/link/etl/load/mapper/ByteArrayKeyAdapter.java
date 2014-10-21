@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 public class ByteArrayKeyAdapter implements KeyAdapter {
 

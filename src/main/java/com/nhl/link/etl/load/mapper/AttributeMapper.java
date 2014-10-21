@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 import java.util.Map;
 
@@ -6,11 +6,11 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
-public class AttributeMatcher<T extends DataObject> implements Matcher<T> {
+public class AttributeMapper<T extends DataObject> implements Mapper<T> {
 
 	private final String keyProperty;
 
-	public AttributeMatcher(String keyProperty) {
+	public AttributeMapper(String keyProperty) {
 		this.keyProperty = keyProperty;
 	}
 

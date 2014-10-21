@@ -15,22 +15,21 @@ import org.apache.cayenne.query.SelectQuery;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.load.CreateOrUpdateLoader;
 import com.nhl.link.etl.load.LoadListener;
-import com.nhl.link.etl.load.matcher.Matcher;
+import com.nhl.link.etl.load.mapper.Mapper;
 
 public class CayenneCreateOrUpdateLoader<T extends DataObject> extends CreateOrUpdateLoader<T> {
 
 	protected final ObjectContext context;
 	protected final Execution execution;
-	protected final Matcher<T> targetMatcher;
 	protected final CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy;
 
-	public CayenneCreateOrUpdateLoader(Class<T> type, Execution execution, Matcher<T> cayenneMatcher,
+	public CayenneCreateOrUpdateLoader(Class<T> type, Execution execution, Mapper<T> mapper,
 			CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy, List<LoadListener<T>> transformListeners,
 			ObjectContext context) {
-		super(type, cayenneMatcher, transformListeners);
+
+		super(type, mapper, transformListeners);
 		this.context = context;
 		this.execution = execution;
-		this.targetMatcher = cayenneMatcher;
 		this.createOrUpdateStrategy = createOrUpdateStrategy;
 	}
 
@@ -71,7 +70,7 @@ public class CayenneCreateOrUpdateLoader<T extends DataObject> extends CreateOrU
 		List<Expression> expressions = new ArrayList<>(keys.size());
 		for (Object key : keys) {
 
-			Expression e = matcher.expressionForKey(key);
+			Expression e = mapper.expressionForKey(key);
 			if (e != null) {
 				expressions.add(e);
 			}

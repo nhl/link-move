@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.cayenne.DataObject;
@@ -15,9 +16,11 @@ import org.apache.cayenne.map.ObjEntity;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
+import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchRunner;
+import com.nhl.link.etl.extract.Extractor;
 import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateLoader;
@@ -26,16 +29,16 @@ import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateWithPKStrategy;
 import com.nhl.link.etl.load.cayenne.DefaultCayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.load.cayenne.RelationshipInfo;
 import com.nhl.link.etl.load.cayenne.RelationshipType;
-import com.nhl.link.etl.load.matcher.AttributeMatcher;
-import com.nhl.link.etl.load.matcher.IdMatcher;
-import com.nhl.link.etl.load.matcher.KeyAdapter;
-import com.nhl.link.etl.load.matcher.Matcher;
-import com.nhl.link.etl.load.matcher.MultiAttributeMatcher;
-import com.nhl.link.etl.load.matcher.SafeMapKeyMatcher;
+import com.nhl.link.etl.load.mapper.AttributeMapper;
+import com.nhl.link.etl.load.mapper.IdMapper;
+import com.nhl.link.etl.load.mapper.KeyAdapter;
+import com.nhl.link.etl.load.mapper.Mapper;
+import com.nhl.link.etl.load.mapper.MultiAttributeMapper;
+import com.nhl.link.etl.load.mapper.SafeMapKeyMapper;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
-import com.nhl.link.etl.runtime.matcher.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.transform.MapTransformer;
 
@@ -43,12 +46,12 @@ import com.nhl.link.etl.transform.MapTransformer;
  * A builder of an ETL task that matches source data with target data based on a
  * certain unique attribute on both sides.
  */
-public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
+public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> {
 
 	private static final int DEFAULT_BATCH_SIZE = 500;
 
 	private ITargetCayenneService targetCayenneService;
-
+	private IExtractorService extractorService;
 	private ITokenManager tokenManager;
 	private IKeyAdapterFactory keyMapAdapterFactory;
 
@@ -58,14 +61,14 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	private List<RelationshipInfo> relationships;
 	private List<LoadListener<T>> transformListeners;
 
-	private Matcher<T> matcher;
+	private Mapper<T> mapper;
 	private boolean byId;
-	private List<String> matchAttributes;
+	private List<String> keyAttributes;
 
-	MatchingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
+	DefaultTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
 			ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
-		super(extractorService);
+		this.extractorService = extractorService;
 		this.batchSize = DEFAULT_BATCH_SIZE;
 		this.type = type;
 		this.targetCayenneService = targetCayenneService;
@@ -75,29 +78,33 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		this.keyMapAdapterFactory = keyMapAdapterFactory;
 	}
 
-	public MatchingTaskBuilder<T> withExtractor(String extractorName) {
+	@Override
+	public DefaultTaskBuilder<T> withExtractor(String extractorName) {
 		this.extractorName = extractorName;
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> matchBy(Matcher<T> matcher) {
+	@Override
+	public DefaultTaskBuilder<T> matchBy(Mapper<T> mapper) {
 		this.byId = false;
-		this.matcher = matcher;
-		this.matchAttributes = null;
+		this.mapper = mapper;
+		this.keyAttributes = null;
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> matchBy(String... matchAttributes) {
+	@Override
+	public DefaultTaskBuilder<T> matchBy(String... keyAttributes) {
 		this.byId = false;
-		this.matcher = null;
-		this.matchAttributes = Arrays.asList(matchAttributes);
+		this.mapper = null;
+		this.keyAttributes = Arrays.asList(keyAttributes);
 		return this;
 	}
 
 	/**
 	 * @since 1.1
 	 */
-	public MatchingTaskBuilder<T> matchBy(Property<?> matchAttribute) {
+	@Override
+	public DefaultTaskBuilder<T> matchBy(Property<?> matchAttribute) {
 		return matchBy(matchAttribute.getName());
 	}
 
@@ -105,64 +112,71 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 	 * @deprecated since 1.1 use {@link #matchById(String)}.
 	 */
 	@Deprecated
-	public MatchingTaskBuilder<T> matchByPrimaryKey(String idProperty) {
+	@Override
+	public DefaultTaskBuilder<T> matchByPrimaryKey(String idProperty) {
 		return matchById(idProperty);
 	}
 
 	/**
 	 * @since 1.1
 	 */
-	public MatchingTaskBuilder<T> matchById(String idProperty) {
+	@Override
+	public DefaultTaskBuilder<T> matchById(String idProperty) {
 		this.byId = true;
-		this.matcher = null;
-		this.matchAttributes = Collections.singletonList(idProperty);
+		this.mapper = null;
+		this.keyAttributes = Collections.singletonList(idProperty);
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withBatchSize(int batchSize) {
+	@Override
+	public DefaultTaskBuilder<T> withBatchSize(int batchSize) {
 		this.batchSize = batchSize;
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
+	@Override
+	public DefaultTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType));
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
+	@Override
+	public DefaultTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType));
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
+	@Override
+	public DefaultTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
 				relationshipKeyAttribute));
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
+	@Override
+	public DefaultTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
 				relationshipKeyAttribute));
 		return this;
 	}
 
-	public MatchingTaskBuilder<T> withListener(LoadListener<T> listener) {
+	public DefaultTaskBuilder<T> withListener(LoadListener<T> listener) {
 		this.transformListeners.add(listener);
 		return this;
 	}
 
 	private String getSingleMatchAttribute() {
-		if (matchAttributes == null || matchAttributes.isEmpty()) {
+		if (keyAttributes == null || keyAttributes.isEmpty()) {
 			return null;
 		}
-		if (matchAttributes.size() > 1) {
+		if (keyAttributes.size() > 1) {
 			throw new IllegalStateException("Trying to get a single match attribute but multi key matching is set");
 		}
-		return matchAttributes.get(0);
+		return keyAttributes.get(0);
 	}
 
 	private ObjAttribute getMatchAttribute() {
@@ -186,26 +200,26 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		}
 	}
 
-	private Matcher<T> createMatcher() {
+	private Mapper<T> createMatcher() {
 
 		// not wrapping custom matcher, presuming the user knows what's he's
 		// doing and his matcher generates proper keys
-		if (this.matcher != null) {
-			return this.matcher;
+		if (this.mapper != null) {
+			return this.mapper;
 		}
 
-		if (matchAttributes == null) {
+		if (keyAttributes == null) {
 			throw new IllegalStateException("'matcher' or 'matchAttribute' must be set");
 		}
 
-		Matcher<T> matcher;
+		Mapper<T> matcher;
 
 		if (byId) {
-			matcher = new IdMatcher<>(pkAttribute(), getSingleMatchAttribute());
-		} else if (matchAttributes.size() > 1) {
-			matcher = new MultiAttributeMatcher<>(matchAttributes);
+			matcher = new IdMapper<>(pkAttribute(), getSingleMatchAttribute());
+		} else if (keyAttributes.size() > 1) {
+			matcher = new MultiAttributeMapper<>(keyAttributes);
 		} else {
-			matcher = new AttributeMatcher<>(getSingleMatchAttribute());
+			matcher = new AttributeMapper<>(getSingleMatchAttribute());
 		}
 
 		KeyAdapter keyAdapter;
@@ -213,14 +227,14 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		// TODO: mapping keyMapAdapters by type doesn't take into account
 		// composition and hierarchy of the keys ... need a different approach.
 		// for now resorting to the hacks below
-		if (matchAttributes.size() > 1) {
+		if (keyAttributes.size() > 1) {
 			keyAdapter = keyMapAdapterFactory.adapter(List.class);
 		} else {
 			ObjAttribute attribute = getMatchAttribute();
 			keyAdapter = keyMapAdapterFactory.adapter(attribute.getJavaClass());
 		}
 
-		return new SafeMapKeyMatcher<>(matcher, keyAdapter);
+		return new SafeMapKeyMapper<>(matcher, keyAdapter);
 	}
 
 	private String pkAttribute() {
@@ -238,13 +252,14 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 		return pks.iterator().next();
 	}
 
+	@Override
 	public EtlTask task() throws IllegalStateException {
 
 		if (extractorName == null) {
 			throw new IllegalStateException("Required 'extractorName' is not set");
 		}
 
-		final Matcher<T> matcher = createMatcher();
+		final Mapper<T> matcher = createMatcher();
 
 		return new EtlTask() {
 
@@ -264,8 +279,8 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 
 					// processor is stateful and is not thread-safe, so creating
 					// it every time...
-					CayenneCreateOrUpdateLoader<T> processor = new CayenneCreateOrUpdateLoader<>(type,
-							execution, matcher, createOrUpdateStrategy, transformListeners, context);
+					CayenneCreateOrUpdateLoader<T> processor = new CayenneCreateOrUpdateLoader<>(type, execution,
+							matcher, createOrUpdateStrategy, transformListeners, context);
 
 					ExtractorParameters extractorParams = new ExtractorParameters();
 					SyncToken startToken = tokenManager.previousToken(token);
@@ -279,6 +294,47 @@ public class MatchingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 
 					return execution;
 				}
+			}
+		};
+	}
+
+	/**
+	 * Returns a RowReader obtained from a named extractor and wrapped in a read
+	 * stats counter.
+	 */
+	protected RowReader getRowReader(final Execution execution, String extractorName,
+			ExtractorParameters extractorParams) {
+
+		Extractor extractor = extractorService.getExtractor(extractorName);
+		final RowReader reader = extractor.getReader(extractorParams);
+		return new RowReader() {
+
+			@Override
+			public Iterator<Row> iterator() {
+				final Iterator<Row> it = reader.iterator();
+
+				return new Iterator<Row>() {
+					@Override
+					public boolean hasNext() {
+						return it.hasNext();
+					}
+
+					@Override
+					public void remove() {
+						it.remove();
+					}
+
+					@Override
+					public Row next() {
+						execution.incrementExtracted(1);
+						return it.next();
+					}
+				};
+			}
+
+			@Override
+			public void close() {
+				reader.close();
 			}
 		};
 	}

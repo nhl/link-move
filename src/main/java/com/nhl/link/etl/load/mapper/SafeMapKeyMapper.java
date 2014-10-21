@@ -1,21 +1,21 @@
-package com.nhl.link.etl.load.matcher;
+package com.nhl.link.etl.load.mapper;
 
 import java.util.Map;
 
 import org.apache.cayenne.exp.Expression;
 
 /**
- * A matcher that does transparent conversion between object key value and a
+ * A mapper that does transparent conversion between object key value and a
  * map-friendly key.
  * 
  * @since 1.1
  */
-public class SafeMapKeyMatcher<T> implements Matcher<T> {
+public class SafeMapKeyMapper<T> implements Mapper<T> {
 
-	private Matcher<T> delegate;
+	private Mapper<T> delegate;
 	private KeyAdapter keyAdapter;
 
-	public SafeMapKeyMatcher(Matcher<T> delegate, KeyAdapter keyAdapter) {
+	public SafeMapKeyMapper(Mapper<T> delegate, KeyAdapter keyAdapter) {
 		this.delegate = delegate;
 		this.keyAdapter = keyAdapter;
 	}

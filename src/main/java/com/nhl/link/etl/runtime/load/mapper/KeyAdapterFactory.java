@@ -1,10 +1,10 @@
-package com.nhl.link.etl.runtime.matcher;
+package com.nhl.link.etl.runtime.load.mapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.nhl.link.etl.load.matcher.ByteArrayKeyAdapter;
-import com.nhl.link.etl.load.matcher.KeyAdapter;
+import com.nhl.link.etl.load.mapper.ByteArrayKeyAdapter;
+import com.nhl.link.etl.load.mapper.KeyAdapter;
 
 public class KeyAdapterFactory implements IKeyAdapterFactory {
 
