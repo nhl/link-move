@@ -14,10 +14,15 @@ public class ClasspathExtractorConfigLoader extends AbstractXmlExtractorConfigLo
 
 	@Override
 	protected Reader getXmlSource(String name) throws IOException {
-		URL resource = ClasspathExtractorConfigLoader.class.getResource(name + ".xml");
+
+		if (!name.endsWith(".xml")) {
+			name = name + ".xml";
+		}
+
+		URL resource = ClasspathExtractorConfigLoader.class.getClassLoader().getResource(name);
 		if (resource == null) {
 			String path = ClasspathExtractorConfigLoader.class.getPackage().getName().replace('.', '/');
-			throw new EtlRuntimeException("Extractor config not found in classpath: " + path + "/" + name + ".xml");
+			throw new EtlRuntimeException("Extractor config not found in classpath: " + path + "/" + name);
 		}
 
 		return new InputStreamReader(resource.openStream(), "UTF-8");
