@@ -43,9 +43,6 @@ public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implemen
 	}
 
 	protected void writeProperty(ObjectContext context, T target, String property, Object value) {
-		if (value == null) {
-			return;
-		}
 		if (relationshipsByKeyAttributes.containsKey(property)) {
 			writeRelationship(context, target, relationshipsByKeyAttributes.get(property), value);
 		} else {

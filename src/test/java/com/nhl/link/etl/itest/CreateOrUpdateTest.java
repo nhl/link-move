@@ -174,4 +174,19 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
 				+ "WHERE E2_ID = 34 AND E5_ID = 17 AND NAME = '3Name2' AND phone_number = '3PHONE2'"));
 	}
+
+	@Test
+	public void test_ByAttribute_SyncNulls() {
+
+		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
+				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
+
+		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
+		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', NULL)");
+
+		Execution e1 = task.run();
+		assertExec(1, 0, 1, e1);
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age is null"));
+	}
 }
