@@ -50,6 +50,36 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	}
 
 	@Test
+	public void test_ByAttributes() {
+
+		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
+				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME, Etl1t.AGE).task();
+
+		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
+		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', 5)");
+
+		Execution e1 = task.run(SyncToken.nullToken());
+		assertExec(2, 2, 0, e1);
+		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age = 5"));
+
+		// changing one of the key components should result in no-match and a
+		// new record insertion
+		srcRunSql("UPDATE utest.etl1 SET NAME = 'c' WHERE NAME = 'a'");
+
+		Execution e2 = task.run(SyncToken.nullToken());
+		assertExec(2, 1, 0, e2);
+		assertEquals(3, targetScalar("SELECT count(1) from utest.etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'c' AND age = 3"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age = 5"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
+
+		Execution e4 = task.run(SyncToken.nullToken());
+		assertExec(2, 0, 0, e4);
+	}
+
+	@Test
 	public void test_ById() {
 
 		EtlTask task = etl.getTaskService().createTaskBuilder(Etl5t.class)
