@@ -125,4 +125,23 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 
 		task.run(SyncToken.nullToken());
 	}
+
+	@Test
+	public void test_CapsLower() {
+
+		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
+				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_lower").matchBy(Etl1t.NAME).task();
+
+		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
+		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
+
+		Execution e1 = task.run(SyncToken.nullToken());
+		assertExec(2, 2, 0, e1);
+		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age is null"));
+
+		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('c')");
+		srcRunSql("UPDATE utest.etl1 SET AGE = 5 WHERE NAME = 'a'");
+	}
 }

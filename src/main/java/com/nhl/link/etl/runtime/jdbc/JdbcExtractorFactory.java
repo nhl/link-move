@@ -41,6 +41,7 @@ public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
 
 		String capsStrategyString = config.getProperties().get(SQL_TEMPLATE_CAPS_PROPERTY);
 		if (capsStrategyString != null) {
+			capsStrategyString = capsStrategyString.trim().toUpperCase();
 			capsStrategy = CapsStrategy.valueOf(capsStrategyString);
 		}
 
