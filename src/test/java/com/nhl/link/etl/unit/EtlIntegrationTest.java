@@ -18,7 +18,8 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 	@Before
 	public void before() {
 		Connector c = new JdbcConnector(srcDataSource);
-		this.etl = new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetRuntime).build();
+		this.etl = new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime())
+				.build();
 	}
 
 	@After

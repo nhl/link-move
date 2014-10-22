@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.query.SQLSelect;
 import org.apache.cayenne.query.SQLTemplate;
 import org.junit.AfterClass;
@@ -15,31 +14,23 @@ import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
 public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
-	protected static DerbyManager derbyTarget;
-	protected static ServerRuntime targetRuntime;
+	protected static CayenneDerbyStack targetStack;
 	protected ObjectContext targetContext;
 
 	@BeforeClass
 	public static void startTarget() throws IOException, SQLException {
-		derbyTarget = new DerbyManager("target/derbytarget");
-
-		targetRuntime = new ServerRuntime("cayenne-linketl-tests-targets.xml");
+		targetStack = new CayenneDerbyStack("derbytarget", "cayenne-linketl-tests-targets.xml");
 	}
 
 	@AfterClass
 	public static void shutdownTarget() throws IOException, SQLException {
-
-		targetRuntime.shutdown();
-		targetRuntime = null;
-
-		derbyTarget.shutdown();
-		derbyTarget = null;
+		targetStack.shutdown();
 	}
 
 	@Before
 	public void prepareTarget() {
 
-		targetContext = targetRuntime.newContext();
+		targetContext = targetStack.newContext();
 
 		// first query in a test set will also load the schema...
 
