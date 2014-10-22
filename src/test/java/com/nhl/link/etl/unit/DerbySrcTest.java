@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.conn.PoolManager;
 import org.apache.cayenne.log.NoopJdbcEventLogger;
+import org.apache.cayenne.query.SQLSelect;
 import org.apache.cayenne.query.SQLTemplate;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -56,4 +57,9 @@ public abstract class DerbySrcTest {
 		context.performGenericQuery(new SQLTemplate(Object.class, sql));
 	}
 
+	protected int srcScalar(String sql) {
+		ObjectContext context = srcStack.newContext();
+		SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
+		return query.selectOne(context).intValue();
+	}
 }

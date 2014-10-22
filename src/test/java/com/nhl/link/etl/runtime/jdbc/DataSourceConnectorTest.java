@@ -1,5 +1,6 @@
 package com.nhl.link.etl.runtime.jdbc;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.sql.SQLException;
@@ -13,13 +14,13 @@ import org.junit.Test;
 
 import com.nhl.link.etl.unit.DerbySrcTest;
 
-public class JdbcConnectorTest extends DerbySrcTest {
+public class DataSourceConnectorTest extends DerbySrcTest {
 
-	private JdbcConnector connector;
+	private DataSourceConnector connector;
 
 	@Before
 	public void setUp() throws SQLException {
-		this.connector = new JdbcConnector(srcDataSource);
+		this.connector = new DataSourceConnector(srcDataSource);
 	}
 
 	@After
@@ -33,7 +34,8 @@ public class JdbcConnectorTest extends DerbySrcTest {
 		assertNotNull(context);
 
 		DataMap dummy = context.getEntityResolver().getDataMap("placeholder");
-
 		context.performQuery(new SQLTemplate(dummy, "INSERT INTO utest.etl1 (NAME) VALUES ('a')", false));
+		assertEquals(1, srcScalar("SELECT count(1) from utest.etl1"));
 	}
+
 }

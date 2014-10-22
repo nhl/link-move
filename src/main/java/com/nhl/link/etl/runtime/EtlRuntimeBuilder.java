@@ -14,17 +14,19 @@ import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
 
 import com.nhl.link.etl.connect.Connector;
+import com.nhl.link.etl.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetCayenneService;
+import com.nhl.link.etl.runtime.cayenne.TargetConnectorFactory;
 import com.nhl.link.etl.runtime.connect.ConnectorService;
-import com.nhl.link.etl.runtime.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
 import com.nhl.link.etl.runtime.extract.ClasspathExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extract.ExtractorService;
 import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extract.IExtractorFactory;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.jdbc.JdbcConnector;
 import com.nhl.link.etl.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.load.mapper.KeyAdapterFactory;
@@ -48,10 +50,12 @@ public class EtlRuntimeBuilder {
 	public static final String END_TOKEN_VAR = "endToken";
 
 	private Map<String, Connector> connectors;
-	private Map<String, IConnectorFactory> connectorFactories;
-	private Map<String, Class<? extends IConnectorFactory>> connectorFactoryTypes;
+	private Map<String, IConnectorFactory<? extends Connector>> connectorFactories;
+	private Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
+
 	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory>> extractorFactoryTypes;
+
 	private IExtractorConfigLoader extractorConfigLoader;
 	private ITokenManager tokenManager;
 	private ServerRuntime targetRuntime;
@@ -97,14 +101,32 @@ public class EtlRuntimeBuilder {
 		return this;
 	}
 
-	public EtlRuntimeBuilder withConnectorFactory(Class<? extends Connector> connectorType, IConnectorFactory factory) {
+	public <C extends Connector> EtlRuntimeBuilder withConnectorFactory(Class<C> connectorType,
+			IConnectorFactory<C> factory) {
 		connectorFactories.put(connectorType.getName(), factory);
 		return this;
 	}
 
-	public EtlRuntimeBuilder withConnectorFactory(Class<? extends Connector> connectorType,
-			Class<? extends IConnectorFactory> factoryType) {
+	public <C extends Connector> EtlRuntimeBuilder withConnectorFactory(Class<C> connectorType,
+			Class<? extends IConnectorFactory<C>> factoryType) {
 		connectorFactoryTypes.put(connectorType.getName(), factoryType);
+		return this;
+	}
+
+	/**
+	 * Ensures source JDBC connectors are created for each one of the target
+	 * DataSources. Connector ID will be equal to the DataNode name of the
+	 * target.
+	 * <p>
+	 * This configuration conveniently reuses already pre-configured target
+	 * DataSources. It may be useful in cases when the data is transferred
+	 * between the tables on the sane DB server, or if connectors are known
+	 * upfront and hence can be modeled in Cayenne as DataNodes.
+	 * 
+	 * @since 1.1
+	 */
+	public EtlRuntimeBuilder withConnectorFromTarget() {
+		connectorFactoryTypes.put(JdbcConnector.class.getName(), TargetConnectorFactory.class);
 		return this;
 	}
 
@@ -155,12 +177,13 @@ public class EtlRuntimeBuilder {
 
 				binder.<Connector> bindMap(EtlRuntimeBuilder.CONNECTORS_MAP).putAll(connectors);
 
-				MapBuilder<IConnectorFactory> connectorFactories = binder
-						.<IConnectorFactory> bindMap(EtlRuntimeBuilder.CONNECTOR_FACTORIES_MAP);
+				MapBuilder<IConnectorFactory<? extends Connector>> connectorFactories = binder
+						.<IConnectorFactory<? extends Connector>> bindMap(EtlRuntimeBuilder.CONNECTOR_FACTORIES_MAP);
 
 				connectorFactories.putAll(EtlRuntimeBuilder.this.connectorFactories);
 
-				for (Entry<String, Class<? extends IConnectorFactory>> e : connectorFactoryTypes.entrySet()) {
+				for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
+						.entrySet()) {
 
 					// a bit ugly - need to bind all factory types explicitly
 					// before placing then in a map .. also must drop

@@ -8,15 +8,16 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.connect.Connector;
+import com.nhl.link.etl.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 
 public class ConnectorService implements IConnectorService {
 
 	private ConcurrentMap<String, Connector> connectors;
-	private Map<String, IConnectorFactory> factories;
+	private Map<String, IConnectorFactory<?>> factories;
 
 	public ConnectorService(
-			@Inject(EtlRuntimeBuilder.CONNECTOR_FACTORIES_MAP) Map<String, IConnectorFactory> factories,
+			@Inject(EtlRuntimeBuilder.CONNECTOR_FACTORIES_MAP) Map<String, IConnectorFactory<?>> factories,
 			@Inject(EtlRuntimeBuilder.CONNECTORS_MAP) Map<String, Connector> connectors) {
 		this.factories = factories;
 		this.connectors = new ConcurrentHashMap<>(connectors);
@@ -33,7 +34,7 @@ public class ConnectorService implements IConnectorService {
 		Connector connector = connectors.get(id);
 		if (connector == null) {
 
-			IConnectorFactory factory = factories.get(type.getName());
+			IConnectorFactory<?> factory = factories.get(type.getName());
 			if (factory == null) {
 				throw new IllegalStateException("No factory mapped for Connector type of '" + type.getName() + "'");
 			}

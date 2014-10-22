@@ -9,7 +9,7 @@ import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.connect.Connector;
 import com.nhl.link.etl.runtime.EtlRuntime;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
-import com.nhl.link.etl.runtime.jdbc.JdbcConnector;
+import com.nhl.link.etl.runtime.jdbc.DataSourceConnector;
 
 public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 
@@ -17,9 +17,7 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 
 	@Before
 	public void before() {
-		Connector c = new JdbcConnector(srcDataSource);
-		this.etl = new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime())
-				.build();
+		this.etl = createEtl();
 	}
 
 	@After
@@ -27,9 +25,14 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 		etl.shutdown();
 	}
 
+	protected EtlRuntime createEtl() {
+		Connector c = new DataSourceConnector(srcDataSource);
+		return new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime()).build();
+	}
+
 	protected void assertExec(int extracted, int created, int updated, Execution exec) {
-		assertEquals(extracted, exec.getExtracted());
-		assertEquals(created, exec.getCreated());
-		assertEquals(updated, exec.getUpdated());
+		assertEquals("Extracted unexpected number of records", extracted, exec.getExtracted());
+		assertEquals("Created unexpected number of records", created, exec.getCreated());
+		assertEquals("Updated unexpected number of records", updated, exec.getUpdated());
 	}
 }

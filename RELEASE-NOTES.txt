@@ -12,6 +12,7 @@ Release 1.1
 #18 JdbcExtractorFactory - trim SQL and other properties comping from XML
 #19 Task update count includes related objects
 #20 ETL fails to reset non-null properties to NULL on update
+#21 A default IConnectorFactory using target DataSource for source
 
 Release 1.0 2014-08-13
 
