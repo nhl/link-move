@@ -281,7 +281,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 
 			@Override
 			public Execution run() {
-				return run(SyncToken.nullToken());
+				return run(SyncToken.nullToken(extractorName));
 			}
 
 			@Override

@@ -7,16 +7,13 @@ package com.nhl.link.etl;
  */
 public abstract class SyncToken {
 
-	private static final SyncToken NULL_TOKEN = new SyncToken("null_token", null) {
-
-		@Override
-		public SyncToken getInitialToken() {
-			return this;
-		}
-	};
-
-	public static SyncToken nullToken() {
-		return NULL_TOKEN;
+	public static SyncToken nullToken(String name) {
+		return new SyncToken(name, null) {
+			@Override
+			public SyncToken getInitialToken() {
+				return this;
+			}
+		};
 	}
 
 	private String name;

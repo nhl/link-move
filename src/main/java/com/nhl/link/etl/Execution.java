@@ -42,14 +42,17 @@ public class Execution implements AutoCloseable {
 		// printable
 		Map<String, Object> report = new LinkedHashMap<>();
 
-		report.put("Task", syncToken.getName());
+		if (syncToken.getName() != null) {
+			report.put("Task", syncToken.getName());
+		}
+
 		report.put("Token", syncToken.getValue());
 
 		DateFormat format = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
 
 		if (finished > 0) {
 			report.put("Status", "finished");
-			report.put("Duration, ms.", finished - started);
+			report.put("Duration", finished - started);
 		} else {
 			report.put("Status", "in progress");
 			report.put("Started on ", format.format(new Date(started)));
