@@ -25,12 +25,12 @@ public class ConnectorService implements IConnectorService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Connector> T getConnector(Class<T> type, String id) {
-		Connector connector = connectors.get(id);
 
 		if (id == null) {
 			throw new EtlRuntimeException("Null connector id");
 		}
 
+		Connector connector = connectors.get(id);
 		if (connector == null) {
 
 			IConnectorFactory factory = factories.get(type.getName());
