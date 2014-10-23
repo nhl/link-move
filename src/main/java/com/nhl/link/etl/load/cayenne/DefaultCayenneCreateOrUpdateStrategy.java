@@ -50,29 +50,42 @@ public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implemen
 		}
 	}
 
-	private void writeRelationship(ObjectContext context, T target, RelationshipInfo relationship,
-	                               Object relationshipKey) {
-		DataObject object = resolveRelationshipObject(context, relationship, relationshipKey);
-		if (object == null) {
-			// TODO: should we throw an exception here or just ignore?
-			throw new EtlRuntimeException("Related object has not been found");
+	private void writeRelationship(ObjectContext context, T target, RelationshipInfo relationship, Object value) {
+
+		DataObject object;
+
+		if (value == null) {
+			object = null;
+		} else {
+			object = resolveRelationshipObject(context, relationship, value);
+			if (object == null) {
+				// TODO: should we throw an exception here or just ignore?
+				throw new EtlRuntimeException("Related object has not been found");
+			}
 		}
+
 		if (relationship.getType() == RelationshipType.TO_ONE) {
 			target.setToOneTarget(relationship.getName(), object, true);
 		} else if (relationship.getType() == RelationshipType.TO_MANY) {
+
+			if (object == null) {
+				// TODO: should we throw an exception here or just ignore?
+				throw new EtlRuntimeException("Can't set to-many relationship '" + relationship.getName()
+						+ "' to a null value");
+			}
+
 			target.addToManyTarget(relationship.getName(), object, true);
 		} else {
 			throw new EtlRuntimeException("Unknown relationship type");
 		}
 	}
 
-	private DataObject resolveRelationshipObject(ObjectContext context, RelationshipInfo relationship,
-	                                             Object relationshipKey) {
+	private DataObject resolveRelationshipObject(ObjectContext context, RelationshipInfo relationship, Object value) {
 		if (relationship.getRelationshipKeyAttribute() == null) {
-			return Cayenne.objectForPK(context, relationship.getObjectType(), relationshipKey);
+			return Cayenne.objectForPK(context, relationship.getObjectType(), value);
 		}
-		return context.selectOne(new SelectQuery<>(relationship.getObjectType(),
-				ExpressionFactory.matchExp(relationship.getRelationshipKeyAttribute(), relationshipKey)));
+		return context.selectOne(new SelectQuery<>(relationship.getObjectType(), ExpressionFactory.matchExp(
+				relationship.getRelationshipKeyAttribute(), value)));
 	}
 
 	private void writeBasicProperty(ObjectContext context, T target, String property, Object value) {

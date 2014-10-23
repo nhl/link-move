@@ -176,6 +176,45 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	}
 
 	@Test
+	public void test_ByAttribute_SyncFk_Nulls() {
+
+		EtlTask task = etl.getTaskService().createTaskBuilder(Etl3t.class)
+				.withExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
+				.withToOneRelationship(Etl3t.E2.getName(), Etl2t.class, Etl3t.E2.getName())
+				.withToOneRelationship(Etl3t.E5.getName(), Etl5t.class, Etl3t.E5.getName()).task();
+
+		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
+		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (17, '5Name1')");
+		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, '5Name2')");
+
+		srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (null, 17, '3Name1', '3PHONE1')");
+		srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, null, '3Name2', '3PHONE2')");
+
+		targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
+		targetRunSql("INSERT INTO utest.etl5t (ID, NAME) VALUES (17, '5Name1')");
+		targetRunSql("INSERT INTO utest.etl5t (ID, NAME) VALUES (11, '5Name2')");
+
+		Execution e1 = task.run();
+		assertExec(2, 2, 0, e1);
+		assertEquals(2, targetScalar("SELECT count(1) from utest.etl3t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
+				+ "WHERE E2_ID IS NULL AND E5_ID = 17 AND NAME = '3Name1' AND phone_number = '3PHONE1'"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
+				+ "WHERE E2_ID = 34 AND E5_ID IS NULL AND NAME = '3Name2' AND phone_number = '3PHONE2'"));
+
+		srcRunSql("UPDATE utest.etl3 SET E5_ID = NULL WHERE NAME = '3Name1'");
+		srcRunSql("UPDATE utest.etl3 SET E5_ID = 11 WHERE NAME = '3Name2'");
+
+		Execution e2 = task.run();
+		assertExec(2, 0, 2, e2);
+		assertEquals(2, targetScalar("SELECT count(1) from utest.etl3t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
+				+ "WHERE E2_ID IS NULL AND E5_ID IS NULL AND NAME = '3Name1' AND phone_number = '3PHONE1'"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
+				+ "WHERE E2_ID = 34 AND E5_ID = 11 AND NAME = '3Name2' AND phone_number = '3PHONE2'"));
+	}
+
+	@Test
 	public void test_ByAttribute_SyncNulls() {
 
 		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
