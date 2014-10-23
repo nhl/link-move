@@ -4,7 +4,7 @@
 
 	<groupId>com.nhl.link.etl</groupId>
 	<artifactId>link-etl</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 
 	<name>Library: link-etl</name>
 	<description>Extract / Transform / Load (ETL) Framework</description>
@@ -27,7 +27,7 @@
 		<connection>scm:git:https://github.com/nhl/link-etl</connection>
 		<developerConnection>scm:git:ssh://git@github.com/nhl/link-etl</developerConnection>
 		<url>https://github.com/nhl/link-etl</url>
-		<tag>HEAD</tag>
+		<tag>link-etl-1.1</tag>
 	</scm>
 
 	<distributionManagement>
