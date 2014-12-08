@@ -1,5 +1,6 @@
-Release 1.2
+Release 1.2 2014-12-08
 
+#24 Upgrade Cayenne dependency to 4.0.M2.1ab1caa
 
 Release 1.1 2014-10-23
 

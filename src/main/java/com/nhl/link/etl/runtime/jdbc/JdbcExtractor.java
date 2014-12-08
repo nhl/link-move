@@ -33,7 +33,7 @@ public class JdbcExtractor implements Extractor {
 		// iterating a JDBC ResultSet
 
 		SQLSelect<DataRow> select = SQLSelect.dataRowQuery(sqlTemplate);
-		select.getParameters().putAll(parameters.asMap());
+		select.params(parameters.asMap());
 
 		switch (capsStrategy) {
 

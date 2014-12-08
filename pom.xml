@@ -20,7 +20,7 @@
 		<!-- Custom properties (mostly framework versions) -->
 
 		<slf4j-version>1.6.6</slf4j-version>
-		<cayenne-version>3.2.M2.27fc609</cayenne-version>
+		<cayenne-version>4.0.M2.1ab1caa</cayenne-version>
 	</properties>
 
 	<scm>
