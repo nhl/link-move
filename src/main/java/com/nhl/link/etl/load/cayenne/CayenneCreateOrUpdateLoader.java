@@ -17,14 +17,15 @@ import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.load.CreateOrUpdateLoader;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.load.mapper.Mapper;
+import com.nhl.link.etl.task.createorupdate.CreateOrUpdateStrategy;
 
 public class CayenneCreateOrUpdateLoader<T extends DataObject> extends CreateOrUpdateLoader<T> {
 
 	protected final ObjectContext context;
-	protected final CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy;
+	protected final CreateOrUpdateStrategy<T> createOrUpdateStrategy;
 
 	public CayenneCreateOrUpdateLoader(Class<T> type, Execution execution, Mapper<T> mapper,
-			CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy, List<LoadListener<T>> transformListeners,
+			CreateOrUpdateStrategy<T> createOrUpdateStrategy, List<LoadListener<T>> transformListeners,
 			ObjectContext context) {
 
 		super(type, mapper, execution, transformListeners);

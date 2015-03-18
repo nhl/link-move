@@ -22,7 +22,6 @@ public class JdbcRowReader implements RowReader {
 	@Override
 	public Iterator<Row> iterator() {
 		final Iterator<DataRow> drIt = rows.iterator();
-		final DataRowRow flyweightRow = new DataRowRow(attributes);
 
 		return new Iterator<Row>() {
 			@Override
@@ -32,10 +31,7 @@ public class JdbcRowReader implements RowReader {
 
 			@Override
 			public Row next() {
-
-				DataRow dr = drIt.next();
-				flyweightRow.setRow(dr);
-				return flyweightRow;
+				return new DataRowRow(attributes, drIt.next());
 			}
 
 			@Override

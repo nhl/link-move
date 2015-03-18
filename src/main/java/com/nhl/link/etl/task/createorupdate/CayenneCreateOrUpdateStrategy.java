@@ -1,6 +1,8 @@
-package com.nhl.link.etl.load.cayenne;
+package com.nhl.link.etl.task.createorupdate;
 
-import com.nhl.link.etl.EtlRuntimeException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.cayenne.Cayenne;
 import org.apache.cayenne.DataObject;
@@ -12,16 +14,17 @@ import org.apache.cayenne.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.load.cayenne.RelationshipInfo;
+import com.nhl.link.etl.load.cayenne.RelationshipType;
 
-public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implements CayenneCreateOrUpdateStrategy<T> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultCayenneCreateOrUpdateStrategy.class);
+public class CayenneCreateOrUpdateStrategy<T extends DataObject> implements CreateOrUpdateStrategy<T> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CayenneCreateOrUpdateStrategy.class);
 
 	private final Map<String, RelationshipInfo> relationshipsByKeyAttributes;
 
-	public DefaultCayenneCreateOrUpdateStrategy(List<RelationshipInfo> relationships) {
+	public CayenneCreateOrUpdateStrategy(List<RelationshipInfo> relationships) {
 		relationshipsByKeyAttributes = new HashMap<>();
 		for (RelationshipInfo relationship : relationships) {
 			relationshipsByKeyAttributes.put(relationship.getKeyAttribute(), relationship);
@@ -36,22 +39,32 @@ public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implemen
 	}
 
 	@Override
-	public void update(ObjectContext context, Map<String, Object> source, T target) {
+	public boolean update(ObjectContext context, Map<String, Object> source, T target) {
+
+		if (source.entrySet().isEmpty()) {
+			return false;
+		}
+
+		boolean updated = false;
+
 		for (Map.Entry<String, Object> e : source.entrySet()) {
-			writeProperty(context, target, e.getKey(), e.getValue());
+			updated = writeProperty(context, target, e.getKey(), e.getValue()) || updated;
 		}
+
+		return updated;
 	}
 
-	protected void writeProperty(ObjectContext context, T target, String property, Object value) {
+	protected boolean writeProperty(ObjectContext context, T target, String property, Object value) {
 		if (relationshipsByKeyAttributes.containsKey(property)) {
-			writeRelationship(context, target, relationshipsByKeyAttributes.get(property), value);
+			return writeRelationship(context, target, relationshipsByKeyAttributes.get(property), value);
 		} else {
-			writeBasicProperty(context, target, property, value);
+			return writeBasicProperty(context, target, property, value);
 		}
 	}
 
-	private void writeRelationship(ObjectContext context, T target, RelationshipInfo relationship, Object value) {
+	private boolean writeRelationship(ObjectContext context, T target, RelationshipInfo relationship, Object value) {
 
+		boolean updated = false;
 		DataObject object;
 
 		if (value == null) {
@@ -66,6 +79,7 @@ public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implemen
 
 		if (relationship.getType() == RelationshipType.TO_ONE) {
 			target.setToOneTarget(relationship.getName(), object, true);
+			updated = true;
 		} else if (relationship.getType() == RelationshipType.TO_MANY) {
 
 			if (object == null) {
@@ -75,9 +89,12 @@ public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implemen
 			}
 
 			target.addToManyTarget(relationship.getName(), object, true);
+			updated = true;
 		} else {
 			throw new EtlRuntimeException("Unknown relationship type");
 		}
+		
+		return updated;
 	}
 
 	private DataObject resolveRelationshipObject(ObjectContext context, RelationshipInfo relationship, Object value) {
@@ -88,17 +105,21 @@ public class DefaultCayenneCreateOrUpdateStrategy<T extends DataObject> implemen
 				relationship.getRelationshipKeyAttribute(), value)));
 	}
 
-	private void writeBasicProperty(ObjectContext context, T target, String property, Object value) {
+	private boolean writeBasicProperty(ObjectContext context, T target, String property, Object value) {
 		// explicitly prevent phantom updates... this would allow us to track
 		// change stats by looking inside ObjectContext.
+		boolean updated = false;
 		if (!Util.nullSafeEquals(readProperty(target, property), value)) {
 			ObjEntity targetObjEntity = context.getEntityResolver().getObjEntity(target.getClass());
 			if (targetObjEntity.getAttribute(property) != null) {
 				target.writeProperty(property, value);
+				updated = true;
 			} else {
 				LOGGER.warn("Unknown attribute '{}' for entity '{}'", property, target.getClass());
 			}
 		}
+
+		return updated;
 	}
 
 	protected Object readProperty(T target, String property) {

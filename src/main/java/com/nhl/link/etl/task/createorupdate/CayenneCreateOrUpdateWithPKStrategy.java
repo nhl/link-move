@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.cayenne;
+package com.nhl.link.etl.task.createorupdate;
 
 import java.util.List;
 import java.util.Map;
@@ -11,10 +11,11 @@ import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.load.cayenne.RelationshipInfo;
 
 // TODO: this strategy should be merged into superclass once we start programming IDs using "db:" expressions... 
 // ID update/merge mechanism is generic and does not depend on the selected mapper.
-public class CayenneCreateOrUpdateWithPKStrategy<T extends DataObject> extends DefaultCayenneCreateOrUpdateStrategy<T> {
+public class CayenneCreateOrUpdateWithPKStrategy<T extends DataObject> extends CayenneCreateOrUpdateStrategy<T> {
 	private final String primaryKeyAttribute;
 
 	public CayenneCreateOrUpdateWithPKStrategy(List<RelationshipInfo> relationships, String primaryKeyAttribute) {
@@ -24,8 +25,7 @@ public class CayenneCreateOrUpdateWithPKStrategy<T extends DataObject> extends D
 
 	@Override
 	public T create(ObjectContext context, Class<T> type, Map<String, Object> source) {
-		T target = context.newObject(type);
-		update(context, source, target);
+		T target = super.create(context, type, source);
 
 		// merge ID..
 
@@ -73,11 +73,16 @@ public class CayenneCreateOrUpdateWithPKStrategy<T extends DataObject> extends D
 	}
 
 	@Override
-	public void update(ObjectContext context, Map<String, Object> source, T target) {
+	public boolean update(ObjectContext context, Map<String, Object> source, T target) {
+
+		boolean updated = false;
+
 		for (Map.Entry<String, Object> e : source.entrySet()) {
 			if (!e.getKey().equals(primaryKeyAttribute)) {
-				writeProperty(context, target, e.getKey(), e.getValue());
+				updated = writeProperty(context, target, e.getKey(), e.getValue()) || updated;
 			}
 		}
+
+		return updated;
 	}
 }

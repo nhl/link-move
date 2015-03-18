@@ -25,7 +25,7 @@ public class TaskService implements ITaskService {
 
 	@Override
 	public <T extends DataObject> TaskBuilder<T> createTaskBuilder(Class<T> type) {
-		return new DefaultTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager, keyBuilderFactory);
+		return new CreateOrUpdateTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager, keyBuilderFactory);
 	}
 
 }

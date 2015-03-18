@@ -4,32 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.cayenne.DataObject;
-import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
-import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.Row;
-import com.nhl.link.etl.RowReader;
-import com.nhl.link.etl.SyncToken;
-import com.nhl.link.etl.batch.BatchProcessor;
-import com.nhl.link.etl.batch.BatchRunner;
-import com.nhl.link.etl.batch.converter.RowToTargetMapConverter;
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.load.LoadListener;
-import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateLoader;
-import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateStrategy;
-import com.nhl.link.etl.load.cayenne.CayenneCreateOrUpdateWithPKStrategy;
-import com.nhl.link.etl.load.cayenne.DefaultCayenneCreateOrUpdateStrategy;
 import com.nhl.link.etl.load.cayenne.RelationshipInfo;
 import com.nhl.link.etl.load.cayenne.RelationshipType;
 import com.nhl.link.etl.load.mapper.AttributeMapper;
@@ -38,17 +22,25 @@ import com.nhl.link.etl.load.mapper.KeyAdapter;
 import com.nhl.link.etl.load.mapper.Mapper;
 import com.nhl.link.etl.load.mapper.MultiAttributeMapper;
 import com.nhl.link.etl.load.mapper.SafeMapKeyMapper;
-import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
+import com.nhl.link.etl.task.createorupdate.CayenneCreateOrUpdateStrategy;
+import com.nhl.link.etl.task.createorupdate.CayenneCreateOrUpdateWithPKStrategy;
+import com.nhl.link.etl.task.createorupdate.CreateOrUpdateMerger;
+import com.nhl.link.etl.task.createorupdate.CreateOrUpdateSegmentProcessor;
+import com.nhl.link.etl.task.createorupdate.CreateOrUpdateStrategy;
+import com.nhl.link.etl.task.createorupdate.CreateOrUpdateTask;
+import com.nhl.link.etl.task.createorupdate.RowConverter;
+import com.nhl.link.etl.task.createorupdate.SourceMapper;
+import com.nhl.link.etl.task.createorupdate.TargetMatcher;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
  * certain unique attribute on both sides.
  */
-public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> {
+public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuilder<T> {
 
 	private static final int DEFAULT_BATCH_SIZE = 500;
 
@@ -61,15 +53,15 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	private String extractorName;
 	private int batchSize;
 	private List<RelationshipInfo> relationships;
-	private List<LoadListener<T>> transformListeners;
+	private List<LoadListener<T>> loadListeners;
 
 	private Mapper<T> mapper;
 	private boolean byId;
 	private List<String> keyAttributes;
 
 	@SuppressWarnings("unchecked")
-	DefaultTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService, IExtractorService extractorService,
-			ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
+	CreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
+			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
 		this.extractorService = extractorService;
 		this.batchSize = DEFAULT_BATCH_SIZE;
@@ -79,20 +71,20 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 		this.relationships = new ArrayList<>();
 		this.keyMapAdapterFactory = keyMapAdapterFactory;
 
-		this.transformListeners = new ArrayList<>();
+		this.loadListeners = new ArrayList<>();
 
 		// always add stats listener..
-		transformListeners.add(StatsLoadListener.instance());
+		loadListeners.add(StatsLoadListener.instance());
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withExtractor(String extractorName) {
+	public CreateOrUpdateTaskBuilder<T> withExtractor(String extractorName) {
 		this.extractorName = extractorName;
 		return this;
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> matchBy(Mapper<T> mapper) {
+	public CreateOrUpdateTaskBuilder<T> matchBy(Mapper<T> mapper) {
 		this.byId = false;
 		this.mapper = mapper;
 		this.keyAttributes = null;
@@ -100,7 +92,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> matchBy(String... keyAttributes) {
+	public CreateOrUpdateTaskBuilder<T> matchBy(String... keyAttributes) {
 		this.byId = false;
 		this.mapper = null;
 		this.keyAttributes = Arrays.asList(keyAttributes);
@@ -111,7 +103,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	 * @since 1.1
 	 */
 	@Override
-	public DefaultTaskBuilder<T> matchBy(Property<?>... matchAttributes) {
+	public CreateOrUpdateTaskBuilder<T> matchBy(Property<?>... matchAttributes) {
 
 		// it will fail later on 'build'; TODO: should we do early argument
 		// checking?
@@ -131,7 +123,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	 */
 	@Deprecated
 	@Override
-	public DefaultTaskBuilder<T> matchByPrimaryKey(String idProperty) {
+	public CreateOrUpdateTaskBuilder<T> matchByPrimaryKey(String idProperty) {
 		return matchById(idProperty);
 	}
 
@@ -139,7 +131,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	 * @since 1.1
 	 */
 	@Override
-	public DefaultTaskBuilder<T> matchById(String idProperty) {
+	public CreateOrUpdateTaskBuilder<T> matchById(String idProperty) {
 		this.byId = true;
 		this.mapper = null;
 		this.keyAttributes = Collections.singletonList(idProperty);
@@ -147,27 +139,27 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withBatchSize(int batchSize) {
+	public CreateOrUpdateTaskBuilder<T> withBatchSize(int batchSize) {
 		this.batchSize = batchSize;
 		return this;
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
+	public CreateOrUpdateTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType));
 		return this;
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
+	public CreateOrUpdateTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType));
 		return this;
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
+	public CreateOrUpdateTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
 				relationshipKeyAttribute));
@@ -175,7 +167,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
+	public CreateOrUpdateTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
 				relationshipKeyAttribute));
@@ -183,8 +175,8 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 	}
 
 	@Override
-	public DefaultTaskBuilder<T> withListener(LoadListener<T> listener) {
-		this.transformListeners.add(listener);
+	public CreateOrUpdateTaskBuilder<T> withListener(LoadListener<T> listener) {
+		this.loadListeners.add(listener);
 		return this;
 	}
 
@@ -219,7 +211,39 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 		}
 	}
 
-	private Mapper<T> createMatcher() {
+	@Override
+	public EtlTask task() throws IllegalStateException {
+
+		if (extractorName == null) {
+			throw new IllegalStateException("Required 'extractorName' is not set");
+		}
+
+		return new CreateOrUpdateTask<T>(extractorName, batchSize, targetCayenneService, tokenManager,
+				extractorService, createProcessor());
+	}
+
+	private CreateOrUpdateSegmentProcessor<T> createProcessor() {
+
+		Mapper<T> mapper = createMapper();
+		CreateOrUpdateStrategy<T> createOrUpdateStrategy = createCreateOrUpdateStrategy();
+
+		SourceMapper<T> sourceMapper = new SourceMapper<>(mapper);
+		TargetMatcher<T> targetMatcher = new TargetMatcher<>(mapper);
+		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(mapper, createOrUpdateStrategy);
+
+		return new CreateOrUpdateSegmentProcessor<>(type, RowConverter.instance(), sourceMapper, targetMatcher, merger,
+				loadListeners);
+	}
+
+	private CreateOrUpdateStrategy<T> createCreateOrUpdateStrategy() {
+		if (byId) {
+			return new CayenneCreateOrUpdateWithPKStrategy<>(relationships, getSingleMatchAttribute());
+		} else {
+			return new CayenneCreateOrUpdateStrategy<>(relationships);
+		}
+	}
+
+	private Mapper<T> createMapper() {
 
 		// not wrapping custom matcher, presuming the user knows what's he's
 		// doing and his matcher generates proper keys
@@ -271,95 +295,4 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 		return pks.iterator().next();
 	}
 
-	@Override
-	public EtlTask task() throws IllegalStateException {
-
-		if (extractorName == null) {
-			throw new IllegalStateException("Required 'extractorName' is not set");
-		}
-
-		final Mapper<T> matcher = createMatcher();
-
-		return new EtlTask() {
-
-			@Override
-			public Execution run() {
-				return run(SyncToken.nullToken(extractorName));
-			}
-
-			@Override
-			public Execution run(SyncToken token) {
-
-				try (Execution execution = new Execution(token);) {
-					ObjectContext context = targetCayenneService.newContext();
-
-					CayenneCreateOrUpdateStrategy<T> createOrUpdateStrategy;
-					if (byId) {
-						createOrUpdateStrategy = new CayenneCreateOrUpdateWithPKStrategy<>(relationships,
-								getSingleMatchAttribute());
-					} else {
-						createOrUpdateStrategy = new DefaultCayenneCreateOrUpdateStrategy<>(relationships);
-					}
-
-					// processor is stateful and is not thread-safe, so creating
-					// it every time...
-					BatchProcessor<Map<String, Object>> processor = new CayenneCreateOrUpdateLoader<>(type, execution,
-							matcher, createOrUpdateStrategy, transformListeners, context);
-
-					ExtractorParameters extractorParams = new ExtractorParameters();
-					SyncToken startToken = tokenManager.previousToken(token);
-					extractorParams.add(EtlRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
-					extractorParams.add(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
-
-					try (RowReader data = getRowReader(execution, extractorName, extractorParams)) {
-						BatchRunner.create(processor).withBatchSize(batchSize).run(data, RowToTargetMapConverter.instance());
-						tokenManager.saveToken(token);
-					}
-
-					return execution;
-				}
-			}
-		};
-	}
-
-	/**
-	 * Returns a RowReader obtained from a named extractor and wrapped in a read
-	 * stats counter.
-	 */
-	protected RowReader getRowReader(final Execution execution, String extractorName,
-			ExtractorParameters extractorParams) {
-
-		Extractor extractor = extractorService.getExtractor(extractorName);
-		final RowReader reader = extractor.getReader(extractorParams);
-		return new RowReader() {
-
-			@Override
-			public Iterator<Row> iterator() {
-				final Iterator<Row> it = reader.iterator();
-
-				return new Iterator<Row>() {
-					@Override
-					public boolean hasNext() {
-						return it.hasNext();
-					}
-
-					@Override
-					public void remove() {
-						it.remove();
-					}
-
-					@Override
-					public Row next() {
-						execution.incrementExtracted(1);
-						return it.next();
-					}
-				};
-			}
-
-			@Override
-			public void close() {
-				reader.close();
-			}
-		};
-	}
 }
