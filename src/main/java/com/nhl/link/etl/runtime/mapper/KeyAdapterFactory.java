@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.load.mapper;
+package com.nhl.link.etl.runtime.mapper;
 
 import java.util.HashMap;
 import java.util.Map;

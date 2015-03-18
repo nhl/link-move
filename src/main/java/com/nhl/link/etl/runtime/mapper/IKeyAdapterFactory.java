@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.load.mapper;
+package com.nhl.link.etl.runtime.mapper;
 
 import com.nhl.link.etl.mapper.KeyAdapter;
 
