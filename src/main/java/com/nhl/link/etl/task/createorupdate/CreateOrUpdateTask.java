@@ -2,73 +2,69 @@ package com.nhl.link.etl.task.createorupdate;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.cayenne.ObjectContext;
 
-import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
-import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.Extractor;
 import com.nhl.link.etl.extract.ExtractorParameters;
-import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
+import com.nhl.link.etl.task.BaseTask;
 
 /**
  * @since 1.3
  */
-public class CreateOrUpdateTask<T> implements EtlTask {
+public class CreateOrUpdateTask<T> extends BaseTask {
 
 	private String extractorName;
 	private int batchSize;
 	private ITargetCayenneService targetCayenneService;
-	private ITokenManager tokenManager;
 	private IExtractorService extractorService;
 	private CreateOrUpdateSegmentProcessor<T> processor;
 
 	public CreateOrUpdateTask(String extractorName, int batchSize, ITargetCayenneService targetCayenneService,
-			ITokenManager tokenManager, IExtractorService extractorService, CreateOrUpdateSegmentProcessor<T> processor) {
+			IExtractorService extractorService, ITokenManager tokenManager, CreateOrUpdateSegmentProcessor<T> processor) {
+
+		super(tokenManager);
 
 		this.extractorName = extractorName;
 		this.batchSize = batchSize;
 		this.targetCayenneService = targetCayenneService;
-		this.tokenManager = tokenManager;
 		this.extractorService = extractorService;
 		this.processor = processor;
 	}
 
 	@Override
-	public Execution run() {
-		return run(SyncToken.nullToken(extractorName));
-	}
+	public Execution run(Map<String, Object> params) {
 
-	@Override
-	public Execution run(SyncToken token) {
-
-		try (Execution execution = new Execution(token);) {
+		try (Execution execution = new Execution(extractorName, params);) {
 
 			BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-			ExtractorParameters extractorParams = createExtractorParameters(token);
+			ExtractorParameters extractorParams = createExtractorParameters(params);
 
 			try (RowReader data = getRowReader(execution, extractorParams)) {
 				BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
-				tokenManager.saveToken(token);
 			}
 
 			return execution;
 		}
 	}
 
-	protected ExtractorParameters createExtractorParameters(SyncToken token) {
+	protected ExtractorParameters createExtractorParameters(Map<String, Object> params) {
 		ExtractorParameters extractorParams = new ExtractorParameters();
-		SyncToken startToken = tokenManager.previousToken(token);
-		extractorParams.add(EtlRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
-		extractorParams.add(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
+
+		for (Entry<String, Object> e : params.entrySet()) {
+			extractorParams.add(e.getKey(), e.getValue());
+		}
+
 		return extractorParams;
 	}
 

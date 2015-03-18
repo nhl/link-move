@@ -210,8 +210,8 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 			throw new IllegalStateException("Required 'extractorName' is not set");
 		}
 
-		return new CreateOrUpdateTask<T>(extractorName, batchSize, targetCayenneService, tokenManager,
-				extractorService, createProcessor());
+		return new CreateOrUpdateTask<T>(extractorName, batchSize, targetCayenneService, extractorService,
+				tokenManager, createProcessor());
 	}
 
 	private CreateOrUpdateSegmentProcessor<T> createProcessor() {

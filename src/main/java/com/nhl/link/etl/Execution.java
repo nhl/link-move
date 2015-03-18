@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Represents a single execution of an {@link EtlTask}. Tracks task parameters
@@ -12,16 +13,18 @@ import java.util.Map;
  */
 public class Execution implements AutoCloseable {
 
-	protected SyncToken syncToken;
+	protected String name;
+	protected Map<String, ?> parameters;
 	protected long extracted;
 	protected long created;
 	protected long updated;
 	protected long started;
 	protected long finished;
 
-	public Execution(SyncToken token) {
+	public Execution(String name, Map<String, ?> params) {
 		this.started = System.currentTimeMillis();
-		this.syncToken = token;
+		this.name = name;
+		this.parameters = params;
 	}
 
 	@Override
@@ -38,15 +41,18 @@ public class Execution implements AutoCloseable {
 	 * Creates task execution report as a map of labels vs. values.
 	 */
 	public Map<String, Object> createReport() {
+
 		// let's keep order of insertion consistent so that the report is easily
 		// printable
 		Map<String, Object> report = new LinkedHashMap<>();
 
-		if (syncToken.getName() != null) {
-			report.put("Task", syncToken.getName());
+		if (name != null) {
+			report.put("Task", name);
 		}
 
-		report.put("Token", syncToken.getValue());
+		for (Entry<String, ?> p : parameters.entrySet()) {
+			report.put("Parameter[" + p.getKey() + "]", p.getValue());
+		}
 
 		DateFormat format = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
 
@@ -77,8 +83,11 @@ public class Execution implements AutoCloseable {
 		this.updated += count;
 	}
 
-	public SyncToken getSyncToken() {
-		return syncToken;
+	/**
+	 * @since 1.3
+	 */
+	public Map<String, ?> getParameters() {
+		return parameters;
 	}
 
 	public long getExtracted() {
