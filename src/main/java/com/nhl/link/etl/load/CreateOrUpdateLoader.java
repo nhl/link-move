@@ -1,7 +1,6 @@
 package com.nhl.link.etl.load;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +25,6 @@ public abstract class CreateOrUpdateLoader<T extends DataObject> implements Batc
 	protected final Execution execution;
 	protected final Mapper<T> mapper;
 	protected final List<LoadListener<T>> transformListeners;
-
-	protected CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper, Execution execution) {
-		this(type, mapper, execution, Collections.<LoadListener<T>> emptyList());
-	}
 
 	public CreateOrUpdateLoader(Class<T> type, Mapper<T> mapper, Execution execution,
 			List<LoadListener<T>> transformListeners) {

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * A callback for the {@link BatchRunner}.
  */
-public interface BatchProcessor<T> {
+public interface BatchProcessor<S> {
 
-	void process(List<T> segment);
+	void process(List<S> segment);
 }

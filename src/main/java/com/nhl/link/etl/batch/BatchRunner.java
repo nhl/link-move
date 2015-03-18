@@ -3,6 +3,15 @@ package com.nhl.link.etl.batch;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nhl.link.etl.transform.PassThroughConverter;
+
+/**
+ * Provides a micro-batch execution facility that breaks an incoming stream into
+ * segments of a predefined size and passes them in turn to the processor.
+ *
+ * @param <T>
+ *            type of the batch source data.
+ */
 public class BatchRunner<T> {
 
 	static final int DEFAULT_BATCH_SIZE = 500;
@@ -23,32 +32,22 @@ public class BatchRunner<T> {
 		this.batchSize = batchSize;
 		return this;
 	}
-	
+
 	/**
-	 * Splits the iteration into batched segments according to 'batchSize'
-	 * property and runs each segment via a callback {@link BatchProcessor}.
+	 * Splits the iterator into segments according to 'batchSize' property and
+	 * runs each segment via a callback {@link BatchProcessor}.
 	 */
-	public void run(Iterable<T> objects) {
-
-		List<T> batch = new ArrayList<>(batchSize);
-
-		for (T o : objects) {
-
-			batch.add(o);
-
-			if (batch.size() % batchSize == 0) {
-
-				processor.process(batch);
-				batch.clear();
-			}
-		}
-
-		if (!batch.isEmpty()) {
-			processor.process(batch);
-		}
+	public void run(Iterable<T> source) {
+		run(source, PassThroughConverter.<T> instance());
 	}
 
-	public <S> void run(final Iterable<S> source, final BatchConverter<S, T> converter) {
+	/**
+	 * Splits the iterator into segments according to 'batchSize' property, then
+	 * converts each segment from type S to the processor type T using provided
+	 * converter and finally executes a converted segment with
+	 * {@link BatchProcessor}.
+	 */
+	public <S> void run(final Iterable<S> source, BatchConverter<S, T> converter) {
 
 		// reuse converted objects to minimize GC between batches
 

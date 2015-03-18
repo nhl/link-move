@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -19,6 +20,7 @@ import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.SyncToken;
+import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.Extractor;
 import com.nhl.link.etl.extract.ExtractorParameters;
@@ -40,7 +42,7 @@ import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.transform.MapTransformer;
+import com.nhl.link.etl.transform.RowToTargetMapConverter;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -180,6 +182,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 		return this;
 	}
 
+	@Override
 	public DefaultTaskBuilder<T> withListener(LoadListener<T> listener) {
 		this.transformListeners.add(listener);
 		return this;
@@ -300,7 +303,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 
 					// processor is stateful and is not thread-safe, so creating
 					// it every time...
-					CayenneCreateOrUpdateLoader<T> processor = new CayenneCreateOrUpdateLoader<>(type, execution,
+					BatchProcessor<Map<String, Object>> processor = new CayenneCreateOrUpdateLoader<>(type, execution,
 							matcher, createOrUpdateStrategy, transformListeners, context);
 
 					ExtractorParameters extractorParams = new ExtractorParameters();
@@ -309,7 +312,7 @@ public class DefaultTaskBuilder<T extends DataObject> implements TaskBuilder<T> 
 					extractorParams.add(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
 
 					try (RowReader data = getRowReader(execution, extractorName, extractorParams)) {
-						BatchRunner.create(processor).withBatchSize(batchSize).run(data, MapTransformer.instance());
+						BatchRunner.create(processor).withBatchSize(batchSize).run(data, RowToTargetMapConverter.instance());
 						tokenManager.saveToken(token);
 					}
 

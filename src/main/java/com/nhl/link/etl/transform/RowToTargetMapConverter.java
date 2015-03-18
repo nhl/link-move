@@ -8,19 +8,20 @@ import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.batch.BatchConverter;
 
 /**
- * A simple direct transformer of the extracted data.
+ * Converts source {@link Row} to a map containing row column values by ETL
+ * target key.
  * 
- * @since 1.1
+ * @since 1.3
  */
-public class MapTransformer implements BatchConverter<Row, Map<String, Object>> {
+public class RowToTargetMapConverter implements BatchConverter<Row, Map<String, Object>> {
 
-	private static final BatchConverter<Row, Map<String, Object>> instance = new MapTransformer();
+	private static final BatchConverter<Row, Map<String, Object>> instance = new RowToTargetMapConverter();
 
 	public static BatchConverter<Row, Map<String, Object>> instance() {
 		return instance;
 	}
 
-	private MapTransformer() {
+	private RowToTargetMapConverter() {
 		// private noop constructor
 	}
 
