@@ -1,5 +1,6 @@
 Release 1.3
 
+#25 Parameterized queries for Extractors
 #26 Refactoring ETL stack to expose processing chain in the object design
 #27 Upgrade to official Cayenne 4.0.M2
 
