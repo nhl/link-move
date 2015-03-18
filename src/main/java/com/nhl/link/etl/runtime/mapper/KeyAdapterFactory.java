@@ -8,11 +8,11 @@ import com.nhl.link.etl.mapper.KeyAdapter;
 
 public class KeyAdapterFactory implements IKeyAdapterFactory {
 
-	private KeyAdapter noopBuilder;
-	private Map<Class<?>, KeyAdapter> builders;
+	private KeyAdapter noopAdapter;
+	private Map<Class<?>, KeyAdapter> adapters;
 
 	public KeyAdapterFactory() {
-		this.noopBuilder = new KeyAdapter() {
+		this.noopAdapter = new KeyAdapter() {
 
 			@Override
 			public Object toMapKey(Object rawKey) {
@@ -25,15 +25,15 @@ public class KeyAdapterFactory implements IKeyAdapterFactory {
 			}
 		};
 
-		this.builders = new HashMap<>();
-		this.builders.put(byte[].class, new ByteArrayKeyAdapter());
+		this.adapters = new HashMap<>();
+		this.adapters.put(byte[].class, new ByteArrayKeyAdapter());
 	}
 
 	@Override
 	public KeyAdapter adapter(Class<?> type) {
-		KeyAdapter b = builders.get(type);
+		KeyAdapter b = adapters.get(type);
 
-		return b != null ? b : noopBuilder;
+		return b != null ? b : noopAdapter;
 	}
 
 }
