@@ -31,15 +31,15 @@ public class RowToTargetMapConverter implements BatchConverter<Row, Map<String, 
 	}
 
 	@Override
-	public Map<String, Object> fromTemplate(Row source, Map<String, Object> targetTemplate) {
+	public Map<String, Object> fromTemplate(Row rawSource, Map<String, Object> template) {
 
 		// reusing template for new values
-		targetTemplate.clear();
+		template.clear();
 
-		for (RowAttribute key : source.attributes()) {
-			targetTemplate.put(key.targetName(), source.get(key));
+		for (RowAttribute key : rawSource.attributes()) {
+			template.put(key.targetName(), rawSource.get(key));
 		}
 
-		return targetTemplate;
+		return template;
 	}
 }

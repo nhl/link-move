@@ -27,7 +27,7 @@ public class PassThroughConverter<S> implements BatchConverter<S, S> {
 	}
 
 	@Override
-	public S fromTemplate(S source, S targetTemplate) {
-		return source;
+	public S fromTemplate(S rawSource, S template) {
+		return rawSource;
 	}
 }

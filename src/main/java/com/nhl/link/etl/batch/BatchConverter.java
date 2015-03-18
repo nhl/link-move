@@ -10,5 +10,5 @@ public interface BatchConverter<R, S> {
 
 	S createTemplate();
 
-	S fromTemplate(R source, S targetTemplate);
+	S fromTemplate(R rawSource, S template);
 }
