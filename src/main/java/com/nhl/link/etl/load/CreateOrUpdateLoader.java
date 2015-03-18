@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.PersistenceState;
-
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.batch.BatchProcessor;
@@ -19,7 +16,7 @@ import com.nhl.link.etl.load.mapper.Mapper;
  * Cayenne objects with a provided matcher. Targets are created if missing or
  * updated if present.
  */
-public abstract class CreateOrUpdateLoader<T extends DataObject> implements BatchProcessor<Map<String, Object>> {
+public abstract class CreateOrUpdateLoader<T> implements BatchProcessor<Map<String, Object>> {
 
 	protected final Class<T> type;
 	protected final Execution execution;
@@ -80,19 +77,15 @@ public abstract class CreateOrUpdateLoader<T extends DataObject> implements Batc
 		return byKey;
 	}
 
-	private void fireTargetCreated(Map<String, Object> source, T target) {
+	protected void fireTargetCreated(Map<String, Object> source, T target) {
 		for (LoadListener<T> listener : transformListeners) {
 			listener.targetCreated(execution, source, target);
 		}
 	}
 
-	private void fireTargetUpdated(Map<String, Object> source, T target) {
-
-		// prevent phantom events
-		if (target.getPersistenceState() == PersistenceState.MODIFIED) {
-			for (LoadListener<T> listener : transformListeners) {
-				listener.targetUpdated(execution, source, target);
-			}
+	protected void fireTargetUpdated(Map<String, Object> source, T target) {
+		for (LoadListener<T> listener : transformListeners) {
+			listener.targetUpdated(execution, source, target);
 		}
 	}
 }

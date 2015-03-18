@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.PersistenceState;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
@@ -74,5 +75,13 @@ public class CayenneCreateOrUpdateLoader<T extends DataObject> extends CreateOrU
 		SelectQuery<T> query = SelectQuery.query(type);
 		query.setQualifier(ExpressionFactory.joinExp(Expression.OR, expressions));
 		return context.select(query);
+	}
+
+	@Override
+	protected void fireTargetUpdated(Map<String, Object> source, T target) {
+		// prevent phantom events
+		if (target.getPersistenceState() == PersistenceState.MODIFIED) {
+			super.fireTargetUpdated(source, target);
+		}
 	}
 }
