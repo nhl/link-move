@@ -11,7 +11,7 @@ import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.load.cayenne.RelationshipInfo;
+import com.nhl.link.etl.metadata.RelationshipInfo;
 
 // TODO: this strategy should be merged into superclass once we start programming IDs using "db:" expressions... 
 // ID update/merge mechanism is generic and does not depend on the selected mapper.

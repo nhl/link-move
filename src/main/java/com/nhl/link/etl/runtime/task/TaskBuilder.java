@@ -4,8 +4,8 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
 
 import com.nhl.link.etl.EtlTask;
-import com.nhl.link.etl.load.LoadListener;
-import com.nhl.link.etl.load.mapper.Mapper;
+import com.nhl.link.etl.LoadListener;
+import com.nhl.link.etl.mapper.Mapper;
 
 /**
  * @since 1.1

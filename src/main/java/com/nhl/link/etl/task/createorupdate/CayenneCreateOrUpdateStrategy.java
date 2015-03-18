@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.load.cayenne.RelationshipInfo;
-import com.nhl.link.etl.load.cayenne.RelationshipType;
+import com.nhl.link.etl.metadata.RelationshipInfo;
+import com.nhl.link.etl.metadata.RelationshipType;
 
 public class CayenneCreateOrUpdateStrategy<T extends DataObject> implements CreateOrUpdateStrategy<T> {
 

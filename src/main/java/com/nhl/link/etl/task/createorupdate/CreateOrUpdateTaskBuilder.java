@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.task;
+package com.nhl.link.etl.task.createorupdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,28 +13,20 @@ import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
-import com.nhl.link.etl.load.LoadListener;
-import com.nhl.link.etl.load.cayenne.RelationshipInfo;
-import com.nhl.link.etl.load.cayenne.RelationshipType;
-import com.nhl.link.etl.load.mapper.AttributeMapper;
-import com.nhl.link.etl.load.mapper.IdMapper;
-import com.nhl.link.etl.load.mapper.KeyAdapter;
-import com.nhl.link.etl.load.mapper.Mapper;
-import com.nhl.link.etl.load.mapper.MultiAttributeMapper;
-import com.nhl.link.etl.load.mapper.SafeMapKeyMapper;
+import com.nhl.link.etl.LoadListener;
+import com.nhl.link.etl.mapper.AttributeMapper;
+import com.nhl.link.etl.mapper.IdMapper;
+import com.nhl.link.etl.mapper.KeyAdapter;
+import com.nhl.link.etl.mapper.Mapper;
+import com.nhl.link.etl.mapper.MultiAttributeMapper;
+import com.nhl.link.etl.mapper.SafeMapKeyMapper;
+import com.nhl.link.etl.metadata.RelationshipInfo;
+import com.nhl.link.etl.metadata.RelationshipType;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.task.TaskBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.task.createorupdate.CayenneCreateOrUpdateStrategy;
-import com.nhl.link.etl.task.createorupdate.CayenneCreateOrUpdateWithPKStrategy;
-import com.nhl.link.etl.task.createorupdate.CreateOrUpdateMerger;
-import com.nhl.link.etl.task.createorupdate.CreateOrUpdateSegmentProcessor;
-import com.nhl.link.etl.task.createorupdate.CreateOrUpdateStrategy;
-import com.nhl.link.etl.task.createorupdate.CreateOrUpdateTask;
-import com.nhl.link.etl.task.createorupdate.RowConverter;
-import com.nhl.link.etl.task.createorupdate.SourceMapper;
-import com.nhl.link.etl.task.createorupdate.TargetMatcher;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -60,7 +52,7 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	private List<String> keyAttributes;
 
 	@SuppressWarnings("unchecked")
-	CreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
+	public CreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
 		this.extractorService = extractorService;

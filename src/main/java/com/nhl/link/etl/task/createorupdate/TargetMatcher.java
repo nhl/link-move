@@ -11,7 +11,7 @@ import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.SelectQuery;
 
-import com.nhl.link.etl.load.mapper.Mapper;
+import com.nhl.link.etl.mapper.Mapper;
 
 /**
  * @since 1.3

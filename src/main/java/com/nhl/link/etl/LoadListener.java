@@ -1,8 +1,6 @@
-package com.nhl.link.etl.load;
+package com.nhl.link.etl;
 
 import java.util.Map;
-
-import com.nhl.link.etl.Execution;
 
 /**
  * A listener for load-stage events.

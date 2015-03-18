@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.mapper;
+package com.nhl.link.etl.mapper;
 
 import static org.apache.cayenne.exp.ExpressionFactory.joinExp;
 

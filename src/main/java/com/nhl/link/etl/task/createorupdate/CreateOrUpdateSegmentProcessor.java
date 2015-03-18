@@ -3,7 +3,7 @@ package com.nhl.link.etl.task.createorupdate;
 import java.util.List;
 
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.load.LoadListener;
+import com.nhl.link.etl.LoadListener;
 
 /**
  * A stateless thread-safe processor of a single batch segment of a

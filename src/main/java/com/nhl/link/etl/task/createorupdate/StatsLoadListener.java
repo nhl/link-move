@@ -1,9 +1,9 @@
-package com.nhl.link.etl.runtime.task;
+package com.nhl.link.etl.task.createorupdate;
 
 import java.util.Map;
 
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.load.LoadListener;
+import com.nhl.link.etl.LoadListener;
 
 /**
  * A {@link LoadListener} that collects load stats and places them in the

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.load.cayenne;
+package com.nhl.link.etl.metadata;
 
 import org.apache.cayenne.DataObject;
 

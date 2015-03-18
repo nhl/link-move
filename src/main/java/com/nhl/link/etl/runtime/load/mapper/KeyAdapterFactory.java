@@ -3,8 +3,8 @@ package com.nhl.link.etl.runtime.load.mapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.nhl.link.etl.load.mapper.ByteArrayKeyAdapter;
-import com.nhl.link.etl.load.mapper.KeyAdapter;
+import com.nhl.link.etl.mapper.ByteArrayKeyAdapter;
+import com.nhl.link.etl.mapper.KeyAdapter;
 
 public class KeyAdapterFactory implements IKeyAdapterFactory {
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.etl.load.mapper.Mapper;
+import com.nhl.link.etl.mapper.Mapper;
 
 /**
  * @since 1.3

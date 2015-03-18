@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import org.apache.cayenne.ObjectContext;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.load.mapper.Mapper;
+import com.nhl.link.etl.mapper.Mapper;
 
 /**
  * @since 1.3
