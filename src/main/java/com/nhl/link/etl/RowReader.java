@@ -2,7 +2,7 @@ package com.nhl.link.etl;
 
 /**
  * An iterator over the source data of the ETL. Each data "row" is represented
- * as an Object[].
+ * as a {@link Row}.
  */
 public interface RowReader extends AutoCloseable, Iterable<Row> {
 
