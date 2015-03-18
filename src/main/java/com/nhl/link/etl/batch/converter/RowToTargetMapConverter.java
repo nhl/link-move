@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.batch.converter;
 
 import java.util.HashMap;
 import java.util.Map;

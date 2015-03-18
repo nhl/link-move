@@ -3,32 +3,32 @@ package com.nhl.link.etl.batch;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nhl.link.etl.transform.PassThroughConverter;
+import com.nhl.link.etl.batch.converter.PassThroughConverter;
 
 /**
  * Provides a micro-batch execution facility that breaks an incoming stream into
  * segments of a predefined size and passes them in turn to the processor.
  *
- * @param <T>
+ * @param <S>
  *            type of the batch source data.
  */
-public class BatchRunner<T> {
+public class BatchRunner<S> {
 
 	static final int DEFAULT_BATCH_SIZE = 500;
 
 	private int batchSize;
-	private BatchProcessor<T> processor;
+	private BatchProcessor<S> processor;
 
-	public static <T> BatchRunner<T> create(BatchProcessor<T> processor) {
-		return new BatchRunner<T>(processor);
+	public static <S> BatchRunner<S> create(BatchProcessor<S> processor) {
+		return new BatchRunner<>(processor);
 	}
 
-	private BatchRunner(BatchProcessor<T> processor) {
+	private BatchRunner(BatchProcessor<S> processor) {
 		this.batchSize = DEFAULT_BATCH_SIZE;
 		this.processor = processor;
 	}
 
-	public BatchRunner<T> withBatchSize(int batchSize) {
+	public BatchRunner<S> withBatchSize(int batchSize) {
 		this.batchSize = batchSize;
 		return this;
 	}
@@ -37,8 +37,8 @@ public class BatchRunner<T> {
 	 * Splits the iterator into segments according to 'batchSize' property and
 	 * runs each segment via a callback {@link BatchProcessor}.
 	 */
-	public void run(Iterable<T> source) {
-		run(source, PassThroughConverter.<T> instance());
+	public void run(Iterable<S> source) {
+		run(source, PassThroughConverter.<S> instance());
 	}
 
 	/**
@@ -46,13 +46,18 @@ public class BatchRunner<T> {
 	 * converts each segment from type S to the processor type T using provided
 	 * converter and finally executes a converted segment with
 	 * {@link BatchProcessor}.
+	 * 
+	 * @param <R>
+	 *            a "raw" source type that is preconverted to S by the supplied
+	 *            {@link BatchConverter} before being passed to
+	 *            {@link BatchProcessor}.
 	 */
-	public <S> void run(final Iterable<S> source, BatchConverter<S, T> converter) {
+	public <R> void run(final Iterable<R> source, BatchConverter<R, S> converter) {
 
 		// reuse converted objects to minimize GC between batches
 
-		List<T> templates = new ArrayList<>(batchSize);
-		List<T> batch = new ArrayList<>(batchSize);
+		List<S> templates = new ArrayList<>(batchSize);
+		List<S> batch = new ArrayList<>(batchSize);
 
 		for (int i = 0; i < batchSize; i++) {
 			templates.add(converter.createTemplate());
@@ -60,9 +65,9 @@ public class BatchRunner<T> {
 
 		int i = 0;
 
-		for (S s : source) {
+		for (R s : source) {
 
-			T t = converter.fromTemplate(s, templates.get(i++ % batchSize));
+			S t = converter.fromTemplate(s, templates.get(i++ % batchSize));
 			batch.add(t);
 
 			if (batch.size() % batchSize == 0) {

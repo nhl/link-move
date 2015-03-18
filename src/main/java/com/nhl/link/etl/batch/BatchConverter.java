@@ -1,14 +1,14 @@
 package com.nhl.link.etl.batch;
 
 /**
- * A converter that allows to preprocess batch source objects before passing
- * them to targets. In addition to the actual conversion, the converter allows
+ * A converter of source objects of the batch to the type understood by the
+ * processor. In addition to the actual conversion, the converter allows
  * implementors to reuse target objects between the batches to prevent excessive
  * GC.
  */
-public interface BatchConverter<S, T> {
+public interface BatchConverter<R, S> {
 
-	T createTemplate();
+	S createTemplate();
 
-	T fromTemplate(S source, T targetTemplate);
+	S fromTemplate(R source, S targetTemplate);
 }

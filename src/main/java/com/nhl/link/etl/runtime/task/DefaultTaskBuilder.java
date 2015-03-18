@@ -22,6 +22,7 @@ import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.SyncToken;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
+import com.nhl.link.etl.batch.converter.RowToTargetMapConverter;
 import com.nhl.link.etl.extract.Extractor;
 import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.load.LoadListener;
@@ -42,7 +43,6 @@ import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.load.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.transform.RowToTargetMapConverter;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a

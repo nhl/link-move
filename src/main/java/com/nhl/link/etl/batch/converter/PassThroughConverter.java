@@ -1,4 +1,4 @@
-package com.nhl.link.etl.transform;
+package com.nhl.link.etl.batch.converter;
 
 import com.nhl.link.etl.batch.BatchConverter;
 
@@ -8,13 +8,13 @@ import com.nhl.link.etl.batch.BatchConverter;
  * 
  * @since 1.3
  */
-public class PassThroughConverter<T> implements BatchConverter<T, T> {
+public class PassThroughConverter<S> implements BatchConverter<S, S> {
 
 	private static final BatchConverter<?, ?> instance = new PassThroughConverter<>();
 
 	@SuppressWarnings("unchecked")
-	public static <T> BatchConverter<T, T> instance() {
-		return (BatchConverter<T, T>) instance;
+	public static <S> BatchConverter<S, S> instance() {
+		return (BatchConverter<S, S>) instance;
 	}
 
 	private PassThroughConverter() {
@@ -22,12 +22,12 @@ public class PassThroughConverter<T> implements BatchConverter<T, T> {
 	}
 
 	@Override
-	public T createTemplate() {
+	public S createTemplate() {
 		return null;
 	}
 
 	@Override
-	public T fromTemplate(T source, T targetTemplate) {
+	public S fromTemplate(S source, S targetTemplate) {
 		return source;
 	}
 }
