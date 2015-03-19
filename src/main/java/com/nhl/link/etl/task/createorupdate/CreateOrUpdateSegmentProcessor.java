@@ -6,8 +6,8 @@ import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.LoadListener;
 
 /**
- * A stateless thread-safe processor of a single batch segment of a
- * create-or-update ETL task.
+ * A stateless thread-safe processor for batch segments of a create-or-update
+ * ETL task.
  * 
  * @since 1.3
  */
