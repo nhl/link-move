@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.query.SelectQuery;
+import org.apache.cayenne.query.ObjectSelect;
 
 import com.nhl.link.etl.mapper.Mapper;
 
@@ -48,9 +48,7 @@ public class TargetMatcher<T> {
 		if (expressions.isEmpty()) {
 			return Collections.emptyList();
 		} else {
-			SelectQuery<T> query = SelectQuery.query(type);
-			query.setQualifier(ExpressionFactory.joinExp(Expression.OR, expressions));
-			return context.select(query);
+			return ObjectSelect.query(type).where(ExpressionFactory.or(expressions)).select(context);
 		}
 	}
 }
