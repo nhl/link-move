@@ -3,11 +3,11 @@ package com.nhl.link.etl;
 import java.util.Map;
 
 /**
- * A listener for load-stage events.
+ * A listener for target merge events.
  * 
  * @since 1.1
  */
-public interface LoadListener<T> {
+public interface TargetListener<T> {
 
 	void targetCreated(Execution e, Map<String, Object> source, T target);
 

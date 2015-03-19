@@ -23,8 +23,8 @@ public class CreateOrUpdate_TargetOnlyTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl2t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1t_to_etl2t").matchBy(Etl2t.NAME).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl2t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1t_to_etl2t").matchBy(Etl2t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME) VALUES ('a')");
 		targetRunSql("INSERT INTO utest.etl1t (NAME) VALUES ('b')");

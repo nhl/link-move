@@ -7,7 +7,7 @@ import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.task.createorupdate.CreateOrUpdateTaskBuilder;
+import com.nhl.link.etl.task.createorupdate.DefaultCreateOrUpdateTaskBuilder;
 
 public class TaskService implements ITaskService {
 
@@ -25,8 +25,15 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public <T extends DataObject> TaskBuilder<T> createTaskBuilder(Class<T> type) {
-		return new CreateOrUpdateTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager, keyBuilderFactory);
+	public <T extends DataObject> CreateOrUpdateTaskBuilder<T> createOrUpdate(Class<T> type) {
+		return new DefaultCreateOrUpdateTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager,
+				keyBuilderFactory);
+	}
+
+	@Deprecated
+	@Override
+	public <T extends DataObject> CreateOrUpdateTaskBuilder<T> createTaskBuilder(Class<T> type) {
+		return createOrUpdate(type);
 	}
 
 }

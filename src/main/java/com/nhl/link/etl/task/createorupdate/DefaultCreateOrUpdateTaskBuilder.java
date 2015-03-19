@@ -13,7 +13,7 @@ import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
-import com.nhl.link.etl.LoadListener;
+import com.nhl.link.etl.TargetListener;
 import com.nhl.link.etl.mapper.AttributeMapper;
 import com.nhl.link.etl.mapper.IdMapper;
 import com.nhl.link.etl.mapper.KeyAdapter;
@@ -25,14 +25,14 @@ import com.nhl.link.etl.metadata.RelationshipType;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
-import com.nhl.link.etl.runtime.task.TaskBuilder;
+import com.nhl.link.etl.runtime.task.CreateOrUpdateTaskBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
  * certain unique attribute on both sides.
  */
-public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuilder<T> {
+public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements CreateOrUpdateTaskBuilder<T> {
 
 	private static final int DEFAULT_BATCH_SIZE = 500;
 
@@ -45,14 +45,14 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	private String extractorName;
 	private int batchSize;
 	private List<RelationshipInfo> relationships;
-	private List<LoadListener<T>> loadListeners;
+	private List<TargetListener<T>> loadListeners;
 
 	private Mapper<T> mapper;
 	private boolean byId;
 	private List<String> keyAttributes;
 
 	@SuppressWarnings("unchecked")
-	public CreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
+	public DefaultCreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
 		this.extractorService = extractorService;
@@ -70,13 +70,19 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withExtractor(String extractorName) {
+	public DefaultCreateOrUpdateTaskBuilder<T> sourceExtractor(String extractorName) {
 		this.extractorName = extractorName;
 		return this;
 	}
 
+	@Deprecated
 	@Override
-	public CreateOrUpdateTaskBuilder<T> matchBy(Mapper<T> mapper) {
+	public CreateOrUpdateTaskBuilder<T> withExtractor(String extractorName) {
+		return sourceExtractor(extractorName);
+	}
+
+	@Override
+	public DefaultCreateOrUpdateTaskBuilder<T> matchBy(Mapper<T> mapper) {
 		this.byId = false;
 		this.mapper = mapper;
 		this.keyAttributes = null;
@@ -84,7 +90,7 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> matchBy(String... keyAttributes) {
+	public DefaultCreateOrUpdateTaskBuilder<T> matchBy(String... keyAttributes) {
 		this.byId = false;
 		this.mapper = null;
 		this.keyAttributes = Arrays.asList(keyAttributes);
@@ -95,7 +101,7 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	 * @since 1.1
 	 */
 	@Override
-	public CreateOrUpdateTaskBuilder<T> matchBy(Property<?>... matchAttributes) {
+	public DefaultCreateOrUpdateTaskBuilder<T> matchBy(Property<?>... matchAttributes) {
 
 		// it will fail later on 'build'; TODO: should we do early argument
 		// checking?
@@ -111,19 +117,10 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	}
 
 	/**
-	 * @deprecated since 1.1 use {@link #matchById(String)}.
-	 */
-	@Deprecated
-	@Override
-	public CreateOrUpdateTaskBuilder<T> matchByPrimaryKey(String idProperty) {
-		return matchById(idProperty);
-	}
-
-	/**
 	 * @since 1.1
 	 */
 	@Override
-	public CreateOrUpdateTaskBuilder<T> matchById(String idProperty) {
+	public DefaultCreateOrUpdateTaskBuilder<T> matchById(String idProperty) {
 		this.byId = true;
 		this.mapper = null;
 		this.keyAttributes = Collections.singletonList(idProperty);
@@ -131,45 +128,57 @@ public class CreateOrUpdateTaskBuilder<T extends DataObject> implements TaskBuil
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withBatchSize(int batchSize) {
+	public DefaultCreateOrUpdateTaskBuilder<T> batchSize(int batchSize) {
 		this.batchSize = batchSize;
 		return this;
 	}
 
+	@Deprecated
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
-			String keyAttribute) {
+	public CreateOrUpdateTaskBuilder<T> withBatchSize(int batchSize) {
+		return batchSize(batchSize);
+	}
+
+	@Override
+	public DefaultCreateOrUpdateTaskBuilder<T> withToOneRelationship(String name,
+			Class<? extends DataObject> relatedObjType, String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType));
 		return this;
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
-			String keyAttribute) {
+	public DefaultCreateOrUpdateTaskBuilder<T> withToManyRelationship(String name,
+			Class<? extends DataObject> relatedObjType, String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType));
 		return this;
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
-			String keyAttribute, String relationshipKeyAttribute) {
+	public DefaultCreateOrUpdateTaskBuilder<T> withToOneRelationship(String name,
+			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
 				relationshipKeyAttribute));
 		return this;
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
-			String keyAttribute, String relationshipKeyAttribute) {
+	public DefaultCreateOrUpdateTaskBuilder<T> withToManyRelationship(String name,
+			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
 				relationshipKeyAttribute));
 		return this;
 	}
 
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withListener(LoadListener<T> listener) {
+	public DefaultCreateOrUpdateTaskBuilder<T> targetListener(TargetListener<T> listener) {
 		this.loadListeners.add(listener);
 		return this;
+	}
+
+	@Deprecated
+	@Override
+	public CreateOrUpdateTaskBuilder<T> withListener(TargetListener<T> listener) {
+		return targetListener(listener);
 	}
 
 	private String getSingleMatchAttribute() {

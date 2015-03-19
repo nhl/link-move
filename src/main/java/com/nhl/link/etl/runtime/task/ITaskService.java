@@ -4,5 +4,16 @@ import org.apache.cayenne.DataObject;
 
 public interface ITaskService {
 
-	<T extends DataObject> TaskBuilder<T> createTaskBuilder(Class<T> type);
+	/**
+	 * Returns a builder of create-or-update ETL synchronization task.
+	 * 
+	 * @since 1.3
+	 */
+	<T extends DataObject> CreateOrUpdateTaskBuilder<T> createOrUpdate(Class<T> type);
+
+	/**
+	 * @deprecated since 1.3 use {@link #createOrUpdate(Class)}.
+	 */
+	@Deprecated
+	<T extends DataObject> CreateOrUpdateTaskBuilder<T> createTaskBuilder(Class<T> type);
 }

@@ -18,8 +18,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
@@ -53,8 +53,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttributes() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME, Etl1t.AGE).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME, Etl1t.AGE).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', 5)");
@@ -83,8 +83,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_ById() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl5t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml").matchById(Etl5t.ID_PK_COLUMN).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl5t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml").matchById(Etl5t.ID_PK_COLUMN).task();
 
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, 'b')");
@@ -118,8 +118,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test(expected = EtlRuntimeException.class)
 	public void test_ById_Autoincrement() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_byid.xml").matchById(Etl1t.ID_PK_COLUMN).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_byid.xml").matchById(Etl1t.ID_PK_COLUMN).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (45, 'a', 67)");
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (11, 'b', 4)");
@@ -130,8 +130,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_CapsLower() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_lower").matchBy(Etl1t.NAME).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_lower").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
@@ -149,8 +149,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute_SyncFk() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl3t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
 				.withToOneRelationship(Etl3t.E2.getName(), Etl2t.class, Etl3t.E2.getName())
 				.withToOneRelationship(Etl3t.E5.getName(), Etl5t.class, Etl3t.E5.getName()).task();
 
@@ -178,8 +178,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute_SyncFk_Nulls() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl3t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
 				.withToOneRelationship(Etl3t.E2.getName(), Etl2t.class, Etl3t.E2.getName())
 				.withToOneRelationship(Etl3t.E5.getName(), Etl5t.class, Etl3t.E5.getName()).task();
 
@@ -217,8 +217,8 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute_SyncNulls() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', NULL)");

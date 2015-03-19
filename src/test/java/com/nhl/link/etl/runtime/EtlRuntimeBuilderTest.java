@@ -25,7 +25,7 @@ public class EtlRuntimeBuilderTest {
 		assertNotNull(runtime);
 		ITaskService taskService = runtime.getTaskService();
 		assertNotNull(taskService);
-		assertNotNull(taskService.createTaskBuilder(CayenneDataObject.class));
+		assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -44,7 +44,7 @@ public class EtlRuntimeBuilderTest {
 
 		ITaskService taskService = runtime.getTaskService();
 		assertNotNull(taskService);
-		assertNotNull(taskService.createTaskBuilder(CayenneDataObject.class));
+		assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
 	}
 
 	@Test

@@ -3,21 +3,21 @@ package com.nhl.link.etl.task.createorupdate;
 import java.util.Map;
 
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.LoadListener;
+import com.nhl.link.etl.TargetListener;
 
 /**
- * A {@link LoadListener} that collects load stats and places them in the
+ * A {@link TargetListener} that collects load stats and places them in the
  * execution. It is intentionally generics-free to work with any kind of root
  * entities.
  * 
  * @since 1.1
  */
 @SuppressWarnings("rawtypes")
-class StatsLoadListener implements LoadListener {
+class StatsLoadListener implements TargetListener {
 
-	private static final LoadListener instance = new StatsLoadListener();
+	private static final TargetListener instance = new StatsLoadListener();
 
-	public static LoadListener instance() {
+	public static TargetListener instance() {
 		return instance;
 	}
 

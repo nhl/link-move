@@ -15,8 +15,8 @@ public class CreateOrUpdateWithTokenTest extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().createTaskBuilder(Etl1t.class)
-				.withExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_withtoken").matchBy(Etl1t.NAME).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_withtoken").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', 1)");

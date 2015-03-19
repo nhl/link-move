@@ -3,7 +3,7 @@ package com.nhl.link.etl.task.createorupdate;
 import java.util.List;
 
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.LoadListener;
+import com.nhl.link.etl.TargetListener;
 
 /**
  * A stateless thread-safe processor for batch segments of a create-or-update
@@ -18,10 +18,10 @@ public class CreateOrUpdateSegmentProcessor<T> {
 	private SourceMapper<T> mapper;
 	private TargetMatcher<T> matcher;
 	private CreateOrUpdateMerger<T> merger;
-	private List<LoadListener<T>> loadListeners;
+	private List<TargetListener<T>> loadListeners;
 
 	public CreateOrUpdateSegmentProcessor(Class<T> type, RowConverter rowConverter, SourceMapper<T> mapper,
-			TargetMatcher<T> matcher, CreateOrUpdateMerger<T> merger, List<LoadListener<T>> loadListeners) {
+			TargetMatcher<T> matcher, CreateOrUpdateMerger<T> merger, List<TargetListener<T>> loadListeners) {
 		this.type = type;
 		this.rowConverter = rowConverter;
 		this.mapper = mapper;
@@ -61,11 +61,11 @@ public class CreateOrUpdateSegmentProcessor<T> {
 			for (CreateOrUpdateTuple<T> t : segment.getMerged()) {
 
 				if (t.isCreated()) {
-					for (LoadListener<T> l : loadListeners) {
+					for (TargetListener<T> l : loadListeners) {
 						l.targetCreated(exec, t.getSource(), t.getTarget());
 					}
 				} else {
-					for (LoadListener<T> l : loadListeners) {
+					for (TargetListener<T> l : loadListeners) {
 						l.targetUpdated(exec, t.getSource(), t.getTarget());
 					}
 				}
