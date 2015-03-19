@@ -33,26 +33,26 @@ public class CreateOrUpdateSegmentProcessor<T> {
 	public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
 
 		// execute create-or-update pipeline stages
-		convert(segment);
-		map(segment);
-		match(segment);
-		merge(exec, segment);
-		commit(segment);
+		convertSrc(segment);
+		mapSrc(segment);
+		matchTarget(segment);
+		mergeToTarget(exec, segment);
+		commitTarget(segment);
 	}
 
-	private void convert(CreateOrUpdateSegment<T> segment) {
+	private void convertSrc(CreateOrUpdateSegment<T> segment) {
 		segment.setTranslatedSources(rowConverter.convert(segment.getRows()));
 	}
 
-	private void map(CreateOrUpdateSegment<T> segment) {
+	private void mapSrc(CreateOrUpdateSegment<T> segment) {
 		segment.setMappedSources(mapper.map(segment.getTranslatedSources()));
 	}
 
-	private void match(CreateOrUpdateSegment<T> segment) {
+	private void matchTarget(CreateOrUpdateSegment<T> segment) {
 		segment.setMatchedTargets(matcher.match(type, segment.getContext(), segment.getMappedSources()));
 	}
 
-	private void merge(final Execution exec, CreateOrUpdateSegment<T> segment) {
+	private void mergeToTarget(final Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMerged(merger.merge(type, segment.getContext(), segment.getMappedSources(),
 				segment.getMatchedTargets()));
 
@@ -73,7 +73,7 @@ public class CreateOrUpdateSegmentProcessor<T> {
 		}
 	}
 
-	private void commit(CreateOrUpdateSegment<T> segment) {
+	private void commitTarget(CreateOrUpdateSegment<T> segment) {
 		segment.getContext().commitChanges();
 	}
 
