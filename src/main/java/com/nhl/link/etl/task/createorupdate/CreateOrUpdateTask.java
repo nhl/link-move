@@ -20,6 +20,9 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.task.BaseTask;
 
 /**
+ * A task that reads streamed source data and creates/updates records in a
+ * target DB.
+ * 
  * @since 1.3
  */
 public class CreateOrUpdateTask<T> extends BaseTask {
