@@ -11,7 +11,6 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.nhl.link.etl.extract.ExtractorConfig;
-import com.nhl.link.etl.runtime.extract.AbstractXmlExtractorConfigLoader;
 
 public class AbstractXmlExtractorConfigLoaderTest {
 

@@ -14,9 +14,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorConfig;
-import com.nhl.link.etl.extract.ReloadableExtractor;
 import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extract.IExtractorFactory;
 

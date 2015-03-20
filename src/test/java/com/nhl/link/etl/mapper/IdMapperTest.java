@@ -12,8 +12,6 @@ import org.apache.cayenne.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.etl.mapper.IdMapper;
-
 public class IdMapperTest {
 
 	private IdMapper<DataObject> mapper;

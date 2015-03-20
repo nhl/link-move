@@ -13,9 +13,6 @@ import org.junit.Test;
 import com.nhl.link.etl.CollectionRowReader;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorParameters;
-import com.nhl.link.etl.extract.MultiExtractor;
 
 public class MultiExtractorTest {
 

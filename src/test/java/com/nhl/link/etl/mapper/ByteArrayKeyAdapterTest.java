@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.nhl.link.etl.mapper.ByteArrayKeyAdapter;
-
 public class ByteArrayKeyAdapterTest {
 	
 	@Test

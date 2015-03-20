@@ -11,8 +11,6 @@ import org.apache.cayenne.DataObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.etl.mapper.AttributeMapper;
-
 public class AttributeMapperTest {
 
 	private AttributeMapper<DataObject> mapper;
