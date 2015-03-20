@@ -7,7 +7,9 @@ import com.nhl.link.etl.SyncToken;
 
 /**
  * A simple token manager that stores a map of task tokens in memory. An
- * implementation in a real ETL runtime must use some form of persistent store.
+ * implementation of a real-life token manager should probably use some form of
+ * persistent store to preserve the last token position between the container
+ * restarts.
  */
 public class InMemoryTokenManager implements ITokenManager {
 
