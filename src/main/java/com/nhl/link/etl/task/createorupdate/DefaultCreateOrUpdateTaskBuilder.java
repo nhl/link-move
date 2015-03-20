@@ -11,6 +11,7 @@ import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 
+import com.nhl.link.etl.CreateOrUpdateBuilder;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.TargetListener;
@@ -25,14 +26,13 @@ import com.nhl.link.etl.metadata.RelationshipType;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
-import com.nhl.link.etl.runtime.task.CreateOrUpdateTaskBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
  * certain unique attribute on both sides.
  */
-public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements CreateOrUpdateTaskBuilder<T> {
+public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements CreateOrUpdateBuilder<T> {
 
 	private static final int DEFAULT_BATCH_SIZE = 500;
 
@@ -77,7 +77,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 
 	@Deprecated
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withExtractor(String extractorName) {
+	public CreateOrUpdateBuilder<T> withExtractor(String extractorName) {
 		return sourceExtractor(extractorName);
 	}
 
@@ -135,7 +135,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 
 	@Deprecated
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withBatchSize(int batchSize) {
+	public CreateOrUpdateBuilder<T> withBatchSize(int batchSize) {
 		return batchSize(batchSize);
 	}
 
@@ -177,7 +177,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 
 	@Deprecated
 	@Override
-	public CreateOrUpdateTaskBuilder<T> withListener(TargetListener<T> listener) {
+	public CreateOrUpdateBuilder<T> withListener(TargetListener<T> listener) {
 		return targetListener(listener);
 	}
 

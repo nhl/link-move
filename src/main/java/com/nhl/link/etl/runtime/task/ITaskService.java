@@ -2,6 +2,8 @@ package com.nhl.link.etl.runtime.task;
 
 import org.apache.cayenne.DataObject;
 
+import com.nhl.link.etl.CreateOrUpdateBuilder;
+
 public interface ITaskService {
 
 	/**
@@ -9,11 +11,11 @@ public interface ITaskService {
 	 * 
 	 * @since 1.3
 	 */
-	<T extends DataObject> CreateOrUpdateTaskBuilder<T> createOrUpdate(Class<T> type);
+	<T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type);
 
 	/**
 	 * @deprecated since 1.3 use {@link #createOrUpdate(Class)}.
 	 */
 	@Deprecated
-	<T extends DataObject> CreateOrUpdateTaskBuilder<T> createTaskBuilder(Class<T> type);
+	<T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type);
 }

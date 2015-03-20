@@ -3,6 +3,7 @@ package com.nhl.link.etl.runtime.task;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
 
+import com.nhl.link.etl.CreateOrUpdateBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
@@ -25,14 +26,14 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public <T extends DataObject> CreateOrUpdateTaskBuilder<T> createOrUpdate(Class<T> type) {
+	public <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
 		return new DefaultCreateOrUpdateTaskBuilder<>(type, targetCayenneService, extractorService, tokenManager,
 				keyBuilderFactory);
 	}
 
 	@Deprecated
 	@Override
-	public <T extends DataObject> CreateOrUpdateTaskBuilder<T> createTaskBuilder(Class<T> type) {
+	public <T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type) {
 		return createOrUpdate(type);
 	}
 
