@@ -30,13 +30,6 @@ public class TargetMatcher<T> {
 
 		Collection<Object> keys = mappedSegment.keySet();
 
-		// TODO: split query in batches:
-		// respect Constants.SERVER_MAX_ID_QUALIFIER_SIZE_PROPERTY
-		// property of Cayenne , breaking query into subqueries.
-		// Otherwise this operation will not scale.. Though I guess since we are
-		// not using streaming API to read data from Cayenne, we are already
-		// limited in how much data can fit in the memory map.
-
 		List<Expression> expressions = new ArrayList<>(keys.size());
 		for (Object key : keys) {
 
