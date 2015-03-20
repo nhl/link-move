@@ -1,4 +1,4 @@
-package com.nhl.link.etl.task.createorupdate;
+package com.nhl.link.etl.runtime.task.createorupdate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

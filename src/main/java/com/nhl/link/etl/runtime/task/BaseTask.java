@@ -1,4 +1,4 @@
-package com.nhl.link.etl.task;
+package com.nhl.link.etl.runtime.task;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

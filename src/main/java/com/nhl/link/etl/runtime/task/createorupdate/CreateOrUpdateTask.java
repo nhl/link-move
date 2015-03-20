@@ -1,4 +1,4 @@
-package com.nhl.link.etl.task.createorupdate;
+package com.nhl.link.etl.runtime.task.createorupdate;
 
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +16,8 @@ import com.nhl.link.etl.extract.Extractor;
 import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.task.BaseTask;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.task.BaseTask;
 
 /**
  * A task that reads streamed source data and creates/updates records in a

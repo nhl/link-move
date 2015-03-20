@@ -7,8 +7,8 @@ import com.nhl.link.etl.CreateOrUpdateBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.task.createorupdate.DefaultCreateOrUpdateTaskBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
-import com.nhl.link.etl.task.createorupdate.DefaultCreateOrUpdateTaskBuilder;
 
 public class TaskService implements ITaskService {
 
