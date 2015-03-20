@@ -48,7 +48,7 @@ public class CreateOrUpdateTask<T> extends BaseTask {
 	@Override
 	public Execution run(Map<String, Object> params) {
 
-		try (Execution execution = new Execution(extractorName, params);) {
+		try (Execution execution = new Execution("CreateOrUpdateTask:" + extractorName, params);) {
 
 			BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
 			ExtractorParameters extractorParams = createExtractorParameters(params);
