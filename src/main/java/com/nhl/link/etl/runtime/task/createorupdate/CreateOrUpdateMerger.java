@@ -16,16 +16,18 @@ import com.nhl.link.etl.mapper.Mapper;
  */
 public class CreateOrUpdateMerger<T> {
 
+	private Class<T> type;
 	private Mapper<T> mapper;
 	private CreateOrUpdateStrategy<T> createOrUpdateStrategy;
 
-	public CreateOrUpdateMerger(Mapper<T> mapper, CreateOrUpdateStrategy<T> createOrUpdateStrategy) {
+	public CreateOrUpdateMerger(Class<T> type, Mapper<T> mapper, CreateOrUpdateStrategy<T> createOrUpdateStrategy) {
 		this.mapper = mapper;
+		this.type = type;
 		this.createOrUpdateStrategy = createOrUpdateStrategy;
 	}
 
-	public List<CreateOrUpdateTuple<T>> merge(Class<T> type, ObjectContext context,
-			Map<Object, Map<String, Object>> mappedSources, List<T> matchedTargets) {
+	public List<CreateOrUpdateTuple<T>> merge(ObjectContext context, Map<Object, Map<String, Object>> mappedSources,
+			List<T> matchedTargets) {
 
 		// clone mappedSources as we are planning to truncate it in this method
 		Map<Object, Map<String, Object>> localMappedSources = new HashMap<>(mappedSources);

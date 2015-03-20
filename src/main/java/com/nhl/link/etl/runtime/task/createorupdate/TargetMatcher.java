@@ -18,13 +18,15 @@ import com.nhl.link.etl.mapper.Mapper;
  */
 public class TargetMatcher<T> {
 
+	private Class<T> type;
 	private Mapper<T> mapper;
 
-	public TargetMatcher(Mapper<T> mapper) {
+	public TargetMatcher(Class<T> type, Mapper<T> mapper) {
+		this.type = type;
 		this.mapper = mapper;
 	}
 
-	public List<T> match(Class<T> type, ObjectContext context, Map<Object, Map<String, Object>> mappedSegment) {
+	public List<T> match(ObjectContext context, Map<Object, Map<String, Object>> mappedSegment) {
 
 		Collection<Object> keys = mappedSegment.keySet();
 

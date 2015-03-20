@@ -13,16 +13,15 @@ import com.nhl.link.etl.TargetListener;
  */
 public class CreateOrUpdateSegmentProcessor<T> {
 
-	private Class<T> type;
 	private RowConverter rowConverter;
 	private SourceMapper<T> mapper;
 	private TargetMatcher<T> matcher;
 	private CreateOrUpdateMerger<T> merger;
 	private List<TargetListener<T>> loadListeners;
 
-	public CreateOrUpdateSegmentProcessor(Class<T> type, RowConverter rowConverter, SourceMapper<T> mapper,
-			TargetMatcher<T> matcher, CreateOrUpdateMerger<T> merger, List<TargetListener<T>> loadListeners) {
-		this.type = type;
+	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper<T> mapper, TargetMatcher<T> matcher,
+			CreateOrUpdateMerger<T> merger, List<TargetListener<T>> loadListeners) {
+
 		this.rowConverter = rowConverter;
 		this.mapper = mapper;
 		this.matcher = matcher;
@@ -49,12 +48,11 @@ public class CreateOrUpdateSegmentProcessor<T> {
 	}
 
 	private void matchTarget(CreateOrUpdateSegment<T> segment) {
-		segment.setMatchedTargets(matcher.match(type, segment.getContext(), segment.getMappedSources()));
+		segment.setMatchedTargets(matcher.match(segment.getContext(), segment.getMappedSources()));
 	}
 
 	private void mergeToTarget(final Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.setMerged(merger.merge(type, segment.getContext(), segment.getMappedSources(),
-				segment.getMatchedTargets()));
+		segment.setMerged(merger.merge(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
 
 		// dispatch post-merge events
 		if (!loadListeners.isEmpty()) {

@@ -229,10 +229,10 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 		CreateOrUpdateStrategy<T> createOrUpdateStrategy = createCreateOrUpdateStrategy();
 
 		SourceMapper<T> sourceMapper = new SourceMapper<>(mapper);
-		TargetMatcher<T> targetMatcher = new TargetMatcher<>(mapper);
-		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(mapper, createOrUpdateStrategy);
+		TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
+		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, createOrUpdateStrategy);
 
-		return new CreateOrUpdateSegmentProcessor<>(type, RowConverter.instance(), sourceMapper, targetMatcher, merger,
+		return new CreateOrUpdateSegmentProcessor<>(RowConverter.instance(), sourceMapper, targetMatcher, merger,
 				loadListeners);
 	}
 
