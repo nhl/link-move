@@ -3,7 +3,7 @@ package com.nhl.link.etl;
 import java.util.Map;
 
 /**
- * An abstraction of a runnable task.
+ * An abstraction of a runnable data transfer task.
  */
 public interface EtlTask {
 
