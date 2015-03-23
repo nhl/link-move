@@ -1,10 +1,13 @@
 package com.nhl.link.etl.runtime.task.createorupdate;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
@@ -14,7 +17,7 @@ import org.apache.cayenne.map.ObjEntity;
 import com.nhl.link.etl.CreateOrUpdateBuilder;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
-import com.nhl.link.etl.TargetListener;
+import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.AttributeMapper;
 import com.nhl.link.etl.mapper.IdMapper;
 import com.nhl.link.etl.mapper.KeyAdapter;
@@ -25,6 +28,8 @@ import com.nhl.link.etl.metadata.RelationshipInfo;
 import com.nhl.link.etl.metadata.RelationshipType;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
+import com.nhl.link.etl.runtime.listener.CreateOrUpdateListenerFactory;
 import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
@@ -32,6 +37,7 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
  * A builder of an ETL task that matches source data with target data based on a
  * certain unique attribute on both sides.
  */
+@SuppressWarnings("deprecation")
 public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements CreateOrUpdateBuilder<T> {
 
 	private static final int DEFAULT_BATCH_SIZE = 500;
@@ -45,13 +51,16 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	private String extractorName;
 	private int batchSize;
 	private List<RelationshipInfo> relationships;
-	private List<TargetListener<T>> loadListeners;
+
+	@Deprecated
+	private List<LoadListener<T>> loadListeners;
+
+	private Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners;
 
 	private Mapper<T> mapper;
 	private boolean byId;
 	private List<String> keyAttributes;
 
-	@SuppressWarnings("unchecked")
 	public DefaultCreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
@@ -63,10 +72,12 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 		this.relationships = new ArrayList<>();
 		this.keyMapAdapterFactory = keyMapAdapterFactory;
 
-		this.loadListeners = new ArrayList<>();
+		this.stageListeners = new HashMap<>();
 
 		// always add stats listener..
-		loadListeners.add(StatsLoadListener.instance());
+		stageListener(StatsLoadListener.instance());
+
+		this.loadListeners = new ArrayList<>();
 	}
 
 	@Override
@@ -169,16 +180,17 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 		return this;
 	}
 
+	@Deprecated
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> targetListener(TargetListener<T> listener) {
+	public CreateOrUpdateBuilder<T> withListener(LoadListener<T> listener) {
 		this.loadListeners.add(listener);
 		return this;
 	}
 
-	@Deprecated
 	@Override
-	public CreateOrUpdateBuilder<T> withListener(TargetListener<T> listener) {
-		return targetListener(listener);
+	public CreateOrUpdateBuilder<T> stageListener(Object listener) {
+		CreateOrUpdateListenerFactory.appendListeners(stageListeners, listener);
+		return this;
 	}
 
 	private String getSingleMatchAttribute() {
@@ -233,7 +245,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, createOrUpdateStrategy);
 
 		return new CreateOrUpdateSegmentProcessor<>(RowConverter.instance(), sourceMapper, targetMatcher, merger,
-				loadListeners);
+				stageListeners, loadListeners);
 	}
 
 	private CreateOrUpdateStrategy<T> createCreateOrUpdateStrategy() {

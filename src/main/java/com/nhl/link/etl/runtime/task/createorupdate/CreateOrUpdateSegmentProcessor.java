@@ -1,9 +1,17 @@
 package com.nhl.link.etl.runtime.task.createorupdate;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map;
 
+import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.TargetListener;
+import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
+import com.nhl.link.etl.annotation.AfterSourcesMapped;
+import com.nhl.link.etl.annotation.AfterTargetMatched;
+import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.load.LoadListener;
+import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
 
 /**
  * A stateless thread-safe processor for batch segments of a create-or-update
@@ -11,59 +19,74 @@ import com.nhl.link.etl.TargetListener;
  * 
  * @since 1.3
  */
+@SuppressWarnings("deprecation")
 public class CreateOrUpdateSegmentProcessor<T> {
 
 	private RowConverter rowConverter;
 	private SourceMapper<T> mapper;
 	private TargetMatcher<T> matcher;
 	private CreateOrUpdateMerger<T> merger;
-	private List<TargetListener<T>> loadListeners;
+
+	@Deprecated
+	private List<LoadListener<T>> loadListeners;
+
+	private Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners;
 
 	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper<T> mapper, TargetMatcher<T> matcher,
-			CreateOrUpdateMerger<T> merger, List<TargetListener<T>> loadListeners) {
+			CreateOrUpdateMerger<T> merger,
+			Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners,
+			List<LoadListener<T>> loadListeners) {
 
 		this.rowConverter = rowConverter;
 		this.mapper = mapper;
 		this.matcher = matcher;
 		this.merger = merger;
 		this.loadListeners = loadListeners;
+		this.stageListeners = stageListeners;
 	}
 
 	public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
 
 		// execute create-or-update pipeline stages
-		convertSrc(segment);
-		mapSrc(segment);
-		matchTarget(segment);
+		convertSrc(exec, segment);
+		mapSrc(exec, segment);
+		matchTarget(exec, segment);
 		mergeToTarget(exec, segment);
 		commitTarget(segment);
 	}
 
-	private void convertSrc(CreateOrUpdateSegment<T> segment) {
+	private void convertSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setSources(rowConverter.convert(segment.getSourceRows()));
+		notifyListeners(AfterSourceRowsConverted.class, exec, segment);
 	}
 
-	private void mapSrc(CreateOrUpdateSegment<T> segment) {
+	private void mapSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMappedSources(mapper.map(segment.getSources()));
+		notifyListeners(AfterSourcesMapped.class, exec, segment);
 	}
 
-	private void matchTarget(CreateOrUpdateSegment<T> segment) {
+	private void matchTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMatchedTargets(matcher.match(segment.getContext(), segment.getMappedSources()));
+		notifyListeners(AfterTargetMatched.class, exec, segment);
 	}
 
-	private void mergeToTarget(final Execution exec, CreateOrUpdateSegment<T> segment) {
+	private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMerged(merger.merge(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
+		notifyListeners(AfterTargetMerged.class, exec, segment);
+		callDeprecatedListeners(exec, segment);
+	}
 
-		// dispatch post-merge events
+	@Deprecated
+	private void callDeprecatedListeners(Execution exec, CreateOrUpdateSegment<T> segment) {
 		if (!loadListeners.isEmpty()) {
 			for (CreateOrUpdateTuple<T> t : segment.getMerged()) {
 
 				if (t.isCreated()) {
-					for (TargetListener<T> l : loadListeners) {
+					for (LoadListener<T> l : loadListeners) {
 						l.targetCreated(exec, t.getSource(), t.getTarget());
 					}
 				} else {
-					for (TargetListener<T> l : loadListeners) {
+					for (LoadListener<T> l : loadListeners) {
 						l.targetUpdated(exec, t.getSource(), t.getTarget());
 					}
 				}
@@ -73,6 +96,17 @@ public class CreateOrUpdateSegmentProcessor<T> {
 
 	private void commitTarget(CreateOrUpdateSegment<T> segment) {
 		segment.getContext().commitChanges();
+
+		// TODO: do we care for a listener here?
+	}
+
+	private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateOrUpdateSegment<T> segment) {
+		List<CreateOrUpdateListener> listeners = stageListeners.get(type);
+		if (listeners != null) {
+			for (CreateOrUpdateListener l : listeners) {
+				l.afterStageFinished(exec, segment);
+			}
+		}
 	}
 
 }

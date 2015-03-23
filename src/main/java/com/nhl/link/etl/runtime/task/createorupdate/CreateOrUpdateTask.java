@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.apache.cayenne.ObjectContext;
 
+import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
