@@ -6,16 +6,16 @@ import com.nhl.link.etl.annotation.AfterTargetMerged;
 import com.nhl.link.etl.stats.ExecutionStats;
 
 /**
- * A listener that collects load stats and places them in the execution. It is
- * intentionally generics-free to work with any kind of root entities.
+ * A listener that collects task stats and stores them in the Execution's
+ * {@link ExecutionStats} object.
  * 
  * @since 1.1
  */
-public class StatsLoadListener {
+public class CreateOrUpdateStatsListener {
 
-	private static final StatsLoadListener instance = new StatsLoadListener();
+	private static final CreateOrUpdateStatsListener instance = new CreateOrUpdateStatsListener();
 
-	public static StatsLoadListener instance() {
+	public static CreateOrUpdateStatsListener instance() {
 		return instance;
 	}
 

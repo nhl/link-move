@@ -75,7 +75,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 		this.stageListeners = new HashMap<>();
 
 		// always add stats listener..
-		stageListener(StatsLoadListener.instance());
+		stageListener(CreateOrUpdateStatsListener.instance());
 
 		this.loadListeners = new ArrayList<>();
 	}
