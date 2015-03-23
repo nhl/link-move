@@ -31,8 +31,8 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 	}
 
 	protected void assertExec(int extracted, int created, int updated, Execution exec) {
-		assertEquals("Extracted unexpected number of records", extracted, exec.getExtracted());
-		assertEquals("Created unexpected number of records", created, exec.getCreated());
-		assertEquals("Updated unexpected number of records", updated, exec.getUpdated());
+		assertEquals("Extracted unexpected number of records", extracted, exec.getStats().getExtracted());
+		assertEquals("Created unexpected number of records", created, exec.getStats().getCreated());
+		assertEquals("Updated unexpected number of records", updated, exec.getStats().getUpdated());
 	}
 }

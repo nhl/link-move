@@ -110,7 +110,7 @@ public class CreateOrUpdateTask<T> extends BaseTask {
 
 					@Override
 					public Row next() {
-						execution.incrementExtracted(1);
+						execution.getStats().incrementExtracted(1);
 						return it.next();
 					}
 				};

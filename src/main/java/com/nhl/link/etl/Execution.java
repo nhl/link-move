@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.nhl.link.etl.stats.ExecutionStats;
+
 /**
  * Represents a single execution of an {@link EtlTask}. Tracks task parameters
  * and execution statistics.
@@ -15,21 +17,19 @@ public class Execution implements AutoCloseable {
 
 	protected String name;
 	protected Map<String, ?> parameters;
-	protected long extracted;
-	protected long created;
-	protected long updated;
-	protected long started;
-	protected long finished;
+	protected ExecutionStats stats;
 
 	public Execution(String name, Map<String, ?> params) {
-		this.started = System.currentTimeMillis();
 		this.name = name;
 		this.parameters = params;
+		this.stats = new ExecutionStats();
+
+		stats.executionStarted();
 	}
 
 	@Override
 	public void close() {
-		this.finished = System.currentTimeMillis();
+		stats.executionStopped();
 	}
 
 	@Override
@@ -56,31 +56,19 @@ public class Execution implements AutoCloseable {
 
 		DateFormat format = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
 
-		if (finished > 0) {
+		if (stats.isStopped()) {
 			report.put("Status", "finished");
-			report.put("Duration", finished - started);
+			report.put("Duration", stats.getDuration());
 		} else {
 			report.put("Status", "in progress");
-			report.put("Started on ", format.format(new Date(started)));
+			report.put("Started on ", format.format(new Date(stats.getStarted())));
 		}
 
-		report.put("Extracted", extracted);
-		report.put("Created", created);
-		report.put("Updated", updated);
+		report.put("Extracted", stats.getExtracted());
+		report.put("Created", stats.getCreated());
+		report.put("Updated", stats.getUpdated());
 
 		return report;
-	}
-
-	public void incrementExtracted(long count) {
-		this.extracted += count;
-	}
-
-	public void incrementCreated(long count) {
-		this.created += count;
-	}
-
-	public void incrementUpdated(long count) {
-		this.updated += count;
 	}
 
 	/**
@@ -90,24 +78,8 @@ public class Execution implements AutoCloseable {
 		return parameters;
 	}
 
-	public long getExtracted() {
-		return extracted;
-	}
-
-	public long getCreated() {
-		return created;
-	}
-
-	public long getUpdated() {
-		return updated;
-	}
-
-	public long getStarted() {
-		return started;
-	}
-
-	public long getFinished() {
-		return finished;
+	public ExecutionStats getStats() {
+		return stats;
 	}
 
 }

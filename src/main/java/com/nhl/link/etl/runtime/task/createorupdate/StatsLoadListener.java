@@ -23,11 +23,11 @@ class StatsLoadListener implements TargetListener {
 
 	@Override
 	public void targetCreated(Execution e, Map source, Object target) {
-		e.incrementCreated(1);
+		e.getStats().incrementCreated(1);
 	}
 
 	@Override
 	public void targetUpdated(Execution e, Map source, Object target) {
-		e.incrementUpdated(1);
+		e.getStats().incrementUpdated(1);
 	}
 }
