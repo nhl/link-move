@@ -1,6 +1,7 @@
 package com.nhl.link.etl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -25,6 +26,18 @@ public class ExecutionTest {
 		Map<String, Object> r2 = execution.createReport();
 		assertEquals(r2.toString(), 7, r2.size());
 		assertEquals("finished", r2.get("Status"));
+	}
 
+	@Test
+	public void testAttribute() {
+		try (Execution execution = new Execution("xsync", Collections.<String, Object> emptyMap())) {
+			assertNull(execution.getAttribute("a"));
+
+			execution.setAttribute("a", "MMM");
+			assertEquals("MMM", execution.getAttribute("a"));
+
+			execution.setAttribute("a", null);
+			assertNull(execution.getAttribute("a"));
+		}
 	}
 }

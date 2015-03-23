@@ -3,6 +3,7 @@ package com.nhl.link.etl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,11 +18,16 @@ public class Execution implements AutoCloseable {
 
 	protected String name;
 	protected Map<String, ?> parameters;
+	protected Map<String, Object> attributes;
 	protected ExecutionStats stats;
 
 	public Execution(String name, Map<String, ?> params) {
 		this.name = name;
 		this.parameters = params;
+
+		// a "parallel" execution should have this turned into a ConcurrentMap
+		this.attributes = new HashMap<>();
+
 		this.stats = new ExecutionStats();
 
 		stats.executionStarted();
@@ -69,6 +75,20 @@ public class Execution implements AutoCloseable {
 		report.put("Updated", stats.getUpdated());
 
 		return report;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	public Object getAttribute(String key) {
+		return attributes.get(key);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	public void setAttribute(String key, Object value) {
+		attributes.put(key, value);
 	}
 
 	/**
