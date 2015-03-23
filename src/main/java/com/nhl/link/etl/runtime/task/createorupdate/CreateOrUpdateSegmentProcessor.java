@@ -4,6 +4,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
@@ -21,6 +24,8 @@ import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
  */
 @SuppressWarnings("deprecation")
 public class CreateOrUpdateSegmentProcessor<T> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrUpdateSegmentProcessor.class);
 
 	private RowConverter rowConverter;
 	private SourceMapper<T> mapper;
@@ -79,6 +84,11 @@ public class CreateOrUpdateSegmentProcessor<T> {
 	@Deprecated
 	private void callDeprecatedListeners(Execution exec, CreateOrUpdateSegment<T> segment) {
 		if (!loadListeners.isEmpty()) {
+
+			LOGGER.warn("*** Calling deprecated LoadListener's. "
+					+ "Consider replacing them with annotated segment listeners. "
+					+ "See 'com.nhl.link.etl.annotation' package ");
+
 			for (CreateOrUpdateTuple<T> t : segment.getMerged()) {
 
 				if (t.isCreated()) {
