@@ -40,11 +40,11 @@ public class CreateOrUpdateSegmentProcessor<T> {
 	}
 
 	private void convertSrc(CreateOrUpdateSegment<T> segment) {
-		segment.setTranslatedSources(rowConverter.convert(segment.getRows()));
+		segment.setSources(rowConverter.convert(segment.getSourceRows()));
 	}
 
 	private void mapSrc(CreateOrUpdateSegment<T> segment) {
-		segment.setMappedSources(mapper.map(segment.getTranslatedSources()));
+		segment.setMappedSources(mapper.map(segment.getSources()));
 	}
 
 	private void matchTarget(CreateOrUpdateSegment<T> segment) {

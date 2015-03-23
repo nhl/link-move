@@ -13,15 +13,15 @@ import com.nhl.link.etl.Row;
 public class CreateOrUpdateSegment<T> {
 
 	private ObjectContext context;
-	private List<Row> rows;
+	private List<Row> sourceRows;
 
-	private List<Map<String, Object>> translatedSources;
+	private List<Map<String, Object>> sources;
 	private Map<Object, Map<String, Object>> mappedSources;
 	private List<T> matchedTargets;
 	private List<CreateOrUpdateTuple<T>> merged;
 
 	public CreateOrUpdateSegment(ObjectContext context, List<Row> rows) {
-		this.rows = rows;
+		this.sourceRows = rows;
 		this.context = context;
 	}
 
@@ -29,16 +29,16 @@ public class CreateOrUpdateSegment<T> {
 		return context;
 	}
 
-	public List<Row> getRows() {
-		return rows;
+	public List<Row> getSourceRows() {
+		return sourceRows;
 	}
 
-	public List<Map<String, Object>> getTranslatedSources() {
-		return translatedSources;
+	public List<Map<String, Object>> getSources() {
+		return sources;
 	}
 
-	public void setTranslatedSources(List<Map<String, Object>> translatedSegment) {
-		this.translatedSources = translatedSegment;
+	public void setSources(List<Map<String, Object>> translatedSegment) {
+		this.sources = translatedSegment;
 	}
 
 	public Map<Object, Map<String, Object>> getMappedSources() {
