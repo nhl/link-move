@@ -1,11 +1,11 @@
 package com.nhl.link.etl.runtime.task.createorupdate;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.ObjectContext;
 
+import com.nhl.link.etl.CountingRowReader;
 import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.Row;
@@ -77,40 +77,9 @@ public class CreateOrUpdateTask<T> extends BaseTask {
 	 * Returns a RowReader obtained from a named extractor and wrapped in a read
 	 * stats counter.
 	 */
-	protected RowReader getRowReader(final Execution execution, ExtractorParameters extractorParams) {
-
+	protected RowReader getRowReader(Execution execution, ExtractorParameters extractorParams) {
 		Extractor extractor = extractorService.getExtractor(extractorName);
-		final RowReader reader = extractor.getReader(extractorParams);
-		return new RowReader() {
-
-			@Override
-			public Iterator<Row> iterator() {
-				final Iterator<Row> it = reader.iterator();
-
-				return new Iterator<Row>() {
-					@Override
-					public boolean hasNext() {
-						return it.hasNext();
-					}
-
-					@Override
-					public void remove() {
-						it.remove();
-					}
-
-					@Override
-					public Row next() {
-						execution.getStats().incrementExtracted(1);
-						return it.next();
-					}
-				};
-			}
-
-			@Override
-			public void close() {
-				reader.close();
-			}
-		};
+		return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
 	}
 
 }
