@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class MultiExtractorTest {
 		assertFound(e, 9);
 		assertEquals(3, closeCounter[0]);
 	}
-	
+
 	@Test
 	public void testGetReader_Many_FirstEmpty() {
 
@@ -67,7 +68,7 @@ public class MultiExtractorTest {
 	protected void assertFound(MultiExtractor extractor, int expectedRows) {
 
 		int rows = 0;
-		try (RowReader reader = extractor.getReader(new ExtractorParameters())) {
+		try (RowReader reader = extractor.getReader(Collections.<String, Object> emptyMap())) {
 			for (@SuppressWarnings("unused")
 			Row row : reader) {
 				rows++;
@@ -82,7 +83,7 @@ public class MultiExtractorTest {
 		return new Extractor() {
 
 			@Override
-			public RowReader getReader(ExtractorParameters parameters) {
+			public RowReader getReader(Map<String, ?> parameters) {
 				Collection<Row> rows = new ArrayList<>(rowsToReturn);
 				for (int i = 0; i < rowsToReturn; i++) {
 					rows.add(mock(Row.class));

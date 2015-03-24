@@ -14,7 +14,6 @@ import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.task.BaseTask;
@@ -49,12 +48,15 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 	@Override
 	public Execution run(Map<String, Object> params) {
 
+		if (params == null) {
+			throw new NullPointerException("Null params");
+		}
+
 		try (Execution execution = new Execution("CreateOrUpdateTask:" + extractorName, params);) {
 
 			BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-			ExtractorParameters extractorParams = createExtractorParameters(params);
 
-			try (RowReader data = getRowReader(execution, extractorParams)) {
+			try (RowReader data = getRowReader(execution, params)) {
 				BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
 			}
 
@@ -78,7 +80,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 	 * Returns a RowReader obtained from a named extractor and wrapped in a read
 	 * stats counter.
 	 */
-	protected RowReader getRowReader(Execution execution, ExtractorParameters extractorParams) {
+	protected RowReader getRowReader(Execution execution, Map<String, Object> extractorParams) {
 		Extractor extractor = extractorService.getExtractor(extractorName);
 		return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
 	}

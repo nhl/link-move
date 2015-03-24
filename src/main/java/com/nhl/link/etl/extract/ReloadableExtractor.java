@@ -27,7 +27,7 @@ public class ReloadableExtractor implements Extractor {
 	}
 
 	@Override
-	public RowReader getReader(ExtractorParameters parameters) {
+	public RowReader getReader(Map<String, ?> parameters) {
 		return getDelegate().getReader(parameters);
 	}
 

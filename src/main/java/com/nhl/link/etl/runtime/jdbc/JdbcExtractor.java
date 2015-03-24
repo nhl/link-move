@@ -1,5 +1,7 @@
 package com.nhl.link.etl.runtime.jdbc;
 
+import java.util.Map;
+
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.CapsStrategy;
@@ -8,7 +10,6 @@ import org.apache.cayenne.query.SQLSelect;
 import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorParameters;
 
 public class JdbcExtractor implements Extractor {
 
@@ -26,14 +27,14 @@ public class JdbcExtractor implements Extractor {
 	}
 
 	@Override
-	public RowReader getReader(ExtractorParameters parameters) {
+	public RowReader getReader(Map<String, ?> parameters) {
 
 		// TODO: fetching DataRows and then converting them to Object[] is kind
 		// of expensive... maybe we can create Object[] bypassing DR, ideally by
 		// iterating a JDBC ResultSet
 
 		SQLSelect<DataRow> select = SQLSelect.dataRowQuery(sqlTemplate);
-		select.params(parameters.asMap());
+		select.params(parameters);
 
 		switch (capsStrategy) {
 

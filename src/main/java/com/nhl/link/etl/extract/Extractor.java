@@ -1,5 +1,7 @@
 package com.nhl.link.etl.extract;
 
+import java.util.Map;
+
 import com.nhl.link.etl.RowReader;
 
 /**
@@ -9,5 +11,5 @@ import com.nhl.link.etl.RowReader;
  */
 public interface Extractor {
 
-	RowReader getReader(ExtractorParameters parameters);
+	RowReader getReader(Map<String, ?> parameters);
 }

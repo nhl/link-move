@@ -1,6 +1,7 @@
 package com.nhl.link.etl.extract;
 
 import java.util.List;
+import java.util.Map;
 
 import com.nhl.link.etl.RowReader;
 
@@ -13,7 +14,7 @@ public class MultiExtractor implements Extractor {
 	}
 
 	@Override
-	public RowReader getReader(ExtractorParameters parameters) {
+	public RowReader getReader(Map<String, ?> parameters) {
 		return new MultiExtractorRowReader(extractors, parameters);
 	}
 

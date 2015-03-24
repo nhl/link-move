@@ -1,14 +1,12 @@
 package com.nhl.link.etl.runtime.task;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.SyncToken;
-import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
@@ -39,16 +37,15 @@ public abstract class BaseTask implements EtlTask {
 	@Override
 	public Execution run(SyncToken token, Map<String, Object> params) {
 
-		// preserve ordering... token goes first
-		Map<String, Object> linkedMap = new LinkedHashMap<>();
+		Map<String, Object> combinedParams = new HashMap<>();
 
 		SyncToken startToken = tokenManager.previousToken(token);
-		linkedMap.put(EtlRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
-		linkedMap.put(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
+		combinedParams.put(EtlRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
+		combinedParams.put(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
 
-		linkedMap.putAll(params);
+		combinedParams.putAll(params);
 
-		Execution exec = run(linkedMap);
+		Execution exec = run(combinedParams);
 
 		// if we ever start using delayed executions, token should be
 		// saved inside the execution...
@@ -56,14 +53,5 @@ public abstract class BaseTask implements EtlTask {
 
 		return exec;
 	}
-	
-	protected ExtractorParameters createExtractorParameters(Map<String, Object> params) {
-		ExtractorParameters extractorParams = new ExtractorParameters();
 
-		for (Entry<String, Object> e : params.entrySet()) {
-			extractorParams.add(e.getKey(), e.getValue());
-		}
-
-		return extractorParams;
-	}
 }

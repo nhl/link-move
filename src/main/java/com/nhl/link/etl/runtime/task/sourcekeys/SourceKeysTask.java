@@ -13,7 +13,6 @@ import com.nhl.link.etl.SourceKeysSegment;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.task.BaseTask;
 import com.nhl.link.etl.runtime.token.ITokenManager;
@@ -46,14 +45,17 @@ public class SourceKeysTask extends BaseTask {
 	@Override
 	public Execution run(Map<String, Object> params) {
 
+		if (params == null) {
+			throw new NullPointerException("Null params");
+		}
+
 		try (Execution execution = new Execution("SourceKeysTask:" + sourceExtractorName, params);) {
 
 			execution.setAttribute(RESULT_KEY, new HashSet<>());
 
 			BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-			ExtractorParameters extractorParams = createExtractorParameters(params);
 
-			try (RowReader data = getRowReader(execution, extractorParams)) {
+			try (RowReader data = getRowReader(execution, params)) {
 				BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
 			}
 
@@ -75,7 +77,7 @@ public class SourceKeysTask extends BaseTask {
 	 * Returns a RowReader obtained from a named extractor and wrapped in a read
 	 * stats counter.
 	 */
-	protected RowReader getRowReader(final Execution execution, ExtractorParameters extractorParams) {
+	protected RowReader getRowReader(final Execution execution, Map<String, Object> extractorParams) {
 		Extractor extractor = extractorService.getExtractor(sourceExtractorName);
 		return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
 	}

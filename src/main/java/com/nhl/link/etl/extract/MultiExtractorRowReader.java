@@ -2,6 +2,7 @@ package com.nhl.link.etl.extract;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.nhl.link.etl.Row;
@@ -28,13 +29,13 @@ public class MultiExtractorRowReader implements RowReader {
 	};
 
 	private List<Extractor> extractors;
-	private ExtractorParameters parameters;
+	private Map<String, ?> parameters;
 
 	private int currentExtractor;
 	private RowReader currentReader;
 	private Iterator<Row> currentIterator;
 
-	public MultiExtractorRowReader(List<Extractor> extractors, ExtractorParameters parameters) {
+	public MultiExtractorRowReader(List<Extractor> extractors, Map<String, ?> parameters) {
 		this.extractors = extractors;
 		this.parameters = parameters;
 	}
