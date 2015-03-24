@@ -20,7 +20,7 @@ import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
 import com.nhl.link.etl.runtime.listener.CreateOrUpdateListenerFactory;
-import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
+import com.nhl.link.etl.runtime.task.MappingTaskBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
@@ -28,7 +28,7 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
  * certain unique attribute on both sides.
  */
 @SuppressWarnings("deprecation")
-public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder<T> implements
+public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingTaskBuilder<T> implements
 		CreateOrUpdateBuilder<T> {
 
 	private IExtractorService extractorService;
