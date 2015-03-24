@@ -29,4 +29,6 @@ public interface DeleteBuilder<T> {
 	DeleteBuilder<T> matchById(String idAttribute);
 
 	DeleteBuilder<T> batchSize(int batchSize);
+
+	DeleteBuilder<T> stageListener(Object listener);
 }

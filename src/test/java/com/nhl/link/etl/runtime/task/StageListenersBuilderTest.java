@@ -1,15 +1,11 @@
-package com.nhl.link.etl.runtime.listener;
+package com.nhl.link.etl.runtime.task;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 
@@ -20,24 +16,31 @@ import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.annotation.AfterTargetsMatched;
 import com.nhl.link.etl.annotation.AfterTargetsMerged;
 
-public class CreateOrUpdateListenerFactoryTest {
+public class StageListenersBuilderTest {
+
+	private ListenersBuilder listenersBuilder;
+
+	@Before
+	public void before() {
+		listenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
+				AfterTargetsMatched.class, AfterTargetsMerged.class);
+	}
 
 	@Test
-	public void testAppendListeners() {
-		Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> listeners = new HashMap<>();
+	public void testAddListener() {
 
 		MockCreateOrUpdateListener listener1 = new MockCreateOrUpdateListener();
-		CreateOrUpdateListenerFactory.appendListeners(listeners, listener1);
+		listenersBuilder.addListener(listener1);
 
-		assertEquals(4, listeners.size());
-		assertEquals(2, listeners.get(AfterTargetsMatched.class).size());
-		assertEquals(1, listeners.get(AfterSourceRowsConverted.class).size());
-		assertEquals(1, listeners.get(AfterSourcesMapped.class).size());
-		assertEquals(1, listeners.get(AfterTargetsMerged.class).size());
+		assertEquals(4, listenersBuilder.getListeners().size());
+		assertEquals(2, listenersBuilder.getListeners().get(AfterTargetsMatched.class).size());
+		assertEquals(1, listenersBuilder.getListeners().get(AfterSourceRowsConverted.class).size());
+		assertEquals(1, listenersBuilder.getListeners().get(AfterSourcesMapped.class).size());
+		assertEquals(1, listenersBuilder.getListeners().get(AfterTargetsMerged.class).size());
 
 		verify(listener1.getMockDelegate(), times(0)).afterSourceRowsConverted(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));
-		listeners.get(AfterSourceRowsConverted.class).get(0)
+		listenersBuilder.getListeners().get(AfterSourceRowsConverted.class).get(0)
 				.afterStageFinished(mock(Execution.class), mock(CreateOrUpdateSegment.class));
 		verify(listener1.getMockDelegate()).afterSourceRowsConverted(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));
@@ -46,9 +49,9 @@ public class CreateOrUpdateListenerFactoryTest {
 				Matchers.any(CreateOrUpdateSegment.class));
 		verify(listener1.getMockDelegate(), times(0)).afterTargetMatched2(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));
-		listeners.get(AfterTargetsMatched.class).get(0)
+		listenersBuilder.getListeners().get(AfterTargetsMatched.class).get(0)
 				.afterStageFinished(mock(Execution.class), mock(CreateOrUpdateSegment.class));
-		listeners.get(AfterTargetsMatched.class).get(1)
+		listenersBuilder.getListeners().get(AfterTargetsMatched.class).get(1)
 				.afterStageFinished(mock(Execution.class), mock(CreateOrUpdateSegment.class));
 		verify(listener1.getMockDelegate()).afterTargetMatched(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));

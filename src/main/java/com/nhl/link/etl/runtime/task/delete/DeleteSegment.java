@@ -11,7 +11,6 @@ public class DeleteSegment<T> {
 	private List<T> targets;
 
 	private Map<Object, T> mappedTargets;
-	private List<Map<String, Object>> matchedSources;
 	private List<T> missingTargets;
 
 	public DeleteSegment(ObjectContext context, List<T> targets) {
@@ -33,14 +32,6 @@ public class DeleteSegment<T> {
 
 	public void setMappedTargets(Map<Object, T> mappedTargets) {
 		this.mappedTargets = mappedTargets;
-	}
-
-	public List<Map<String, Object>> getMatchedSources() {
-		return matchedSources;
-	}
-
-	public void setMatchedSources(List<Map<String, Object>> convertedRows) {
-		this.matchedSources = convertedRows;
 	}
 
 	public List<T> getMissingTargets() {

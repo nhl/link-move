@@ -9,7 +9,7 @@ import com.nhl.link.etl.stats.ExecutionStats;
  * A listener that collects task stats and stores them in the Execution's
  * {@link ExecutionStats} object.
  * 
- * @since 1.1
+ * @since 1.3
  */
 public class CreateOrUpdateStatsListener {
 

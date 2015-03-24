@@ -8,11 +8,14 @@ import org.apache.cayenne.map.ObjEntity;
 import com.nhl.link.etl.DeleteBuilder;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
+import com.nhl.link.etl.annotation.AfterMissingTargetsFiltered;
+import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
 import com.nhl.link.etl.runtime.task.ITaskService;
+import com.nhl.link.etl.runtime.task.ListenersBuilder;
 import com.nhl.link.etl.runtime.task.MapperBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
@@ -29,6 +32,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	private Expression targetFilter;
 	private String extractorName;
 	private MapperBuilder mapperBuilder;
+	private ListenersBuilder listenersBuilder;
 
 	public DefaultDeleteBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IKeyAdapterFactory keyAdapterFactory, ITaskService taskService) {
@@ -43,6 +47,16 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 		}
 
 		this.mapperBuilder = new MapperBuilder(entity, keyAdapterFactory);
+		this.listenersBuilder = new ListenersBuilder(AfterSourcesMapped.class, AfterMissingTargetsFiltered.class);
+
+		// always add stats listener..
+		stageListener(DeleteStatsListener.instance());
+	}
+
+	@Override
+	public DefaultDeleteBuilder<T> stageListener(Object listener) {
+		listenersBuilder.addListener(listener);
+		return this;
 	}
 
 	@Override
@@ -106,6 +120,6 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 		MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>(keysSubtask);
 		DeleteTargetStage<T> deleter = new DeleteTargetStage<>();
 
-		return new DeleteSegmentProcessor<>(targetMapper, sourceMatcher, deleter);
+		return new DeleteSegmentProcessor<>(targetMapper, sourceMatcher, deleter, listenersBuilder.getListeners());
 	}
 }

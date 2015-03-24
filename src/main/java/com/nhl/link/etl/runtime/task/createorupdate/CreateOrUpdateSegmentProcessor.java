@@ -15,7 +15,7 @@ import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.annotation.AfterTargetsMatched;
 import com.nhl.link.etl.annotation.AfterTargetsMerged;
 import com.nhl.link.etl.load.LoadListener;
-import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
+import com.nhl.link.etl.runtime.task.StageListener;
 
 /**
  * A stateless thread-safe processor for batch segments of a create-or-update
@@ -36,11 +36,11 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 	@Deprecated
 	private List<LoadListener<T>> loadListeners;
 
-	private Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners;
+	private Map<Class<? extends Annotation>, List<StageListener>> stageListeners;
 
 	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper mapper, TargetMatcher<T> matcher,
 			CreateOrUpdateMerger<T> merger,
-			Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners,
+			Map<Class<? extends Annotation>, List<StageListener>> stageListeners,
 			List<LoadListener<T>> loadListeners) {
 
 		this.rowConverter = rowConverter;
@@ -112,9 +112,9 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 	}
 
 	private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateOrUpdateSegment<T> segment) {
-		List<CreateOrUpdateListener> listeners = stageListeners.get(type);
+		List<StageListener> listeners = stageListeners.get(type);
 		if (listeners != null) {
-			for (CreateOrUpdateListener l : listeners) {
+			for (StageListener l : listeners) {
 				l.afterStageFinished(exec, segment);
 			}
 		}

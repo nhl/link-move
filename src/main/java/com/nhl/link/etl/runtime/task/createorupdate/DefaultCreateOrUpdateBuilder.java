@@ -1,10 +1,7 @@
 package com.nhl.link.etl.runtime.task.createorupdate;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
@@ -13,6 +10,10 @@ import org.apache.cayenne.map.ObjEntity;
 import com.nhl.link.etl.CreateOrUpdateBuilder;
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
+import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
+import com.nhl.link.etl.annotation.AfterSourcesMapped;
+import com.nhl.link.etl.annotation.AfterTargetsMatched;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.metadata.RelationshipInfo;
@@ -20,10 +21,9 @@ import com.nhl.link.etl.metadata.RelationshipType;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
-import com.nhl.link.etl.runtime.listener.CreateOrUpdateListenerFactory;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
 import com.nhl.link.etl.runtime.task.MapperBuilder;
+import com.nhl.link.etl.runtime.task.ListenersBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
@@ -38,6 +38,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
 	private MapperBuilder mapperBuilder;
+	private ListenersBuilder stageListenersBuilder;
 	private Class<T> type;
 
 	private String extractorName;
@@ -45,7 +46,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 	@Deprecated
 	private List<LoadListener<T>> loadListeners;
-	private Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners;
 
 	public DefaultCreateOrUpdateBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory) {
@@ -55,13 +55,14 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		this.extractorService = extractorService;
 		this.tokenManager = tokenManager;
 		this.relationships = new ArrayList<>();
-		this.stageListeners = new HashMap<>();
 
 		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
 		if (entity == null) {
 			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
 		this.mapperBuilder = new MapperBuilder(entity, keyAdapterFactory);
+		this.stageListenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class,
+				AfterSourcesMapped.class, AfterTargetsMatched.class, AfterTargetsMerged.class);
 
 		// always add stats listener..
 		stageListener(CreateOrUpdateStatsListener.instance());
@@ -165,7 +166,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	 */
 	@Override
 	public CreateOrUpdateBuilder<T> stageListener(Object listener) {
-		CreateOrUpdateListenerFactory.appendListeners(stageListeners, listener);
+		stageListenersBuilder.addListener(listener);
 		return this;
 	}
 
@@ -190,7 +191,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, createOrUpdateStrategy);
 
 		return new CreateOrUpdateSegmentProcessor<>(RowConverter.instance(), sourceMapper, targetMatcher, merger,
-				stageListeners, loadListeners);
+				stageListenersBuilder.getListeners(), loadListeners);
 	}
 
 	private CreateOrUpdateStrategy<T> createCreateOrUpdateStrategy() {
