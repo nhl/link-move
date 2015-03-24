@@ -7,7 +7,6 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
 import com.nhl.link.etl.CountingRowReader;
-import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;

@@ -3,7 +3,6 @@ package com.nhl.link.etl.runtime.task.sourcekeys;
 import java.util.Set;
 
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.SourceKeysSegment;
 import com.nhl.link.etl.runtime.task.createorupdate.RowConverter;
 
 /**

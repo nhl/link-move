@@ -1,8 +1,7 @@
-package com.nhl.link.etl.runtime.task;
+package com.nhl.link.etl.runtime.task.createorupdate;
 
 import static org.mockito.Mockito.mock;
 
-import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;

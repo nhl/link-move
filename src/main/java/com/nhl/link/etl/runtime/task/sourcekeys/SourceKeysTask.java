@@ -9,7 +9,6 @@ import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
-import com.nhl.link.etl.SourceKeysSegment;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extract.Extractor;

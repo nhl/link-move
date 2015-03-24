@@ -2,8 +2,6 @@ package com.nhl.link.etl;
 
 import java.util.Iterator;
 
-import com.nhl.link.etl.stats.ExecutionStats;
-
 /**
  * A {@link RowReader} decorator that counts each returned row using
  * {@link ExecutionStats}.

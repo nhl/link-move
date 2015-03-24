@@ -1,4 +1,4 @@
-package com.nhl.link.etl.stats;
+package com.nhl.link.etl;
 
 /**
  * @since 1.3

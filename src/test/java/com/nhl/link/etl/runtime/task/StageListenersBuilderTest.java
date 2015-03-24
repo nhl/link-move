@@ -9,12 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 
-import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.annotation.AfterTargetsMatched;
 import com.nhl.link.etl.annotation.AfterTargetsMerged;
+import com.nhl.link.etl.runtime.task.createorupdate.CreateOrUpdateSegment;
+import com.nhl.link.etl.runtime.task.createorupdate.MockCreateOrUpdateListener;
 
 public class StageListenersBuilderTest {
 

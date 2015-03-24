@@ -8,8 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nhl.link.etl.stats.ExecutionStats;
-
 /**
  * Represents a single execution of an {@link EtlTask}. Tracks task parameters
  * and execution statistics.

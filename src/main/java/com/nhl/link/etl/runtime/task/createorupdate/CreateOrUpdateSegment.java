@@ -1,11 +1,11 @@
-package com.nhl.link.etl;
+package com.nhl.link.etl.runtime.task.createorupdate;
 
 import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.ObjectContext;
 
-import com.nhl.link.etl.runtime.task.createorupdate.CreateOrUpdateTuple;
+import com.nhl.link.etl.Row;
 
 /**
  * @since 1.3

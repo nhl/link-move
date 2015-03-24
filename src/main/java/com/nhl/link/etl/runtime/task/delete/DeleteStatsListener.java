@@ -1,8 +1,8 @@
 package com.nhl.link.etl.runtime.task.delete;
 
 import com.nhl.link.etl.Execution;
+import com.nhl.link.etl.ExecutionStats;
 import com.nhl.link.etl.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.etl.stats.ExecutionStats;
 
 /**
  * A listener that collects task stats and stores them in the Execution's
