@@ -18,7 +18,7 @@ import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.mapper.MultiAttributeMapper;
 import com.nhl.link.etl.mapper.SafeMapKeyMapper;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
-import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 
 /**
  * @since 1.3

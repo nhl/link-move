@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
-import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 

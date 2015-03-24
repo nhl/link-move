@@ -6,7 +6,7 @@ import org.apache.cayenne.di.Inject;
 import com.nhl.link.etl.CreateOrUpdateBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
-import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
