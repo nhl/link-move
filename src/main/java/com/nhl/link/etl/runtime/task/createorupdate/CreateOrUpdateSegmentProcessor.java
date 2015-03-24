@@ -35,7 +35,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 	@Deprecated
 	private List<LoadListener<T>> loadListeners;
 
-	private Map<Class<? extends Annotation>, List<StageListener>> stageListeners;
+	private Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
 	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper mapper, TargetMatcher<T> matcher,
 			CreateOrUpdateMerger<T> merger,
@@ -47,7 +47,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 		this.matcher = matcher;
 		this.merger = merger;
 		this.loadListeners = loadListeners;
-		this.stageListeners = stageListeners;
+		this.listeners = stageListeners;
 	}
 
 	public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
@@ -111,9 +111,9 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 	}
 
 	private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateOrUpdateSegment<T> segment) {
-		List<StageListener> listeners = stageListeners.get(type);
-		if (listeners != null) {
-			for (StageListener l : listeners) {
+		List<StageListener> listenersOfType = listeners.get(type);
+		if (listenersOfType != null) {
+			for (StageListener l : listenersOfType) {
 				l.afterStageFinished(exec, segment);
 			}
 		}
