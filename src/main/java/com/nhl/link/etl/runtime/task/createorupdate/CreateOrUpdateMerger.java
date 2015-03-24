@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
 import com.nhl.link.etl.EtlRuntimeException;
@@ -14,13 +15,13 @@ import com.nhl.link.etl.mapper.Mapper;
 /**
  * @since 1.3
  */
-public class CreateOrUpdateMerger<T> {
+public class CreateOrUpdateMerger<T extends DataObject> {
 
 	private Class<T> type;
-	private Mapper<T> mapper;
+	private Mapper mapper;
 	private CreateOrUpdateStrategy<T> createOrUpdateStrategy;
 
-	public CreateOrUpdateMerger(Class<T> type, Mapper<T> mapper, CreateOrUpdateStrategy<T> createOrUpdateStrategy) {
+	public CreateOrUpdateMerger(Class<T> type, Mapper mapper, CreateOrUpdateStrategy<T> createOrUpdateStrategy) {
 		this.mapper = mapper;
 		this.type = type;
 		this.createOrUpdateStrategy = createOrUpdateStrategy;
@@ -46,7 +47,7 @@ public class CreateOrUpdateMerger<T> {
 				throw new EtlRuntimeException("Invalid key: " + key);
 			}
 
-			// skip phatom updates...
+			// skip phantom updates...
 			if (createOrUpdateStrategy.update(context, src, t)) {
 				result.add(new CreateOrUpdateTuple<>(src, t, false));
 			}

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
@@ -17,67 +16,62 @@ import com.nhl.link.etl.mapper.KeyAdapter;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.mapper.MultiAttributeMapper;
 import com.nhl.link.etl.mapper.SafeMapKeyMapper;
-import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 
 /**
- * A common superclass of task builders for tasks that require mapping targets
- * to sources.
- * 
  * @since 1.3
  */
-public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
+public class MapperBuilder {
 
-	protected IKeyAdapterFactory keyAdapterFactory;
-	protected ITargetCayenneService targetCayenneService;
+	private IKeyAdapterFactory keyAdapterFactory;
 
-	protected Class<T> type;
-	protected Mapper<T> mapper;
-	protected boolean byId;
-	protected List<String> keyAttributes;
+	private ObjEntity entity;
+	private Mapper mapper;
+	private boolean byId;
+	private List<String> keyAttributes;
 
-	public MappingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
-			IKeyAdapterFactory keyAdapterFactory) {
-
-		this.type = type;
-		this.targetCayenneService = targetCayenneService;
+	public MapperBuilder(ObjEntity entity, IKeyAdapterFactory keyAdapterFactory) {
+		this.entity = entity;
 		this.keyAdapterFactory = keyAdapterFactory;
 	}
 
-	protected void setMapper(Mapper<T> mapper) {
+	public MapperBuilder matchBy(Mapper mapper) {
 		this.byId = false;
 		this.mapper = mapper;
 		this.keyAttributes = null;
+		return this;
 	}
 
-	protected void setMapperAttributeNames(String... keyAttributes) {
+	public MapperBuilder matchBy(String... keyAttributes) {
 		this.byId = false;
 		this.mapper = null;
 		this.keyAttributes = Arrays.asList(keyAttributes);
+		return this;
 	}
 
-	protected void setMapperProperties(Property<?>... matchAttributes) {
+	public MapperBuilder matchBy(Property<?>... matchAttributes) {
 
 		// it will fail later on 'build'; TODO: should we do early argument
 		// checking?
 		if (matchAttributes == null) {
-			return;
+			return this;
 		}
 		String[] names = new String[matchAttributes.length];
 		for (int i = 0; i < matchAttributes.length; i++) {
 			names[i] = matchAttributes[i].getName();
 		}
 
-		setMapperAttributeNames(names);
+		return matchBy(names);
 	}
 
-	protected void setMapperId(String idProperty) {
+	public MapperBuilder matchById(String idProperty) {
 		this.byId = true;
 		this.mapper = null;
 		this.keyAttributes = Collections.singletonList(idProperty);
+		return this;
 	}
 
-	protected Mapper<T> createMapper() {
+	public Mapper build() {
 
 		// not wrapping custom matcher, presuming the user knows what's he's
 		// doing and his matcher generates proper keys
@@ -89,14 +83,14 @@ public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskB
 			throw new IllegalStateException("'matchBy' or 'matchById' must be set");
 		}
 
-		Mapper<T> matcher;
+		Mapper mapper;
 
 		if (byId) {
-			matcher = new IdMapper<>(pkAttribute(), getSingleMatchAttribute());
+			mapper = new IdMapper(pkAttribute(), getSingleMatchAttribute());
 		} else if (keyAttributes.size() > 1) {
-			matcher = new MultiAttributeMapper<>(keyAttributes);
+			mapper = new MultiAttributeMapper(keyAttributes);
 		} else {
-			matcher = new AttributeMapper<>(getSingleMatchAttribute());
+			mapper = new AttributeMapper(getSingleMatchAttribute());
 		}
 
 		KeyAdapter keyAdapter;
@@ -111,25 +105,21 @@ public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskB
 			keyAdapter = keyAdapterFactory.adapter(attribute.getJavaClass());
 		}
 
-		return new SafeMapKeyMapper<>(matcher, keyAdapter);
+		return new SafeMapKeyMapper(mapper, keyAdapter);
 	}
 
 	private String pkAttribute() {
-		ObjEntity oe = targetCayenneService.entityResolver().getObjEntity(type);
-		if (oe == null) {
-			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
-		}
 
-		Collection<String> pks = oe.getPrimaryKeyNames();
+		Collection<String> pks = entity.getPrimaryKeyNames();
 		if (pks.size() != 1) {
 			throw new EtlRuntimeException("Only single-column PK is supported for now. Got " + pks.size()
-					+ " for entity: " + oe.getName());
+					+ " for entity: " + entity.getName());
 		}
 
 		return pks.iterator().next();
 	}
 
-	protected String getSingleMatchAttribute() {
+	public String getSingleMatchAttribute() {
 		if (keyAttributes == null || keyAttributes.isEmpty()) {
 			return null;
 		}
@@ -140,12 +130,6 @@ public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskB
 	}
 
 	private ObjAttribute getMatchAttribute() {
-
-		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
-
-		if (entity == null) {
-			throw new IllegalStateException("Type " + type.getName() + " is not mapped in Cayenne");
-		}
 
 		if (byId) {
 			return entity.getPrimaryKeys().iterator().next();
@@ -159,4 +143,9 @@ public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskB
 			return a;
 		}
 	}
+
+	public boolean isById() {
+		return byId;
+	}
+
 }

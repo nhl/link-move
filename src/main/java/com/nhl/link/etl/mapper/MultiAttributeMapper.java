@@ -11,7 +11,7 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
-public class MultiAttributeMapper<T extends DataObject> implements Mapper<T> {
+public class MultiAttributeMapper implements Mapper {
 
 	private final List<String> keyProperties;
 
@@ -48,7 +48,7 @@ public class MultiAttributeMapper<T extends DataObject> implements Mapper<T> {
 	}
 
 	@Override
-	public Object keyForTarget(T target) {
+	public Object keyForTarget(DataObject target) {
 		Map<String, Object> keyMap = new HashMap<String, Object>(keyProperties.size() * 2);
 
 		for (String property : keyProperties) {

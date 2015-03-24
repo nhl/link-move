@@ -13,11 +13,11 @@ import org.junit.Test;
 
 public class AttributeMapperTest {
 
-	private AttributeMapper<DataObject> mapper;
+	private AttributeMapper mapper;
 
 	@Before
 	public void setUpMatcher() {
-		mapper = new AttributeMapper<>("abc");
+		mapper = new AttributeMapper("abc");
 	}
 
 	@Test

@@ -9,11 +9,11 @@ import com.nhl.link.etl.mapper.Mapper;
 /**
  * @since 1.3
  */
-public class SourceMapper<T> {
+public class SourceMapper {
 
-	private Mapper<T> mapper;
+	private Mapper mapper;
 
-	public SourceMapper(Mapper<T> mapper) {
+	public SourceMapper(Mapper mapper) {
 		this.mapper = mapper;
 	}
 

@@ -8,8 +8,10 @@ import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.etl.CreateOrUpdateBuilder;
+import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
@@ -20,7 +22,8 @@ import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
 import com.nhl.link.etl.runtime.listener.CreateOrUpdateListenerFactory;
-import com.nhl.link.etl.runtime.task.MappingTaskBuilder;
+import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
+import com.nhl.link.etl.runtime.task.MapperBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
@@ -28,11 +31,14 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
  * certain unique attribute on both sides.
  */
 @SuppressWarnings("deprecation")
-public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingTaskBuilder<T> implements
+public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder implements
 		CreateOrUpdateBuilder<T> {
 
 	private IExtractorService extractorService;
+	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
+	private MapperBuilder mapperBuilder;
+	private Class<T> type;
 
 	private String extractorName;
 	private List<RelationshipInfo> relationships;
@@ -44,12 +50,18 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingT
 	public DefaultCreateOrUpdateBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory) {
 
-		super(type, targetCayenneService, keyAdapterFactory);
-
+		this.type = type;
+		this.targetCayenneService = targetCayenneService;
 		this.extractorService = extractorService;
 		this.tokenManager = tokenManager;
 		this.relationships = new ArrayList<>();
 		this.stageListeners = new HashMap<>();
+
+		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
+		if (entity == null) {
+			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+		}
+		this.mapperBuilder = new MapperBuilder(entity, keyAdapterFactory);
 
 		// always add stats listener..
 		stageListener(CreateOrUpdateStatsListener.instance());
@@ -70,14 +82,14 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingT
 	}
 
 	@Override
-	public DefaultCreateOrUpdateBuilder<T> matchBy(Mapper<T> mapper) {
-		setMapper(mapper);
+	public DefaultCreateOrUpdateBuilder<T> matchBy(Mapper mapper) {
+		mapperBuilder.matchBy(mapper);
 		return this;
 	}
 
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchBy(String... keyAttributes) {
-		setMapperAttributeNames(keyAttributes);
+		mapperBuilder.matchBy(keyAttributes);
 		return this;
 	}
 
@@ -86,7 +98,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingT
 	 */
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchBy(Property<?>... matchAttributes) {
-		setMapperProperties(matchAttributes);
+		mapperBuilder.matchBy(matchAttributes);
 		return this;
 	}
 
@@ -95,7 +107,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingT
 	 */
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchById(String idProperty) {
-		setMapperId(idProperty);
+		mapperBuilder.matchById(idProperty);
 		return this;
 	}
 
@@ -170,10 +182,10 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingT
 
 	private CreateOrUpdateSegmentProcessor<T> createProcessor() {
 
-		Mapper<T> mapper = createMapper();
+		Mapper mapper = mapperBuilder.build();
 		CreateOrUpdateStrategy<T> createOrUpdateStrategy = createCreateOrUpdateStrategy();
 
-		SourceMapper<T> sourceMapper = new SourceMapper<>(mapper);
+		SourceMapper sourceMapper = new SourceMapper(mapper);
 		TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
 		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, createOrUpdateStrategy);
 
@@ -182,8 +194,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends MappingT
 	}
 
 	private CreateOrUpdateStrategy<T> createCreateOrUpdateStrategy() {
-		if (byId) {
-			return new CayenneCreateOrUpdateWithPKStrategy<>(relationships, getSingleMatchAttribute());
+		if (mapperBuilder.isById()) {
+			return new CayenneCreateOrUpdateWithPKStrategy<>(relationships, mapperBuilder.getSingleMatchAttribute());
 		} else {
 			return new CayenneCreateOrUpdateStrategy<>(relationships);
 		}

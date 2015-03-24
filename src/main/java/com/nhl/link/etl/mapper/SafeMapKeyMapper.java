@@ -2,6 +2,7 @@ package com.nhl.link.etl.mapper;
 
 import java.util.Map;
 
+import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
 /**
@@ -10,18 +11,18 @@ import org.apache.cayenne.exp.Expression;
  * 
  * @since 1.1
  */
-public class SafeMapKeyMapper<T> implements Mapper<T> {
+public class SafeMapKeyMapper implements Mapper {
 
-	private Mapper<T> delegate;
+	private Mapper delegate;
 	private KeyAdapter keyAdapter;
 
-	public SafeMapKeyMapper(Mapper<T> delegate, KeyAdapter keyAdapter) {
+	public SafeMapKeyMapper(Mapper delegate, KeyAdapter keyAdapter) {
 		this.delegate = delegate;
 		this.keyAdapter = keyAdapter;
 	}
 
 	@Override
-	public Object keyForTarget(T target) {
+	public Object keyForTarget(DataObject target) {
 		return keyAdapter.toMapKey(delegate.keyForTarget(target));
 	}
 

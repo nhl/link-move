@@ -35,7 +35,7 @@ public interface CreateOrUpdateBuilder<T> {
 	@Deprecated
 	CreateOrUpdateBuilder<T> withExtractor(String extractorName);
 
-	CreateOrUpdateBuilder<T> matchBy(Mapper<T> mapper);
+	CreateOrUpdateBuilder<T> matchBy(Mapper mapper);
 
 	CreateOrUpdateBuilder<T> matchBy(String... keyAttributes);
 

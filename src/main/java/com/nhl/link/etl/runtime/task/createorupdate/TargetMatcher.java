@@ -19,9 +19,9 @@ import com.nhl.link.etl.mapper.Mapper;
 public class TargetMatcher<T> {
 
 	private Class<T> type;
-	private Mapper<T> mapper;
+	private Mapper mapper;
 
-	public TargetMatcher(Class<T> type, Mapper<T> mapper) {
+	public TargetMatcher(Class<T> type, Mapper mapper) {
 		this.type = type;
 		this.mapper = mapper;
 	}

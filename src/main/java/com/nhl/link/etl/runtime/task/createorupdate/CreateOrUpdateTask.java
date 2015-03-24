@@ -3,6 +3,7 @@ package com.nhl.link.etl.runtime.task.createorupdate;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
 import com.nhl.link.etl.CountingRowReader;
@@ -25,7 +26,7 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
  * 
  * @since 1.3
  */
-public class CreateOrUpdateTask<T> extends BaseTask {
+public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
 	private String extractorName;
 	private int batchSize;

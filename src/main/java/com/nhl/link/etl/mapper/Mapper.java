@@ -2,6 +2,7 @@ package com.nhl.link.etl.mapper;
 
 import java.util.Map;
 
+import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
 /**
@@ -9,9 +10,9 @@ import org.apache.cayenne.exp.Expression;
  * the ETL. Keys are then used during the LOAD phase of the ETL execution to
  * match sources and targets.
  */
-public interface Mapper<T> {
+public interface Mapper {
 
-	Object keyForTarget(T target);
+	Object keyForTarget(DataObject target);
 
 	Object keyForSource(Map<String, Object> source);
 

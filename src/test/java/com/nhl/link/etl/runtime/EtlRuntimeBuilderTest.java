@@ -5,10 +5,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import org.apache.cayenne.CayenneDataObject;
+import org.apache.cayenne.DataChannel;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
+import org.apache.cayenne.map.EntityResolver;
+import org.apache.cayenne.map.ObjEntity;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
@@ -17,9 +22,25 @@ import com.nhl.link.etl.runtime.task.ITaskService;
 
 public class EtlRuntimeBuilderTest {
 
+	private ServerRuntime cayenneRuntime;
+
+	@Before
+	public void before() {
+
+		EntityResolver resolver = mock(EntityResolver.class);
+		when(resolver.getObjEntity(any(Class.class))).thenReturn(mock(ObjEntity.class));
+
+		DataChannel channel = mock(DataChannel.class);
+		when(channel.getEntityResolver()).thenReturn(resolver);
+
+		this.cayenneRuntime = mock(ServerRuntime.class);
+		when(cayenneRuntime.getChannel()).thenReturn(channel);
+	}
+
 	@Test
 	public void testBuild_DefaultConfigLoader() {
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(mock(ServerRuntime.class));
+
+		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(cayenneRuntime);
 		EtlRuntime runtime = builder.build();
 
 		assertNotNull(runtime);
@@ -38,7 +59,7 @@ public class EtlRuntimeBuilderTest {
 	@Test
 	public void testBuild() {
 		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withExtractorConfigLoader(
-				mock(IExtractorConfigLoader.class)).withTargetRuntime(mock(ServerRuntime.class));
+				mock(IExtractorConfigLoader.class)).withTargetRuntime(cayenneRuntime);
 		EtlRuntime runtime = builder.build();
 		assertNotNull(runtime);
 
@@ -51,8 +72,7 @@ public class EtlRuntimeBuilderTest {
 	public void testAdapter() {
 
 		LinkEtlAdapter adapter = mock(LinkEtlAdapter.class);
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(mock(ServerRuntime.class)).adapter(
-				adapter);
+		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(cayenneRuntime).adapter(adapter);
 
 		verifyZeroInteractions(adapter);
 		builder.build();

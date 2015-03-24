@@ -6,7 +6,7 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
-public class AttributeMapper<T extends DataObject> implements Mapper<T> {
+public class AttributeMapper implements Mapper {
 
 	private final String keyProperty;
 
@@ -26,7 +26,7 @@ public class AttributeMapper<T extends DataObject> implements Mapper<T> {
 	}
 
 	@Override
-	public Object keyForTarget(T target) {
+	public Object keyForTarget(DataObject target) {
 		return target.readProperty(keyProperty);
 	}
 }

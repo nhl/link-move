@@ -11,7 +11,7 @@ import org.apache.cayenne.exp.Expression;
 /**
  * @since 1.1
  */
-public class IdMapper<T extends DataObject> implements Mapper<T> {
+public class IdMapper implements Mapper {
 
 	private String targetIdColumn;
 	private final String sourceIdName;
@@ -32,7 +32,7 @@ public class IdMapper<T extends DataObject> implements Mapper<T> {
 	}
 
 	@Override
-	public Object keyForTarget(T target) {
+	public Object keyForTarget(DataObject target) {
 		return Cayenne.pkForObject(target);
 	}
 

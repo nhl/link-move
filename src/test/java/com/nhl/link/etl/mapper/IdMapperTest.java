@@ -14,11 +14,11 @@ import org.junit.Test;
 
 public class IdMapperTest {
 
-	private IdMapper<DataObject> mapper;
+	private IdMapper mapper;
 
 	@Before
 	public void setUpMapper() {
-		mapper = new IdMapper<>("TID", "SID");
+		mapper = new IdMapper("TID", "SID");
 	}
 
 	@Test

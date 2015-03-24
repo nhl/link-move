@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.cayenne.DataObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,12 @@ import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
  * @since 1.3
  */
 @SuppressWarnings("deprecation")
-public class CreateOrUpdateSegmentProcessor<T> {
+public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrUpdateSegmentProcessor.class);
 
 	private RowConverter rowConverter;
-	private SourceMapper<T> mapper;
+	private SourceMapper mapper;
 	private TargetMatcher<T> matcher;
 	private CreateOrUpdateMerger<T> merger;
 
@@ -37,7 +38,7 @@ public class CreateOrUpdateSegmentProcessor<T> {
 
 	private Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners;
 
-	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper<T> mapper, TargetMatcher<T> matcher,
+	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper mapper, TargetMatcher<T> matcher,
 			CreateOrUpdateMerger<T> merger,
 			Map<Class<? extends Annotation>, List<CreateOrUpdateListener>> stageListeners,
 			List<LoadListener<T>> loadListeners) {
