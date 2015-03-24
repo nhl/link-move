@@ -3,7 +3,6 @@ package com.nhl.link.etl.runtime.task.createorupdate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.cayenne.ObjectContext;
 
@@ -60,16 +59,6 @@ public class CreateOrUpdateTask<T> extends BaseTask {
 
 			return execution;
 		}
-	}
-
-	protected ExtractorParameters createExtractorParameters(Map<String, Object> params) {
-		ExtractorParameters extractorParams = new ExtractorParameters();
-
-		for (Entry<String, Object> e : params.entrySet()) {
-			extractorParams.add(e.getKey(), e.getValue());
-		}
-
-		return extractorParams;
 	}
 
 	protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {

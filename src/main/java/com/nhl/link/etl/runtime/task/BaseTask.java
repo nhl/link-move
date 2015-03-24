@@ -3,10 +3,12 @@ package com.nhl.link.etl.runtime.task;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.SyncToken;
+import com.nhl.link.etl.extract.ExtractorParameters;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
@@ -53,5 +55,15 @@ public abstract class BaseTask implements EtlTask {
 		tokenManager.saveToken(token);
 
 		return exec;
+	}
+	
+	protected ExtractorParameters createExtractorParameters(Map<String, Object> params) {
+		ExtractorParameters extractorParams = new ExtractorParameters();
+
+		for (Entry<String, Object> e : params.entrySet()) {
+			extractorParams.add(e.getKey(), e.getValue());
+		}
+
+		return extractorParams;
 	}
 }

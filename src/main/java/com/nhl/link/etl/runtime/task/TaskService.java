@@ -15,20 +15,20 @@ public class TaskService implements ITaskService {
 	private IExtractorService extractorService;
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
-	private IKeyAdapterFactory keyBuilderFactory;
+	private IKeyAdapterFactory keyAdapterFactory;
 
 	public TaskService(@Inject IExtractorService extractorService, @Inject ITargetCayenneService targetCayenneService,
-			@Inject ITokenManager tokenManager, @Inject IKeyAdapterFactory keyBuilderFactory) {
+			@Inject ITokenManager tokenManager, @Inject IKeyAdapterFactory keyAdapterFactory) {
 		this.extractorService = extractorService;
 		this.targetCayenneService = targetCayenneService;
 		this.tokenManager = tokenManager;
-		this.keyBuilderFactory = keyBuilderFactory;
+		this.keyAdapterFactory = keyAdapterFactory;
 	}
 
 	@Override
 	public <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
 		return new DefaultCreateOrUpdateBuilder<>(type, targetCayenneService, extractorService, tokenManager,
-				keyBuilderFactory);
+				keyAdapterFactory);
 	}
 
 	@Deprecated
