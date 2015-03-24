@@ -14,17 +14,31 @@ public class SourceMapperBuilder {
 
 	private IKeyAdapterFactory keyAdapterFactory;
 	private List<String> columns;
+	private Mapper mapper;
 
 	public SourceMapperBuilder(IKeyAdapterFactory keyAdapterFactory) {
 		this.keyAdapterFactory = keyAdapterFactory;
 	}
 
+	public SourceMapperBuilder matchBy(Mapper mapper) {
+		this.mapper = mapper;
+		this.columns = null;
+		return this;
+	}
+
 	public SourceMapperBuilder matchBy(String... columns) {
+		this.mapper = null;
 		this.columns = Arrays.asList(columns);
 		return this;
 	}
 
 	public Mapper build() {
+
+		// not wrapping custom matcher, presuming the user knows what's he's
+		// doing and his matcher generates proper keys
+		if (this.mapper != null) {
+			return this.mapper;
+		}
 
 		if (columns == null) {
 			throw new IllegalStateException("'matchBy' or 'matchById' must be set");

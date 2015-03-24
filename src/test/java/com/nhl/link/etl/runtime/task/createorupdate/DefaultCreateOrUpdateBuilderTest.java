@@ -27,7 +27,6 @@ public class DefaultCreateOrUpdateBuilderTest {
 
 		this.cayenneService = mock(ITargetCayenneService.class);
 		when(cayenneService.entityResolver()).thenReturn(resolver);
-
 	}
 
 	@Test(expected = IllegalStateException.class)

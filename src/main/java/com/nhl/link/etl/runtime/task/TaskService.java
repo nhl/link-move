@@ -4,11 +4,13 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.CreateOrUpdateBuilder;
+import com.nhl.link.etl.DeleteBuilder;
 import com.nhl.link.etl.SourceKeysBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
+import com.nhl.link.etl.runtime.task.delete.DefaultDeleteBuilder;
 import com.nhl.link.etl.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
@@ -43,4 +45,10 @@ public class TaskService implements ITaskService {
 	public <T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type) {
 		return createOrUpdate(type);
 	}
+
+	@Override
+	public <T extends DataObject> DeleteBuilder<T> delete(Class<T> type) {
+		return new DefaultDeleteBuilder<T>(type, targetCayenneService, keyAdapterFactory, this);
+	}
+
 }

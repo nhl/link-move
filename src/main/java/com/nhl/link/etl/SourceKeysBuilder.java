@@ -1,5 +1,7 @@
 package com.nhl.link.etl;
 
+import com.nhl.link.etl.mapper.Mapper;
+
 /**
  * A builder of an {@link EtlTask} that extracts all the keys from the source
  * data store.
@@ -24,5 +26,8 @@ public interface SourceKeysBuilder {
 	 */
 	SourceKeysBuilder batchSize(int batchSize);
 
+	SourceKeysBuilder matchBy(Mapper mapper);
+
 	SourceKeysBuilder matchBy(String... columns);
+
 }

@@ -14,7 +14,7 @@ public interface Mapper {
 
 	Object keyForTarget(DataObject target);
 
-	Object keyForSource(Map<String, Object> source);
-
 	Expression expressionForKey(Object key);
+
+	Object keyForSource(Map<String, Object> source);
 }

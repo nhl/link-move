@@ -58,6 +58,12 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 	}
 
 	@Override
+	public SourceKeysBuilder matchBy(Mapper mapper) {
+		mapperBuilder.matchBy(mapper);
+		return this;
+	}
+
+	@Override
 	public SourceKeysBuilder matchBy(String... columns) {
 		mapperBuilder.matchBy(columns);
 		return this;

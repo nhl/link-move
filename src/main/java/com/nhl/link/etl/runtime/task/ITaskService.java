@@ -3,6 +3,7 @@ package com.nhl.link.etl.runtime.task;
 import org.apache.cayenne.DataObject;
 
 import com.nhl.link.etl.CreateOrUpdateBuilder;
+import com.nhl.link.etl.DeleteBuilder;
 import com.nhl.link.etl.SourceKeysBuilder;
 
 public interface ITaskService {
@@ -24,4 +25,11 @@ public interface ITaskService {
 	 */
 	@Deprecated
 	<T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type);
+
+	/**
+	 * Returns a builder of target delete ETL synchronization task.
+	 * 
+	 * @since 1.3
+	 */
+	<T extends DataObject> DeleteBuilder<T> delete(Class<T> type);
 }
