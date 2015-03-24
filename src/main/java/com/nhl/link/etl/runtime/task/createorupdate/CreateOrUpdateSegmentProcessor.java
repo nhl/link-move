@@ -12,8 +12,8 @@ import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
-import com.nhl.link.etl.annotation.AfterTargetMatched;
-import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.annotation.AfterTargetsMatched;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.runtime.listener.CreateOrUpdateListener;
 
@@ -73,12 +73,12 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
 	private void matchTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMatchedTargets(matcher.match(segment.getContext(), segment.getMappedSources()));
-		notifyListeners(AfterTargetMatched.class, exec, segment);
+		notifyListeners(AfterTargetsMatched.class, exec, segment);
 	}
 
 	private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMerged(merger.merge(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
-		notifyListeners(AfterTargetMerged.class, exec, segment);
+		notifyListeners(AfterTargetsMerged.class, exec, segment);
 		callDeprecatedListeners(exec, segment);
 	}
 

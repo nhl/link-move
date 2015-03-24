@@ -30,7 +30,7 @@ public class CreateOrUpdate_TargetOnlyTest extends EtlIntegrationTest {
 		targetRunSql("INSERT INTO utest.etl1t (NAME) VALUES ('b')");
 
 		Execution e1 = task.run();
-		assertExec(2, 2, 0, e1);
+		assertExec(2, 2, 0, 0, e1);
 		assertEquals(2, targetScalar("SELECT count(1) from utest.etl2t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl2t WHERE NAME = 'a' AND address is null"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl2t WHERE NAME = 'b' AND address is null"));
@@ -39,7 +39,7 @@ public class CreateOrUpdate_TargetOnlyTest extends EtlIntegrationTest {
 		targetRunSql("UPDATE utest.etl1t SET NAME = 'd' WHERE NAME = 'a'");
 
 		Execution e2 = task.run();
-		assertExec(3, 2, 0, e2);
+		assertExec(3, 2, 0, 0, e2);
 		assertEquals(4, targetScalar("SELECT count(1) from utest.etl2t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl2t WHERE NAME = 'a' AND address is null"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl2t WHERE NAME = 'b' AND address is null"));

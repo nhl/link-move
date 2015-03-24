@@ -103,7 +103,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 		EtlTask keysSubtask = taskService.extractSourceKeys().sourceExtractor(extractorName).matchBy(mapper).task();
 
 		TargetMapper<T> targetMapper = new TargetMapper<>(mapper);
-		SourceMatcher<T> sourceMatcher = new SourceMatcher<>(keysSubtask);
+		MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>(keysSubtask);
 		DeleteTargetStage<T> deleter = new DeleteTargetStage<>();
 
 		return new DeleteSegmentProcessor<>(targetMapper, sourceMatcher, deleter);

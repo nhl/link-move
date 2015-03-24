@@ -21,6 +21,7 @@ public class DeleteTest extends EtlIntegrationTest {
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('b', NULL)");
 
 		Execution e1 = task.run();
+		assertExec(0, 0, 0, 2, e1);
 
 		assertEquals(0, targetScalar("SELECT count(1) from utest.etl1t"));
 
@@ -30,6 +31,7 @@ public class DeleteTest extends EtlIntegrationTest {
 		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('a')");
 
 		Execution e2 = task.run();
+		assertExec(0, 0, 0, 1, e2);
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a'"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t"));
 

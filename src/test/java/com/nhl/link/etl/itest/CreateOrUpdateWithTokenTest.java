@@ -22,22 +22,22 @@ public class CreateOrUpdateWithTokenTest extends EtlIntegrationTest {
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', 1)");
 
 		Execution e1 = task.run(new IntToken("test_ByAttribute", 2));
-		assertExec(1, 1, 0, e1);
+		assertExec(1, 1, 0, 0, e1);
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age = 1"));
 
 		Execution e2 = task.run(new IntToken("test_ByAttribute", 5));
-		assertExec(1, 1, 0, e2);
+		assertExec(1, 1, 0, 0, e2);
 		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
 
 		Execution e3 = task.run(new IntToken("test_ByAttribute", 8));
-		assertExec(0, 0, 0, e3);
+		assertExec(0, 0, 0, 0, e3);
 
 		srcRunSql("UPDATE utest.etl1 SET AGE = 9 WHERE NAME = 'b'");
 
 		Execution e4 = task.run(new IntToken("test_ByAttribute", 11));
-		assertExec(1, 0, 1, e4);
+		assertExec(1, 0, 1, 0, e4);
 		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age = 9"));
 	}

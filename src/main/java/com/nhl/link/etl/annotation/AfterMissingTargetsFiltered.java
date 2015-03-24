@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation of a data segment transformation stage listener method that should
- * be called after objects are pulled from the target data store for a set of
- * source keys.
+ * be called after objects from the target data store are found that have no
+ * corresponding records in the source.
  * 
  * @since 1.3
  */
@@ -18,6 +18,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface AfterTargetMatched {
+public @interface AfterMissingTargetsFiltered {
 
 }

@@ -7,13 +7,13 @@ import com.nhl.link.etl.Execution;
 public class DeleteSegmentProcessor<T extends DataObject> {
 
 	private TargetMapper<T> targetMapper;
-	private SourceMatcher<T> sourceMatcher;
+	private MissingTargetsFilterStage<T> missingTargetsFilter;
 	private DeleteTargetStage<T> deleter;
 
-	public DeleteSegmentProcessor(TargetMapper<T> targetMapper, SourceMatcher<T> sourceMatcher,
+	public DeleteSegmentProcessor(TargetMapper<T> targetMapper, MissingTargetsFilterStage<T> missingTargetsFilter,
 			DeleteTargetStage<T> deleter) {
 		this.targetMapper = targetMapper;
-		this.sourceMatcher = sourceMatcher;
+		this.missingTargetsFilter = missingTargetsFilter;
 		this.deleter = deleter;
 	}
 
@@ -22,7 +22,7 @@ public class DeleteSegmentProcessor<T extends DataObject> {
 		// execute delete stages
 
 		mapTarget(segment);
-		matchSrc(segment);
+		filterMissingTargets(segment);
 		deleteTarget(segment);
 		commitTarget(segment);
 	}
@@ -31,8 +31,8 @@ public class DeleteSegmentProcessor<T extends DataObject> {
 		segment.setMappedTargets(targetMapper.map(segment.getTargets()));
 	}
 
-	private void matchSrc(DeleteSegment<T> segment) {
-		segment.setMissingTargets(sourceMatcher.match(segment.getContext(), segment.getMappedTargets()));
+	private void filterMissingTargets(DeleteSegment<T> segment) {
+		segment.setMissingTargets(missingTargetsFilter.filterMissing(segment.getContext(), segment.getMappedTargets()));
 	}
 
 	private void deleteTarget(DeleteSegment<T> segment) {

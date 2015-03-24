@@ -13,8 +13,8 @@ import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
-import com.nhl.link.etl.annotation.AfterTargetMatched;
-import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.annotation.AfterTargetsMatched;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 
 /**
  * @since 1.3
@@ -23,7 +23,7 @@ public class CreateOrUpdateListenerFactory {
 
 	@SuppressWarnings("unchecked")
 	private static Class<? extends Annotation>[] LISTENER_ANNOTATIONS = new Class[] { AfterSourceRowsConverted.class,
-			AfterSourcesMapped.class, AfterTargetMatched.class, AfterTargetMerged.class };
+			AfterSourcesMapped.class, AfterTargetsMatched.class, AfterTargetsMerged.class };
 
 	private static MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 

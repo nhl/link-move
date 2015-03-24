@@ -27,7 +27,7 @@ public class SourceKeysTest extends EtlIntegrationTest {
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
 
 		Execution e1 = task.run();
-		assertExec(2, 0, 0, e1);
+		assertExec(2, 0, 0, 0, e1);
 		Set<Object> keys1 = (Set<Object>) e1.getAttribute(SourceKeysTask.RESULT_KEY);
 		assertNotNull(keys1);
 		assertEquals(new HashSet<>(Arrays.asList("a", "b")), keys1);
@@ -36,7 +36,7 @@ public class SourceKeysTest extends EtlIntegrationTest {
 		srcRunSql("UPDATE utest.etl1 SET NAME = 'd' WHERE NAME = 'a'");
 
 		Execution e2 = task.run();
-		assertExec(3, 0, 0, e2);
+		assertExec(3, 0, 0, 0, e2);
 		Set<Object> keys2 = (Set<Object>) e2.getAttribute(SourceKeysTask.RESULT_KEY);
 		assertNotNull(keys2);
 		assertEquals(new HashSet<>(Arrays.asList("b", "c", "d")), keys2);

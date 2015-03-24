@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation of a data segment transformation stage listener method that should
- * be called after source data is merged into target objects.
+ * be called after objects from the target data store are mapped to keys.
  * 
  * @since 1.3
  */
@@ -17,6 +17,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface AfterTargetMerged {
+public @interface AfterTargetsMapped {
 
 }

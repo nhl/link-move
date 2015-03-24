@@ -30,9 +30,11 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 		return new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime()).build();
 	}
 
-	protected void assertExec(int extracted, int created, int updated, Execution exec) {
-		assertEquals("Extracted unexpected number of records", extracted, exec.getStats().getExtracted());
-		assertEquals("Created unexpected number of records", created, exec.getStats().getCreated());
-		assertEquals("Updated unexpected number of records", updated, exec.getStats().getUpdated());
+	protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {
+		assertEquals("Extracted unexpected number of records.", extracted, exec.getStats().getExtracted());
+		assertEquals("Created unexpected number of records.", created, exec.getStats().getCreated());
+		assertEquals("Updated unexpected number of records.", updated, exec.getStats().getUpdated());
+		assertEquals("Deleted unexpected number of records.", deleted, exec.getStats().getDeleted());
+
 	}
 }

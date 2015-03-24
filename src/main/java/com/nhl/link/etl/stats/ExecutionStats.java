@@ -8,6 +8,7 @@ public class ExecutionStats {
 	protected long extracted;
 	protected long created;
 	protected long updated;
+	protected long deleted;
 	protected long started;
 	protected long finished;
 
@@ -39,6 +40,10 @@ public class ExecutionStats {
 	public void incrementUpdated(long count) {
 		this.updated += count;
 	}
+	
+	public void incrementDeleted(long count) {
+		this.deleted += count;
+	}
 
 	public long getExtracted() {
 		return extracted;
@@ -50,6 +55,10 @@ public class ExecutionStats {
 
 	public long getUpdated() {
 		return updated;
+	}
+	
+	public long getDeleted() {
+		return deleted;
 	}
 
 	public long getStarted() {

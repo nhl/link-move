@@ -6,19 +6,19 @@ import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
-import com.nhl.link.etl.annotation.AfterTargetMatched;
-import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.annotation.AfterTargetsMatched;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 
 public class MockCreateOrUpdateListener {
 
 	private MockCreateOrUpdateListener mockDelegate = mock(MockCreateOrUpdateListener.class);
 
-	@AfterTargetMatched
+	@AfterTargetsMatched
 	public void afterTargetMatched(Execution execution, CreateOrUpdateSegment<?> segment) {
 		mockDelegate.afterTargetMatched(execution, segment);
 	}
 	
-	@AfterTargetMatched
+	@AfterTargetsMatched
 	public void afterTargetMatched2(Execution execution, CreateOrUpdateSegment<?> segment) {
 		mockDelegate.afterTargetMatched2(execution, segment);
 	}
@@ -33,7 +33,7 @@ public class MockCreateOrUpdateListener {
 		mockDelegate.afterSourceMapped(execution, segment);
 	}
 	
-	@AfterTargetMerged
+	@AfterTargetsMerged
 	public void afterTargetMerged(Execution execution, CreateOrUpdateSegment<?> segment) {
 		mockDelegate.afterTargetMerged(execution, segment);
 	}

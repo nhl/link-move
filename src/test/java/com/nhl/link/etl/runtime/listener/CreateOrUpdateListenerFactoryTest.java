@@ -17,8 +17,8 @@ import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
-import com.nhl.link.etl.annotation.AfterTargetMatched;
-import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.annotation.AfterTargetsMatched;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 
 public class CreateOrUpdateListenerFactoryTest {
 
@@ -30,10 +30,10 @@ public class CreateOrUpdateListenerFactoryTest {
 		CreateOrUpdateListenerFactory.appendListeners(listeners, listener1);
 
 		assertEquals(4, listeners.size());
-		assertEquals(2, listeners.get(AfterTargetMatched.class).size());
+		assertEquals(2, listeners.get(AfterTargetsMatched.class).size());
 		assertEquals(1, listeners.get(AfterSourceRowsConverted.class).size());
 		assertEquals(1, listeners.get(AfterSourcesMapped.class).size());
-		assertEquals(1, listeners.get(AfterTargetMerged.class).size());
+		assertEquals(1, listeners.get(AfterTargetsMerged.class).size());
 
 		verify(listener1.getMockDelegate(), times(0)).afterSourceRowsConverted(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));
@@ -46,9 +46,9 @@ public class CreateOrUpdateListenerFactoryTest {
 				Matchers.any(CreateOrUpdateSegment.class));
 		verify(listener1.getMockDelegate(), times(0)).afterTargetMatched2(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));
-		listeners.get(AfterTargetMatched.class).get(0)
+		listeners.get(AfterTargetsMatched.class).get(0)
 				.afterStageFinished(mock(Execution.class), mock(CreateOrUpdateSegment.class));
-		listeners.get(AfterTargetMatched.class).get(1)
+		listeners.get(AfterTargetsMatched.class).get(1)
 				.afterStageFinished(mock(Execution.class), mock(CreateOrUpdateSegment.class));
 		verify(listener1.getMockDelegate()).afterTargetMatched(Matchers.any(Execution.class),
 				Matchers.any(CreateOrUpdateSegment.class));

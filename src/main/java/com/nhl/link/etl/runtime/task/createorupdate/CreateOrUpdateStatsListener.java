@@ -2,7 +2,7 @@ package com.nhl.link.etl.runtime.task.createorupdate;
 
 import com.nhl.link.etl.CreateOrUpdateSegment;
 import com.nhl.link.etl.Execution;
-import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 import com.nhl.link.etl.stats.ExecutionStats;
 
 /**
@@ -19,7 +19,7 @@ public class CreateOrUpdateStatsListener {
 		return instance;
 	}
 
-	@AfterTargetMerged
+	@AfterTargetsMerged
 	public void targetCreated(Execution e, CreateOrUpdateSegment<?> segment) {
 
 		ExecutionStats stats = e.getStats();

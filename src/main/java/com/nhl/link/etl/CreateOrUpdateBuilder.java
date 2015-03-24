@@ -5,7 +5,7 @@ import org.apache.cayenne.exp.Property;
 
 import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
-import com.nhl.link.etl.annotation.AfterTargetMerged;
+import com.nhl.link.etl.annotation.AfterTargetsMerged;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
 
@@ -81,7 +81,7 @@ public interface CreateOrUpdateBuilder<T> {
 	/**
 	 * Adds a listener of transformation stages of batch segments. It should
 	 * have methods annotated with {@link AfterSourceRowsConverted},
-	 * {@link AfterSourcesMapped}, {@link AfterTargetMerged},
+	 * {@link AfterSourcesMapped}, {@link AfterTargetsMerged},
 	 * {@link AfterSourcesMapped}, etc.
 	 * 
 	 * @since 1.3
