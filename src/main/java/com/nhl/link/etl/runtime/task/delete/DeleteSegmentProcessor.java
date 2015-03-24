@@ -42,7 +42,7 @@ public class DeleteSegmentProcessor<T extends DataObject> {
 	}
 
 	private void filterMissingTargets(Execution exec, DeleteSegment<T> segment) {
-		segment.setMissingTargets(missingTargetsFilter.filterMissing(segment.getContext(), segment.getMappedTargets()));
+		segment.setMissingTargets(missingTargetsFilter.filterMissing(exec, segment.getContext(), segment.getMappedTargets()));
 		notifyListeners(AfterMissingTargetsFiltered.class, exec, segment);
 	}
 
