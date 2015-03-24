@@ -148,6 +148,9 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		return this;
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@Override
 	public CreateOrUpdateBuilder<T> stageListener(Object listener) {
 		CreateOrUpdateListenerFactory.appendListeners(stageListeners, listener);
