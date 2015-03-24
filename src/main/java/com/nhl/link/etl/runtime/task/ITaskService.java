@@ -3,6 +3,7 @@ package com.nhl.link.etl.runtime.task;
 import org.apache.cayenne.DataObject;
 
 import com.nhl.link.etl.CreateOrUpdateBuilder;
+import com.nhl.link.etl.SourceKeysBuilder;
 
 public interface ITaskService {
 
@@ -12,6 +13,11 @@ public interface ITaskService {
 	 * @since 1.3
 	 */
 	<T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type);
+
+	/**
+	 * @since 1.3
+	 */
+	SourceKeysBuilder extractSourceKeys();
 
 	/**
 	 * @deprecated since 1.3 use {@link #createOrUpdate(Class)}.

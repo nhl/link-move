@@ -10,7 +10,8 @@ import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
 
 /**
- * A builder of {@link EtlTask} that performs create-or-update synchronization.
+ * A builder of an {@link EtlTask} that performs create-or-update
+ * synchronization.
  * 
  * @since 1.3
  */

@@ -4,10 +4,12 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.CreateOrUpdateBuilder;
+import com.nhl.link.etl.SourceKeysBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
+import com.nhl.link.etl.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 public class TaskService implements ITaskService {
@@ -31,10 +33,14 @@ public class TaskService implements ITaskService {
 				keyAdapterFactory);
 	}
 
+	@Override
+	public SourceKeysBuilder extractSourceKeys() {
+		return new DefaultSourceKeysBuilder(extractorService, tokenManager, keyAdapterFactory);
+	}
+
 	@Deprecated
 	@Override
 	public <T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type) {
 		return createOrUpdate(type);
 	}
-
 }
