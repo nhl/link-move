@@ -21,15 +21,15 @@ public interface ITaskService {
 	SourceKeysBuilder extractSourceKeys();
 
 	/**
-	 * @deprecated since 1.3 use {@link #createOrUpdate(Class)}.
-	 */
-	@Deprecated
-	<T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type);
-
-	/**
 	 * Returns a builder of target delete ETL synchronization task.
 	 * 
 	 * @since 1.3
 	 */
 	<T extends DataObject> DeleteBuilder<T> delete(Class<T> type);
+
+	/**
+	 * @deprecated since 1.3 use {@link #createOrUpdate(Class)}.
+	 */
+	@Deprecated
+	<T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type);
 }
