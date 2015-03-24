@@ -26,11 +26,12 @@ import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
  * 
  * @since 1.3
  */
-public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskBuilder<T> {
+public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskBuilder {
 
 	protected IKeyAdapterFactory keyAdapterFactory;
 	protected ITargetCayenneService targetCayenneService;
 
+	protected Class<T> type;
 	protected Mapper<T> mapper;
 	protected boolean byId;
 	protected List<String> keyAttributes;
@@ -38,7 +39,7 @@ public abstract class MappingTaskBuilder<T extends DataObject> extends BaseTaskB
 	public MappingTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IKeyAdapterFactory keyAdapterFactory) {
 
-		super(type);
+		this.type = type;
 		this.targetCayenneService = targetCayenneService;
 		this.keyAdapterFactory = keyAdapterFactory;
 	}
