@@ -38,7 +38,7 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
  * certain unique attribute on both sides.
  */
 @SuppressWarnings("deprecation")
-public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements CreateOrUpdateBuilder<T> {
+public class DefaultCreateOrUpdateBuilder<T extends DataObject> implements CreateOrUpdateBuilder<T> {
 
 	private static final int DEFAULT_BATCH_SIZE = 500;
 
@@ -61,7 +61,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	private boolean byId;
 	private List<String> keyAttributes;
 
-	public DefaultCreateOrUpdateTaskBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
+	public DefaultCreateOrUpdateBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyMapAdapterFactory) {
 
 		this.extractorService = extractorService;
@@ -81,7 +81,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> sourceExtractor(String extractorName) {
+	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String extractorName) {
 		this.extractorName = extractorName;
 		return this;
 	}
@@ -93,7 +93,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> matchBy(Mapper<T> mapper) {
+	public DefaultCreateOrUpdateBuilder<T> matchBy(Mapper<T> mapper) {
 		this.byId = false;
 		this.mapper = mapper;
 		this.keyAttributes = null;
@@ -101,7 +101,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> matchBy(String... keyAttributes) {
+	public DefaultCreateOrUpdateBuilder<T> matchBy(String... keyAttributes) {
 		this.byId = false;
 		this.mapper = null;
 		this.keyAttributes = Arrays.asList(keyAttributes);
@@ -112,7 +112,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	 * @since 1.1
 	 */
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> matchBy(Property<?>... matchAttributes) {
+	public DefaultCreateOrUpdateBuilder<T> matchBy(Property<?>... matchAttributes) {
 
 		// it will fail later on 'build'; TODO: should we do early argument
 		// checking?
@@ -131,7 +131,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	 * @since 1.1
 	 */
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> matchById(String idProperty) {
+	public DefaultCreateOrUpdateBuilder<T> matchById(String idProperty) {
 		this.byId = true;
 		this.mapper = null;
 		this.keyAttributes = Collections.singletonList(idProperty);
@@ -139,7 +139,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> batchSize(int batchSize) {
+	public DefaultCreateOrUpdateBuilder<T> batchSize(int batchSize) {
 		this.batchSize = batchSize;
 		return this;
 	}
@@ -151,21 +151,21 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> withToOneRelationship(String name,
+	public DefaultCreateOrUpdateBuilder<T> withToOneRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType));
 		return this;
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> withToManyRelationship(String name,
+	public DefaultCreateOrUpdateBuilder<T> withToManyRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType));
 		return this;
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> withToOneRelationship(String name,
+	public DefaultCreateOrUpdateBuilder<T> withToOneRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
 				relationshipKeyAttribute));
@@ -173,7 +173,7 @@ public class DefaultCreateOrUpdateTaskBuilder<T extends DataObject> implements C
 	}
 
 	@Override
-	public DefaultCreateOrUpdateTaskBuilder<T> withToManyRelationship(String name,
+	public DefaultCreateOrUpdateBuilder<T> withToManyRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
 		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
 				relationshipKeyAttribute));

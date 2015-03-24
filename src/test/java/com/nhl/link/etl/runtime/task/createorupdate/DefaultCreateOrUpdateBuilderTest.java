@@ -10,11 +10,11 @@ import com.nhl.link.etl.runtime.mapper.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
-public class DefaultCreateOrUpdateTaskBuilderTest {
+public class DefaultCreateOrUpdateBuilderTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testTask_NoExtractorName() {
-		DefaultCreateOrUpdateTaskBuilder<Etl1t> builder = new DefaultCreateOrUpdateTaskBuilder<>(Etl1t.class,
+		DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(Etl1t.class,
 				mock(ITargetCayenneService.class), mock(IExtractorService.class), mock(ITokenManager.class),
 				mock(IKeyAdapterFactory.class));
 
@@ -23,7 +23,7 @@ public class DefaultCreateOrUpdateTaskBuilderTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testTask_NoMatcher() {
-		DefaultCreateOrUpdateTaskBuilder<Etl1t> builder = new DefaultCreateOrUpdateTaskBuilder<>(Etl1t.class,
+		DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(Etl1t.class,
 				mock(ITargetCayenneService.class), mock(IExtractorService.class), mock(ITokenManager.class),
 				mock(IKeyAdapterFactory.class));
 		builder.sourceExtractor("test");
