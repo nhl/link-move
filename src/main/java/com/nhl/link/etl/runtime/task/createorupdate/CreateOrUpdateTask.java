@@ -45,7 +45,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 	}
 
 	@Override
-	public Execution run(Map<String, Object> params) {
+	public Execution run(Map<String, ?> params) {
 
 		if (params == null) {
 			throw new NullPointerException("Null params");
@@ -79,7 +79,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 	 * Returns a RowReader obtained from a named extractor and wrapped in a read
 	 * stats counter.
 	 */
-	protected RowReader getRowReader(Execution execution, Map<String, Object> extractorParams) {
+	protected RowReader getRowReader(Execution execution, Map<String, ?> extractorParams) {
 		Extractor extractor = extractorService.getExtractor(extractorName);
 		return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
 	}

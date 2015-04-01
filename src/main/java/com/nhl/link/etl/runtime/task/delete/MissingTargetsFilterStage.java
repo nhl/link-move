@@ -55,7 +55,7 @@ public class MissingTargetsFilterStage<T> {
 
 	@SuppressWarnings("unchecked")
 	private Set<Object> loadKeys(Execution parentExec) {
-		Execution exec = keysSubtask.run();
+		Execution exec = keysSubtask.run(parentExec.getParameters());
 
 		parentExec.getStats().incrementExtracted(exec.getStats().getExtracted());
 

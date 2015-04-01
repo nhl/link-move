@@ -22,7 +22,7 @@ public abstract class BaseTask implements EtlTask {
 	}
 
 	@Override
-	public abstract Execution run(Map<String, Object> params);
+	public abstract Execution run(Map<String, ?> params);
 
 	@Override
 	public Execution run() {
@@ -35,7 +35,7 @@ public abstract class BaseTask implements EtlTask {
 	}
 
 	@Override
-	public Execution run(SyncToken token, Map<String, Object> params) {
+	public Execution run(SyncToken token, Map<String, ?> params) {
 
 		Map<String, Object> combinedParams = new HashMap<>();
 

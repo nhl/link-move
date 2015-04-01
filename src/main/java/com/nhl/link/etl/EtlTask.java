@@ -24,7 +24,7 @@ public interface EtlTask {
 	 * 
 	 * @since 1.3
 	 */
-	Execution run(Map<String, Object> params);
+	Execution run(Map<String, ?> params);
 
 	/**
 	 * Executes the task with a map of parameters returning {@link Execution}
@@ -42,6 +42,6 @@ public interface EtlTask {
 	 * 
 	 * @since 1.3
 	 */
-	Execution run(SyncToken token, Map<String, Object> params);
+	Execution run(SyncToken token, Map<String, ?> params);
 
 }

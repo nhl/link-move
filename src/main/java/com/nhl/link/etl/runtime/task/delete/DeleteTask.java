@@ -45,7 +45,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 	}
 
 	@Override
-	public Execution run(Map<String, Object> params) {
+	public Execution run(Map<String, ?> params) {
 
 		try (Execution execution = new Execution("DeleteTask:" + extractorName, params);) {
 
