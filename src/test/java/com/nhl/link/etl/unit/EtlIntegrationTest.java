@@ -22,7 +22,9 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 
 	@After
 	public void shutdown() {
-		etl.shutdown();
+		if (etl != null) {
+			etl.shutdown();
+		}
 	}
 
 	protected EtlRuntime createEtl() {
