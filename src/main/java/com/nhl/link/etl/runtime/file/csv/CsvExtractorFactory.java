@@ -10,6 +10,9 @@ import org.apache.cayenne.di.Inject;
 
 import java.nio.charset.Charset;
 
+/**
+ * @since 1.4
+ */
 public class CsvExtractorFactory extends BaseExtractorFactory<FileConnector> {
 
     /**

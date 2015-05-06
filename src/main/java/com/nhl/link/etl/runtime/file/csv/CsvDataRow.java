@@ -7,6 +7,9 @@ import com.nhl.link.etl.RowAttribute;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+/**
+ * @since 1.4
+ */
 public class CsvDataRow implements Row {
 
     private RowAttribute[] attributes;

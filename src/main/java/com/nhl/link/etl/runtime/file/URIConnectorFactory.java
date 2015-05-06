@@ -6,6 +6,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+/**
+ * @since 1.4
+ */
 public class URIConnectorFactory implements FileConnectorFactory {
 
     @Override

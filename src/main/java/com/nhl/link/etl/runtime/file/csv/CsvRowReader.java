@@ -8,6 +8,9 @@ import com.nhl.link.etl.RowReader;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @since 1.4
+ */
 public class CsvRowReader implements RowReader {
 
     public static final char DEFAULT_DELIMITER = ',';

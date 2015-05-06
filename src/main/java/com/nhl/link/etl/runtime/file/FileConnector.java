@@ -5,6 +5,9 @@ import com.nhl.link.etl.connect.Connector;
 import java.io.File;
 import java.net.URI;
 
+/**
+ * @since 1.4
+ */
 public class FileConnector implements Connector {
 
     private File file;

@@ -3,6 +3,9 @@ package com.nhl.link.etl.runtime.file.csv;
 import java.io.IOException;
 import java.io.StringReader;
 
+/**
+ * @since 1.4
+ */
 public class CsvUtils {
 
     public static String[] parse(String[] result, String data, char delimiter) throws IOException {

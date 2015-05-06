@@ -12,6 +12,9 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @since 1.4
+ */
 public class CsvExtractor implements Extractor {
 
     private File file;
