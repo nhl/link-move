@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nhl.link.etl.runtime.file.FileConnector;
-import com.nhl.link.etl.runtime.file.URIConnectorFactory;
+import com.nhl.link.etl.connect.StreamConnector;
+import com.nhl.link.etl.runtime.connect.URIConnectorFactory;
 import com.nhl.link.etl.runtime.file.csv.CsvExtractorFactory;
+import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -49,6 +50,7 @@ public class EtlRuntimeBuilder {
 
 	public static final String JDBC_EXTRACTOR_TYPE = "jdbc";
 	public static final String CSV_EXTRACTOR_TYPE = "csv";
+	public static final String XML_EXTRACTOR_TYPE = "xml";
 
 	public static final String START_TOKEN_VAR = "startToken";
 	public static final String END_TOKEN_VAR = "endToken";
@@ -73,16 +75,16 @@ public class EtlRuntimeBuilder {
 		this.extractorFactoryTypes = new HashMap<>();
 		this.adapters = new ArrayList<>();
 
-		// always add JDBC extractors...
+		// default extractors
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
-		// ...and CSV also...
 		extractorFactoryTypes.put(CSV_EXTRACTOR_TYPE, CsvExtractorFactory.class);
-		connectorFactoryTypes.put(FileConnector.class.getName(), URIConnectorFactory.class);
+		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
+		connectorFactoryTypes.put(StreamConnector.class.getName(), URIConnectorFactory.class);
 	}
 
 	/**
 	 * Adds an adapter that can override existing DI services or add new ones.
-	 * 
+	 *
 	 * @since 1.1
 	 */
 	public EtlRuntimeBuilder adapter(LinkEtlAdapter adapter) {
@@ -129,7 +131,7 @@ public class EtlRuntimeBuilder {
 	 * DataSources. It may be useful in cases when the data is transferred
 	 * between the tables on the sane DB server, or if connectors are known
 	 * upfront and hence can be modeled in Cayenne as DataNodes.
-	 * 
+	 *
 	 * @since 1.1
 	 */
 	public EtlRuntimeBuilder withConnectorFromTarget() {
