@@ -26,7 +26,6 @@ public class MapperBuilder {
 	private IKeyAdapterFactory keyAdapterFactory;
 
 	private ObjEntity entity;
-	private Mapper mapper;
 	private boolean byId;
 	private List<String> keyAttributes;
 
@@ -35,16 +34,8 @@ public class MapperBuilder {
 		this.keyAdapterFactory = keyAdapterFactory;
 	}
 
-	public MapperBuilder matchBy(Mapper mapper) {
-		this.byId = false;
-		this.mapper = mapper;
-		this.keyAttributes = null;
-		return this;
-	}
-
 	public MapperBuilder matchBy(String... keyAttributes) {
 		this.byId = false;
-		this.mapper = null;
 		this.keyAttributes = Arrays.asList(keyAttributes);
 		return this;
 	}
@@ -66,32 +57,13 @@ public class MapperBuilder {
 
 	public MapperBuilder matchById(String idProperty) {
 		this.byId = true;
-		this.mapper = null;
 		this.keyAttributes = Collections.singletonList(idProperty);
 		return this;
 	}
 
 	public Mapper build() {
 
-		// not wrapping custom matcher, presuming the user knows what's he's
-		// doing and his matcher generates proper keys
-		if (this.mapper != null) {
-			return this.mapper;
-		}
-
-		if (keyAttributes == null) {
-			throw new IllegalStateException("'matchBy' or 'matchById' must be set");
-		}
-
-		Mapper mapper;
-
-		if (byId) {
-			mapper = new IdMapper(pkAttribute(), getSingleMatchAttribute());
-		} else if (keyAttributes.size() > 1) {
-			mapper = new MultiAttributeMapper(keyAttributes);
-		} else {
-			mapper = new AttributeMapper(getSingleMatchAttribute());
-		}
+		Mapper mapper = buildUnsafe();
 
 		KeyAdapter keyAdapter;
 
@@ -106,6 +78,21 @@ public class MapperBuilder {
 		}
 
 		return new SafeMapKeyMapper(mapper, keyAdapter);
+	}
+
+	Mapper buildUnsafe() {
+
+		if (keyAttributes == null) {
+			throw new IllegalStateException("'matchBy' or 'matchById' must be set");
+		}
+
+		if (byId) {
+			return new IdMapper(pkAttribute(), getSingleMatchAttribute());
+		} else if (keyAttributes.size() > 1) {
+			return new MultiAttributeMapper(keyAttributes);
+		} else {
+			return new AttributeMapper(getSingleMatchAttribute());
+		}
 	}
 
 	private String pkAttribute() {

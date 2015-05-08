@@ -36,6 +36,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
 	private MapperBuilder mapperBuilder;
+	private Mapper mapper;
 	private ListenersBuilder stageListenersBuilder;
 	private Class<T> type;
 
@@ -80,13 +81,14 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchBy(Mapper mapper) {
-		mapperBuilder.matchBy(mapper);
+		this.mapper = mapper;
 		return this;
 	}
 
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchBy(String... keyAttributes) {
-		mapperBuilder.matchBy(keyAttributes);
+		this.mapper = null;
+		this.mapperBuilder.matchBy(keyAttributes);
 		return this;
 	}
 
@@ -95,7 +97,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	 */
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchBy(Property<?>... matchAttributes) {
-		mapperBuilder.matchBy(matchAttributes);
+		this.mapper = null;
+		this.mapperBuilder.matchBy(matchAttributes);
 		return this;
 	}
 
@@ -104,7 +107,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	 */
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> matchById(String idProperty) {
-		mapperBuilder.matchById(idProperty);
+		this.mapper = null;
+		this.mapperBuilder.matchById(idProperty);
 		return this;
 	}
 
@@ -197,7 +201,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 	private CreateOrUpdateSegmentProcessor<T> createProcessor() {
 
-		Mapper mapper = mapperBuilder.build();
+		Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 		CreateOrUpdateStrategy<T> createOrUpdateStrategy = createCreateOrUpdateStrategy();
 
 		SourceMapper sourceMapper = new SourceMapper(mapper);

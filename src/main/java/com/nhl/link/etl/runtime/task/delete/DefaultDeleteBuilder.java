@@ -31,6 +31,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 
 	private Expression targetFilter;
 	private String extractorName;
+	private Mapper mapper;
 	private MapperBuilder mapperBuilder;
 	private ListenersBuilder listenersBuilder;
 
@@ -79,25 +80,28 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 
 	@Override
 	public DefaultDeleteBuilder<T> matchBy(Mapper mapper) {
-		mapperBuilder.matchBy(mapper);
+		this.mapper = mapper;
 		return this;
 	}
 
 	@Override
 	public DefaultDeleteBuilder<T> matchBy(String... keyAttributes) {
-		mapperBuilder.matchBy(keyAttributes);
+		this.mapper = null;
+		this.mapperBuilder.matchBy(keyAttributes);
 		return this;
 	}
 
 	@Override
 	public DefaultDeleteBuilder<T> matchBy(Property<?>... matchAttributes) {
-		mapperBuilder.matchBy(matchAttributes);
+		this.mapper = null;
+		this.mapperBuilder.matchBy(matchAttributes);
 		return this;
 	}
 
 	@Override
 	public DefaultDeleteBuilder<T> matchById(String idProperty) {
-		mapperBuilder.matchById(idProperty);
+		this.mapper = null;
+		this.mapperBuilder.matchById(idProperty);
 		return this;
 	}
 
@@ -112,7 +116,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	}
 
 	private DeleteSegmentProcessor<T> createProcessor() {
-		Mapper mapper = mapperBuilder.build();
+		Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
 		EtlTask keysSubtask = taskService.extractSourceKeys().sourceExtractor(extractorName).matchBy(mapper).task();
 
