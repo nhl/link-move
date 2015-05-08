@@ -1,11 +1,11 @@
 package com.nhl.link.etl.runtime.file.csv;
 
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.connect.StreamConnector;
 import com.nhl.link.etl.extract.Extractor;
 import com.nhl.link.etl.extract.ExtractorConfig;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
 import com.nhl.link.etl.runtime.extract.BaseExtractorFactory;
-import com.nhl.link.etl.runtime.file.FileConnector;
 import org.apache.cayenne.di.Inject;
 
 import java.nio.charset.Charset;
@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 /**
  * @since 1.4
  */
-public class CsvExtractorFactory extends BaseExtractorFactory<FileConnector> {
+public class CsvExtractorFactory extends BaseExtractorFactory<StreamConnector> {
 
     /**
      * Delimiter character.
@@ -37,20 +37,20 @@ public class CsvExtractorFactory extends BaseExtractorFactory<FileConnector> {
     }
 
     @Override
-    protected Class<FileConnector> getConnectorType() {
-        return FileConnector.class;
+    protected Class<StreamConnector> getConnectorType() {
+        return StreamConnector.class;
     }
 
     @Override
-    protected Extractor createExtractor(FileConnector connector, ExtractorConfig config) {
+    protected Extractor createExtractor(StreamConnector connector, ExtractorConfig config) {
         try {
             CsvExtractor extractor;
 
             String charsetName = config.getProperties().get(CHARSET_PROPERTY);
             if (charsetName == null) {
-                extractor = new CsvExtractor(connector.getFile(), config.getAttributes());
+                extractor = new CsvExtractor(connector, config.getAttributes());
             } else {
-                extractor = new CsvExtractor(connector.getFile(), config.getAttributes(), Charset.forName(charsetName));
+                extractor = new CsvExtractor(connector, config.getAttributes(), Charset.forName(charsetName));
             }
 
             String delimiter = config.getProperties().get(DELIMITIER_PROPERTY);
