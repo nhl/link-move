@@ -36,10 +36,22 @@ public interface CreateOrUpdateBuilder<T> {
 	@Deprecated
 	CreateOrUpdateBuilder<T> withExtractor(String extractorName);
 
+	/**
+	 * Instructs the task to match sources and targets using explicitly provided
+	 * {@link Mapper}.
+	 */
 	CreateOrUpdateBuilder<T> matchBy(Mapper mapper);
 
+	/**
+	 * Instructs the task to match sources and targets based on one or more
+	 * attributes.
+	 */
 	CreateOrUpdateBuilder<T> matchBy(String... keyAttributes);
 
+	/**
+	 * Instructs the task to match sources and targets based on one or more
+	 * DataObject properties.
+	 */
 	CreateOrUpdateBuilder<T> matchBy(Property<?>... keyAttributes);
 
 	CreateOrUpdateBuilder<T> matchById(String idAttribute);
