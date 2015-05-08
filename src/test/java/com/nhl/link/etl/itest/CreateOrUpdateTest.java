@@ -9,7 +9,6 @@ import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
-import com.nhl.link.etl.unit.cayenne.t.Etl2t;
 import com.nhl.link.etl.unit.cayenne.t.Etl3t;
 import com.nhl.link.etl.unit.cayenne.t.Etl5t;
 
@@ -150,9 +149,7 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	public void test_ByAttribute_SyncFk() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
-				.withToOneRelationship(Etl3t.E2.getName(), Etl2t.class, Etl3t.E2.getName())
-				.withToOneRelationship(Etl3t.E5.getName(), Etl5t.class, Etl3t.E5.getName()).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
@@ -179,9 +176,7 @@ public class CreateOrUpdateTest extends EtlIntegrationTest {
 	public void test_ByAttribute_SyncFk_Nulls() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME)
-				.withToOneRelationship(Etl3t.E2.getName(), Etl2t.class, Etl3t.E2.getName())
-				.withToOneRelationship(Etl3t.E5.getName(), Etl5t.class, Etl3t.E5.getName()).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (17, '5Name1')");

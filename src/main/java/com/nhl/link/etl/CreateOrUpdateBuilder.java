@@ -58,15 +58,31 @@ public interface CreateOrUpdateBuilder<T> {
 	@Deprecated
 	CreateOrUpdateBuilder<T> withBatchSize(int batchSize);
 
+	/**
+	 * @deprecated since 1.4 the framework can find relationships in the
+	 *             existing Cayenne model.
+	 */
 	CreateOrUpdateBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute);
 
+	/**
+	 * @deprecated since 1.4 the framework can find relationships in the
+	 *             existing Cayenne model.
+	 */
 	CreateOrUpdateBuilder<T> withToOneRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute, String relationshipKeyAttribute);
 
+	/**
+	 * @deprecated since 1.4. To-many relationships weren't handled and this
+	 *             method did nothing.
+	 */
 	CreateOrUpdateBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute);
 
+	/**
+	 * @deprecated since 1.4. To-many relationships weren't handled and this
+	 *             method did nothing.
+	 */
 	CreateOrUpdateBuilder<T> withToManyRelationship(String name, Class<? extends DataObject> relatedObjType,
 			String keyAttribute, String relationshipKeyAttribute);
 

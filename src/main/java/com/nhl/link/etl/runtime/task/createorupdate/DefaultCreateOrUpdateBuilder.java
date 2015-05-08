@@ -16,14 +16,12 @@ import com.nhl.link.etl.annotation.AfterTargetsMatched;
 import com.nhl.link.etl.annotation.AfterTargetsMerged;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
-import com.nhl.link.etl.metadata.RelationshipInfo;
-import com.nhl.link.etl.metadata.RelationshipType;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
-import com.nhl.link.etl.runtime.task.MapperBuilder;
 import com.nhl.link.etl.runtime.task.ListenersBuilder;
+import com.nhl.link.etl.runtime.task.MapperBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 
 /**
@@ -42,7 +40,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private Class<T> type;
 
 	private String extractorName;
-	private List<RelationshipInfo> relationships;
 
 	@Deprecated
 	private List<LoadListener<T>> loadListeners;
@@ -54,15 +51,14 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		this.targetCayenneService = targetCayenneService;
 		this.extractorService = extractorService;
 		this.tokenManager = tokenManager;
-		this.relationships = new ArrayList<>();
 
 		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
 		if (entity == null) {
 			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
 		this.mapperBuilder = new MapperBuilder(entity, keyAdapterFactory);
-		this.stageListenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class,
-				AfterSourcesMapped.class, AfterTargetsMatched.class, AfterTargetsMerged.class);
+		this.stageListenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
+				AfterTargetsMatched.class, AfterTargetsMerged.class);
 
 		// always add stats listener..
 		stageListener(CreateOrUpdateStatsListener.instance());
@@ -124,33 +120,51 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		return batchSize(batchSize);
 	}
 
+	/**
+	 * Does nothing.
+	 * 
+	 * @deprecated since 1.4
+	 */
+	@Deprecated
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> withToOneRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute) {
-		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType));
 		return this;
 	}
 
+	/**
+	 * Does nothing.
+	 * 
+	 * @deprecated since 1.4
+	 */
+	@Deprecated
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> withToManyRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute) {
-		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType));
 		return this;
 	}
 
+	/**
+	 * Does nothing.
+	 * 
+	 * @deprecated since 1.4
+	 */
+	@Deprecated
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> withToOneRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
-		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_ONE, relatedObjType,
-				relationshipKeyAttribute));
 		return this;
 	}
 
+	/**
+	 * Does nothing.
+	 * 
+	 * @deprecated since 1.4
+	 */
+	@Deprecated
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> withToManyRelationship(String name,
 			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
-		this.relationships.add(new RelationshipInfo(name, keyAttribute, RelationshipType.TO_MANY, relatedObjType,
-				relationshipKeyAttribute));
 		return this;
 	}
 
@@ -196,9 +210,9 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 	private CreateOrUpdateStrategy<T> createCreateOrUpdateStrategy() {
 		if (mapperBuilder.isById()) {
-			return new CayenneCreateOrUpdateWithPKStrategy<>(relationships, mapperBuilder.getSingleMatchAttribute());
+			return new CayenneCreateOrUpdateWithPKStrategy<>(mapperBuilder.getSingleMatchAttribute());
 		} else {
-			return new CayenneCreateOrUpdateStrategy<>(relationships);
+			return new CayenneCreateOrUpdateStrategy<>();
 		}
 	}
 
