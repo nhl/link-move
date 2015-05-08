@@ -1,19 +1,24 @@
 package com.nhl.link.etl.runtime.xml;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.connect.StreamConnector;
 import com.nhl.link.etl.extract.Extractor;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.util.Map;
-
+/**
+ * @since 1.4
+ */
 public class XmlExtractor implements Extractor {
 
 	private final StreamConnector connector;

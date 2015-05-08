@@ -15,6 +15,9 @@ import javax.xml.xpath.XPathFactory;
 
 import static java.lang.String.format;
 
+/**
+ * @since 1.4
+ */
 public class XmlExtractorFactory extends BaseExtractorFactory<StreamConnector> {
 	public static final String XPATH_EXPRESSION_PROPERTY = "extractor.xml.xpathexpression";
 

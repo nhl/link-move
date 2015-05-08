@@ -5,6 +5,9 @@ import com.nhl.link.etl.RowAttribute;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * @since 1.4
+ */
 class XmlNodeRow implements Row {
 	private final RowAttribute[] attributes;
 	private final Node node;

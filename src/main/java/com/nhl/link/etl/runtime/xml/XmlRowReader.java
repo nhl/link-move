@@ -8,6 +8,9 @@ import org.w3c.dom.NodeList;
 
 import java.util.Iterator;
 
+/**
+ * @since 1.4
+ */
 public class XmlRowReader implements RowReader {
 	private final RowAttribute[] attributes;
 	private final NodeList nodes;
