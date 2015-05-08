@@ -38,6 +38,11 @@ public class CsvExtractor implements Extractor {
 
 	@Override
 	public RowReader getReader(Map<String, ?> parameters) {
+
+		// TODO: this requires reading the entire file in memory. We can
+		// probably turn this into a constant-memory streaming extractor that
+		// reads one line at a time, processes and discards it.
+		
 		List<String> lines = new ArrayList<>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connector.getInputStream(), charset));
