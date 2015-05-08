@@ -6,8 +6,7 @@ import java.util.Map;
 import com.nhl.link.etl.RowAttribute;
 
 /**
- * A thread-safe config for an {@link Extractor}. The config can be externally
- * updated by calling {@link #setProperties(Map)}.
+ * Represents an abstract model of an {@link Extractor} of any kind.
  */
 public class ExtractorConfig {
 
