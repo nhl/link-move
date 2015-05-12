@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nhl.link.etl.connect.StreamConnector;
-import com.nhl.link.etl.runtime.connect.URIConnectorFactory;
 import com.nhl.link.etl.runtime.file.csv.CsvExtractorFactory;
 import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
 import org.apache.cayenne.configuration.server.ServerRuntime;
@@ -79,7 +77,6 @@ public class EtlRuntimeBuilder {
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
 		extractorFactoryTypes.put(CSV_EXTRACTOR_TYPE, CsvExtractorFactory.class);
 		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
-		connectorFactoryTypes.put(StreamConnector.class.getName(), URIConnectorFactory.class);
 	}
 
 	/**
