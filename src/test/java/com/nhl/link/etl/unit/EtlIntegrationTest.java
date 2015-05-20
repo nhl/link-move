@@ -2,6 +2,8 @@ package com.nhl.link.etl.unit;
 
 import static org.junit.Assert.assertEquals;
 
+import com.nhl.link.etl.connect.StreamConnector;
+import com.nhl.link.etl.runtime.connect.URIConnectorFactory;
 import org.junit.After;
 import org.junit.Before;
 
@@ -29,7 +31,9 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 
 	protected EtlRuntime createEtl() {
 		Connector c = new DataSourceConnector(srcDataSource);
-		return new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime()).build();
+		return new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime())
+				.withConnectorFactory(StreamConnector.class, new URIConnectorFactory())
+				.build();
 	}
 
 	protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {
