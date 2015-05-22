@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.conn.PoolManager;
-import org.apache.cayenne.log.NoopJdbcEventLogger;
+import org.apache.cayenne.datasource.DataSourceBuilder;
+import org.apache.cayenne.datasource.PoolingDataSource;
 import org.apache.cayenne.query.SQLSelect;
 import org.apache.cayenne.query.SQLTemplate;
 import org.junit.AfterClass;
@@ -15,15 +15,13 @@ import org.junit.BeforeClass;
 public abstract class DerbySrcTest {
 
 	protected static CayenneDerbyStack srcStack;
-	protected static PoolManager srcDataSource;
+	protected static PoolingDataSource srcDataSource;
 
-	@SuppressWarnings("deprecation")
 	@BeforeClass
 	public static void startSrc() throws IOException, SQLException {
 		srcStack = new CayenneDerbyStack("derbysrc", "cayenne-linketl-tests-sources.xml");
-		srcDataSource = new PoolManager("org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:" + srcStack.getDerbyPath()
-				+ ";create=true", 1, 10, "sa", "bla", NoopJdbcEventLogger.getInstance(),
-				PoolManager.MAX_QUEUE_WAIT_DEFAULT);
+		srcDataSource = DataSourceBuilder.url("jdbc:derby:" + srcStack.getDerbyPath() + ";create=true")
+				.driver("org.apache.derby.jdbc.EmbeddedDriver").userName("sa").pool(1, 10).build();
 	}
 
 	@AfterClass
@@ -32,9 +30,10 @@ public abstract class DerbySrcTest {
 		srcStack.shutdown();
 
 		try {
-			srcDataSource.shutdown();
-		} catch (SQLException e) {
+			srcDataSource.close();
+		} catch (Exception e) {
 		}
+
 		srcDataSource = null;
 	}
 

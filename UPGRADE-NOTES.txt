@@ -1,0 +1,6 @@
+Upgrading to 1.4
+
+* https://github.com/nhl/link-etl/issues/46 
+1.4 requires a version of Cayenne 4.0.M3.debfa94 or newer for its core functionality. 
+Unofficial builds of Cayenne are available from ObjectStyle.org repository:
+http://maven.objectstyle.org/nexus/content/repositories/cayenne-unofficial/	
