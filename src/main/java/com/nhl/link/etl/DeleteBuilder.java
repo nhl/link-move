@@ -26,7 +26,7 @@ public interface DeleteBuilder<T> {
 
 	DeleteBuilder<T> matchBy(Property<?>... keyAttributes);
 
-	DeleteBuilder<T> matchById(String idAttribute);
+	DeleteBuilder<T> matchById();
 
 	DeleteBuilder<T> batchSize(int batchSize);
 

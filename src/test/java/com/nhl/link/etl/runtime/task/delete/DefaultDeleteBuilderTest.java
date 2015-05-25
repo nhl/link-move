@@ -33,8 +33,8 @@ public class DefaultDeleteBuilderTest {
 		ObjAttribute matchAttribute = new ObjAttribute("abc");
 		matchAttribute.setType(Object.class.getName());
 
-		ObjEntity targetEntity = mock(ObjEntity.class);
-		when(targetEntity.getAttribute("abc")).thenReturn(matchAttribute);
+		ObjEntity targetEntity = new ObjEntity();
+		targetEntity.addAttribute(matchAttribute);
 
 		EntityResolver resolver = mock(EntityResolver.class);
 		when(resolver.getObjEntity(any(Class.class))).thenReturn(targetEntity);

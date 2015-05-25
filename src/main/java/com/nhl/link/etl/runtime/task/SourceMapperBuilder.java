@@ -1,12 +1,14 @@
 package com.nhl.link.etl.runtime.task;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.nhl.link.etl.mapper.AttributeMapper;
+import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.mapper.KeyAdapter;
 import com.nhl.link.etl.mapper.Mapper;
-import com.nhl.link.etl.mapper.MultiAttributeMapper;
+import com.nhl.link.etl.mapper.MultiPathMapper;
 import com.nhl.link.etl.mapper.SafeMapKeyMapper;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 
@@ -47,9 +49,17 @@ public class SourceMapperBuilder {
 		Mapper mapper;
 
 		if (columns.size() > 1) {
-			mapper = new MultiAttributeMapper(columns);
+			
+			// ensuring predictable attribute iteration order with
+			// LinkedHashMap. Useful for unit test for one thing.
+			Map<String, Mapper> attributeMappers = new LinkedHashMap<>();
+			for (String a : columns) {
+				attributeMappers.put(a, new PathMapper(a));
+			}
+			
+			mapper = new MultiPathMapper(attributeMappers);
 		} else {
-			mapper = new AttributeMapper(getSingleMatchAttribute());
+			mapper = new PathMapper(getSingleMatchAttribute());
 		}
 
 		KeyAdapter keyAdapter;

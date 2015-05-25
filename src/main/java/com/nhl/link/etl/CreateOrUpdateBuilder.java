@@ -54,7 +54,7 @@ public interface CreateOrUpdateBuilder<T> {
 	 */
 	CreateOrUpdateBuilder<T> matchBy(Property<?>... keyAttributes);
 
-	CreateOrUpdateBuilder<T> matchById(String idAttribute);
+	CreateOrUpdateBuilder<T> matchById();
 
 	/**
 	 * Defines the number of records that are processed together as a single

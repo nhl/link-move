@@ -5,21 +5,34 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
+import org.junit.Before;
 import org.junit.Test;
 
-public class MultiAttributeMapperTest {
+public class MultiPathMapperTest {
+
+	private MultiPathMapper mapper;
+
+	@Before
+	public void before() {
+
+		// must ensure predictable key iteration order, so using LinkedMap
+		Map<String, Mapper> mappers = new LinkedHashMap<>();
+		mappers.put("a", new PathMapper("a"));
+		mappers.put("b", new PathMapper("b"));
+
+		mapper = new MultiPathMapper(mappers);
+	}
 
 	@Test
 	public void testExpressionForKey() {
 
-		MultiAttributeMapper mapper = new MultiAttributeMapper(Arrays.asList("a", "b"));
 		Map<String, Object> key = new HashMap<>();
 		key.put("a", "a1");
 		key.put("b", 5);
@@ -30,7 +43,6 @@ public class MultiAttributeMapperTest {
 
 	@Test
 	public void testKeyForSource() {
-		MultiAttributeMapper mapper = new MultiAttributeMapper(Arrays.asList("a", "b"));
 
 		Map<String, Object> source = new HashMap<>();
 		source.put("a", "a1");
@@ -46,16 +58,15 @@ public class MultiAttributeMapperTest {
 		assertEquals("a1", keyMap.get("a"));
 		assertEquals(5, keyMap.get("b"));
 	}
-	
+
 	@Test
 	public void testKeyForTarget() {
-		MultiAttributeMapper mapper = new MultiAttributeMapper(Arrays.asList("a", "b"));
 
 		DataObject target = mock(DataObject.class);
-		when(target.readProperty("a")).thenReturn("a1");
-		when(target.readProperty("b")).thenReturn(5);
-		when(target.readProperty("c")).thenReturn(6);
-		
+		when(target.readNestedProperty("a")).thenReturn("a1");
+		when(target.readNestedProperty("b")).thenReturn(5);
+		when(target.readNestedProperty("c")).thenReturn(6);
+
 		Object key = mapper.keyForTarget(target);
 		assertTrue(key instanceof Map);
 

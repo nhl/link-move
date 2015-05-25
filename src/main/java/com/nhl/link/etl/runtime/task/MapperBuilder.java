@@ -1,20 +1,23 @@
 package com.nhl.link.etl.runtime.task;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
+import org.apache.cayenne.map.ObjRelationship;
 
-import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.mapper.AttributeMapper;
-import com.nhl.link.etl.mapper.IdMapper;
 import com.nhl.link.etl.mapper.KeyAdapter;
 import com.nhl.link.etl.mapper.Mapper;
-import com.nhl.link.etl.mapper.MultiAttributeMapper;
+import com.nhl.link.etl.mapper.MultiPathMapper;
+import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.mapper.SafeMapKeyMapper;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 
@@ -26,55 +29,76 @@ public class MapperBuilder {
 	private IKeyAdapterFactory keyAdapterFactory;
 
 	private ObjEntity entity;
-	private boolean byId;
-	private List<String> keyAttributes;
+	private List<String> paths;
 
 	public MapperBuilder(ObjEntity entity, IKeyAdapterFactory keyAdapterFactory) {
 		this.entity = entity;
 		this.keyAdapterFactory = keyAdapterFactory;
 	}
 
-	public MapperBuilder matchBy(String... keyAttributes) {
-		this.byId = false;
-		this.keyAttributes = Arrays.asList(keyAttributes);
+	public MapperBuilder matchBy(String... paths) {
+		this.paths = Arrays.asList(paths);
 		return this;
 	}
 
-	public MapperBuilder matchBy(Property<?>... matchAttributes) {
+	public MapperBuilder matchBy(Property<?>... paths) {
 
 		// it will fail later on 'build'; TODO: should we do early argument
 		// checking?
-		if (matchAttributes == null) {
+		if (paths == null) {
 			return this;
 		}
-		String[] names = new String[matchAttributes.length];
-		for (int i = 0; i < matchAttributes.length; i++) {
-			names[i] = matchAttributes[i].getName();
+		String[] names = new String[paths.length];
+		for (int i = 0; i < paths.length; i++) {
+			names[i] = paths[i].getName();
 		}
 
 		return matchBy(names);
 	}
 
-	public MapperBuilder matchById(String idProperty) {
-		this.byId = true;
-		this.keyAttributes = Collections.singletonList(idProperty);
+	public MapperBuilder matchById() {
+
+		List<String> pks = new ArrayList<>(3);
+		for (DbAttribute pk : entity.getDbEntity().getPrimaryKeys()) {
+			pks.add(ASTDbPath.DB_PREFIX + pk.getName());
+		}
+
+		if (pks.isEmpty()) {
+			throw new IllegalStateException("Target entity has no PKs defined: " + entity.getDbEntityName());
+		}
+
+		this.paths = pks;
 		return this;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Mapper build() {
 
 		Mapper mapper = buildUnsafe();
 
 		KeyAdapter keyAdapter;
 
-		// TODO: mapping keyMapAdapters by type doesn't take into account
-		// composition and hierarchy of the keys ... need a different approach.
-		// for now resorting to the hacks below
-		if (keyAttributes.size() > 1) {
+		if (paths.size() > 1) {
+			// TODO: mapping keyMapAdapters by type doesn't take into account
+			// composition and hierarchy of the keys ... need a different
+			// approach. for now resorting to the hacks below
+
 			keyAdapter = keyAdapterFactory.adapter(List.class);
 		} else {
-			ObjAttribute attribute = getMatchAttribute();
-			keyAdapter = keyAdapterFactory.adapter(attribute.getJavaClass());
+
+			Object attributeOrRelationship = ExpressionFactory.exp(paths.get(0)).evaluate(entity);
+
+			Class<?> type;
+
+			if (attributeOrRelationship instanceof ObjAttribute) {
+				type = ((ObjAttribute) attributeOrRelationship).getJavaClass();
+			} else if (attributeOrRelationship instanceof ObjRelationship) {
+				type = ((ObjRelationship) attributeOrRelationship).getTargetEntity().getJavaClass();
+			} else {
+				type = null;
+			}
+
+			keyAdapter = keyAdapterFactory.adapter(type);
 		}
 
 		return new SafeMapKeyMapper(mapper, keyAdapter);
@@ -82,57 +106,26 @@ public class MapperBuilder {
 
 	Mapper buildUnsafe() {
 
-		if (keyAttributes == null) {
+		if (paths == null) {
+			matchById();
+		}
+
+		if (paths == null || paths.isEmpty()) {
 			throw new IllegalStateException("'matchBy' or 'matchById' must be set");
 		}
 
-		if (byId) {
-			return new IdMapper(pkAttribute(), getSingleMatchAttribute());
-		} else if (keyAttributes.size() > 1) {
-			return new MultiAttributeMapper(keyAttributes);
-		} else {
-			return new AttributeMapper(getSingleMatchAttribute());
-		}
+		Map<String, Mapper> mappers = createMappers();
+		return mappers.size() > 1 ? new MultiPathMapper(mappers) : mappers.values().iterator().next();
 	}
 
-	private String pkAttribute() {
-
-		Collection<String> pks = entity.getPrimaryKeyNames();
-		if (pks.size() != 1) {
-			throw new EtlRuntimeException("Only single-column PK is supported for now. Got " + pks.size()
-					+ " for entity: " + entity.getName());
+	private Map<String, Mapper> createMappers() {
+		// ensuring predictable attribute iteration order with
+		// LinkedHashMap. Useful for unit test for one thing.
+		Map<String, Mapper> mappers = new LinkedHashMap<>();
+		for (String a : paths) {
+			mappers.put(a, new PathMapper(a));
 		}
 
-		return pks.iterator().next();
+		return mappers;
 	}
-
-	public String getSingleMatchAttribute() {
-		if (keyAttributes == null || keyAttributes.isEmpty()) {
-			return null;
-		}
-		if (keyAttributes.size() > 1) {
-			throw new IllegalStateException("Trying to get a single match attribute but multi key matching is set");
-		}
-		return keyAttributes.get(0);
-	}
-
-	private ObjAttribute getMatchAttribute() {
-
-		if (byId) {
-			return entity.getPrimaryKeys().iterator().next();
-		} else {
-			String matchAttribute = getSingleMatchAttribute();
-			ObjAttribute a = entity.getAttribute(matchAttribute);
-			if (a == null) {
-				throw new IllegalStateException("Invalid attribute name " + matchAttribute + " for entity "
-						+ entity.getName());
-			}
-			return a;
-		}
-	}
-
-	public boolean isById() {
-		return byId;
-	}
-
 }

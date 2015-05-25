@@ -99,9 +99,9 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	}
 
 	@Override
-	public DefaultDeleteBuilder<T> matchById(String idProperty) {
+	public DefaultDeleteBuilder<T> matchById() {
 		this.mapper = null;
-		this.mapperBuilder.matchById(idProperty);
+		this.mapperBuilder.matchById();
 		return this;
 	}
 
