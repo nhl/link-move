@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.connect.IConnectorFactory;
+import com.nhl.link.etl.runtime.connect.IConnectorFactory;
 
 /**
  * A factory for {@link JdbcConnector} variety of Connectors based on a map of

@@ -1,6 +1,7 @@
-package com.nhl.link.etl.connect;
+package com.nhl.link.etl.runtime.connect;
 
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.connect.Connector;
 
 /**
  * A factory to create connectors of a related type.

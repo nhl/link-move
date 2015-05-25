@@ -16,12 +16,12 @@ import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
 
 import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetConnectorFactory;
 import com.nhl.link.etl.runtime.connect.ConnectorService;
+import com.nhl.link.etl.runtime.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
 import com.nhl.link.etl.runtime.csv.CsvExtractorFactory;
 import com.nhl.link.etl.runtime.extract.ClasspathExtractorConfigLoader;

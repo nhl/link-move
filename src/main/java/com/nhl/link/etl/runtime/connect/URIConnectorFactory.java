@@ -1,8 +1,8 @@
 package com.nhl.link.etl.runtime.connect;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.connect.IConnectorFactory;
 import com.nhl.link.etl.connect.StreamConnector;
+import com.nhl.link.etl.connect.URIConnector;
 
 import java.net.URI;
 import java.net.URISyntaxException;

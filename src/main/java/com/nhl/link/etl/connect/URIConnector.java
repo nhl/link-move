@@ -1,10 +1,8 @@
-package com.nhl.link.etl.runtime.connect;
+package com.nhl.link.etl.connect;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-
-import com.nhl.link.etl.connect.StreamConnector;
 
 /**
  * @since 1.4

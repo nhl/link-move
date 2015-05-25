@@ -8,7 +8,6 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 
 public class ConnectorService implements IConnectorService {

@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.connect.IConnectorFactory;
 import com.nhl.link.etl.runtime.jdbc.JdbcConnector;
 
 public class ConnectorServiceTest {
