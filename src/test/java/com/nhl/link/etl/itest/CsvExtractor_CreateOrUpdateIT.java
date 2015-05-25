@@ -1,4 +1,4 @@
-package com.nhl.link.etl.itest.csv;
+package com.nhl.link.etl.itest;
 
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class CsvExtractorIT extends EtlIntegrationTest {
+public class CsvExtractor_CreateOrUpdateIT extends EtlIntegrationTest {
 
     @Test
     public void testExtractor() {
