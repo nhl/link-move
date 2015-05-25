@@ -9,7 +9,7 @@ import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
-public class DeleteTest extends EtlIntegrationTest {
+public class DeleteIT extends EtlIntegrationTest {
 
 	@Test
 	public void test_ByAttribute() {

@@ -14,7 +14,7 @@ import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.runtime.task.sourcekeys.SourceKeysTask;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
 
-public class SourceKeysTest extends EtlIntegrationTest {
+public class SourceKeysIT extends EtlIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test

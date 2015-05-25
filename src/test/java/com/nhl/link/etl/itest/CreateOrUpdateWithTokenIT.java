@@ -10,7 +10,7 @@ import com.nhl.link.etl.IntToken;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
-public class CreateOrUpdateWithTokenTest extends EtlIntegrationTest {
+public class CreateOrUpdateWithTokenIT extends EtlIntegrationTest {
 
 	@Test
 	public void test_ByAttribute() {

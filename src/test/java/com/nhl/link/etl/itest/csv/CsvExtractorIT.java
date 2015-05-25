@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class CsvExtractorTest extends EtlIntegrationTest {
+public class CsvExtractorIT extends EtlIntegrationTest {
 
     @Test
     public void testExtractor() {

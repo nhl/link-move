@@ -11,7 +11,7 @@ import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl2t;
 
-public class CreateOrUpdate_TargetOnlyTest extends EtlIntegrationTest {
+public class CreateOrUpdate_TargetOnlyIT extends EtlIntegrationTest {
 
 	@Override
 	protected EtlRuntime createEtl() {

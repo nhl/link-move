@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.task.createorupdate;
+package com.nhl.link.etl.itest.runtime.task.createorupdate;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -10,11 +10,12 @@ import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.unit.DerbySrcTargetTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
-public class DefaultCreateOrUpdateBuilderTest extends DerbySrcTargetTest {
+public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 
 	private ITargetCayenneService cayenneService;
 

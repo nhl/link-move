@@ -12,7 +12,7 @@ import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 import com.nhl.link.etl.unit.cayenne.t.Etl3t;
 import com.nhl.link.etl.unit.cayenne.t.Etl5t;
 
-public class CreateOrUpdateTest extends EtlIntegrationTest {
+public class CreateOrUpdateIT extends EtlIntegrationTest {
 
 	@Test
 	public void test_ByAttribute() {

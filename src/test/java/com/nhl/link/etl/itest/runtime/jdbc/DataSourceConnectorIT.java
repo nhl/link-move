@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.jdbc;
+package com.nhl.link.etl.itest.runtime.jdbc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,9 +12,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.nhl.link.etl.runtime.jdbc.DataSourceConnector;
 import com.nhl.link.etl.unit.DerbySrcTest;
 
-public class DataSourceConnectorTest extends DerbySrcTest {
+public class DataSourceConnectorIT extends DerbySrcTest {
 
 	private DataSourceConnector connector;
 

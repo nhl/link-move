@@ -1,4 +1,4 @@
-package com.nhl.link.etl.mapper;
+package com.nhl.link.etl.itest.mapper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,10 +6,11 @@ import org.apache.cayenne.Cayenne;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.unit.DerbySrcTargetTest;
 import com.nhl.link.etl.unit.cayenne.t.Etl3t;
 
-public class PathMapperIT_Test extends DerbySrcTargetTest {
+public class PathMapperIT extends DerbySrcTargetTest {
 
 	private Etl3t e;
 
