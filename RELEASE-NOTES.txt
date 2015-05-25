@@ -2,6 +2,7 @@ Release 1.4
 
  #1 XML extractor support
 #36 CSV extractors
+#41 Automatic mapping of row attributes
 #43 Deprecate/remove explicit relationship mapping from CreateOrUpdateBuilder
 #44 Straighten mapping by ID
 #46 Cayenne upgrade to 4.0.M3.debfa94

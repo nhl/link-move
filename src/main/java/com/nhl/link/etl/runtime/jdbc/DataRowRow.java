@@ -17,8 +17,8 @@ final class DataRowRow implements Row {
 	private final RowAttribute[] attributes;
 	private DataRow row;
 
-	DataRowRow(RowAttribute[] keys, DataRow row) {
-		this.attributes = keys;
+	DataRowRow(RowAttribute[] attributes, DataRow row) {
+		this.attributes = attributes;
 		this.row = row;
 	}
 
