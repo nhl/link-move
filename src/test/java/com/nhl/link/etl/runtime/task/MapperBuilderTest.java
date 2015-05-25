@@ -29,15 +29,15 @@ public class MapperBuilderTest {
 	}
 
 	@Test
-	public void testBuildUnsafe_ByPropreties_Single() {
-		Mapper mapper = builder.matchBy(new Property<Object>("a")).buildUnsafe();
+	public void testCreateMapper_ByPropreties_Single() {
+		Mapper mapper = builder.matchBy(new Property<Object>("a")).createMapper();
 		assertNotNull(mapper);
 		assertTrue(mapper instanceof PathMapper);
 	}
 
 	@Test
-	public void testBuildUnsafe_ByPropreties_Multi() {
-		Mapper mapper = builder.matchBy(new Property<Object>("a"), new Property<Object>("b")).buildUnsafe();
+	public void testCreateMapper_ByPropreties_Multi() {
+		Mapper mapper = builder.matchBy(new Property<Object>("a"), new Property<Object>("b")).createMapper();
 		assertNotNull(mapper);
 		assertTrue(mapper instanceof MultiPathMapper);
 	}
@@ -45,7 +45,7 @@ public class MapperBuilderTest {
 	@Test
 	public void testMatchBy_Additivity() {
 		Map<String, Mapper> mappers = builder.matchBy(new Property<Object>("a"), new Property<Object>("b"))
-				.matchBy("c").createMappers();
+				.matchBy("c").createPathMappers();
 		assertEquals(3, mappers.size());
 		assertTrue(mappers.containsKey("a"));
 		assertTrue(mappers.containsKey("b"));
@@ -54,7 +54,7 @@ public class MapperBuilderTest {
 
 	@Test
 	public void testMatchBy_Duplicates() {
-		Map<String, Mapper> mappers = builder.matchBy("a", "b", "b").matchBy("a").createMappers();
+		Map<String, Mapper> mappers = builder.matchBy("a", "b", "b").matchBy("a").createPathMappers();
 		assertEquals(2, mappers.size());
 		assertTrue(mappers.containsKey("a"));
 		assertTrue(mappers.containsKey("b"));

@@ -83,11 +83,12 @@ public class MapperBuilder {
 		return this;
 	}
 
-	@SuppressWarnings("deprecation")
 	public Mapper build() {
+		return createSafeKeyMapper(createMapper());
+	}
 
-		Mapper mapper = buildUnsafe();
-
+	@SuppressWarnings("deprecation")
+	Mapper createSafeKeyMapper(Mapper unsafe) {
 		KeyAdapter keyAdapter;
 
 		if (paths.size() > 1) {
@@ -113,15 +114,15 @@ public class MapperBuilder {
 			keyAdapter = keyAdapterFactory.adapter(type);
 		}
 
-		return new SafeMapKeyMapper(mapper, keyAdapter);
+		return new SafeMapKeyMapper(unsafe, keyAdapter);
 	}
 
-	Mapper buildUnsafe() {
-		Map<String, Mapper> mappers = createMappers();
+	Mapper createMapper() {
+		Map<String, Mapper> mappers = createPathMappers();
 		return mappers.size() > 1 ? new MultiPathMapper(mappers) : mappers.values().iterator().next();
 	}
 
-	Map<String, Mapper> createMappers() {
+	Map<String, Mapper> createPathMappers() {
 
 		if (paths.isEmpty()) {
 			matchById();
