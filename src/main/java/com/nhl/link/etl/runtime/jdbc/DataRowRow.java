@@ -14,27 +14,27 @@ final class DataRowRow implements Row {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataRowRow.class);
 
-	private final RowAttribute[] keys;
+	private final RowAttribute[] attributes;
 	private DataRow row;
 
 	DataRowRow(RowAttribute[] keys, DataRow row) {
-		this.keys = keys;
+		this.attributes = keys;
 		this.row = row;
 	}
 
 	@Override
 	public RowAttribute[] attributes() {
-		return keys;
+		return attributes;
 	}
 
 	@Override
-	public Object get(RowAttribute key) {
+	public Object get(RowAttribute attribute) {
 
 		// nulls are valid, but missing keys are suspect, so add debugging for
 		// this condition
-		Object value = row.get(key.sourceName());
-		if (value == null && !row.containsKey(key.sourceName())) {
-			LOGGER.info("Key is missing in the source '" + key.sourceName() + "' ... ignoring");
+		Object value = row.get(attribute.sourceName());
+		if (value == null && !row.containsKey(attribute.sourceName())) {
+			LOGGER.info("Key is missing in the source '" + attribute.sourceName() + "' ... ignoring");
 		}
 
 		return value;
