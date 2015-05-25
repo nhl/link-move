@@ -1,10 +1,13 @@
 package com.nhl.link.etl.runtime.task;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.Property;
@@ -29,45 +32,54 @@ public class MapperBuilder {
 	private IKeyAdapterFactory keyAdapterFactory;
 
 	private ObjEntity entity;
-	private List<String> paths;
+	private Set<String> paths;
 
 	public MapperBuilder(ObjEntity entity, IKeyAdapterFactory keyAdapterFactory) {
 		this.entity = entity;
 		this.keyAdapterFactory = keyAdapterFactory;
+
+		// Set will weed out simple duplicates , however we don't check for
+		// invariants... so duplication is possible via db: vs obj: expressions
+		this.paths = new HashSet<>();
 	}
 
 	public MapperBuilder matchBy(String... paths) {
-		this.paths = Arrays.asList(paths);
+
+		if (paths == null) {
+			throw new NullPointerException("Null 'paths'");
+		}
+
+		for (String p : paths) {
+			this.paths.add(p);
+		}
+
 		return this;
 	}
 
 	public MapperBuilder matchBy(Property<?>... paths) {
 
-		// it will fail later on 'build'; TODO: should we do early argument
-		// checking?
 		if (paths == null) {
-			return this;
-		}
-		String[] names = new String[paths.length];
-		for (int i = 0; i < paths.length; i++) {
-			names[i] = paths[i].getName();
+			throw new NullPointerException("Null 'paths'");
 		}
 
-		return matchBy(names);
+		for (Property<?> p : paths) {
+			this.paths.add(p.getName());
+		}
+
+		return this;
 	}
 
 	public MapperBuilder matchById() {
 
-		List<String> pks = new ArrayList<>(3);
-		for (DbAttribute pk : entity.getDbEntity().getPrimaryKeys()) {
-			pks.add(ASTDbPath.DB_PREFIX + pk.getName());
-		}
-
+		Collection<DbAttribute> pks = entity.getDbEntity().getPrimaryKeys();
 		if (pks.isEmpty()) {
 			throw new IllegalStateException("Target entity has no PKs defined: " + entity.getDbEntityName());
 		}
 
-		this.paths = pks;
+		for (DbAttribute pk : pks) {
+			this.paths.add(ASTDbPath.DB_PREFIX + pk.getName());
+		}
+
 		return this;
 	}
 
@@ -86,7 +98,7 @@ public class MapperBuilder {
 			keyAdapter = keyAdapterFactory.adapter(List.class);
 		} else {
 
-			Object attributeOrRelationship = ExpressionFactory.exp(paths.get(0)).evaluate(entity);
+			Object attributeOrRelationship = ExpressionFactory.exp(paths.iterator().next()).evaluate(entity);
 
 			Class<?> type;
 
@@ -105,24 +117,24 @@ public class MapperBuilder {
 	}
 
 	Mapper buildUnsafe() {
-
-		if (paths == null) {
-			matchById();
-		}
-
-		if (paths == null || paths.isEmpty()) {
-			throw new IllegalStateException("'matchBy' or 'matchById' must be set");
-		}
-
 		Map<String, Mapper> mappers = createMappers();
 		return mappers.size() > 1 ? new MultiPathMapper(mappers) : mappers.values().iterator().next();
 	}
 
-	private Map<String, Mapper> createMappers() {
-		// ensuring predictable attribute iteration order with
-		// LinkedHashMap. Useful for unit test for one thing.
+	Map<String, Mapper> createMappers() {
+
+		if (paths.isEmpty()) {
+			matchById();
+		}
+
+		// ensuring predictable attribute iteration order by alphabetically
+		// ordering paths and using LinkedHashMap. Useful for unit test for one
+		// thing.
+		List<String> orderedPaths = new ArrayList<>(paths);
+		Collections.sort(orderedPaths);
+
 		Map<String, Mapper> mappers = new LinkedHashMap<>();
-		for (String a : paths) {
+		for (String a : orderedPaths) {
 			mappers.put(a, new PathMapper(a));
 		}
 
