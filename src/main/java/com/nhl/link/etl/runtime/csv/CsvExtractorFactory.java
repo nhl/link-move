@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.file.csv;
+package com.nhl.link.etl.runtime.csv;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.connect.StreamConnector;

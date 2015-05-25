@@ -1,7 +1,10 @@
 package com.nhl.link.etl.runtime.file.csv;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import com.nhl.link.etl.runtime.csv.CsvUtils;
 
 public class CsvUtilsTest {
 

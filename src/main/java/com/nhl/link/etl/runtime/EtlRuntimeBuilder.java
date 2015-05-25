@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nhl.link.etl.runtime.file.csv.CsvExtractorFactory;
 import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
+
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -23,6 +23,7 @@ import com.nhl.link.etl.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.etl.runtime.cayenne.TargetConnectorFactory;
 import com.nhl.link.etl.runtime.connect.ConnectorService;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
+import com.nhl.link.etl.runtime.csv.CsvExtractorFactory;
 import com.nhl.link.etl.runtime.extract.ClasspathExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extract.ExtractorService;
 import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;

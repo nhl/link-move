@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.file.csv;
+package com.nhl.link.etl.runtime.csv;
 
 import java.io.IOException;
 import java.io.StringReader;
