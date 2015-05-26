@@ -34,13 +34,13 @@ public class JdbcRowReader_DynamicAttributesTest {
 		assertNotNull(attributes);
 		assertEquals(3, attributes.length);
 
-		assertEquals("A0", attributes[0].sourceName());
-		assertEquals("db:A0", attributes[0].targetName());
+		assertEquals("A0", attributes[0].getSourceName());
+		assertEquals("db:A0", attributes[0].getTargetPath());
 		
-		assertEquals("A1", attributes[1].sourceName());
-		assertEquals("db:A1", attributes[1].targetName());
+		assertEquals("A1", attributes[1].getSourceName());
+		assertEquals("db:A1", attributes[1].getTargetPath());
 		
-		assertEquals("A2", attributes[2].sourceName());
-		assertEquals("db:A2", attributes[2].targetName());
+		assertEquals("A2", attributes[2].getSourceName());
+		assertEquals("db:A2", attributes[2].getTargetPath());
 	}
 }

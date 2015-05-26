@@ -46,20 +46,20 @@ public class AbstractXmlExtractorConfigLoaderTest {
 		assertEquals("aconnector", config.getConnectorId());
 		assertEquals(3, config.getAttributes().length);
 
-		assertEquals(0, config.getAttributes()[0].ordinal());
+		assertEquals(0, config.getAttributes()[0].getOrdinal());
 		assertEquals(String.class, config.getAttributes()[0].type());
-		assertEquals("a1", config.getAttributes()[0].sourceName());
-		assertEquals("a_1", config.getAttributes()[0].targetName());
+		assertEquals("a1", config.getAttributes()[0].getSourceName());
+		assertEquals("a_1", config.getAttributes()[0].getTargetPath());
 
-		assertEquals(1, config.getAttributes()[1].ordinal());
+		assertEquals(1, config.getAttributes()[1].getOrdinal());
 		assertEquals(Integer.class, config.getAttributes()[1].type());
-		assertEquals("a2", config.getAttributes()[1].sourceName());
-		assertEquals("a_2", config.getAttributes()[1].targetName());
+		assertEquals("a2", config.getAttributes()[1].getSourceName());
+		assertEquals("a_2", config.getAttributes()[1].getTargetPath());
 
-		assertEquals(2, config.getAttributes()[2].ordinal());
+		assertEquals(2, config.getAttributes()[2].getOrdinal());
 		assertEquals(Integer.class, config.getAttributes()[2].type());
-		assertEquals("a2", config.getAttributes()[2].sourceName());
-		assertEquals("db:a2", config.getAttributes()[2].targetName());
+		assertEquals("a2", config.getAttributes()[2].getSourceName());
+		assertEquals("db:a2", config.getAttributes()[2].getTargetPath());
 
 		assertEquals(2, config.getProperties().size());
 		assertEquals("AB", config.getProperties().get("a.b"));

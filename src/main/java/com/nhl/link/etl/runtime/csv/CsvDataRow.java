@@ -34,7 +34,7 @@ public class CsvDataRow implements Row {
         }
         return getValue(
                 attribute.type(),
-                values[attribute.ordinal()]
+                values[attribute.getOrdinal()]
         );
     }
 

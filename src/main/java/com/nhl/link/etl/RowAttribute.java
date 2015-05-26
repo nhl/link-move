@@ -1,23 +1,27 @@
 package com.nhl.link.etl;
 
 /**
- * Describes a single entry in a data row.
+ * Provides a source-to-target mapping for a single value in an extractor
+ * {@link Row}.
  */
 public class RowAttribute {
 
 	private Class<?> type;
 	private String sourceName;
-	private String targetName;
+	private String targetPath;
 	private int ordinal;
 
 	public RowAttribute(Class<?> type, String sourceName, String targetName, int ordinal) {
 		this.type = type;
 		this.sourceName = sourceName;
-		this.targetName = targetName;
+		this.targetPath = targetName;
 		this.ordinal = ordinal;
 	}
 
-	public int ordinal() {
+	/**
+	 * Returns a position of the attribute in a row.
+	 */
+	public int getOrdinal() {
 		return ordinal;
 	}
 
@@ -25,18 +29,25 @@ public class RowAttribute {
 		return type;
 	}
 
-	public String sourceName() {
+	/**
+	 * Returns a String name of the attribute as provided by the source.
+	 */
+	public String getSourceName() {
 		return sourceName;
 	}
 
-	public String targetName() {
-		return targetName;
+	/**
+	 * Returns a path expression that maps source Row value to a target
+	 * property.
+	 */
+	public String getTargetPath() {
+		return targetPath;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
-		buffer.append("{sourceName:").append(sourceName).append(",targetName:").append(targetName).append(",ordinal:")
+		buffer.append("{sourceName:").append(sourceName).append(",targetName:").append(targetPath).append(",ordinal:")
 				.append(ordinal).append("}");
 		return buffer.toString();
 	}

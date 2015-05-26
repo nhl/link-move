@@ -9,8 +9,8 @@ import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowAttribute;
 
 /**
- * Converts source {@link Row} to a map containing row column values by ETL
- * target key.
+ * Re-maps a list of {@link Row} objects to a Map with keys in the target
+ * namespace.
  * 
  * @since 1.3
  */
@@ -43,7 +43,7 @@ public class RowConverter {
 		Map<String, Object> translated = new HashMap<>();
 
 		for (RowAttribute key : source.attributes()) {
-			translated.put(key.targetName(), source.get(key));
+			translated.put(key.getTargetPath(), source.get(key));
 		}
 
 		return translated;

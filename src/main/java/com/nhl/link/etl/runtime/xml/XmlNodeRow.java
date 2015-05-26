@@ -22,7 +22,7 @@ class XmlNodeRow implements Row {
 		NodeList childNodes = node.getChildNodes();
 		for (int i = 0; i <= childNodes.getLength(); i++) {
 			Node childNode = childNodes.item(i);
-			if (childNode.getNodeName().equals(attribute.sourceName())) {
+			if (childNode.getNodeName().equals(attribute.getSourceName())) {
 				return childNode.getTextContent();
 			}
 		}

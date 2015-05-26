@@ -32,9 +32,9 @@ final class DataRowRow implements Row {
 
 		// nulls are valid, but missing keys are suspect, so add debugging for
 		// this condition
-		Object value = row.get(attribute.sourceName());
-		if (value == null && !row.containsKey(attribute.sourceName())) {
-			LOGGER.info("Key is missing in the source '" + attribute.sourceName() + "' ... ignoring");
+		Object value = row.get(attribute.getSourceName());
+		if (value == null && !row.containsKey(attribute.getSourceName())) {
+			LOGGER.info("Key is missing in the source '" + attribute.getSourceName() + "' ... ignoring");
 		}
 
 		return value;

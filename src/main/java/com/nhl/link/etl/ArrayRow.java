@@ -17,6 +17,6 @@ public class ArrayRow implements Row {
 
 	@Override
 	public Object get(RowAttribute attribute) {
-		return values[attribute.ordinal()];
+		return values[attribute.getOrdinal()];
 	}
 }
