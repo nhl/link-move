@@ -141,10 +141,16 @@ public abstract class AbstractXmlExtractorConfigLoader implements IExtractorConf
 			}
 		}
 
+		// 'source' is optional. E.g. CSV extractor is positional
+
 		// 'target' is optional; if missing target is assumed to be a "db:" path
 		// matching the "source"
 		if (target == null) {
-			target = ASTDbPath.DB_PREFIX + source;
+			if (source != null) {
+				target = ASTDbPath.DB_PREFIX + source;
+			} else {
+				throw new EtlRuntimeException("Both 'source' and 'target' are missing for attribute.");
+			}
 		}
 
 		attributes.add(new RowAttribute(type, source, target, attributes.size()));
