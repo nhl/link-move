@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://github.com/nhl/link-etl/extractor_config.xsd"
 	xmlns="http://github.com/nhl/link-etl/extractor_config.xsd">
+
 	<type>jdbc</type>
-	<connectorId>derbysrc</connectorId>
+	<connectorId>dummyconnector</connectorId>
+
+	<attributes>
+		<attribute>
+			<type>java.lang.Integer</type>
+			<target>db:id</target>
+		</attribute>
+	</attributes>
+
 	<properties>
 		<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT age, description, name FROM utest.etl1
-			]]>
+			<![CDATA[SELECT * FROM utest.etl1]]>
 		</extractor.jdbc.sqltemplate>
-		<!-- This (or #result) is required as Derby metadata returns uppercase columns -->
-		<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 	</properties>
 </config>

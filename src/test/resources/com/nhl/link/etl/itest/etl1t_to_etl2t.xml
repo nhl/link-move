@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- ETL within the same DB; connector ID == DataNode name == 'datanode' -->
-<config>
+<config  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://github.com/nhl/link-etl/extractor_config.xsd"
+	xmlns="http://github.com/nhl/link-etl/extractor_config.xsd">
 	<type>jdbc</type>
 	<connectorId>datanode</connectorId>
 	<attributes>

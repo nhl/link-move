@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://github.com/nhl/link-etl/extractor_config.xsd"
+	xmlns="http://github.com/nhl/link-etl/extractor_config.xsd">
 	<type>jdbc</type>
 	<connectorId>derbysrc</connectorId>
 	<attributes>
