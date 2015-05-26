@@ -59,7 +59,7 @@ public class AbstractXmlExtractorConfigLoaderTest {
 		assertEquals(2, config.getAttributes()[2].ordinal());
 		assertEquals(Integer.class, config.getAttributes()[2].type());
 		assertEquals("a2", config.getAttributes()[2].sourceName());
-		assertEquals("a2", config.getAttributes()[2].targetName());
+		assertEquals("db:a2", config.getAttributes()[2].targetName());
 
 		assertEquals(2, config.getProperties().size());
 		assertEquals("AB", config.getProperties().get("a.b"));
