@@ -9,7 +9,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -138,18 +137,6 @@ public abstract class AbstractXmlExtractorConfigLoader implements IExtractorConf
 					target = e.getTextContent();
 					break;
 				}
-			}
-		}
-
-		// 'source' is optional. E.g. CSV extractor is positional
-
-		// 'target' is optional; if missing target is assumed to be a "db:" path
-		// matching the "source"
-		if (target == null) {
-			if (source != null) {
-				target = ASTDbPath.DB_PREFIX + source;
-			} else {
-				throw new EtlRuntimeException("Both 'source' and 'target' are missing for attribute.");
 			}
 		}
 

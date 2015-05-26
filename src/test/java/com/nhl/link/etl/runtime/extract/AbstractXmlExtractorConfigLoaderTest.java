@@ -2,6 +2,7 @@ package com.nhl.link.etl.runtime.extract;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class AbstractXmlExtractorConfigLoaderTest {
 		assertEquals(2, config.getAttributes()[2].getOrdinal());
 		assertEquals(Integer.class, config.getAttributes()[2].type());
 		assertEquals("a2", config.getAttributes()[2].getSourceName());
-		assertEquals("db:a2", config.getAttributes()[2].getTargetPath());
+		assertNull(config.getAttributes()[2].getTargetPath());
 
 		assertEquals(2, config.getProperties().size());
 		assertEquals("AB", config.getProperties().get("a.b"));
