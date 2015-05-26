@@ -1,7 +1,7 @@
 package com.nhl.link.etl;
 
 /**
- * An interface for a custom enumeration describing source row.
+ * Describes a single entry in a data row.
  */
 public class RowAttribute {
 
@@ -9,10 +9,6 @@ public class RowAttribute {
 	private String sourceName;
 	private String targetName;
 	private int ordinal;
-
-	public RowAttribute(Class<?> type, String name, int ordinal) {
-		this(type, name, name, ordinal);
-	}
 
 	public RowAttribute(Class<?> type, String sourceName, String targetName, int ordinal) {
 		this.type = type;
@@ -40,7 +36,8 @@ public class RowAttribute {
 	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
-		buffer.append("{sourceName:").append(sourceName).append(",targetName:").append(targetName).append("}");
+		buffer.append("{sourceName:").append(sourceName).append(",targetName:").append(targetName).append(",ordinal:")
+				.append(ordinal).append("}");
 		return buffer.toString();
 	}
 }
