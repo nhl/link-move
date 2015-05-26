@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://github.com/nhl/link-etl/extractor_config.xsd"
-	xmlns:tns="http://github.com/nhl/link-etl/extractor_config.xsd" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nhl.github.io/link-etl/schema/extractor_config"
+	xmlns:tns="http://nhl.github.io/link-etl/schema/extractor_config" elementFormDefault="qualified">
 
 	<annotation>
 		<documentation xml:lang="en">
