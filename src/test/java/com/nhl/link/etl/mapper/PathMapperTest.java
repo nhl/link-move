@@ -11,6 +11,8 @@ import org.apache.cayenne.DataObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.nhl.link.etl.EtlRuntimeException;
+
 public class PathMapperTest {
 
 	private PathMapper mapper;
@@ -28,6 +30,25 @@ public class PathMapperTest {
 		src.put("abc", "ABC");
 
 		assertEquals("ABC", mapper.keyForSource(src));
+	}
+
+	@Test
+	public void testKeyForSource_NullKey() {
+
+		Map<String, Object> src = new HashMap<String, Object>();
+		src.put("a", "A");
+		src.put("abc", null);
+
+		assertEquals(null, mapper.keyForSource(src));
+	}
+
+	@Test(expected = EtlRuntimeException.class)
+	public void testKeyForSource_MissingKey() {
+
+		Map<String, Object> src = new HashMap<String, Object>();
+		src.put("a", "A");
+
+		mapper.keyForSource(src);
 	}
 
 	@Test

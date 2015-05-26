@@ -6,6 +6,8 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
+import com.nhl.link.etl.EtlRuntimeException;
+
 public class PathMapper implements Mapper {
 
 	private String path;
@@ -45,7 +47,16 @@ public class PathMapper implements Mapper {
 
 	@Override
 	public Object keyForSource(Map<String, Object> source) {
-		return source.get(path);
+
+		// if source does not contain a key, we must fail, otherwise multiple
+		// rows will be incorrectly matched against NULL key
+
+		Object key = source.get(path);
+		if (key == null && !source.containsKey(path)) {
+			throw new EtlRuntimeException("Source does not contain key path: " + path);
+		}
+
+		return key;
 	}
 
 	@Override
@@ -60,7 +71,7 @@ public class PathMapper implements Mapper {
 
 		return getOrCreatePathExpression().evaluate(target);
 	}
-	
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "__" + path;
