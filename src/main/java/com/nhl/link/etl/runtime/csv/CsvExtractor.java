@@ -25,14 +25,9 @@ public class CsvExtractor implements Extractor {
 	private String delimiter;
 	private Integer readFrom;
 
-	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes) {
+	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes, Charset charset) {
 		this.connector = connector;
 		this.attributes = attributes;
-		this.charset = Charset.defaultCharset();
-	}
-
-	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes, Charset charset) {
-		this(connector, attributes);
 		this.charset = charset;
 	}
 
@@ -42,7 +37,7 @@ public class CsvExtractor implements Extractor {
 		// TODO: this requires reading the entire file in memory. We can
 		// probably turn this into a constant-memory streaming extractor that
 		// reads one line at a time, processes and discards it.
-		
+
 		List<String> lines = new ArrayList<>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connector.getInputStream(), charset));

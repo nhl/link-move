@@ -44,14 +44,13 @@ public class CsvExtractorFactory extends BaseExtractorFactory<StreamConnector> {
     @Override
     protected Extractor createExtractor(StreamConnector connector, ExtractorConfig config) {
         try {
-            CsvExtractor extractor;
 
             String charsetName = config.getProperties().get(CHARSET_PROPERTY);
-            if (charsetName == null) {
-                extractor = new CsvExtractor(connector, config.getAttributes());
-            } else {
-                extractor = new CsvExtractor(connector, config.getAttributes(), Charset.forName(charsetName));
-            }
+            
+            // TODO: should we lock default Charset to UTF-8 instead of platform-default?
+            Charset charset = charsetName != null ? Charset.forName(charsetName) : Charset.defaultCharset();
+            
+            CsvExtractor extractor = new CsvExtractor(connector, config.getAttributes(), charset);
 
             String delimiter = config.getProperties().get(DELIMITIER_PROPERTY);
             if (delimiter != null) {
