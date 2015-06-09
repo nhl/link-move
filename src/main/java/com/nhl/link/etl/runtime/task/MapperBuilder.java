@@ -23,6 +23,7 @@ import com.nhl.link.etl.mapper.MultiPathMapper;
 import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.mapper.SafeMapKeyMapper;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 
 /**
  * @since 1.3
@@ -30,13 +31,15 @@ import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 public class MapperBuilder {
 
 	private IKeyAdapterFactory keyAdapterFactory;
+	private EntityPathNormalizer pathNormalizer;
 
 	private ObjEntity entity;
 	private Set<String> paths;
 
-	public MapperBuilder(ObjEntity entity, IKeyAdapterFactory keyAdapterFactory) {
+	public MapperBuilder(ObjEntity entity, EntityPathNormalizer pathNormalizer, IKeyAdapterFactory keyAdapterFactory) {
 		this.entity = entity;
 		this.keyAdapterFactory = keyAdapterFactory;
+		this.pathNormalizer = pathNormalizer;
 
 		// Set will weed out simple duplicates , however we don't check for
 		// invariants... so duplication is possible via db: vs obj: expressions
@@ -136,7 +139,8 @@ public class MapperBuilder {
 
 		Map<String, Mapper> mappers = new LinkedHashMap<>();
 		for (String a : orderedPaths) {
-			mappers.put(a, new PathMapper(a));
+			String na = pathNormalizer.normalize(a);
+			mappers.put(na, new PathMapper(na));
 		}
 
 		return mappers;

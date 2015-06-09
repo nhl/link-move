@@ -10,21 +10,21 @@ import com.nhl.link.etl.EtlRuntimeException;
 
 public class PathMapper implements Mapper {
 
-	private String path;
+	private String dbPath;
 
 	// created lazily and cached... parsing expressions is expensive
 	private Expression pathExpression;
 	private Expression keyValueExpression;
 
-	public PathMapper(String path) {
-		this.path = path;
+	public PathMapper(String dbPath) {
+		this.dbPath = dbPath;
 	}
 
 	private Expression getOrCreatePathExpression() {
 		if (pathExpression == null) {
 			// as we expect both Db and Obj paths here, let's pass the path
 			// through the parser to generate the correct expression template...
-			this.pathExpression = ExpressionFactory.exp(path);
+			this.pathExpression = ExpressionFactory.exp(dbPath);
 		}
 
 		return pathExpression;
@@ -34,7 +34,7 @@ public class PathMapper implements Mapper {
 		if (keyValueExpression == null) {
 			// as we expect both Db and Obj paths here, let's pass the path
 			// through the parser to generate the correct expression template...
-			this.keyValueExpression = ExpressionFactory.exp(path + " = $v");
+			this.keyValueExpression = ExpressionFactory.exp(dbPath + " = $v");
 		}
 
 		return keyValueExpression;
@@ -51,9 +51,9 @@ public class PathMapper implements Mapper {
 		// if source does not contain a key, we must fail, otherwise multiple
 		// rows will be incorrectly matched against NULL key
 
-		Object key = source.get(path);
-		if (key == null && !source.containsKey(path)) {
-			throw new EtlRuntimeException("Source does not contain key path: " + path);
+		Object key = source.get(dbPath);
+		if (key == null && !source.containsKey(dbPath)) {
+			throw new EtlRuntimeException("Source does not contain key path: " + dbPath);
 		}
 
 		return key;
@@ -74,6 +74,6 @@ public class PathMapper implements Mapper {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "__" + path;
+		return getClass().getSimpleName() + "__" + dbPath;
 	}
 }

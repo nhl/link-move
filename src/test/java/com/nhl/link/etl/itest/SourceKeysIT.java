@@ -13,6 +13,7 @@ import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.Execution;
 import com.nhl.link.etl.runtime.task.sourcekeys.SourceKeysTask;
 import com.nhl.link.etl.unit.EtlIntegrationTest;
+import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
 public class SourceKeysIT extends EtlIntegrationTest {
 
@@ -20,8 +21,8 @@ public class SourceKeysIT extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().extractSourceKeys().sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t")
-				.matchBy("name").task();
+		EtlTask task = etl.getTaskService().extractSourceKeys(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy("name").task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");

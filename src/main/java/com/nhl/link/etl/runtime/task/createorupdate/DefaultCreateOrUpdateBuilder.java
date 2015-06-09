@@ -11,7 +11,6 @@ import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.DbJoin;
 import org.apache.cayenne.map.DbRelationship;
-import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.AttributeProperty;
 import org.apache.cayenne.reflect.ClassDescriptor;
@@ -33,6 +32,8 @@ import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
+import com.nhl.link.etl.runtime.path.IPathNormalizer;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
 import com.nhl.link.etl.runtime.task.ListenersBuilder;
 import com.nhl.link.etl.runtime.task.MapperBuilder;
@@ -40,7 +41,6 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.writer.TargetAttributePropertyWriter;
 import com.nhl.link.etl.writer.TargetPkPropertyWriter;
 import com.nhl.link.etl.writer.TargetPropertyWriter;
-import com.nhl.link.etl.writer.TargetToManyPropertyWriter;
 import com.nhl.link.etl.writer.TargetToOnePropertyWriter;
 
 /**
@@ -56,6 +56,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private IExtractorService extractorService;
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
+	private ObjEntity entity;
+	private EntityPathNormalizer entityPathNormalizer;
 	private MapperBuilder mapperBuilder;
 	private Mapper mapper;
 	private ListenersBuilder stageListenersBuilder;
@@ -67,18 +69,22 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private List<LoadListener<T>> loadListeners;
 
 	public DefaultCreateOrUpdateBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
-			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory) {
+			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory,
+			IPathNormalizer pathNormalizer) {
 
 		this.type = type;
 		this.targetCayenneService = targetCayenneService;
 		this.extractorService = extractorService;
 		this.tokenManager = tokenManager;
 
-		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
+		this.entity = targetCayenneService.entityResolver().getObjEntity(type);
 		if (entity == null) {
 			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
-		this.mapperBuilder = new MapperBuilder(entity, keyAdapterFactory);
+
+		this.entityPathNormalizer = pathNormalizer.normalizer(entity);
+
+		this.mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
 		this.stageListenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
 				AfterTargetsMatched.class, AfterTargetsMerged.class);
 
@@ -228,8 +234,9 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		SourceMapper sourceMapper = new SourceMapper(mapper);
 		TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
 		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, writers);
+		RowConverter rowConverter = new RowConverter(entityPathNormalizer);
 
-		return new CreateOrUpdateSegmentProcessor<>(RowConverter.instance(), sourceMapper, targetMatcher, merger,
+		return new CreateOrUpdateSegmentProcessor<>(rowConverter, sourceMapper, targetMatcher, merger,
 				stageListenersBuilder.getListeners(), loadListeners);
 	}
 
@@ -238,8 +245,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		// TODO: this should be extracted in a singleton service - property
 		// metadata should be compiled once and reused.
 
-		EntityResolver entityResolver = targetCayenneService.entityResolver();
-		ObjEntity entity = entityResolver.getObjEntity(type);
 		ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
 
 		final Map<String, TargetPropertyWriter> writers = new HashMap<>();
@@ -252,20 +257,13 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 			@Override
 			public boolean visitAttribute(AttributeProperty property) {
 				TargetPropertyWriter writer = new TargetAttributePropertyWriter(property);
-
-				// store for both obj: and db: expressions
-				writers.put(property.getName(), writer);
 				writers.put(ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributeName(), writer);
-
 				return true;
 			}
 
 			@Override
 			public boolean visitToOne(ToOneProperty property) {
 				TargetPropertyWriter writer = new TargetToOnePropertyWriter(property);
-
-				// store for both obj: and db: expressions ..
-				writers.put(property.getName(), writer);
 
 				List<DbRelationship> dbRelationships = property.getRelationship().getDbRelationships();
 				if (dbRelationships.size() > 1) {
@@ -289,7 +287,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 			@Override
 			public boolean visitToMany(ToManyProperty property) {
-				writers.put(property.getName(), new TargetToManyPropertyWriter(property));
+				// nothing for ToMany
 				return true;
 			}
 		});

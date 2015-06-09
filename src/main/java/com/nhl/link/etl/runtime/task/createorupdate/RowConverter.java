@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowAttribute;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 
 /**
  * Re-maps a list of {@link Row} objects to a Map with keys in the target
@@ -16,14 +17,10 @@ import com.nhl.link.etl.RowAttribute;
  */
 public class RowConverter {
 
-	private static final RowConverter instance = new RowConverter();
+	private EntityPathNormalizer pathNormalizer;
 
-	public static RowConverter instance() {
-		return instance;
-	}
-
-	private RowConverter() {
-		// private noop constructor
+	public RowConverter(EntityPathNormalizer pathNormalizer) {
+		this.pathNormalizer = pathNormalizer;
 	}
 
 	public List<Map<String, Object>> convert(List<Row> rows) {
@@ -43,9 +40,13 @@ public class RowConverter {
 		Map<String, Object> translated = new HashMap<>();
 
 		for (RowAttribute key : source.attributes()) {
-			translated.put(key.getTargetPath(), source.get(key));
+			String path = pathNormalizer.normalize(key.getTargetPath());
+			translated.put(path, source.get(key));
 		}
 
 		return translated;
 	}
+
+	
+
 }

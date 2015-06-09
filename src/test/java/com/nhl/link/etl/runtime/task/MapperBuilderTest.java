@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.mapper.MultiPathMapper;
 import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.runtime.key.KeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 
 public class MapperBuilderTest {
 
@@ -25,7 +27,12 @@ public class MapperBuilderTest {
 	public void before() {
 
 		ObjEntity e = mock(ObjEntity.class);
-		builder = new MapperBuilder(e, new KeyAdapterFactory());
+		EntityPathNormalizer pathNormalizer = mock(EntityPathNormalizer.class);
+		when(pathNormalizer.normalize("a")).thenReturn("db:a");
+		when(pathNormalizer.normalize("b")).thenReturn("db:b");
+		when(pathNormalizer.normalize("c")).thenReturn("db:c");
+
+		builder = new MapperBuilder(e, pathNormalizer, new KeyAdapterFactory());
 	}
 
 	@Test
@@ -47,16 +54,16 @@ public class MapperBuilderTest {
 		Map<String, Mapper> mappers = builder.matchBy(new Property<Object>("a"), new Property<Object>("b"))
 				.matchBy("c").createPathMappers();
 		assertEquals(3, mappers.size());
-		assertTrue(mappers.containsKey("a"));
-		assertTrue(mappers.containsKey("b"));
-		assertTrue(mappers.containsKey("c"));
+		assertTrue(mappers.containsKey("db:a"));
+		assertTrue(mappers.containsKey("db:b"));
+		assertTrue(mappers.containsKey("db:c"));
 	}
 
 	@Test
 	public void testMatchBy_Duplicates() {
 		Map<String, Mapper> mappers = builder.matchBy("a", "b", "b").matchBy("a").createPathMappers();
 		assertEquals(2, mappers.size());
-		assertTrue(mappers.containsKey("a"));
-		assertTrue(mappers.containsKey("b"));
+		assertTrue(mappers.containsKey("db:a"));
+		assertTrue(mappers.containsKey("db:b"));
 	}
 }

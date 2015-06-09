@@ -86,7 +86,7 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 		for (Map.Entry<String, Object> e : source.entrySet()) {
 			TargetPropertyWriter writer = writers.get(e.getKey());
 			if (writer == null) {
-				LOGGER.info("Source contains a property not mapped in the target: " + e.getKey() + ". Skipping...");
+				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
 				continue;
 			}
 

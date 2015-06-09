@@ -5,6 +5,7 @@ import com.nhl.link.etl.SourceKeysBuilder;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
 import com.nhl.link.etl.runtime.task.SourceMapperBuilder;
 import com.nhl.link.etl.runtime.task.createorupdate.RowConverter;
@@ -18,14 +19,16 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 	private IExtractorService extractorService;
 	private ITokenManager tokenManager;
 	private SourceMapperBuilder mapperBuilder;
+	private EntityPathNormalizer pathNormalizer;
 
 	private String sourceExtractorName;
 
-	public DefaultSourceKeysBuilder(IExtractorService extractorService, ITokenManager tokenManager,
-			IKeyAdapterFactory keyAdapterFactory) {
+	public DefaultSourceKeysBuilder(EntityPathNormalizer pathNormalizer, IExtractorService extractorService,
+			ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory) {
 		this.extractorService = extractorService;
 		this.tokenManager = tokenManager;
-		this.mapperBuilder = new SourceMapperBuilder(keyAdapterFactory);
+		this.mapperBuilder = new SourceMapperBuilder(pathNormalizer, keyAdapterFactory);
+		this.pathNormalizer = pathNormalizer;
 	}
 
 	@Override
@@ -42,7 +45,8 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 
 		Mapper mapper = mapperBuilder.build();
 		SourceKeysCollector sourceMapper = new SourceKeysCollector(mapper);
-		return new SourceKeysSegmentProcessor(RowConverter.instance(), sourceMapper);
+		RowConverter converter = new RowConverter(pathNormalizer);
+		return new SourceKeysSegmentProcessor(converter, sourceMapper);
 	}
 
 	@Override

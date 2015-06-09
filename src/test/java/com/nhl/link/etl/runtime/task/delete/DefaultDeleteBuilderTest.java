@@ -18,6 +18,8 @@ import org.junit.Test;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
+import com.nhl.link.etl.runtime.path.IPathNormalizer;
 import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.etl.runtime.token.ITokenManager;
@@ -44,12 +46,18 @@ public class DefaultDeleteBuilderTest {
 
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
-		ITaskService taskService = mock(ITaskService.class);
-		when(taskService.extractSourceKeys()).thenReturn(
-				new DefaultSourceKeysBuilder(mock(IExtractorService.class), mock(ITokenManager.class),
-						keyAdapterFactory));
+		EntityPathNormalizer mockEntityPathNormalizer = mock(EntityPathNormalizer.class);
 
-		builder = new DefaultDeleteBuilder<>(Etl1t.class, cayenneService, keyAdapterFactory, taskService);
+		IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
+		when(mockPathNormalizer.normalizer(targetEntity)).thenReturn(mockEntityPathNormalizer);
+
+		ITaskService taskService = mock(ITaskService.class);
+		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(
+				new DefaultSourceKeysBuilder(mockEntityPathNormalizer, mock(IExtractorService.class),
+						mock(ITokenManager.class), keyAdapterFactory));
+
+		this.builder = new DefaultDeleteBuilder<>(Etl1t.class, cayenneService, keyAdapterFactory, taskService,
+				mockPathNormalizer);
 	}
 
 	@Test(expected = IllegalStateException.class)

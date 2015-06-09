@@ -14,6 +14,7 @@ import com.nhl.link.etl.DeleteBuilder;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extract.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.IPathNormalizer;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.unit.cayenne.t.Etl1t;
 
@@ -36,7 +37,10 @@ public class TaskServiceTest {
 		ITokenManager tokenManager = mock(ITokenManager.class);
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
-		taskService = new TaskService(extractorService, cayenneService, tokenManager, keyAdapterFactory);
+		IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
+
+		taskService = new TaskService(extractorService, cayenneService, tokenManager, keyAdapterFactory,
+				mockPathNormalizer);
 	}
 
 	@Test

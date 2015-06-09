@@ -25,7 +25,12 @@ public interface ITaskService {
 	/**
 	 * @since 1.3
 	 */
-	SourceKeysBuilder extractSourceKeys();
+	<T extends DataObject> SourceKeysBuilder extractSourceKeys(Class<T> type);
+
+	/**
+	 * @since 1.4
+	 */
+	SourceKeysBuilder extractSourceKeys(String targetEntityName);
 
 	/**
 	 * @deprecated since 1.3 use {@link #createOrUpdate(Class)}.

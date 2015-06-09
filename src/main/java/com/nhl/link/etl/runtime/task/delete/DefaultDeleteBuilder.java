@@ -13,6 +13,8 @@ import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
+import com.nhl.link.etl.runtime.path.IPathNormalizer;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;
 import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.ListenersBuilder;
@@ -36,7 +38,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	private ListenersBuilder listenersBuilder;
 
 	public DefaultDeleteBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
-			IKeyAdapterFactory keyAdapterFactory, ITaskService taskService) {
+			IKeyAdapterFactory keyAdapterFactory, ITaskService taskService, IPathNormalizer pathNormalizer) {
 
 		this.taskService = taskService;
 		this.targetCayenneService = targetCayenneService;
@@ -47,7 +49,9 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
 
-		this.mapperBuilder = new MapperBuilder(entity, keyAdapterFactory);
+		EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
+
+		this.mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
 		this.listenersBuilder = new ListenersBuilder(AfterSourcesMapped.class, AfterMissingTargetsFiltered.class);
 
 		// always add stats listener..
@@ -118,7 +122,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	private DeleteSegmentProcessor<T> createProcessor() {
 		Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
-		EtlTask keysSubtask = taskService.extractSourceKeys().sourceExtractor(extractorName).matchBy(mapper).task();
+		EtlTask keysSubtask = taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
 
 		TargetMapper<T> targetMapper = new TargetMapper<>(mapper);
 		MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>(keysSubtask);

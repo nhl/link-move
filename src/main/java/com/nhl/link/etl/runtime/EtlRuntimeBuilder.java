@@ -33,6 +33,8 @@ import com.nhl.link.etl.runtime.jdbc.JdbcConnector;
 import com.nhl.link.etl.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.key.KeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.IPathNormalizer;
+import com.nhl.link.etl.runtime.path.PathNormalizer;
 import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.TaskService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
@@ -229,6 +231,7 @@ public class EtlRuntimeBuilder {
 				binder.bind(ITaskService.class).to(TaskService.class);
 				binder.bind(ITokenManager.class).toInstance(tokenManager);
 				binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
+				binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
 
 				// apply adapter-contributed bindings
 				for (LinkEtlAdapter a : adapters) {

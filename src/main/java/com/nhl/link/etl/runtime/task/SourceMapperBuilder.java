@@ -1,36 +1,44 @@
 package com.nhl.link.etl.runtime.task;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.mapper.KeyAdapter;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.mapper.MultiPathMapper;
+import com.nhl.link.etl.mapper.PathMapper;
 import com.nhl.link.etl.mapper.SafeMapKeyMapper;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 
 public class SourceMapperBuilder {
 
 	private IKeyAdapterFactory keyAdapterFactory;
-	private List<String> columns;
+	private List<String> paths;
 	private Mapper mapper;
+	private EntityPathNormalizer pathNormalizer;
 
-	public SourceMapperBuilder(IKeyAdapterFactory keyAdapterFactory) {
+	public SourceMapperBuilder(EntityPathNormalizer pathNormalizer, IKeyAdapterFactory keyAdapterFactory) {
 		this.keyAdapterFactory = keyAdapterFactory;
+		this.pathNormalizer = pathNormalizer;
 	}
 
 	public SourceMapperBuilder matchBy(Mapper mapper) {
 		this.mapper = mapper;
-		this.columns = null;
+		this.paths = null;
 		return this;
 	}
 
-	public SourceMapperBuilder matchBy(String... columns) {
+	public SourceMapperBuilder matchBy(String... paths) {
 		this.mapper = null;
-		this.columns = Arrays.asList(columns);
+
+		this.paths = new ArrayList<>(paths.length);
+		for (String p : paths) {
+			this.paths.add(pathNormalizer.normalize(p));
+		}
+
 		return this;
 	}
 
@@ -42,21 +50,21 @@ public class SourceMapperBuilder {
 			return this.mapper;
 		}
 
-		if (columns == null) {
+		if (paths == null) {
 			throw new IllegalStateException("'matchBy' or 'matchById' must be set");
 		}
 
 		Mapper mapper;
 
-		if (columns.size() > 1) {
-			
+		if (paths.size() > 1) {
+
 			// ensuring predictable attribute iteration order with
 			// LinkedHashMap. Useful for unit test for one thing.
 			Map<String, Mapper> attributeMappers = new LinkedHashMap<>();
-			for (String a : columns) {
+			for (String a : paths) {
 				attributeMappers.put(a, new PathMapper(a));
 			}
-			
+
 			mapper = new MultiPathMapper(attributeMappers);
 		} else {
 			mapper = new PathMapper(getSingleMatchAttribute());
@@ -67,7 +75,7 @@ public class SourceMapperBuilder {
 		// TODO: mapping keyMapAdapters by type doesn't take into account
 		// composition and hierarchy of the keys ... need a different approach.
 		// for now resorting to the hacks below
-		if (columns.size() > 1) {
+		if (paths.size() > 1) {
 			keyAdapter = keyAdapterFactory.adapter(List.class);
 		} else {
 			// TODO: since we don't have metadata upfront, create KeyAdapter
@@ -78,15 +86,16 @@ public class SourceMapperBuilder {
 		return new SafeMapKeyMapper(mapper, keyAdapter);
 	}
 
-	public String getSingleMatchAttribute() {
-		if (columns == null || columns.isEmpty()) {
+	private String getSingleMatchAttribute() {
+		if (paths == null || paths.isEmpty()) {
 			return null;
 		}
 
-		if (columns.size() > 1) {
+		if (paths.size() > 1) {
 			throw new IllegalStateException("Trying to get a single match attribute but multi key matching is set");
 		}
-		return columns.get(0);
+
+		return paths.get(0);
 	}
 
 }

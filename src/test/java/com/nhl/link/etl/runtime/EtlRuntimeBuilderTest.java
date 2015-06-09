@@ -27,8 +27,11 @@ public class EtlRuntimeBuilderTest {
 	@Before
 	public void before() {
 
+		ObjEntity mockEntity = mock(ObjEntity.class);
+		when(mockEntity.getName()).thenReturn("me");
+
 		EntityResolver resolver = mock(EntityResolver.class);
-		when(resolver.getObjEntity(any(Class.class))).thenReturn(mock(ObjEntity.class));
+		when(resolver.getObjEntity(any(Class.class))).thenReturn(mockEntity);
 
 		DataChannel channel = mock(DataChannel.class);
 		when(channel.getEntityResolver()).thenReturn(resolver);
