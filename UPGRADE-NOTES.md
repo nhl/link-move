@@ -26,3 +26,15 @@ http://maven.objectstyle.org/nexus/content/repositories/cayenne-unofficial/
 
 If you have more than one 'matchBy' in your builder chain, you will need to rewrite it, 
 as the task will now work differently.
+
+###  Normalize 'sources' map keys [#51](https://github.com/nhl/link-etl/issues/51)
+
+"sources" is a ```List<Map<String, Object>>``` created from ```List<Row>``` during the first stage 
+of most transformation flows. Currently the keys in the sources map can be an unpredictable mix of 
+obj: and db: expressions, defined by the XML mapping, automatic mapping of source column names, etc. 
+
+This task will ensure that "sources" will be uniformly mapped by "db:column_name" expression, 
+no matter how the original extractor mapping was created.
+
+If you had listeners that read or write from/to the "sources" collection, you will need to take 
+the new rules into account. 
