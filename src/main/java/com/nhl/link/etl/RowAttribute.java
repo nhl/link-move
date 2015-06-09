@@ -1,8 +1,8 @@
 package com.nhl.link.etl;
 
 /**
- * Provides a source-to-target mapping for a single value in an extractor
- * {@link Row}.
+ * A descriptor of a {@link Row} attribute. May contain optional path expression
+ * that maps the attribute to a target attribute.
  */
 public class RowAttribute {
 
