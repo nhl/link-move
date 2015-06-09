@@ -6,6 +6,7 @@ Release 1.4
 #43 Deprecate/remove explicit relationship mapping from CreateOrUpdateBuilder
 #44 Straighten mapping by ID
 #46 Cayenne upgrade to 4.0.M3.debfa94
+#49 Matchers must handle expression invariants in Rows
 #50 XML Schema for extractor configs
 #51 Normalize 'sources' map keys
 
