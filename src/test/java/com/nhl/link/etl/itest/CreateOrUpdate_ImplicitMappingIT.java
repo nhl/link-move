@@ -14,9 +14,18 @@ public class CreateOrUpdate_ImplicitMappingIT extends EtlIntegrationTest {
 
 	@Test
 	public void test_ByDbAttribute() {
+		test_MatchByKey("db:name");
+	}
+
+	@Test
+	public void test_ByObjAttribute() {
+		test_MatchByKey("name");
+	}
+
+	private void test_MatchByKey(String key) {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_implicit").matchBy("db:name").task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_implicit").matchBy(key).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
