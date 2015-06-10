@@ -31,7 +31,9 @@ public abstract class AbstractXmlExtractorConfigLoader implements IExtractorConf
 
 	public AbstractXmlExtractorConfigLoader() {
 		this.domFactory = DocumentBuilderFactory.newInstance();
-		domFactory.setNamespaceAware(true);
+		
+		// important to have NS info available for schema versioning
+		this.domFactory.setNamespaceAware(true);
 
 		Map<String, DOMExtractorConfigParser> parsersByNS = new HashMap<>();
 		parsersByNS.put(ExtractorConfigParser_1.NS, new ExtractorConfigParser_1());
