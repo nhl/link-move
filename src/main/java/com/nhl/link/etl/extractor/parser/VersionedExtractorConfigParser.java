@@ -1,11 +1,11 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import java.util.Map;
 
 import org.w3c.dom.Element;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 
 /**
  * A {@link DOMExtractorConfigParser} that can parse multiple versions of XML

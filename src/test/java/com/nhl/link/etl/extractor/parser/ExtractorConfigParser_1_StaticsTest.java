@@ -1,8 +1,10 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
+
+import com.nhl.link.etl.extractor.parser.ExtractorConfigParser_1;
 
 public class ExtractorConfigParser_1_StaticsTest {
 

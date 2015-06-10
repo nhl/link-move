@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.cayenne.di.Inject;
 
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ReloadableExtractor;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.ReloadableExtractor;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
 
 public class ExtractorService implements IExtractorService {

@@ -1,6 +1,6 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
-import com.nhl.link.etl.extract.Extractor;
+import com.nhl.link.etl.extractor.Extractor;
 
 public interface IExtractorService {
 

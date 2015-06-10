@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
-import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 import com.nhl.link.etl.runtime.path.IPathNormalizer;

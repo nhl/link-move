@@ -12,9 +12,9 @@ import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
-import com.nhl.link.etl.extract.Extractor;
+import com.nhl.link.etl.extractor.Extractor;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
-import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.task.BaseTask;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 

@@ -1,10 +1,10 @@
-package com.nhl.link.etl.extract;
+package com.nhl.link.etl.extractor;
 
 import java.util.Map;
 
 import com.nhl.link.etl.RowReader;
-import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
-import com.nhl.link.etl.runtime.extract.IExtractorFactory;
+import com.nhl.link.etl.runtime.extractor.IExtractorConfigLoader;
+import com.nhl.link.etl.runtime.extractor.IExtractorFactory;
 
 /**
  * An extractor decorator that can recreate the underlying {@link Extractor} if

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -11,7 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.extractor.parser.DOMExtractorConfigParser;
+import com.nhl.link.etl.extractor.parser.VersionedExtractorConfigParser;
 
 public class VersionedExtractorConfigParserTest extends BaseParserTest {
 

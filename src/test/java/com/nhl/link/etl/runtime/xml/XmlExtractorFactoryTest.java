@@ -1,7 +1,8 @@
 package com.nhl.link.etl.runtime.xml;
 
 import com.nhl.link.etl.connect.StreamConnector;
-import com.nhl.link.etl.runtime.extract.BaseExtractorFactoryTest;
+import com.nhl.link.etl.runtime.extractor.BaseExtractorFactoryTest;
+
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

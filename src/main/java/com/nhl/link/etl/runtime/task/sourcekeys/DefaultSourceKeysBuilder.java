@@ -3,7 +3,7 @@ package com.nhl.link.etl.runtime.task.sourcekeys;
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.SourceKeysBuilder;
 import com.nhl.link.etl.mapper.Mapper;
-import com.nhl.link.etl.runtime.extract.IExtractorService;
+import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.etl.runtime.path.EntityPathNormalizer;
 import com.nhl.link.etl.runtime.task.BaseTaskBuilder;

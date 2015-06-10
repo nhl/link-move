@@ -1,8 +1,10 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
+import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
+
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.RowAttribute;
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 
 /**
  * A parser of {@link ExtractorConfig} XML for schema version 1.

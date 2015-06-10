@@ -4,7 +4,7 @@ import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.connect.StreamConnector;
-import com.nhl.link.etl.extract.Extractor;
+import com.nhl.link.etl.extractor.Extractor;
 
 import java.io.BufferedReader;
 import java.io.IOException;

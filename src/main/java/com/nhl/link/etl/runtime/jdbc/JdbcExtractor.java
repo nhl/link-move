@@ -9,7 +9,7 @@ import org.apache.cayenne.query.SQLSelect;
 
 import com.nhl.link.etl.RowAttribute;
 import com.nhl.link.etl.RowReader;
-import com.nhl.link.etl.extract.Extractor;
+import com.nhl.link.etl.extractor.Extractor;
 
 public class JdbcExtractor implements Extractor {
 

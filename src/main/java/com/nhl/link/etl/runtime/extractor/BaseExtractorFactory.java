@@ -1,10 +1,10 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
 
 public abstract class BaseExtractorFactory<T extends Connector> implements IExtractorFactory {

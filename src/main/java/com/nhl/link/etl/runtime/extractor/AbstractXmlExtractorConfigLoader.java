@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -15,10 +15,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.extract.ExtractorConfig;
-import com.nhl.link.etl.extract.parser.DOMExtractorConfigParser;
-import com.nhl.link.etl.extract.parser.ExtractorConfigParser_1;
-import com.nhl.link.etl.extract.parser.VersionedExtractorConfigParser;
+import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.extractor.parser.DOMExtractorConfigParser;
+import com.nhl.link.etl.extractor.parser.ExtractorConfigParser_1;
+import com.nhl.link.etl.extractor.parser.VersionedExtractorConfigParser;
 
 /**
  * Loads {@link ExtractorConfig} objects from XML streams. A decision on how an

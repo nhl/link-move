@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

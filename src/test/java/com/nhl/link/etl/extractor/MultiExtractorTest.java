@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract;
+package com.nhl.link.etl.extractor;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -14,6 +14,8 @@ import org.junit.Test;
 import com.nhl.link.etl.CollectionRowReader;
 import com.nhl.link.etl.Row;
 import com.nhl.link.etl.RowReader;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.MultiExtractor;
 
 public class MultiExtractorTest {
 

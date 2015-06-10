@@ -2,10 +2,11 @@ package com.nhl.link.etl.runtime.xml;
 
 import com.nhl.link.etl.EtlRuntimeException;
 import com.nhl.link.etl.connect.StreamConnector;
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
-import com.nhl.link.etl.runtime.extract.BaseExtractorFactory;
+import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
+
 import org.apache.cayenne.di.Inject;
 
 import javax.xml.xpath.XPath;

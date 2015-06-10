@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,7 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.extractor.parser.ExtractorConfigParser_1;
 
 public class ExtractorConfigParser_1Test extends BaseParserTest {
 

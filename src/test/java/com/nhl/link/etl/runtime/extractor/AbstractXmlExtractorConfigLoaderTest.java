@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,7 +10,8 @@ import java.io.StringReader;
 
 import org.junit.Test;
 
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.runtime.extractor.AbstractXmlExtractorConfigLoader;
 
 public class AbstractXmlExtractorConfigLoaderTest {
 

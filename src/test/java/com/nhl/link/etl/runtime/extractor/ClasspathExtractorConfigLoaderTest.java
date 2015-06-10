@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.runtime.extractor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,6 +9,7 @@ import java.io.Reader;
 import org.junit.Test;
 
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.runtime.extractor.ClasspathExtractorConfigLoader;
 
 public class ClasspathExtractorConfigLoaderTest {
 

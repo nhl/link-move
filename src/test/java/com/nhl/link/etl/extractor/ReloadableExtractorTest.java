@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract;
+package com.nhl.link.etl.extractor;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
@@ -14,8 +14,11 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.nhl.link.etl.runtime.extract.IExtractorConfigLoader;
-import com.nhl.link.etl.runtime.extract.IExtractorFactory;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.extractor.ReloadableExtractor;
+import com.nhl.link.etl.runtime.extractor.IExtractorConfigLoader;
+import com.nhl.link.etl.runtime.extractor.IExtractorFactory;
 
 public class ReloadableExtractorTest {
 

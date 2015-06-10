@@ -3,10 +3,10 @@ package com.nhl.link.etl.runtime.jdbc;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.query.CapsStrategy;
 
-import com.nhl.link.etl.extract.Extractor;
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
-import com.nhl.link.etl.runtime.extract.BaseExtractorFactory;
+import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
 
 public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract;
+package com.nhl.link.etl.extractor;
 
 import java.util.HashMap;
 import java.util.Map;

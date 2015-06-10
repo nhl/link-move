@@ -1,4 +1,4 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import java.io.IOException;
 import java.io.InputStream;

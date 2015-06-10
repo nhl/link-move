@@ -1,8 +1,8 @@
-package com.nhl.link.etl.extract.parser;
+package com.nhl.link.etl.extractor.parser;
 
 import org.w3c.dom.Element;
 
-import com.nhl.link.etl.extract.ExtractorConfig;
+import com.nhl.link.etl.extractor.ExtractorConfig;
 
 /**
  * An extractor config parser that converts a DOM tree into
