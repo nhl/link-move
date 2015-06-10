@@ -129,8 +129,8 @@ public class EtlRuntimeBuilder {
 	 * <p>
 	 * This configuration conveniently reuses already pre-configured target
 	 * DataSources. It may be useful in cases when the data is transferred
-	 * between the tables on the sane DB server, or if connectors are known
-	 * upfront and hence can be modeled in Cayenne as DataNodes.
+	 * between the tables on the same DB server, or if connectors are known in
+	 * advance and can be modeled in Cayenne as DataNodes.
 	 *
 	 * @since 1.1
 	 */
