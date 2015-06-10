@@ -9,7 +9,6 @@ import java.io.Reader;
 import org.junit.Test;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.runtime.extractor.ClasspathExtractorConfigLoader;
 
 public class ClasspathExtractorConfigLoaderTest {
 
@@ -18,7 +17,7 @@ public class ClasspathExtractorConfigLoaderTest {
 
 		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
 
-		try (Reader r = loader.getXmlSource("ClasspathExtractorConfigLoaderTest")) {
+		try (Reader r = loader.getXmlSource("com/nhl/link/etl/runtime/extractor/ClasspathExtractorConfigLoaderTest")) {
 
 			assertNotNull(r);
 
@@ -34,7 +33,8 @@ public class ClasspathExtractorConfigLoaderTest {
 
 		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
 
-		try (Reader r = loader.getXmlSource("ClasspathExtractorConfigLoaderTest.xml")) {
+		try (Reader r = loader
+				.getXmlSource("com/nhl/link/etl/runtime/extractor/ClasspathExtractorConfigLoaderTest.xml")) {
 
 			assertNotNull(r);
 
@@ -57,7 +57,8 @@ public class ClasspathExtractorConfigLoaderTest {
 
 		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
 
-		try (Reader r = loader.getXmlSource("extractor/ClasspathExtractorConfigLoaderTest_path")) {
+		try (Reader r = loader
+				.getXmlSource("com/nhl/link/etl/runtime/extractor/ClasspathExtractorConfigLoaderTest_path")) {
 
 			assertNotNull(r);
 
