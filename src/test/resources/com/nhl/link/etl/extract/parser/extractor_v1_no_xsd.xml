@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+
+	<type>atype</type>
+	<connectorId>aconnector</connectorId>
+	<attributes>
+		<attribute>
+			<type>java.lang.String</type>
+			<source>a1</source>
+			<target>a_1</target>
+		</attribute>
+		<attribute>
+			<type>java.lang.Integer</type>
+			<source>a2</source>
+			<target>a_2</target>
+		</attribute>
+		<attribute>
+			<type>java.lang.Integer</type>
+			<source>a2</source>
+		</attribute>
+	</attributes>
+	<properties>
+		<a.b>AB</a.b>
+		<x.y>XY</x.y>
+	</properties>
+	
+</config>

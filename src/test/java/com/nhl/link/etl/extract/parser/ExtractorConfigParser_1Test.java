@@ -1,47 +1,33 @@
-package com.nhl.link.etl.runtime.extract;
+package com.nhl.link.etl.extract.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Element;
 
 import com.nhl.link.etl.extract.ExtractorConfig;
 
-public class AbstractXmlExtractorConfigLoaderTest {
+public class ExtractorConfigParser_1Test extends BaseParserTest {
+
+	private ExtractorConfigParser_1 parser;
+
+	@Before
+	public void before() {
+		this.parser = new ExtractorConfigParser_1();
+	}
 
 	@Test
-	public void testLoadConfig() {
+	public void testParse() {
 
-		AbstractXmlExtractorConfigLoader loader = new AbstractXmlExtractorConfigLoader() {
+		Element rootElement = getXmlRoot("extractor_v1.xml");
+		ExtractorConfig config = new ExtractorConfig("aname");
 
-			@Override
-			protected Reader getXmlSource(String name) throws IOException {
-				return new StringReader(
-						"<config>"
-								+ "  <type>atype</type>"
-								+ "  <connectorId>aconnector</connectorId>"
-								+ "  <attributes>"
-								+ "    <attribute><type>java.lang.String</type><source>a1</source><target>a_1</target></attribute>"
-								+ "    <attribute><type>java.lang.Integer</type><source>a2</source><target>a_2</target></attribute>"
-								+ "    <attribute><type>java.lang.Integer</type><source>a2</source></attribute>"
-								+ "  </attributes>" + "  <properties>" + "    <a.b>AB</a.b>" + "    <x.y>XY</x.y>"
-								+ "  </properties>" + "</config>");
-			}
+		parser.parse(rootElement, config);
 
-			@Override
-			public boolean needsReload(String name, long lastSeen) {
-				return true;
-			}
-		};
-
-		ExtractorConfig config = loader.loadConfig("aname");
 		assertNotNull(config);
-		assertEquals("aname", config.getName());
 		assertEquals("atype", config.getType());
 		assertEquals("aconnector", config.getConnectorId());
 		assertEquals(3, config.getAttributes().length);
