@@ -10,7 +10,7 @@ import com.nhl.link.etl.EtlRuntimeException;
 /**
  * A default {@link IExtractorConfigLoader} that loads XML files from CLASSPATH.
  */
-public class ClasspathExtractorConfigLoader extends AbstractXmlExtractorConfigLoader {
+public class ClasspathExtractorConfigLoader extends BaseExtractorConfigLoader {
 
 	@Override
 	protected Reader getXmlSource(String name) throws IOException {

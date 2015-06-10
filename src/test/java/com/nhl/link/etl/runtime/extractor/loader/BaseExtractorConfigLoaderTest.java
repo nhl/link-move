@@ -11,14 +11,14 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.nhl.link.etl.extractor.ExtractorConfig;
-import com.nhl.link.etl.runtime.extractor.loader.AbstractXmlExtractorConfigLoader;
+import com.nhl.link.etl.runtime.extractor.loader.BaseExtractorConfigLoader;
 
-public class AbstractXmlExtractorConfigLoaderTest {
+public class BaseExtractorConfigLoaderTest {
 
 	@Test
 	public void testLoadConfig() {
 
-		AbstractXmlExtractorConfigLoader loader = new AbstractXmlExtractorConfigLoader() {
+		BaseExtractorConfigLoader loader = new BaseExtractorConfigLoader() {
 
 			@Override
 			protected Reader getXmlSource(String name) throws IOException {

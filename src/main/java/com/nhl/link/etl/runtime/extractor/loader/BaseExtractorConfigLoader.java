@@ -24,12 +24,12 @@ import com.nhl.link.etl.extractor.parser.VersionedExtractorConfigParser;
  * Loads {@link ExtractorConfig} objects from XML streams. A decision on how an
  * XML stream is obtained is deferred to subclasses.
  */
-public abstract class AbstractXmlExtractorConfigLoader implements IExtractorConfigLoader {
+public abstract class BaseExtractorConfigLoader implements IExtractorConfigLoader {
 
 	private DocumentBuilderFactory domFactory;
 	private DOMExtractorConfigParser parser;
 
-	public AbstractXmlExtractorConfigLoader() {
+	public BaseExtractorConfigLoader() {
 		this.domFactory = DocumentBuilderFactory.newInstance();
 		
 		// important to have NS info available for schema versioning
