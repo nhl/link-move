@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-etl/schema/extractor_config/extractor_config_1.xsd"
-	xmlns="http://nhl.github.io/link-etl/schema/extractor_config">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd"
+	xmlns="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd">
 
 	<type>jdbc</type>
 	<connectorId>dummyconnector</connectorId>
@@ -8,13 +8,7 @@
 	<attributes>
 		<attribute>
 			<type>java.lang.Integer</type>
-			<source>ID</source>
 			<target>db:id</target>
-		</attribute>
-		<attribute>
-			<type>java.lang.Integer</type>
-			<source>AGE</source>
-			<target>age</target>
 		</attribute>
 	</attributes>
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.schema;
+package com.nhl.link.etl.xsd;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
