@@ -28,7 +28,7 @@ public class ExtactortConfigXSDTest {
 
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-		URL schemaUrl = getClass().getResource("extractor_config.xsd");
+		URL schemaUrl = getClass().getResource("extractor_config_1.xsd");
 		assertNotNull(schemaUrl);
 
 		Schema schema = schemaFactory.newSchema(schemaUrl);
