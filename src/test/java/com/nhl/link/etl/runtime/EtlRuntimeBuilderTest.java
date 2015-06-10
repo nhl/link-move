@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
-import com.nhl.link.etl.runtime.extractor.IExtractorConfigLoader;
+import com.nhl.link.etl.runtime.extractor.loader.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.task.ITaskService;
 
 public class EtlRuntimeBuilderTest {

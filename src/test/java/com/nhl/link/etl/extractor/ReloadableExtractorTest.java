@@ -17,8 +17,8 @@ import org.junit.Test;
 import com.nhl.link.etl.extractor.Extractor;
 import com.nhl.link.etl.extractor.ExtractorConfig;
 import com.nhl.link.etl.extractor.ReloadableExtractor;
-import com.nhl.link.etl.runtime.extractor.IExtractorConfigLoader;
 import com.nhl.link.etl.runtime.extractor.IExtractorFactory;
+import com.nhl.link.etl.runtime.extractor.loader.IExtractorConfigLoader;
 
 public class ReloadableExtractorTest {
 

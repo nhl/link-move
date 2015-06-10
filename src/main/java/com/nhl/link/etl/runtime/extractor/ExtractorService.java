@@ -9,6 +9,7 @@ import org.apache.cayenne.di.Inject;
 import com.nhl.link.etl.extractor.Extractor;
 import com.nhl.link.etl.extractor.ReloadableExtractor;
 import com.nhl.link.etl.runtime.EtlRuntimeBuilder;
+import com.nhl.link.etl.runtime.extractor.loader.IExtractorConfigLoader;
 
 public class ExtractorService implements IExtractorService {
 

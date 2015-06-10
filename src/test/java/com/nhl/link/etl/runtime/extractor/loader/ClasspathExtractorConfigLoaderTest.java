@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extractor;
+package com.nhl.link.etl.runtime.extractor.loader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +17,8 @@ public class ClasspathExtractorConfigLoaderTest {
 
 		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
 
-		try (Reader r = loader.getXmlSource("com/nhl/link/etl/runtime/extractor/ClasspathExtractorConfigLoaderTest")) {
+		try (Reader r = loader
+				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest")) {
 
 			assertNotNull(r);
 
@@ -34,7 +35,7 @@ public class ClasspathExtractorConfigLoaderTest {
 		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
 
 		try (Reader r = loader
-				.getXmlSource("com/nhl/link/etl/runtime/extractor/ClasspathExtractorConfigLoaderTest.xml")) {
+				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest.xml")) {
 
 			assertNotNull(r);
 
@@ -58,7 +59,7 @@ public class ClasspathExtractorConfigLoaderTest {
 		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
 
 		try (Reader r = loader
-				.getXmlSource("com/nhl/link/etl/runtime/extractor/ClasspathExtractorConfigLoaderTest_path")) {
+				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest_path")) {
 
 			assertNotNull(r);
 

@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extractor;
+package com.nhl.link.etl.runtime.extractor.loader;
 
 import com.nhl.link.etl.extractor.ExtractorConfig;
 
