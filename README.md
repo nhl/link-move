@@ -42,6 +42,7 @@ A JDBC source example:
 	<type>jdbc</type>
 	<connectorId>derbysrc</connectorId>
 	<extractor>
+		<!-- Optional source to target attribute mapping -->
 		<attributes>
 			<attribute>
 				<type>java.lang.Integer</type>
@@ -59,6 +60,7 @@ A JDBC source example:
 				<target>db:name</target>
 			</attribute>
 		</attributes>
+		<!-- JDBC connector properties. Namely the query to run against source -->
 		<properties>
 			<extractor.jdbc.sqltemplate>
 			       SELECT age, description, name FROM utest.etl1
