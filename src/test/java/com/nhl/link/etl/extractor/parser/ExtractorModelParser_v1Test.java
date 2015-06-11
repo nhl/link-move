@@ -13,7 +13,6 @@ import org.w3c.dom.Element;
 
 import com.nhl.link.etl.extractor.model.ExtractorModel;
 import com.nhl.link.etl.extractor.model.ExtractorModelContainer;
-import com.nhl.link.etl.extractor.parser.ExtractorModelParser_v1;
 
 public class ExtractorModelParser_v1Test extends BaseParserTest {
 
@@ -32,18 +31,19 @@ public class ExtractorModelParser_v1Test extends BaseParserTest {
 		ExtractorModelContainer container = parser.parse("alocation", xmlRoot);
 		assertNotNull(container);
 
+		assertEquals("alocation", container.getLocation());
 		assertEquals("atype", container.getType());
 		assertEquals("aconnector", container.getConnectorId());
 
 		Collection<String> extractorNames = container.getExtractorNames();
 		assertEquals(1, extractorNames.size());
-		assertTrue(extractorNames.contains("alocation"));
-		
-		ExtractorModel model = container.getExtractor("alocation");
-		
+		assertTrue(extractorNames.contains(ExtractorModel.DEFAULT_NAME));
+
+		ExtractorModel model = container.getExtractor(ExtractorModel.DEFAULT_NAME);
+
 		assertEquals("atype", model.getType());
 		assertEquals("aconnector", model.getConnectorId());
-		
+
 		assertEquals(3, model.getAttributes().length);
 
 		assertEquals(0, model.getAttributes()[0].getOrdinal());

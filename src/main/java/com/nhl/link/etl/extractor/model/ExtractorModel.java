@@ -11,6 +11,8 @@ import com.nhl.link.etl.extractor.Extractor;
  * @since 1.4
  */
 public interface ExtractorModel {
+	
+	public static final String DEFAULT_NAME = "default_extractor";
 
 	String getName();
 

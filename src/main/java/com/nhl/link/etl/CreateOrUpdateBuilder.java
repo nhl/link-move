@@ -31,15 +31,13 @@ public interface CreateOrUpdateBuilder<T> {
 	CreateOrUpdateBuilder<T> sourceExtractor(String location, String name);
 
 	/**
-	 * Defines the name of the source data extractor.
+	 * Defines the location of the source data extractor. The name of extractor
+	 * is assumed to be "default_extractor".
 	 * 
 	 * @since 1.3
-	 * @deprecated since 1.4 location is required in addition to name to
-	 *             identify an extractor. So use
-	 *             {@link #sourceExtractor(String, String)}.
+	 * @see CreateOrUpdateBuilder#sourceExtractor(String, String).
 	 */
-	@Deprecated
-	CreateOrUpdateBuilder<T> sourceExtractor(String extractorName);
+	CreateOrUpdateBuilder<T> sourceExtractor(String location);
 
 	/**
 	 * @deprecated since 1.3 use {@link #sourceExtractor(String)}

@@ -23,14 +23,12 @@ public interface SourceKeysBuilder {
 	SourceKeysBuilder sourceExtractor(String location, String name);
 
 	/**
-	 * Defines the name of the source data extractor.
+	 * Defines the location of the source data extractor. The name of extractor
+	 * is assumed to be "default_extractor".
 	 * 
-	 * @deprecated since 1.4 location is required in addition to name to
-	 *             identify an extractor. So use
-	 *             {@link #sourceExtractor(String, String)}.
+	 * @since 1.3
 	 */
-	@Deprecated
-	SourceKeysBuilder sourceExtractor(String extractorName);
+	SourceKeysBuilder sourceExtractor(String location);
 
 	/**
 	 * Defines the number of records that are processed together as a single

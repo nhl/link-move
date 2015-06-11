@@ -17,7 +17,6 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute_v1() {
 
-		@SuppressWarnings("deprecation")
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
@@ -54,8 +53,7 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ByAttribute() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t", "com/nhl/link/etl/itest/etl1_to_etl1t")
-				.matchBy(Etl1t.NAME).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
@@ -90,8 +88,7 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ByDbAttribute() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t", "com/nhl/link/etl/itest/etl1_to_etl1t")
-				.matchBy("db:name").task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy("db:name").task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
@@ -126,8 +123,7 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ByAttributes() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t", "com/nhl/link/etl/itest/etl1_to_etl1t")
-				.matchBy(Etl1t.NAME, Etl1t.AGE).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME, Etl1t.AGE).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', 5)");
@@ -156,11 +152,8 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	@Test
 	public void test_ById() {
 
-		EtlTask task = etl
-				.getTaskService()
-				.createOrUpdate(Etl5t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml",
-						"com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml").matchById().task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl5t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml").matchById().task();
 
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, 'b')");
@@ -195,11 +188,8 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ById_Default() {
 
 		// not specifying "matchById" explicitly ... this should be the default
-		EtlTask task = etl
-				.getTaskService()
-				.createOrUpdate(Etl5t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml",
-						"com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml").task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl5t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl5_to_etl5t_byid.xml").task();
 
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, 'b')");
@@ -233,11 +223,8 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	@Test(expected = EtlRuntimeException.class)
 	public void test_ById_Autoincrement() {
 
-		EtlTask task = etl
-				.getTaskService()
-				.createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_byid.xml",
-						"com/nhl/link/etl/itest/etl1_to_etl1t_byid.xml").matchById().task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_byid.xml").matchById().task();
 
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (45, 'a', 67)");
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (11, 'b', 4)");
@@ -248,11 +235,8 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	@Test
 	public void test_CapsLower() {
 
-		EtlTask task = etl
-				.getTaskService()
-				.createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_lower",
-						"com/nhl/link/etl/itest/etl1_to_etl1t_lower").matchBy(Etl1t.NAME).task();
+		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t_lower").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
@@ -271,8 +255,7 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ByAttribute_SyncFk() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t", "com/nhl/link/etl/itest/etl3_to_etl3t")
-				.matchBy(Etl3t.NAME).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
@@ -299,8 +282,7 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ByAttribute_SyncFk_Nulls() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t", "com/nhl/link/etl/itest/etl3_to_etl3t")
-				.matchBy(Etl3t.NAME).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl3_to_etl3t").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (17, '5Name1')");
@@ -337,8 +319,7 @@ public class CreateOrUpdateIT extends EtlIntegrationTest {
 	public void test_ByAttribute_SyncNulls() {
 
 		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t", "com/nhl/link/etl/itest/etl1_to_etl1t")
-				.matchBy(Etl1t.NAME).task();
+				.sourceExtractor("com/nhl/link/etl/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', NULL)");

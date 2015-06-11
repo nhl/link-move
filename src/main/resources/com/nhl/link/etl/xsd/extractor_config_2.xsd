@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd"
-	xmlns:tns="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd"
+	xmlns:tns="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd" elementFormDefault="qualified">
 
 	<annotation>
 		<documentation xml:lang="en">
-			THIS SCHEMA IS DEPRECATED IN link-etl 1.4 IN FAVOR OF extractor_config_2.xsd
-			THAT SUPPORTS MULTIPLE EXTRACTORS IN A SINGLE XML
-			LinkETL Extractor config schema. Provides a structured way to
-			configure an
+			LinkETL Extractor config schema. Provides a structured way to configure an
 			arbitrary ETL extractor.
 		</documentation>
 	</annotation>
@@ -16,17 +13,20 @@
 
 
 	<complexType name="ConfigType">
+
 		<annotation>
 			<documentation source="description">
-				Top level element
+				Top-level element corresponding to ExtractorModelContainer object.
 			</documentation>
 		</annotation>
+
 		<sequence>
 
-			<element name="type" type="string" minOccurs="1" maxOccurs="1">
+			<element name="type" type="string" minOccurs="0" maxOccurs="1">
 				<annotation>
 					<documentation source="description">
 						Defines "type" of the Extractor, such as "jdbc", "csv", "xml", etc.
+						ExtractorModelContainer's type is inherited (and can be overridden) by extractors.
 					</documentation>
 				</annotation>
 			</element>
@@ -36,7 +36,41 @@
 					<documentation source="description">
 						Defines a symbolic ID of the connector used by the extractor. Connector must
 						be
-						compatible with Extrator type specified above.
+						compatible with Extractor type specified above. ExtractorModelContainer's connectorId is inherited (and can be
+						overridden) by extractors.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="extractor" type="tns:ExtractorType" minOccurs="0" maxOccurs="unbounded" />
+
+		</sequence>
+	</complexType>
+
+	<complexType name="ExtractorType">
+		<sequence>
+
+			<element name="name" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Specifies the name unique within the container. If missing, the default name of
+						"default_extractor" is used.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="type" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Overrides "type" of the container
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="connectorId" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Overrides "connectorId" of the container
 					</documentation>
 				</annotation>
 			</element>
@@ -54,12 +88,10 @@
 				</complexType>
 			</element>
 
-
 			<element name="properties" minOccurs="0" maxOccurs="1">
 				<annotation>
 					<documentation source="description">
-						An list of Extractor-specific properties used to configure an arbitrary
-						extractor.
+						An list of Extractor-specific properties.
 					</documentation>
 				</annotation>
 
@@ -82,8 +114,6 @@
 			</element>
 		</sequence>
 	</complexType>
-
-
 
 	<complexType name="AttributeType">
 		<sequence>

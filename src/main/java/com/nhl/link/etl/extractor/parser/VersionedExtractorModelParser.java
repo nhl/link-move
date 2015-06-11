@@ -16,13 +16,12 @@ import com.nhl.link.etl.extractor.model.ExtractorModelContainer;
  */
 public class VersionedExtractorModelParser implements DOMExtractorModelParser {
 
-	// use v1 namespace as the default
-	static final String NO_NS_PARSER_NS = ExtractorModelParser_v1.NS;
-
+	private String defaultNS;
 	private Map<String, DOMExtractorModelParser> parsersByNS;
 
-	public VersionedExtractorModelParser(Map<String, DOMExtractorModelParser> parsersByNS) {
+	public VersionedExtractorModelParser(Map<String, DOMExtractorModelParser> parsersByNS, String defaultNS) {
 		this.parsersByNS = parsersByNS;
+		this.defaultNS = defaultNS;
 	}
 
 	@Override
@@ -33,12 +32,12 @@ public class VersionedExtractorModelParser implements DOMExtractorModelParser {
 
 	DOMExtractorModelParser getDelegate(String namespace) {
 
-		String key = namespace != null ? namespace : NO_NS_PARSER_NS;
+		String key = namespace != null ? namespace : defaultNS;
 
 		DOMExtractorModelParser delegate = parsersByNS.get(key);
 		if (delegate == null) {
 			String message = namespace != null ? "Unsupported namespace: " + namespace
-					: "A parser is not configured for default namespace: " + NO_NS_PARSER_NS;
+					: "No parser is configured for default namespace: " + defaultNS;
 			throw new EtlRuntimeException(message);
 		}
 

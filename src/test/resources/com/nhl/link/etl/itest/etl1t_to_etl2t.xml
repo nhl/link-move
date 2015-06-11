@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- ETL within the same DB; connector ID == DataNode name == 'datanode' -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd"
-	xmlns="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd"
+	xmlns="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd">
 	<type>jdbc</type>
 	<connectorId>datanode</connectorId>
-	<attributes>
-		<attribute>
-			<type>java.lang.String</type>
-			<source>NAME</source>
-			<target>name</target>
-		</attribute>
-	</attributes>
-	<properties>
-		<extractor.jdbc.sqltemplate>
+
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>NAME</source>
+				<target>name</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
 			<![CDATA[SELECT name FROM utest.etl1t
 			]]>
-		</extractor.jdbc.sqltemplate>
-	</properties>
+			</extractor.jdbc.sqltemplate>
+		</properties>
+	</extractor>
 </config>

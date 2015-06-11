@@ -2,6 +2,7 @@ package com.nhl.link.etl.runtime.task.sourcekeys;
 
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.SourceKeysBuilder;
+import com.nhl.link.etl.extractor.model.ExtractorModel;
 import com.nhl.link.etl.extractor.model.ExtractorName;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.extractor.IExtractorService;
@@ -56,11 +57,10 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 		return this;
 	}
 
-	@Deprecated
 	@Override
-	public SourceKeysBuilder sourceExtractor(String extractorName) {
+	public SourceKeysBuilder sourceExtractor(String location) {
 		// v.1 style naming...
-		return sourceExtractor(extractorName, extractorName);
+		return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
 	}
 
 	@Override

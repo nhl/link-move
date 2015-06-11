@@ -27,11 +27,11 @@ public class VersionedExtractorModelParserTest extends BaseParserTest {
 		mockNS2 = mock(DOMExtractorModelParser.class);
 
 		Map<String, DOMExtractorModelParser> parsersByNS = new HashMap<>();
-		parsersByNS.put(VersionedExtractorModelParser.NO_NS_PARSER_NS, mockNSDefault);
+		parsersByNS.put(ExtractorModelParser_v1.NS, mockNSDefault);
 		parsersByNS.put("ns1", mockNS1);
 		parsersByNS.put("ns2", mockNS2);
 
-		this.parser = new VersionedExtractorModelParser(parsersByNS);
+		this.parser = new VersionedExtractorModelParser(parsersByNS, ExtractorModelParser_v1.NS);
 	}
 
 	@Test

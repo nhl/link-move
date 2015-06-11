@@ -27,6 +27,7 @@ import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.annotation.AfterTargetsMatched;
 import com.nhl.link.etl.annotation.AfterTargetsMerged;
+import com.nhl.link.etl.extractor.model.ExtractorModel;
 import com.nhl.link.etl.extractor.model.ExtractorName;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
@@ -94,18 +95,17 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 		this.loadListeners = new ArrayList<>();
 	}
-	
+
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String location, String name) {
 		this.extractorName = ExtractorName.create(location, name);
 		return this;
 	}
 
-	@Deprecated
 	@Override
-	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String extractorName) {
+	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String location) {
 		// v.1 model style config
-		return sourceExtractor(extractorName, extractorName);
+		return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
 	}
 
 	@Deprecated
