@@ -1,6 +1,6 @@
 ## LinkETL
 
-LinkETL is a model-driven dynamically-configurable framework to acquire data from external sources and store it in a database. It can reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. It supports JDBC, LDAP, XML, CSV sources out of the box.
+LinkETL is a model-driven dynamically-configurable framework to acquire data from external sources and save it in your application database. It can reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. It supports JDBC, LDAP, XML, CSV sources out of the box.
 
 It is an ideal tool for domain-driven application designs, allowing to connect multiple data models together in a flexible way that allows independent changes between sources and targets.
 
