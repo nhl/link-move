@@ -55,13 +55,13 @@ public class EtlRuntimeBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void testBuild_NoTargetRuntime() {
 		EtlRuntimeBuilder builder = new EtlRuntimeBuilder()
-				.withExtractorConfigLoader(mock(IExtractorModelLoader.class));
+				.extractorModelLoader(mock(IExtractorModelLoader.class));
 		builder.build();
 	}
 
 	@Test
 	public void testBuild() {
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withExtractorConfigLoader(
+		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().extractorModelLoader(
 				mock(IExtractorModelLoader.class)).withTargetRuntime(cayenneRuntime);
 		EtlRuntime runtime = builder.build();
 		assertNotNull(runtime);

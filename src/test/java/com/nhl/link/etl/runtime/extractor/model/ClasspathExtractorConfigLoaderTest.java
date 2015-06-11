@@ -6,20 +6,24 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.runtime.extractor.model.ClasspathExtractorModelLoader;
 
 public class ClasspathExtractorConfigLoaderTest {
+
+	private ClasspathExtractorModelLoader loader;
+
+	@Before
+	public void before() {
+		loader = new ClasspathExtractorModelLoader();
+	}
 
 	@Test
 	public void testGetXmlSource() throws IOException {
 
-		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
-
-		try (Reader r = loader
-				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest")) {
+		try (Reader r = loader.getXmlSource("com/nhl/link/etl/runtime/extractor/model/dummy")) {
 
 			assertNotNull(r);
 
@@ -27,16 +31,12 @@ public class ClasspathExtractorConfigLoaderTest {
 			int read = r.read(buffer, 0, buffer.length);
 			assertEquals("<dummy/>", new String(buffer, 0, read));
 		}
-
 	}
 
 	@Test
 	public void testGetXmlSource_WithExtension() throws IOException {
 
-		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
-
-		try (Reader r = loader
-				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest.xml")) {
+		try (Reader r = loader.getXmlSource("com/nhl/link/etl/runtime/extractor/model/dummy.xml")) {
 
 			assertNotNull(r);
 
@@ -49,25 +49,6 @@ public class ClasspathExtractorConfigLoaderTest {
 
 	@Test(expected = EtlRuntimeException.class)
 	public void testGetXmlSource_Invalid() throws IOException {
-
-		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
 		loader.getXmlSource("no-such-resource");
-	}
-
-	@Test
-	public void testGetXmlSource_Path() throws IOException {
-
-		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
-
-		try (Reader r = loader
-				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest_path")) {
-
-			assertNotNull(r);
-
-			char[] buffer = new char[100];
-			int read = r.read(buffer, 0, buffer.length);
-			assertEquals("<dummypath/>", new String(buffer, 0, read));
-		}
-
 	}
 }

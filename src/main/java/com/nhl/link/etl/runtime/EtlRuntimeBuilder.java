@@ -1,5 +1,6 @@
 package com.nhl.link.etl.runtime;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,8 +11,11 @@ import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
 import org.apache.cayenne.di.Injector;
+import org.apache.cayenne.di.Key;
 import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nhl.link.etl.connect.Connector;
 import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
@@ -27,6 +31,7 @@ import com.nhl.link.etl.runtime.extractor.IExtractorFactory;
 import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.extractor.model.ClasspathExtractorModelLoader;
 import com.nhl.link.etl.runtime.extractor.model.ExtractorModelService;
+import com.nhl.link.etl.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.etl.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.etl.runtime.extractor.model.IExtractorModelService;
 import com.nhl.link.etl.runtime.jdbc.JdbcConnector;
@@ -46,9 +51,19 @@ import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
  */
 public class EtlRuntimeBuilder {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(EtlRuntimeBuilder.class);
+
 	public static final String CONNECTORS_MAP = "com.nhl.link.etl.connectors";
 	public static final String CONNECTOR_FACTORIES_MAP = "com.nhl.link.etl.connector.factories";
 	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.etl.extractor.factories";
+
+	/**
+	 * A DI property that defines the root directory to resolve locations of
+	 * extractor config files.
+	 * 
+	 * @since 1.4
+	 */
+	public static final String FILE_EXTRACTOR_MODEL_ROOT_DIR = "com.nhl.link.etl.extrator.root.dir";
 
 	public static final String JDBC_EXTRACTOR_TYPE = "jdbc";
 	public static final String CSV_EXTRACTOR_TYPE = "csv";
@@ -64,7 +79,9 @@ public class EtlRuntimeBuilder {
 	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory>> extractorFactoryTypes;
 
-	private IExtractorModelLoader extractorConfigLoader;
+	private IExtractorModelLoader extractorModelLoader;
+	private File extractorModelsRoot;
+
 	private ITokenManager tokenManager;
 	private ServerRuntime targetRuntime;
 	private Collection<LinkEtlAdapter> adapters;
@@ -160,8 +177,40 @@ public class EtlRuntimeBuilder {
 		return this;
 	}
 
-	public EtlRuntimeBuilder withExtractorConfigLoader(IExtractorModelLoader extractorConfigLoader) {
-		this.extractorConfigLoader = extractorConfigLoader;
+	/**
+	 * @deprecated since 1.4 in favor of
+	 *             {@link #extractorModelLoader(IExtractorModelLoader)}. Also
+	 *             see {@link #extractorModelsRoot}.
+	 */
+	@Deprecated
+	public EtlRuntimeBuilder withExtractorConfigLoader(IExtractorModelLoader extractorModelLoader) {
+		return extractorModelLoader(extractorModelLoader);
+	}
+
+	/**
+	 * @since 1.4
+	 */
+	public EtlRuntimeBuilder extractorModelLoader(IExtractorModelLoader extractorModelLoader) {
+		this.extractorModelLoader = extractorModelLoader;
+		this.extractorModelsRoot = null;
+		return this;
+	}
+
+	/**
+	 * @since 1.4
+	 */
+	public EtlRuntimeBuilder extractorModelsRoot(File rootDir) {
+		this.extractorModelLoader = null;
+		this.extractorModelsRoot = rootDir;
+		return this;
+	}
+
+	/**
+	 * @since 1.4
+	 */
+	public EtlRuntimeBuilder extractorModelsRoot(String rootDirPath) {
+		this.extractorModelLoader = null;
+		this.extractorModelsRoot = new File(rootDirPath);
 		return this;
 	}
 
@@ -169,10 +218,6 @@ public class EtlRuntimeBuilder {
 
 		if (targetRuntime == null) {
 			throw new IllegalStateException("Required Cayenne 'targetRuntime' is not set");
-		}
-
-		if (extractorConfigLoader == null) {
-			extractorConfigLoader = new ClasspathExtractorModelLoader();
 		}
 
 		if (tokenManager == null) {
@@ -184,6 +229,8 @@ public class EtlRuntimeBuilder {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public void configure(Binder binder) {
+
+				bindModelLoader(binder);
 
 				binder.<Connector> bindMap(EtlRuntimeBuilder.CONNECTORS_MAP).putAll(connectors);
 
@@ -226,7 +273,6 @@ public class EtlRuntimeBuilder {
 				// when the ETL module is shutdown.
 				binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
-				binder.bind(IExtractorModelLoader.class).toInstance(extractorConfigLoader);
 				binder.bind(IExtractorService.class).to(ExtractorService.class);
 				binder.bind(IConnectorService.class).to(ConnectorService.class);
 				binder.bind(ITaskService.class).to(TaskService.class);
@@ -256,6 +302,22 @@ public class EtlRuntimeBuilder {
 				injector.shutdown();
 			}
 		};
+	}
+
+	void bindModelLoader(Binder binder) {
+		if (extractorModelLoader != null) {
+			binder.bind(IExtractorModelLoader.class).toInstance(extractorModelLoader);
+		} else if (extractorModelsRoot != null) {
+
+			if (!extractorModelsRoot.isDirectory()) {
+				LOGGER.warn("Extractor models root is not a valid directory: " + extractorModelsRoot);
+			}
+
+			binder.bind(IExtractorModelLoader.class).to(FileExtractorModelLoader.class);
+			binder.bind(Key.get(File.class, FILE_EXTRACTOR_MODEL_ROOT_DIR)).toInstance(extractorModelsRoot);
+		} else {
+			binder.bind(IExtractorModelLoader.class).to(ClasspathExtractorModelLoader.class);
+		}
 	}
 
 }
