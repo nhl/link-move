@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extractor.loader;
+package com.nhl.link.etl.runtime.extractor.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,13 +9,14 @@ import java.io.Reader;
 import org.junit.Test;
 
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.runtime.extractor.model.ClasspathExtractorModelLoader;
 
 public class ClasspathExtractorConfigLoaderTest {
 
 	@Test
 	public void testGetXmlSource() throws IOException {
 
-		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
+		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
 
 		try (Reader r = loader
 				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest")) {
@@ -32,7 +33,7 @@ public class ClasspathExtractorConfigLoaderTest {
 	@Test
 	public void testGetXmlSource_WithExtension() throws IOException {
 
-		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
+		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
 
 		try (Reader r = loader
 				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest.xml")) {
@@ -49,14 +50,14 @@ public class ClasspathExtractorConfigLoaderTest {
 	@Test(expected = EtlRuntimeException.class)
 	public void testGetXmlSource_Invalid() throws IOException {
 
-		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
+		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
 		loader.getXmlSource("no-such-resource");
 	}
 
 	@Test
 	public void testGetXmlSource_Path() throws IOException {
 
-		ClasspathExtractorConfigLoader loader = new ClasspathExtractorConfigLoader();
+		ClasspathExtractorModelLoader loader = new ClasspathExtractorModelLoader();
 
 		try (Reader r = loader
 				.getXmlSource("com/nhl/link/etl/runtime/extractor/loader/ClasspathExtractorConfigLoaderTest_path")) {

@@ -16,8 +16,20 @@ public interface SourceKeysBuilder {
 	EtlTask task() throws IllegalStateException;
 
 	/**
-	 * Defines the name of the source data extractor.
+	 * Defines the location and name of the source data extractor.
+	 * 
+	 * @since 1.4
 	 */
+	SourceKeysBuilder sourceExtractor(String location, String name);
+
+	/**
+	 * Defines the name of the source data extractor.
+	 * 
+	 * @deprecated since 1.4 location is required in addition to name to
+	 *             identify an extractor. So use
+	 *             {@link #sourceExtractor(String, String)}.
+	 */
+	@Deprecated
 	SourceKeysBuilder sourceExtractor(String extractorName);
 
 	/**

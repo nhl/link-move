@@ -4,7 +4,7 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.etl.connect.Connector;
 import com.nhl.link.etl.extractor.Extractor;
-import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.extractor.model.ExtractorModel;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
 
 public abstract class BaseExtractorFactory<T extends Connector> implements IExtractorFactory {
@@ -16,14 +16,14 @@ public abstract class BaseExtractorFactory<T extends Connector> implements IExtr
 	}
 
 	@Override
-	public Extractor createExtractor(ExtractorConfig config) {
+	public Extractor createExtractor(ExtractorModel model) {
 
-		T connector = connectorService.getConnector(getConnectorType(), config.getConnectorId());
-		return createExtractor(connector, config);
+		T connector = connectorService.getConnector(getConnectorType(), model.getConnectorId());
+		return createExtractor(connector, model);
 	}
 
 	protected abstract Class<T> getConnectorType();
 
-	protected abstract Extractor createExtractor(T connector, ExtractorConfig config);
+	protected abstract Extractor createExtractor(T connector, ExtractorModel model);
 
 }

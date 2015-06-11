@@ -27,6 +27,7 @@ import com.nhl.link.etl.annotation.AfterSourceRowsConverted;
 import com.nhl.link.etl.annotation.AfterSourcesMapped;
 import com.nhl.link.etl.annotation.AfterTargetsMatched;
 import com.nhl.link.etl.annotation.AfterTargetsMerged;
+import com.nhl.link.etl.extractor.model.ExtractorName;
 import com.nhl.link.etl.load.LoadListener;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
@@ -63,7 +64,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private ListenersBuilder stageListenersBuilder;
 	private Class<T> type;
 
-	private String extractorName;
+	private ExtractorName extractorName;
 
 	@Deprecated
 	private List<LoadListener<T>> loadListeners;
@@ -93,11 +94,18 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 		this.loadListeners = new ArrayList<>();
 	}
+	
+	@Override
+	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String location, String name) {
+		this.extractorName = ExtractorName.create(location, name);
+		return this;
+	}
 
+	@Deprecated
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String extractorName) {
-		this.extractorName = extractorName;
-		return this;
+		// v.1 model style config
+		return sourceExtractor(extractorName, extractorName);
 	}
 
 	@Deprecated

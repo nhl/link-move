@@ -1,16 +1,15 @@
 package com.nhl.link.etl.runtime.extractor;
 
-import com.nhl.link.etl.connect.Connector;
-import com.nhl.link.etl.extractor.ExtractorConfig;
-import com.nhl.link.etl.runtime.connect.IConnectorService;
-import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.nhl.link.etl.connect.Connector;
+import com.nhl.link.etl.extractor.model.MutableExtractorModel;
+import com.nhl.link.etl.runtime.connect.IConnectorService;
 
 public abstract class BaseExtractorFactoryTest<T extends Connector, F extends BaseExtractorFactory<T>> {
 	protected static final String CONNECTOR_ID = "testConnectorId";
@@ -19,7 +18,7 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends Ba
 
 	private T connectorMock;
 
-	private ExtractorConfig extractorConfig;
+	private MutableExtractorModel model;
 
 	private IConnectorService connectorServiceMock;
 
@@ -27,15 +26,15 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends Ba
 	public void setUpExtractorFactory() {
 		connectorMock = mock(getConnectorType());
 		connectorServiceMock = mock(IConnectorService.class);
-		when(connectorServiceMock.getConnector(getConnectorType(), CONNECTOR_ID))
-				.thenReturn(connectorMock);
-		extractorFactory = createExtractorFactory();
+		when(connectorServiceMock.getConnector(getConnectorType(), CONNECTOR_ID)).thenReturn(connectorMock);
+
+		this.extractorFactory = createExtractorFactory();
 	}
 
 	@Before
-	public void setUpExtractorConfig() {
-		extractorConfig = new ExtractorConfig("testExtractorConfig");
-		extractorConfig.setConnectorId(CONNECTOR_ID);
+	public void setUpExtratorModel() {
+		model = new MutableExtractorModel("testExtractorConfig");
+		model.setConnectorId(CONNECTOR_ID);
 	}
 
 	protected abstract F createExtractorFactory();
@@ -54,8 +53,8 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends Ba
 		return connectorServiceMock;
 	}
 
-	protected final ExtractorConfig getExtractorConfig() {
-		return extractorConfig;
+	protected final MutableExtractorModel getModel() {
+		return model;
 	}
 
 	@Test
@@ -65,6 +64,6 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends Ba
 
 	@Test
 	public void testCreateExtractor() throws Exception {
-		extractorFactory.createExtractor(getExtractorConfig());
+		extractorFactory.createExtractor(getModel());
 	}
 }

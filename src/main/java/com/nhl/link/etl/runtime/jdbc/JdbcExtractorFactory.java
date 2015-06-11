@@ -4,7 +4,7 @@ import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.query.CapsStrategy;
 
 import com.nhl.link.etl.extractor.Extractor;
-import com.nhl.link.etl.extractor.ExtractorConfig;
+import com.nhl.link.etl.extractor.model.ExtractorModel;
 import com.nhl.link.etl.runtime.connect.IConnectorService;
 import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
 
@@ -27,9 +27,9 @@ public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
 	}
 
 	@Override
-	protected Extractor createExtractor(JdbcConnector connector, ExtractorConfig config) {
+	protected Extractor createExtractor(JdbcConnector connector, ExtractorModel model) {
 
-		String sqlTemplate = config.getProperties().get(SQL_TEMPLATE_PROPERTY);
+		String sqlTemplate = model.getProperties().get(SQL_TEMPLATE_PROPERTY);
 		if (sqlTemplate == null) {
 			throw new IllegalArgumentException("Missing required property for key '" + SQL_TEMPLATE_PROPERTY + "'");
 		}
@@ -39,13 +39,13 @@ public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
 
 		CapsStrategy capsStrategy = CapsStrategy.DEFAULT;
 
-		String capsStrategyString = config.getProperties().get(SQL_TEMPLATE_CAPS_PROPERTY);
+		String capsStrategyString = model.getProperties().get(SQL_TEMPLATE_CAPS_PROPERTY);
 		if (capsStrategyString != null) {
 			capsStrategyString = capsStrategyString.trim().toUpperCase();
 			capsStrategy = CapsStrategy.valueOf(capsStrategyString);
 		}
 
-		return new JdbcExtractor(connector.sharedContext(), config.getAttributes(), sqlTemplate, capsStrategy);
+		return new JdbcExtractor(connector.sharedContext(), model.getAttributes(), sqlTemplate, capsStrategy);
 	}
 
 }

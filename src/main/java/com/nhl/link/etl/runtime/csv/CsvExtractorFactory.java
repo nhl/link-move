@@ -1,15 +1,15 @@
 package com.nhl.link.etl.runtime.csv;
 
-import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.connect.StreamConnector;
-import com.nhl.link.etl.extractor.Extractor;
-import com.nhl.link.etl.extractor.ExtractorConfig;
-import com.nhl.link.etl.runtime.connect.IConnectorService;
-import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
+import java.nio.charset.Charset;
 
 import org.apache.cayenne.di.Inject;
 
-import java.nio.charset.Charset;
+import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.connect.StreamConnector;
+import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.model.ExtractorModel;
+import com.nhl.link.etl.runtime.connect.IConnectorService;
+import com.nhl.link.etl.runtime.extractor.BaseExtractorFactory;
 
 /**
  * @since 1.4
@@ -43,22 +43,22 @@ public class CsvExtractorFactory extends BaseExtractorFactory<StreamConnector> {
     }
 
     @Override
-    protected Extractor createExtractor(StreamConnector connector, ExtractorConfig config) {
+    protected Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
         try {
 
-            String charsetName = config.getProperties().get(CHARSET_PROPERTY);
+            String charsetName = model.getProperties().get(CHARSET_PROPERTY);
             
             // TODO: should we lock default Charset to UTF-8 instead of platform-default?
             Charset charset = charsetName != null ? Charset.forName(charsetName) : Charset.defaultCharset();
             
-            CsvExtractor extractor = new CsvExtractor(connector, config.getAttributes(), charset);
+            CsvExtractor extractor = new CsvExtractor(connector, model.getAttributes(), charset);
 
-            String delimiter = config.getProperties().get(DELIMITIER_PROPERTY);
+            String delimiter = model.getProperties().get(DELIMITIER_PROPERTY);
             if (delimiter != null) {
                 extractor.setDelimiter(delimiter);
             }
 
-            String readFrom = config.getProperties().get(READ_FROM_PROPERTY);
+            String readFrom = model.getProperties().get(READ_FROM_PROPERTY);
             if (readFrom != null) {
                 Integer n = Integer.valueOf(readFrom);
                 extractor.setReadFrom(n);

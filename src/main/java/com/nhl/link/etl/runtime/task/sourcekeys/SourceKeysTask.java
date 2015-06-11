@@ -12,6 +12,7 @@ import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.model.ExtractorName;
 import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.task.BaseTask;
 import com.nhl.link.etl.runtime.token.ITokenManager;
@@ -28,10 +29,10 @@ public class SourceKeysTask extends BaseTask {
 
 	private int batchSize;
 	private IExtractorService extractorService;
-	private String sourceExtractorName;
+	private ExtractorName sourceExtractorName;
 	private SourceKeysSegmentProcessor processor;
 
-	public SourceKeysTask(String sourceExtractorName, int batchSize, IExtractorService extractorService,
+	public SourceKeysTask(ExtractorName sourceExtractorName, int batchSize, IExtractorService extractorService,
 			ITokenManager tokenManager, SourceKeysSegmentProcessor processor) {
 		super(tokenManager);
 

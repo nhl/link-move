@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extractor.loader;
+package com.nhl.link.etl.runtime.extractor.model;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,11 +6,12 @@ import java.io.Reader;
 import java.net.URL;
 
 import com.nhl.link.etl.EtlRuntimeException;
+import com.nhl.link.etl.extractor.model.ExtractorModelContainer;
 
 /**
- * A default {@link IExtractorConfigLoader} that loads XML files from CLASSPATH.
+ * A default {@link IExtractorModelLoader} that loads XML files from CLASSPATH.
  */
-public class ClasspathExtractorConfigLoader extends BaseExtractorConfigLoader {
+public class ClasspathExtractorModelLoader extends BaseExtractorModelLoader {
 
 	@Override
 	protected Reader getXmlSource(String name) throws IOException {
@@ -19,7 +20,7 @@ public class ClasspathExtractorConfigLoader extends BaseExtractorConfigLoader {
 			name = name + ".xml";
 		}
 
-		URL resource = ClasspathExtractorConfigLoader.class.getClassLoader().getResource(name);
+		URL resource = ClasspathExtractorModelLoader.class.getClassLoader().getResource(name);
 		if (resource == null) {
 			throw new EtlRuntimeException("Extractor config not found in classpath: " + name);
 		}
@@ -28,7 +29,7 @@ public class ClasspathExtractorConfigLoader extends BaseExtractorConfigLoader {
 	}
 
 	@Override
-	public boolean needsReload(String name, long lastSeen) {
-		return lastSeen <= 0;
+	public boolean needsReload(ExtractorModelContainer container) {
+		return false;
 	}
 }

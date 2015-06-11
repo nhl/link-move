@@ -2,6 +2,7 @@ package com.nhl.link.etl.runtime.task.sourcekeys;
 
 import com.nhl.link.etl.EtlTask;
 import com.nhl.link.etl.SourceKeysBuilder;
+import com.nhl.link.etl.extractor.model.ExtractorName;
 import com.nhl.link.etl.mapper.Mapper;
 import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
@@ -21,7 +22,7 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 	private SourceMapperBuilder mapperBuilder;
 	private EntityPathNormalizer pathNormalizer;
 
-	private String sourceExtractorName;
+	private ExtractorName sourceExtractorName;
 
 	public DefaultSourceKeysBuilder(EntityPathNormalizer pathNormalizer, IExtractorService extractorService,
 			ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory) {
@@ -50,9 +51,16 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 	}
 
 	@Override
-	public SourceKeysBuilder sourceExtractor(String extractorName) {
-		this.sourceExtractorName = extractorName;
+	public SourceKeysBuilder sourceExtractor(String location, String name) {
+		this.sourceExtractorName = ExtractorName.create(location, name);
 		return this;
+	}
+
+	@Deprecated
+	@Override
+	public SourceKeysBuilder sourceExtractor(String extractorName) {
+		// v.1 style naming...
+		return sourceExtractor(extractorName, extractorName);
 	}
 
 	@Override

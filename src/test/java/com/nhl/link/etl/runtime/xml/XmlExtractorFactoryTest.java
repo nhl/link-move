@@ -36,14 +36,14 @@ public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	}
 
 	@Override
-	public void setUpExtractorConfig() {
-		super.setUpExtractorConfig();
-		getExtractorConfig().getProperties().put(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY, "/test");
+	public void setUpExtratorModel() {
+		super.setUpExtratorModel();
+		getModel().getProperties().put(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY, "/test");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateExtractorWithEmptyXPathExpression() {
-		getExtractorConfig().getProperties().remove(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY);
-		getExtractorFactory().createExtractor(getConnectorMock(), getExtractorConfig());
+		getModel().getProperties().remove(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY);
+		getExtractorFactory().createExtractor(getConnectorMock(), getModel());
 	}
 }

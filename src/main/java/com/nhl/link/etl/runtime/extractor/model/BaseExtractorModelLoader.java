@@ -1,4 +1,4 @@
-package com.nhl.link.etl.runtime.extractor.loader;
+package com.nhl.link.etl.runtime.extractor.model;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -15,34 +15,34 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nhl.link.etl.EtlRuntimeException;
-import com.nhl.link.etl.extractor.ExtractorConfig;
-import com.nhl.link.etl.extractor.parser.DOMExtractorConfigParser;
-import com.nhl.link.etl.extractor.parser.ExtractorConfigParser_1;
-import com.nhl.link.etl.extractor.parser.VersionedExtractorConfigParser;
+import com.nhl.link.etl.extractor.model.ExtractorModelContainer;
+import com.nhl.link.etl.extractor.parser.DOMExtractorModelParser;
+import com.nhl.link.etl.extractor.parser.ExtractorModelParser_v1;
+import com.nhl.link.etl.extractor.parser.VersionedExtractorModelParser;
 
 /**
- * Loads {@link ExtractorConfig} objects from XML streams. A decision on how an
+ * Loads {@link ExtractorModelContainer} objects from XML streams. A decision on how an
  * XML stream is obtained is deferred to subclasses.
  */
-public abstract class BaseExtractorConfigLoader implements IExtractorConfigLoader {
+public abstract class BaseExtractorModelLoader implements IExtractorModelLoader {
 
 	private DocumentBuilderFactory domFactory;
-	private DOMExtractorConfigParser parser;
+	private DOMExtractorModelParser parser;
 
-	public BaseExtractorConfigLoader() {
+	public BaseExtractorModelLoader() {
 		this.domFactory = DocumentBuilderFactory.newInstance();
-		
+
 		// important to have NS info available for schema versioning
 		this.domFactory.setNamespaceAware(true);
 
-		Map<String, DOMExtractorConfigParser> parsersByNS = new HashMap<>();
-		parsersByNS.put(ExtractorConfigParser_1.NS, new ExtractorConfigParser_1());
+		Map<String, DOMExtractorModelParser> parsersByNS = new HashMap<>();
+		parsersByNS.put(ExtractorModelParser_v1.NS, new ExtractorModelParser_v1());
 
-		this.parser = new VersionedExtractorConfigParser(parsersByNS);
+		this.parser = new VersionedExtractorModelParser(parsersByNS);
 	}
 
 	@Override
-	public ExtractorConfig loadConfig(String name) {
+	public ExtractorModelContainer load(String name) {
 		try (Reader in = getXmlSource(name);) {
 			return processXml(name, in);
 		} catch (IOException | ParserConfigurationException | SAXException | ClassNotFoundException | DOMException e) {
@@ -51,21 +51,17 @@ public abstract class BaseExtractorConfigLoader implements IExtractorConfigLoade
 	}
 
 	protected abstract Reader getXmlSource(String name) throws IOException;
-
+	
 	@Override
-	public abstract boolean needsReload(String name, long lastSeen);
+	public abstract boolean needsReload(ExtractorModelContainer container);
 
-	protected ExtractorConfig processXml(String name, Reader in) throws ParserConfigurationException, SAXException,
+	protected ExtractorModelContainer processXml(String name, Reader in) throws ParserConfigurationException, SAXException,
 			IOException, ClassNotFoundException, DOMException {
-
-		ExtractorConfig config = new ExtractorConfig(name);
 
 		// don't expect large files, so using DOM for convenience
 
 		DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
-		Element rootElement = domBuilder.parse(new InputSource(in)).getDocumentElement();
-		parser.parse(rootElement, config);
-
-		return config;
+		Element xmlRoot = domBuilder.parse(new InputSource(in)).getDocumentElement();
+		return parser.parse(name, xmlRoot);
 	}
 }

@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nhl.link.etl.runtime.adapter.LinkEtlAdapter;
-import com.nhl.link.etl.runtime.extractor.loader.IExtractorConfigLoader;
+import com.nhl.link.etl.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.etl.runtime.task.ITaskService;
 
 public class EtlRuntimeBuilderTest {
@@ -55,14 +55,14 @@ public class EtlRuntimeBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void testBuild_NoTargetRuntime() {
 		EtlRuntimeBuilder builder = new EtlRuntimeBuilder()
-				.withExtractorConfigLoader(mock(IExtractorConfigLoader.class));
+				.withExtractorConfigLoader(mock(IExtractorModelLoader.class));
 		builder.build();
 	}
 
 	@Test
 	public void testBuild() {
 		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withExtractorConfigLoader(
-				mock(IExtractorConfigLoader.class)).withTargetRuntime(cayenneRuntime);
+				mock(IExtractorModelLoader.class)).withTargetRuntime(cayenneRuntime);
 		EtlRuntime runtime = builder.build();
 		assertNotNull(runtime);
 

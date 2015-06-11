@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
-
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -27,8 +25,10 @@ import com.nhl.link.etl.runtime.csv.CsvExtractorFactory;
 import com.nhl.link.etl.runtime.extractor.ExtractorService;
 import com.nhl.link.etl.runtime.extractor.IExtractorFactory;
 import com.nhl.link.etl.runtime.extractor.IExtractorService;
-import com.nhl.link.etl.runtime.extractor.loader.ClasspathExtractorConfigLoader;
-import com.nhl.link.etl.runtime.extractor.loader.IExtractorConfigLoader;
+import com.nhl.link.etl.runtime.extractor.model.ClasspathExtractorModelLoader;
+import com.nhl.link.etl.runtime.extractor.model.ExtractorModelService;
+import com.nhl.link.etl.runtime.extractor.model.IExtractorModelLoader;
+import com.nhl.link.etl.runtime.extractor.model.IExtractorModelService;
 import com.nhl.link.etl.runtime.jdbc.JdbcConnector;
 import com.nhl.link.etl.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.etl.runtime.key.IKeyAdapterFactory;
@@ -39,6 +39,7 @@ import com.nhl.link.etl.runtime.task.ITaskService;
 import com.nhl.link.etl.runtime.task.TaskService;
 import com.nhl.link.etl.runtime.token.ITokenManager;
 import com.nhl.link.etl.runtime.token.InMemoryTokenManager;
+import com.nhl.link.etl.runtime.xml.XmlExtractorFactory;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -63,7 +64,7 @@ public class EtlRuntimeBuilder {
 	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory>> extractorFactoryTypes;
 
-	private IExtractorConfigLoader extractorConfigLoader;
+	private IExtractorModelLoader extractorConfigLoader;
 	private ITokenManager tokenManager;
 	private ServerRuntime targetRuntime;
 	private Collection<LinkEtlAdapter> adapters;
@@ -159,7 +160,7 @@ public class EtlRuntimeBuilder {
 		return this;
 	}
 
-	public EtlRuntimeBuilder withExtractorConfigLoader(IExtractorConfigLoader extractorConfigLoader) {
+	public EtlRuntimeBuilder withExtractorConfigLoader(IExtractorModelLoader extractorConfigLoader) {
 		this.extractorConfigLoader = extractorConfigLoader;
 		return this;
 	}
@@ -171,7 +172,7 @@ public class EtlRuntimeBuilder {
 		}
 
 		if (extractorConfigLoader == null) {
-			extractorConfigLoader = new ClasspathExtractorConfigLoader();
+			extractorConfigLoader = new ClasspathExtractorModelLoader();
 		}
 
 		if (tokenManager == null) {
@@ -225,13 +226,14 @@ public class EtlRuntimeBuilder {
 				// when the ETL module is shutdown.
 				binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
-				binder.bind(IExtractorConfigLoader.class).toInstance(extractorConfigLoader);
+				binder.bind(IExtractorModelLoader.class).toInstance(extractorConfigLoader);
 				binder.bind(IExtractorService.class).to(ExtractorService.class);
 				binder.bind(IConnectorService.class).to(ConnectorService.class);
 				binder.bind(ITaskService.class).to(TaskService.class);
 				binder.bind(ITokenManager.class).toInstance(tokenManager);
 				binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
 				binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
+				binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
 
 				// apply adapter-contributed bindings
 				for (LinkEtlAdapter a : adapters) {

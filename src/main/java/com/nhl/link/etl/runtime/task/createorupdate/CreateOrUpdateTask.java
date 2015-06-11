@@ -13,6 +13,7 @@ import com.nhl.link.etl.RowReader;
 import com.nhl.link.etl.batch.BatchProcessor;
 import com.nhl.link.etl.batch.BatchRunner;
 import com.nhl.link.etl.extractor.Extractor;
+import com.nhl.link.etl.extractor.model.ExtractorName;
 import com.nhl.link.etl.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.etl.runtime.extractor.IExtractorService;
 import com.nhl.link.etl.runtime.task.BaseTask;
@@ -26,13 +27,13 @@ import com.nhl.link.etl.runtime.token.ITokenManager;
  */
 public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
-	private String extractorName;
+	private ExtractorName extractorName;
 	private int batchSize;
 	private ITargetCayenneService targetCayenneService;
 	private IExtractorService extractorService;
 	private CreateOrUpdateSegmentProcessor<T> processor;
 
-	public CreateOrUpdateTask(String extractorName, int batchSize, ITargetCayenneService targetCayenneService,
+	public CreateOrUpdateTask(ExtractorName extractorName, int batchSize, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, CreateOrUpdateSegmentProcessor<T> processor) {
 
 		super(tokenManager);

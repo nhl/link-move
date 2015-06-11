@@ -24,10 +24,21 @@ public interface CreateOrUpdateBuilder<T> {
 	EtlTask task() throws IllegalStateException;
 
 	/**
+	 * Defines the location and name of the source data extractor.
+	 * 
+	 * @since 1.4
+	 */
+	CreateOrUpdateBuilder<T> sourceExtractor(String location, String name);
+
+	/**
 	 * Defines the name of the source data extractor.
 	 * 
 	 * @since 1.3
+	 * @deprecated since 1.4 location is required in addition to name to
+	 *             identify an extractor. So use
+	 *             {@link #sourceExtractor(String, String)}.
 	 */
+	@Deprecated
 	CreateOrUpdateBuilder<T> sourceExtractor(String extractorName);
 
 	/**
