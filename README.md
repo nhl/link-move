@@ -40,8 +40,10 @@ An example using JDBC connector for the source data:
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd"
 	xmlns="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd">
+	
 	<type>jdbc</type>
-	<connectorId>derbysrc</connectorId>
+	<connectorId>myconnector</connectorId>
+	
 	<extractor>
 		<!-- Optional source to target attribute mapping -->
 		<attributes>
