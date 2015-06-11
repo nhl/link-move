@@ -33,7 +33,7 @@ Execution e = task.run();
 
 Extractor XML format is described by a formal schema: http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd
 
-A JDBC source example:
+An example using JDBC connector for the source data:
 
 ```XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -61,8 +61,11 @@ A JDBC source example:
 				<target>db:name</target>
 			</attribute>
 		</attributes>
-		<!-- JDBC connector properties. Namely the query to run against source -->
+		<!-- JDBC connector properties. -->
 		<properties>
+			<!-- Query to run against the source. Supports full Cayenne 
+			     SQLTemplate syntax, including parameters and directives.
+			-->
 			<extractor.jdbc.sqltemplate>
 			       SELECT age, description, name FROM utest.etl1
 			</extractor.jdbc.sqltemplate>
