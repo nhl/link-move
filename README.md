@@ -37,7 +37,8 @@ A JDBC source example:
 
 ```XML
 <?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd"
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd"
 	xmlns="http://nhl.github.io/link-etl/xsd/extractor_config_2.xsd">
 	<type>jdbc</type>
 	<connectorId>derbysrc</connectorId>
