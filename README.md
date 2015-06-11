@@ -5,7 +5,7 @@ LinkETL is a model-driven dynamically-configurable framework to acquire data fro
 It is an ideal tool for domain-driven application designs, allowing to connect multiple data models together in a flexible way that allows independent changes between sources and targets.
 
 
-## Getting Started:
+## Getting Started
 
 ```Java
 // bootstrap shared runtime that will run tasks
