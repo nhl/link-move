@@ -9,8 +9,8 @@ It is an ideal tool for domain-driven application designs, allowing to connect m
 
 ```Java
 // bootstrap shared runtime that will run tasks
-DataSource srcDS = // define how you'd connect to  ETL source 
-ServerRuntime targetRuntime = // Cayenne setup for ETL target .. targets are mapped in Cayenne 
+DataSource srcDS = // define how you'd connect to data source 
+ServerRuntime targetRuntime = // Cayenne setup for data target .. targets are mapped in Cayenne 
 File rootDir = .. // this is a parent dir of XML descriptors
 
 LmRuntime lm = LmRuntimeBuilder()
