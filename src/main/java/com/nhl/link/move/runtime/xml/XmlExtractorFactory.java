@@ -9,7 +9,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.cayenne.di.Inject;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
@@ -40,7 +40,7 @@ public class XmlExtractorFactory extends BaseExtractorFactory<StreamConnector> {
 			XPathExpression expression = getXPathExpression(model);
 			return new XmlExtractor(connector, model.getAttributes(), expression);
 		} catch (XPathExpressionException e) {
-			throw new EtlRuntimeException(e);
+			throw new LmRuntimeException(e);
 		}
 	}
 

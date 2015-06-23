@@ -10,9 +10,9 @@ import org.apache.cayenne.di.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
 
 /**
  * An {@link IExtractorModelLoader} that resolves
@@ -26,7 +26,7 @@ public class FileExtractorModelLoader extends BaseExtractorModelLoader {
 
 	private File rootDir;
 
-	public FileExtractorModelLoader(@Inject(EtlRuntimeBuilder.FILE_EXTRACTOR_MODEL_ROOT_DIR) File rootDir) {
+	public FileExtractorModelLoader(@Inject(LmRuntimeBuilder.FILE_EXTRACTOR_MODEL_ROOT_DIR) File rootDir) {
 		LOGGER.info("Extractor XML files will be located under '{}'", rootDir);
 		this.rootDir = rootDir;
 	}
@@ -54,7 +54,7 @@ public class FileExtractorModelLoader extends BaseExtractorModelLoader {
 		File file = new File(rootDir, name);
 
 		if (!file.isFile()) {
-			throw new EtlRuntimeException(file.getAbsolutePath() + " is not a file");
+			throw new LmRuntimeException(file.getAbsolutePath() + " is not a file");
 		}
 
 		return file;

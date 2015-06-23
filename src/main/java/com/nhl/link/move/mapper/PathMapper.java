@@ -6,7 +6,7 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 
 public class PathMapper implements Mapper {
 
@@ -53,7 +53,7 @@ public class PathMapper implements Mapper {
 
 		Object key = source.get(dbPath);
 		if (key == null && !source.containsKey(dbPath)) {
-			throw new EtlRuntimeException("Source does not contain key path: " + dbPath);
+			throw new LmRuntimeException("Source does not contain key path: " + dbPath);
 		}
 
 		return key;

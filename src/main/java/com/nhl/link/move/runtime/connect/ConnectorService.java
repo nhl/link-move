@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.cayenne.di.Inject;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.Connector;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
 
 public class ConnectorService implements IConnectorService {
 
@@ -16,8 +16,8 @@ public class ConnectorService implements IConnectorService {
 	private Map<String, IConnectorFactory<?>> factories;
 
 	public ConnectorService(
-			@Inject(EtlRuntimeBuilder.CONNECTOR_FACTORIES_MAP) Map<String, IConnectorFactory<?>> factories,
-			@Inject(EtlRuntimeBuilder.CONNECTORS_MAP) Map<String, Connector> connectors) {
+			@Inject(LmRuntimeBuilder.CONNECTOR_FACTORIES_MAP) Map<String, IConnectorFactory<?>> factories,
+			@Inject(LmRuntimeBuilder.CONNECTORS_MAP) Map<String, Connector> connectors) {
 		this.factories = factories;
 		this.connectors = new ConcurrentHashMap<>(connectors);
 	}
@@ -27,7 +27,7 @@ public class ConnectorService implements IConnectorService {
 	public <T extends Connector> T getConnector(Class<T> type, String id) {
 
 		if (id == null) {
-			throw new EtlRuntimeException("Null connector id");
+			throw new LmRuntimeException("Null connector id");
 		}
 
 		Connector connector = connectors.get(id);
@@ -50,7 +50,7 @@ public class ConnectorService implements IConnectorService {
 		}
 
 		if (!type.isAssignableFrom(connector.getClass())) {
-			throw new EtlRuntimeException("Connector for id '" + id + "' is not a " + type.getName()
+			throw new LmRuntimeException("Connector for id '" + id + "' is not a " + type.getName()
 					+ ". The actual type is " + connector.getClass().getName());
 		}
 

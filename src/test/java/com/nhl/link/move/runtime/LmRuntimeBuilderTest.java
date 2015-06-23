@@ -16,13 +16,13 @@ import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.runtime.EtlRuntime;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
+import com.nhl.link.move.runtime.LmRuntime;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.task.ITaskService;
 
-public class EtlRuntimeBuilderTest {
+public class LmRuntimeBuilderTest {
 
 	private ServerRuntime cayenneRuntime;
 
@@ -45,8 +45,8 @@ public class EtlRuntimeBuilderTest {
 	@Test
 	public void testBuild_DefaultConfigLoader() {
 
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(cayenneRuntime);
-		EtlRuntime runtime = builder.build();
+		LmRuntimeBuilder builder = new LmRuntimeBuilder().withTargetRuntime(cayenneRuntime);
+		LmRuntime runtime = builder.build();
 
 		assertNotNull(runtime);
 		ITaskService taskService = runtime.getTaskService();
@@ -56,16 +56,16 @@ public class EtlRuntimeBuilderTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testBuild_NoTargetRuntime() {
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder()
+		LmRuntimeBuilder builder = new LmRuntimeBuilder()
 				.extractorModelLoader(mock(IExtractorModelLoader.class));
 		builder.build();
 	}
 
 	@Test
 	public void testBuild() {
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().extractorModelLoader(
+		LmRuntimeBuilder builder = new LmRuntimeBuilder().extractorModelLoader(
 				mock(IExtractorModelLoader.class)).withTargetRuntime(cayenneRuntime);
-		EtlRuntime runtime = builder.build();
+		LmRuntime runtime = builder.build();
 		assertNotNull(runtime);
 
 		ITaskService taskService = runtime.getTaskService();
@@ -77,7 +77,7 @@ public class EtlRuntimeBuilderTest {
 	public void testAdapter() {
 
 		LinkEtlAdapter adapter = mock(LinkEtlAdapter.class);
-		EtlRuntimeBuilder builder = new EtlRuntimeBuilder().withTargetRuntime(cayenneRuntime).adapter(adapter);
+		LmRuntimeBuilder builder = new LmRuntimeBuilder().withTargetRuntime(cayenneRuntime).adapter(adapter);
 
 		verifyZeroInteractions(adapter);
 		builder.build();

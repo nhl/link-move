@@ -11,7 +11,7 @@ import org.apache.cayenne.ObjectContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 
@@ -49,7 +49,7 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 			// a null can only mean some algorithm malfunction, as keys are all
 			// coming from a known set of sources
 			if (src == null) {
-				throw new EtlRuntimeException("Invalid key: " + key);
+				throw new LmRuntimeException("Invalid key: " + key);
 			}
 
 			// skip phantom updates...

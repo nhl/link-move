@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.cayenne.di.Inject;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
 import com.nhl.link.move.extractor.model.ExtractorName;
@@ -27,7 +27,7 @@ public class ExtractorModelService implements IExtractorModelService {
 
 		ExtractorModel m = c.getExtractor(name.getName());
 		if (m == null) {
-			throw new EtlRuntimeException("No extractor model found for name: " + name);
+			throw new LmRuntimeException("No extractor model found for name: " + name);
 		}
 
 		return m;

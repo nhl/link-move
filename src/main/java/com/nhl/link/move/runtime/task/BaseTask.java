@@ -4,16 +4,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.SyncToken;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
 /**
  * @since 1.3
  */
-public abstract class BaseTask implements EtlTask {
+public abstract class BaseTask implements LmTask {
 
 	private ITokenManager tokenManager;
 
@@ -40,8 +40,8 @@ public abstract class BaseTask implements EtlTask {
 		Map<String, Object> combinedParams = new HashMap<>();
 
 		SyncToken startToken = tokenManager.previousToken(token);
-		combinedParams.put(EtlRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
-		combinedParams.put(EtlRuntimeBuilder.END_TOKEN_VAR, token.getValue());
+		combinedParams.put(LmRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
+		combinedParams.put(LmRuntimeBuilder.END_TOKEN_VAR, token.getValue());
 
 		combinedParams.putAll(params);
 

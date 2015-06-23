@@ -1,8 +1,8 @@
 package com.nhl.link.move.itest;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.unit.EtlIntegrationTest;
+import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 
 import org.apache.cayenne.query.SQLSelect;
@@ -10,11 +10,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class CsvExtractor_CreateOrUpdateIT extends EtlIntegrationTest {
+public class CsvExtractor_CreateOrUpdateIT extends LmIntegrationTest {
 
     @Test
     public void testExtractor() {
-        EtlTask etlTask = etl.getTaskService().createOrUpdate(Etl1t.class)
+        LmTask etlTask = etl.getTaskService().createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/csv/etl1_to_etl1t")
                 .matchBy(Etl1t.NAME)
                 .task();

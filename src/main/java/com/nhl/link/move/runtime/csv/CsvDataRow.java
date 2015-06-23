@@ -3,7 +3,7 @@ package com.nhl.link.move.runtime.csv;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 
@@ -29,7 +29,7 @@ class CsvDataRow implements Row {
 			try {
 				values = CsvUtils.parse(new String[attributes.length], data, delimiter);
 			} catch (IOException e) {
-				throw new EtlRuntimeException("Failed to parse CSV row", e);
+				throw new LmRuntimeException("Failed to parse CSV row", e);
 			}
 		}
 		return getValue(attribute.type(), values[attribute.getOrdinal()]);
@@ -69,7 +69,7 @@ class CsvDataRow implements Row {
 				return false;
 			}
 			default: {
-				throw new EtlRuntimeException("Unknown boolean format: " + value);
+				throw new LmRuntimeException("Unknown boolean format: " + value);
 			}
 			}
 		}

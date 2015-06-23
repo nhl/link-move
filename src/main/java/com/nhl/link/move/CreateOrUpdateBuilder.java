@@ -10,7 +10,7 @@ import com.nhl.link.move.load.LoadListener;
 import com.nhl.link.move.mapper.Mapper;
 
 /**
- * A builder of an {@link EtlTask} that performs create-or-update
+ * A builder of an {@link LmTask} that performs create-or-update
  * synchronization.
  * 
  * @since 1.3
@@ -21,7 +21,7 @@ public interface CreateOrUpdateBuilder<T> {
 	/**
 	 * Creates a new task based on the builder information.
 	 */
-	EtlTask task() throws IllegalStateException;
+	LmTask task() throws IllegalStateException;
 
 	/**
 	 * Defines the location and name of the source data extractor.

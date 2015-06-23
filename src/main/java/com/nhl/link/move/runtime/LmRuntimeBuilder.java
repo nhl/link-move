@@ -49,13 +49,13 @@ import com.nhl.link.move.runtime.xml.XmlExtractorFactory;
 /**
  * A builder class that helps to assemble working LinkEtl stack.
  */
-public class EtlRuntimeBuilder {
+public class LmRuntimeBuilder {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EtlRuntimeBuilder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
 
-	public static final String CONNECTORS_MAP = "com.nhl.link.etl.connectors";
-	public static final String CONNECTOR_FACTORIES_MAP = "com.nhl.link.etl.connector.factories";
-	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.etl.extractor.factories";
+	public static final String CONNECTORS_MAP = "com.nhl.link.move.connectors";
+	public static final String CONNECTOR_FACTORIES_MAP = "com.nhl.link.move.connector.factories";
+	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.move.extractor.factories";
 
 	/**
 	 * A DI property that defines the root directory to resolve locations of
@@ -63,7 +63,7 @@ public class EtlRuntimeBuilder {
 	 * 
 	 * @since 1.4
 	 */
-	public static final String FILE_EXTRACTOR_MODEL_ROOT_DIR = "com.nhl.link.etl.extrator.root.dir";
+	public static final String FILE_EXTRACTOR_MODEL_ROOT_DIR = "com.nhl.link.move.extrator.root.dir";
 
 	public static final String JDBC_EXTRACTOR_TYPE = "jdbc";
 	public static final String CSV_EXTRACTOR_TYPE = "csv";
@@ -86,7 +86,7 @@ public class EtlRuntimeBuilder {
 	private ServerRuntime targetRuntime;
 	private Collection<LinkEtlAdapter> adapters;
 
-	public EtlRuntimeBuilder() {
+	public LmRuntimeBuilder() {
 		this.connectors = new HashMap<>();
 		this.connectorFactories = new HashMap<>();
 		this.connectorFactoryTypes = new HashMap<>();
@@ -105,7 +105,7 @@ public class EtlRuntimeBuilder {
 	 *
 	 * @since 1.1
 	 */
-	public EtlRuntimeBuilder adapter(LinkEtlAdapter adapter) {
+	public LmRuntimeBuilder adapter(LinkEtlAdapter adapter) {
 		this.adapters.add(adapter);
 		return this;
 	}
@@ -113,28 +113,28 @@ public class EtlRuntimeBuilder {
 	/**
 	 * Sets a target Cayenne runtime for this ETL stack.
 	 */
-	public EtlRuntimeBuilder withTargetRuntime(ServerRuntime targetRuntime) {
+	public LmRuntimeBuilder withTargetRuntime(ServerRuntime targetRuntime) {
 		this.targetRuntime = targetRuntime;
 		return this;
 	}
 
-	public EtlRuntimeBuilder withTokenManager(ITokenManager tokenManager) {
+	public LmRuntimeBuilder withTokenManager(ITokenManager tokenManager) {
 		this.tokenManager = tokenManager;
 		return this;
 	}
 
-	public EtlRuntimeBuilder withConnector(String id, Connector connector) {
+	public LmRuntimeBuilder withConnector(String id, Connector connector) {
 		connectors.put(id, connector);
 		return this;
 	}
 
-	public <C extends Connector> EtlRuntimeBuilder withConnectorFactory(Class<C> connectorType,
+	public <C extends Connector> LmRuntimeBuilder withConnectorFactory(Class<C> connectorType,
 			IConnectorFactory<C> factory) {
 		connectorFactories.put(connectorType.getName(), factory);
 		return this;
 	}
 
-	public <C extends Connector> EtlRuntimeBuilder withConnectorFactory(Class<C> connectorType,
+	public <C extends Connector> LmRuntimeBuilder withConnectorFactory(Class<C> connectorType,
 			Class<? extends IConnectorFactory<C>> factoryType) {
 		connectorFactoryTypes.put(connectorType.getName(), factoryType);
 		return this;
@@ -152,7 +152,7 @@ public class EtlRuntimeBuilder {
 	 *
 	 * @since 1.1
 	 */
-	public EtlRuntimeBuilder withConnectorFromTarget() {
+	public LmRuntimeBuilder withConnectorFromTarget() {
 		connectorFactoryTypes.put(JdbcConnector.class.getName(), TargetConnectorFactory.class);
 		return this;
 	}
@@ -162,7 +162,7 @@ public class EtlRuntimeBuilder {
 	 * {@link JdbcExtractorFactory} is loaded by default and does not have to be
 	 * configured explicitly.
 	 */
-	public EtlRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory> factoryType) {
+	public LmRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory> factoryType) {
 		extractorFactoryTypes.put(extractorType, factoryType);
 		return this;
 	}
@@ -172,7 +172,7 @@ public class EtlRuntimeBuilder {
 	 * {@link JdbcExtractorFactory} is loaded by default and does not have to be
 	 * configured explicitly.
 	 */
-	public EtlRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory factory) {
+	public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory factory) {
 		extractorFactories.put(extractorType, factory);
 		return this;
 	}
@@ -183,14 +183,14 @@ public class EtlRuntimeBuilder {
 	 *             see {@link #extractorModelsRoot}.
 	 */
 	@Deprecated
-	public EtlRuntimeBuilder withExtractorConfigLoader(IExtractorModelLoader extractorModelLoader) {
+	public LmRuntimeBuilder withExtractorConfigLoader(IExtractorModelLoader extractorModelLoader) {
 		return extractorModelLoader(extractorModelLoader);
 	}
 
 	/**
 	 * @since 1.4
 	 */
-	public EtlRuntimeBuilder extractorModelLoader(IExtractorModelLoader extractorModelLoader) {
+	public LmRuntimeBuilder extractorModelLoader(IExtractorModelLoader extractorModelLoader) {
 		this.extractorModelLoader = extractorModelLoader;
 		this.extractorModelsRoot = null;
 		return this;
@@ -199,7 +199,7 @@ public class EtlRuntimeBuilder {
 	/**
 	 * @since 1.4
 	 */
-	public EtlRuntimeBuilder extractorModelsRoot(File rootDir) {
+	public LmRuntimeBuilder extractorModelsRoot(File rootDir) {
 		this.extractorModelLoader = null;
 		this.extractorModelsRoot = rootDir;
 		return this;
@@ -208,13 +208,13 @@ public class EtlRuntimeBuilder {
 	/**
 	 * @since 1.4
 	 */
-	public EtlRuntimeBuilder extractorModelsRoot(String rootDirPath) {
+	public LmRuntimeBuilder extractorModelsRoot(String rootDirPath) {
 		this.extractorModelLoader = null;
 		this.extractorModelsRoot = new File(rootDirPath);
 		return this;
 	}
 
-	public EtlRuntime build() throws IllegalStateException {
+	public LmRuntime build() throws IllegalStateException {
 
 		if (targetRuntime == null) {
 			throw new IllegalStateException("Required Cayenne 'targetRuntime' is not set");
@@ -232,12 +232,12 @@ public class EtlRuntimeBuilder {
 
 				bindModelLoader(binder);
 
-				binder.<Connector> bindMap(EtlRuntimeBuilder.CONNECTORS_MAP).putAll(connectors);
+				binder.<Connector> bindMap(LmRuntimeBuilder.CONNECTORS_MAP).putAll(connectors);
 
 				MapBuilder<IConnectorFactory<? extends Connector>> connectorFactories = binder
-						.<IConnectorFactory<? extends Connector>> bindMap(EtlRuntimeBuilder.CONNECTOR_FACTORIES_MAP);
+						.<IConnectorFactory<? extends Connector>> bindMap(LmRuntimeBuilder.CONNECTOR_FACTORIES_MAP);
 
-				connectorFactories.putAll(EtlRuntimeBuilder.this.connectorFactories);
+				connectorFactories.putAll(LmRuntimeBuilder.this.connectorFactories);
 
 				for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
 						.entrySet()) {
@@ -253,8 +253,8 @@ public class EtlRuntimeBuilder {
 				}
 
 				MapBuilder<IExtractorFactory> extractorFactories = binder
-						.<IExtractorFactory> bindMap(EtlRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
-				extractorFactories.putAll(EtlRuntimeBuilder.this.extractorFactories);
+						.<IExtractorFactory> bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
+				extractorFactories.putAll(LmRuntimeBuilder.this.extractorFactories);
 
 				for (Entry<String, Class<? extends IExtractorFactory>> e : extractorFactoryTypes.entrySet()) {
 
@@ -290,7 +290,7 @@ public class EtlRuntimeBuilder {
 
 		final Injector injector = DIBootstrap.createInjector(etlModule);
 
-		return new EtlRuntime() {
+		return new LmRuntime() {
 
 			@Override
 			public ITaskService getTaskService() {

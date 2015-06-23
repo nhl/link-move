@@ -9,7 +9,7 @@ import java.io.Reader;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.extractor.model.ClasspathExtractorModelLoader;
 
 public class ClasspathExtractorConfigLoaderTest {
@@ -48,7 +48,7 @@ public class ClasspathExtractorConfigLoaderTest {
 
 	}
 
-	@Test(expected = EtlRuntimeException.class)
+	@Test(expected = LmRuntimeException.class)
 	public void testGetXmlSource_Invalid() throws IOException {
 		loader.getXmlSource("no-such-resource");
 	}

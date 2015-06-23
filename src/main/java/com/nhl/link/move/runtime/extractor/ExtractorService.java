@@ -8,7 +8,7 @@ import org.apache.cayenne.di.Inject;
 
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
 
 public class ExtractorService implements IExtractorService {
@@ -18,7 +18,7 @@ public class ExtractorService implements IExtractorService {
 	private Map<String, IExtractorFactory> factories;
 
 	public ExtractorService(@Inject IExtractorModelService modelService,
-			@Inject(EtlRuntimeBuilder.EXTRACTOR_FACTORIES_MAP) Map<String, IExtractorFactory> factories) {
+			@Inject(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP) Map<String, IExtractorFactory> factories) {
 		this.factories = factories;
 		this.modelService = modelService;
 		this.extractors = new ConcurrentHashMap<>();

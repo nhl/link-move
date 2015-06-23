@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.SourceKeysBuilder;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
@@ -34,7 +34,7 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 	}
 
 	@Override
-	public EtlTask task() throws IllegalStateException {
+	public LmTask task() throws IllegalStateException {
 
 		if (sourceExtractorName == null) {
 			throw new IllegalStateException("Required 'extractorName' is not set");

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.nhl.link.move.CountingRowReader;
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowReader;
@@ -18,7 +18,7 @@ import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
 /**
- * An {@link EtlTask} that extracts all the keys from the source data store. The
+ * An {@link LmTask} that extracts all the keys from the source data store. The
  * result is stored in memory in the Execution object.
  * 
  * @since 1.3

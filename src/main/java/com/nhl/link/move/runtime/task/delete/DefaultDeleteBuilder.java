@@ -6,8 +6,8 @@ import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjEntity;
 
 import com.nhl.link.move.DeleteBuilder;
-import com.nhl.link.move.EtlRuntimeException;
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourcesMapped;
 import com.nhl.link.move.mapper.Mapper;
@@ -46,7 +46,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 
 		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
 		if (entity == null) {
-			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+			throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
 
 		EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
@@ -122,7 +122,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	private DeleteSegmentProcessor<T> createProcessor() {
 		Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
-		EtlTask keysSubtask = taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
+		LmTask keysSubtask = taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
 
 		TargetMapper<T> targetMapper = new TargetMapper<>(mapper);
 		MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>(keysSubtask);

@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.connect;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.Connector;
 
 /**
@@ -17,7 +17,7 @@ public interface IConnectorFactory<C extends Connector> {
 
 	/**
 	 * Creates a connector for a given symbolic ID. If a connector can not be
-	 * created, or an ID is not recognized, {@link EtlRuntimeException} is
+	 * created, or an ID is not recognized, {@link LmRuntimeException} is
 	 * thrown.
 	 */
 	C createConnector(String id);

@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.jdbc.DataSourceConnectorFactory;
 
 public class DataSourceConnectorFactoryTest {
@@ -40,7 +40,7 @@ public class DataSourceConnectorFactoryTest {
 		assertSame(ds2, factory.connectorDataSource("ds2"));
 	}
 
-	@Test(expected = EtlRuntimeException.class)
+	@Test(expected = LmRuntimeException.class)
 	public void testConnectorDataSource_Missing() {
 		factory.connectorDataSource("ds3");
 	}

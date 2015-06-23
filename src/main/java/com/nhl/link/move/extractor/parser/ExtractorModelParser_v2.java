@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.extractor.model.ContainerAwareExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModel;
@@ -33,7 +33,7 @@ public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
 		try {
 			parseConfig(extractors, xmlRoot);
 		} catch (ClassNotFoundException | DOMException e) {
-			throw new EtlRuntimeException("Error merging config from DOM", e);
+			throw new LmRuntimeException("Error merging config from DOM", e);
 		}
 
 		extractors.setLoadedOn(System.currentTimeMillis());
@@ -44,7 +44,7 @@ public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
 			throws ClassNotFoundException, DOMException {
 
 		if (!"config".equals(configElement.getNodeName())) {
-			throw new EtlRuntimeException("Expected <config> element, got <" + configElement.getNodeName() + ">");
+			throw new LmRuntimeException("Expected <config> element, got <" + configElement.getNodeName() + ">");
 		}
 
 		parseContainer(container, configElement.getChildNodes());

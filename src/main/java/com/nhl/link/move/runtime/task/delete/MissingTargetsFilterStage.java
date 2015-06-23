@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.apache.cayenne.ObjectContext;
 
-import com.nhl.link.move.EtlRuntimeException;
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
 
@@ -20,9 +20,9 @@ public class MissingTargetsFilterStage<T> {
 
 	public static final String SOURCE_KEYS_KEY = MissingTargetsFilterStage.class.getName() + ".SOURCE_KEYS";
 
-	private EtlTask keysSubtask;
+	private LmTask keysSubtask;
 
-	public MissingTargetsFilterStage(EtlTask keysSubtask) {
+	public MissingTargetsFilterStage(LmTask keysSubtask) {
 		this.keysSubtask = keysSubtask;
 	}
 
@@ -61,7 +61,7 @@ public class MissingTargetsFilterStage<T> {
 
 		Set<Object> keys = (Set<Object>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
 		if (keys == null) {
-			throw new EtlRuntimeException("Unxpected state of keys subtask. No attribute for key: "
+			throw new LmRuntimeException("Unxpected state of keys subtask. No attribute for key: "
 					+ SourceKeysTask.RESULT_KEY);
 		}
 

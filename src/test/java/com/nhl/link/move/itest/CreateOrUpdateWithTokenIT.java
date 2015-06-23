@@ -4,18 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.IntToken;
-import com.nhl.link.move.unit.EtlIntegrationTest;
+import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 
-public class CreateOrUpdateWithTokenIT extends EtlIntegrationTest {
+public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_withtoken").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
 
 /**
@@ -38,7 +38,7 @@ public class VersionedExtractorModelParser implements DOMExtractorModelParser {
 		if (delegate == null) {
 			String message = namespace != null ? "Unsupported namespace: " + namespace
 					: "No parser is configured for default namespace: " + defaultNS;
-			throw new EtlRuntimeException(message);
+			throw new LmRuntimeException(message);
 		}
 
 		return delegate;

@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
 import com.nhl.link.move.extractor.parser.DOMExtractorModelParser;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser_v1;
@@ -51,7 +51,7 @@ public abstract class BaseExtractorModelLoader implements IExtractorModelLoader 
 		try (Reader in = getXmlSource(name);) {
 			return processXml(name, in);
 		} catch (IOException | ParserConfigurationException | SAXException | ClassNotFoundException | DOMException e) {
-			throw new EtlRuntimeException("Error reading ExtractorConfig XML", e);
+			throw new LmRuntimeException("Error reading ExtractorConfig XML", e);
 		}
 	}
 

@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.connect;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.connect.URIConnector;
 
@@ -27,12 +27,12 @@ public class URIConnectorFactory implements IConnectorFactory<StreamConnector> {
 				uri = new URI(id);
 			}
 			if (!uri.isAbsolute()) {
-				throw new EtlRuntimeException(
+				throw new LmRuntimeException(
 						"Provided URI is not absolute (should be a classpath resource or absolute path to file)"
 				);
 			}
 		} catch (URISyntaxException e) {
-			throw new EtlRuntimeException("Failed to create connector for URI, because it is malformed: " + id, e);
+			throw new LmRuntimeException("Failed to create connector for URI, because it is malformed: " + id, e);
 		}
 
 		return new URIConnector(uri);

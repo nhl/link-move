@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.csv;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
@@ -46,7 +46,7 @@ public class CsvExtractor implements Extractor {
 				lines.add(line);
 			}
 		} catch (IOException e) {
-			throw new EtlRuntimeException("Failed to read lines from stream", e);
+			throw new LmRuntimeException("Failed to read lines from stream", e);
 		}
 
 		CsvRowReader reader = new CsvRowReader(attributes, lines);

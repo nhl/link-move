@@ -14,7 +14,7 @@ public interface DeleteBuilder<T> {
 	 * Creates a new task that will delete target objects not found in the
 	 * source.
 	 */
-	EtlTask task() throws IllegalStateException;
+	LmTask task() throws IllegalStateException;
 
 	DeleteBuilder<T> targetFilter(Expression filter);
 

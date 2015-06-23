@@ -15,7 +15,7 @@ import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.PathComponent;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 
 /**
  * @since 1.4
@@ -80,11 +80,11 @@ public class PathNormalizer implements IPathNormalizer {
 				}
 
 				if (components.size() == 0) {
-					throw new EtlRuntimeException("Null path. Entity: " + entity.getName());
+					throw new LmRuntimeException("Null path. Entity: " + entity.getName());
 				}
 
 				if (components.size() > 1) {
-					throw new EtlRuntimeException("Nested paths not supported. Path: " + dbExp);
+					throw new LmRuntimeException("Nested paths not supported. Path: " + dbExp);
 				}
 
 				PathComponent<DbAttribute, DbRelationship> c = components.get(0);
@@ -100,7 +100,7 @@ public class PathNormalizer implements IPathNormalizer {
 				// TODO: logic duplication from DefaultCreateOrUpdateBuilder...
 				if (joins.size() > 1) {
 					// TODO: support for multi-key to-one relationships
-					throw new EtlRuntimeException("Multi-column FKs are not yet supported. Path: " + dbExp);
+					throw new LmRuntimeException("Multi-column FKs are not yet supported. Path: " + dbExp);
 				} else {
 					return ASTDbPath.DB_PREFIX + joins.get(0).getSourceName();
 				}

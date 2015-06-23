@@ -21,8 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nhl.link.move.CreateOrUpdateBuilder;
-import com.nhl.link.move.EtlRuntimeException;
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterSourcesMapped;
 import com.nhl.link.move.annotation.AfterTargetsMatched;
@@ -81,7 +81,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 		this.entity = targetCayenneService.entityResolver().getObjEntity(type);
 		if (entity == null) {
-			throw new EtlRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+			throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
 
 		this.entityPathNormalizer = pathNormalizer.normalizer(entity);
@@ -224,7 +224,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	}
 
 	@Override
-	public EtlTask task() throws IllegalStateException {
+	public LmTask task() throws IllegalStateException {
 
 		if (extractorName == null) {
 			throw new IllegalStateException("Required 'extractorName' is not set");

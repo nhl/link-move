@@ -3,7 +3,7 @@ package com.nhl.link.move;
 import com.nhl.link.move.mapper.Mapper;
 
 /**
- * A builder of an {@link EtlTask} that extracts all the keys from the source
+ * A builder of an {@link LmTask} that extracts all the keys from the source
  * data store.
  * 
  * @since 1.3
@@ -13,7 +13,7 @@ public interface SourceKeysBuilder {
 	/**
 	 * Creates a new task based on the builder information.
 	 */
-	EtlTask task() throws IllegalStateException;
+	LmTask task() throws IllegalStateException;
 
 	/**
 	 * Defines the location and name of the source data extractor.

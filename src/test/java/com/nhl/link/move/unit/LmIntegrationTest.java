@@ -8,14 +8,14 @@ import org.junit.Before;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.connect.StreamConnector;
-import com.nhl.link.move.runtime.EtlRuntime;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
+import com.nhl.link.move.runtime.LmRuntime;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.connect.URIConnectorFactory;
 import com.nhl.link.move.runtime.jdbc.DataSourceConnector;
 
-public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
+public abstract class LmIntegrationTest extends DerbySrcTargetTest {
 
-	protected EtlRuntime etl;
+	protected LmRuntime etl;
 
 	@Before
 	public void before() {
@@ -29,9 +29,9 @@ public abstract class EtlIntegrationTest extends DerbySrcTargetTest {
 		}
 	}
 
-	protected EtlRuntime createEtl() {
+	protected LmRuntime createEtl() {
 		Connector c = new DataSourceConnector(srcDataSource);
-		return new EtlRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime())
+		return new LmRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime())
 				.withConnectorFactory(StreamConnector.class, new URIConnectorFactory())
 				.build();
 	}

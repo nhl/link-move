@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.csv;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
@@ -29,14 +29,14 @@ public class CsvRowReader implements RowReader {
 
     public void setDelimiter(String delimiter) {
         if (delimiter.length() != 1) {
-            throw new EtlRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
+            throw new LmRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
         }
         this.delimiter = delimiter.charAt(0);
     }
 
     public void setReadFrom(Integer readFrom) {
         if (readFrom <= 0) {
-            throw new EtlRuntimeException("Invalid line number: " + readFrom);
+            throw new LmRuntimeException("Invalid line number: " + readFrom);
         }
         this.readFrom = readFrom;
     }

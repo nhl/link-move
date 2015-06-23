@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Represents a single execution of an {@link EtlTask}. Tracks task parameters
+ * Represents a single execution of an {@link LmTask}. Tracks task parameters
  * and execution statistics.
  */
 public class Execution implements AutoCloseable {

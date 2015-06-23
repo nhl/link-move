@@ -4,17 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.unit.EtlIntegrationTest;
+import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 
-public class DeleteIT extends EtlIntegrationTest {
+public class DeleteIT extends LmIntegrationTest {
 
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().delete(Etl1t.class)
+		LmTask task = etl.getTaskService().delete(Etl1t.class)
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
@@ -39,7 +39,7 @@ public class DeleteIT extends EtlIntegrationTest {
 	@Test
 	public void test_ByAttribute_MultiBatch() {
 
-		EtlTask task = etl.getTaskService().delete(Etl1t.class).batchSize(2)
+		LmTask task = etl.getTaskService().delete(Etl1t.class).batchSize(2)
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('a')");

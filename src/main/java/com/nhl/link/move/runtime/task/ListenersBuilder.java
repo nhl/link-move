@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Execution;
 
 /**
@@ -37,7 +37,7 @@ public class ListenersBuilder {
 		try {
 			doStageListener(listener);
 		} catch (IllegalAccessException e) {
-			throw new EtlRuntimeException("Error analyzing listener " + listener.getClass().getName(), e);
+			throw new LmRuntimeException("Error analyzing listener " + listener.getClass().getName(), e);
 		}
 
 		return this;
@@ -62,7 +62,7 @@ public class ListenersBuilder {
 								try {
 									handle.invoke(listener, exec, segment);
 								} catch (Throwable e) {
-									throw new EtlRuntimeException("Error invoking listener " + at.getSimpleName(), e);
+									throw new LmRuntimeException("Error invoking listener " + at.getSimpleName(), e);
 								}
 							}
 						};

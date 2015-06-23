@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.connect.IConnectorFactory;
 
 /**
@@ -31,7 +31,7 @@ public class DataSourceConnectorFactory implements IConnectorFactory<JdbcConnect
 		DataSource ds = dataSources.get(id);
 
 		if (ds == null) {
-			throw new EtlRuntimeException("Unknown connector ID: " + id + "; available IDs: " + dataSources.keySet());
+			throw new LmRuntimeException("Unknown connector ID: " + id + "; available IDs: " + dataSources.keySet());
 		}
 
 		return ds;

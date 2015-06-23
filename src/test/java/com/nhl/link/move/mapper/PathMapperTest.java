@@ -11,7 +11,7 @@ import org.apache.cayenne.DataObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.mapper.PathMapper;
 
 public class PathMapperTest {
@@ -43,7 +43,7 @@ public class PathMapperTest {
 		assertEquals(null, mapper.keyForSource(src));
 	}
 
-	@Test(expected = EtlRuntimeException.class)
+	@Test(expected = LmRuntimeException.class)
 	public void testKeyForSource_MissingKey() {
 
 		Map<String, Object> src = new HashMap<String, Object>();

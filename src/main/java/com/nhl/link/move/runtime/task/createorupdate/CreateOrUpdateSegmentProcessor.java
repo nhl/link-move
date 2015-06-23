@@ -87,7 +87,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
 			LOGGER.warn("*** Calling deprecated LoadListener's. "
 					+ "Consider replacing them with annotated segment listeners. "
-					+ "See 'com.nhl.link.etl.annotation' package ");
+					+ "See 'com.nhl.link.move.annotation' package ");
 
 			for (CreateOrUpdateTuple<T> t : segment.getMerged()) {
 

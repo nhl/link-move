@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 
 import org.apache.cayenne.di.Inject;
 
-import com.nhl.link.move.EtlRuntimeException;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
@@ -66,7 +66,7 @@ public class CsvExtractorFactory extends BaseExtractorFactory<StreamConnector> {
 
             return extractor;
         } catch (Exception e) {
-            throw new EtlRuntimeException("Failed to create extractor", e);
+            throw new LmRuntimeException("Failed to create extractor", e);
         }
     }
 

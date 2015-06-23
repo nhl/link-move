@@ -4,26 +4,26 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.runtime.EtlRuntime;
-import com.nhl.link.move.runtime.EtlRuntimeBuilder;
-import com.nhl.link.move.unit.EtlIntegrationTest;
+import com.nhl.link.move.runtime.LmRuntime;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
+import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl2t;
 
-public class CreateOrUpdate_TargetOnlyIT extends EtlIntegrationTest {
+public class CreateOrUpdate_TargetOnlyIT extends LmIntegrationTest {
 
 	@Override
-	protected EtlRuntime createEtl() {
+	protected LmRuntime createEtl() {
 		// override connector logic defined in super to make source and target
 		// the same DB
-		return new EtlRuntimeBuilder().withConnectorFromTarget().withTargetRuntime(targetStack.runtime()).build();
+		return new LmRuntimeBuilder().withConnectorFromTarget().withTargetRuntime(targetStack.runtime()).build();
 	}
 
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().createOrUpdate(Etl2t.class)
+		LmTask task = etl.getTaskService().createOrUpdate(Etl2t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1t_to_etl2t").matchBy(Etl2t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME) VALUES ('a')");

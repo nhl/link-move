@@ -9,19 +9,19 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.nhl.link.move.EtlTask;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
-import com.nhl.link.move.unit.EtlIntegrationTest;
+import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 
-public class SourceKeysIT extends EtlIntegrationTest {
+public class SourceKeysIT extends LmIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void test_ByAttribute() {
 
-		EtlTask task = etl.getTaskService().extractSourceKeys(Etl1t.class)
+		LmTask task = etl.getTaskService().extractSourceKeys(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy("name").task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
