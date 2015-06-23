@@ -13,14 +13,14 @@ DataSource srcDS = // define how you'd connect to  ETL source
 ServerRuntime targetRuntime = // Cayenne setup for ETL target .. targets are mapped in Cayenne 
 File rootDir = .. // this is a parent dir of XML descriptors
 
-EtlRuntime etl = EtlRuntimeBuilder()
+LmRuntime lm = LmRuntimeBuilder()
           .withConnector("myconnector", new DataSourceConnector(srcDS))
           .withTargetRuntime(targetRuntime)
           .extractorModelsRoot(rootDir)
           .build();
 
 // create a reusable task for a given transformation
-EtlTask task = etl.getTaskService()
+LmTask task = lm.getTaskService()
          .createOrUpdate(MyTargetEntity.class)
          .sourceExtractor("my-etl.xml")
          .matchBy(MyTargetEntity.NAME).task();
