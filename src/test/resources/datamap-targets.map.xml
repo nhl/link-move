@@ -3,7 +3,7 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://cayenne.apache.org/schema/7/modelMap http://cayenne.apache.org/schema/7/modelMap.xsd"
 	 project-version="7">
-	<property name="defaultPackage" value="com.nhl.link.etl.unit.cayenne.t"/>
+	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.t"/>
 	<property name="defaultSchema" value="utest"/>
 	<db-entity name="etl1t" schema="utest">
 		<db-attribute name="age" type="INTEGER"/>
@@ -38,20 +38,20 @@
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="50"/>
 	</db-entity>
-	<obj-entity name="Etl1t" className="com.nhl.link.etl.unit.cayenne.t.Etl1t" dbEntityName="etl1t">
+	<obj-entity name="Etl1t" className="com.nhl.link.move.unit.cayenne.t.Etl1t" dbEntityName="etl1t">
 		<obj-attribute name="age" type="java.lang.Integer" db-attribute-path="age"/>
 		<obj-attribute name="description" type="java.lang.String" db-attribute-path="description"/>
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
 	</obj-entity>
-	<obj-entity name="Etl2t" className="com.nhl.link.etl.unit.cayenne.t.Etl2t" dbEntityName="etl2t">
+	<obj-entity name="Etl2t" className="com.nhl.link.move.unit.cayenne.t.Etl2t" dbEntityName="etl2t">
 		<obj-attribute name="address" type="java.lang.String" db-attribute-path="address"/>
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
 	</obj-entity>
-	<obj-entity name="Etl3t" className="com.nhl.link.etl.unit.cayenne.t.Etl3t" dbEntityName="etl3t">
+	<obj-entity name="Etl3t" className="com.nhl.link.move.unit.cayenne.t.Etl3t" dbEntityName="etl3t">
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
 		<obj-attribute name="phoneNumber" type="java.lang.String" db-attribute-path="phone_number"/>
 	</obj-entity>
-	<obj-entity name="Etl4t" className="com.nhl.link.etl.unit.cayenne.t.Etl4t" dbEntityName="etl4t">
+	<obj-entity name="Etl4t" className="com.nhl.link.move.unit.cayenne.t.Etl4t" dbEntityName="etl4t">
 		<obj-attribute name="cBoolean" type="java.lang.Boolean" db-attribute-path="c_boolean"/>
 		<obj-attribute name="cDate" type="java.util.Date" db-attribute-path="c_date"/>
 		<obj-attribute name="cDecimal" type="java.math.BigDecimal" db-attribute-path="c_decimal"/>
@@ -60,7 +60,7 @@
 		<obj-attribute name="cTimestamp" type="java.util.Date" db-attribute-path="c_timestamp"/>
 		<obj-attribute name="cVarchar" type="java.lang.String" db-attribute-path="c_varchar"/>
 	</obj-entity>
-	<obj-entity name="Etl5t" className="com.nhl.link.etl.unit.cayenne.t.Etl5t" dbEntityName="etl5t">
+	<obj-entity name="Etl5t" className="com.nhl.link.move.unit.cayenne.t.Etl5t" dbEntityName="etl5t">
 		<obj-attribute name="date" type="java.util.Date" db-attribute-path="date"/>
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
 	</obj-entity>

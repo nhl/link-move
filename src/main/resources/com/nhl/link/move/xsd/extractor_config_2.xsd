@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
+	xmlns:tns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd" elementFormDefault="qualified">
+
+	<annotation>
+		<documentation xml:lang="en">
+			LinkMove Extractor config schema. Provides a structured way to configure an
+			arbitrary extractor.
+		</documentation>
+	</annotation>
+
+	<element name="config" type="tns:ConfigType" />
+
+
+	<complexType name="ConfigType">
+
+		<annotation>
+			<documentation source="description">
+				Top-level element corresponding to ExtractorModelContainer object.
+			</documentation>
+		</annotation>
+
+		<sequence>
+
+			<element name="type" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Defines "type" of the Extractor, such as "jdbc", "csv", "xml", etc.
+						ExtractorModelContainer's type is inherited (and can be overridden) by extractors.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="connectorId" type="string" minOccurs="1" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Defines a symbolic ID of the connector used by the extractor. Connector must
+						be
+						compatible with Extractor type specified above. ExtractorModelContainer's connectorId is inherited (and can be
+						overridden) by extractors.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="extractor" type="tns:ExtractorType" minOccurs="0" maxOccurs="unbounded" />
+
+		</sequence>
+	</complexType>
+
+	<complexType name="ExtractorType">
+		<sequence>
+
+			<element name="name" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Specifies the name unique within the container. If missing, the default name of
+						"default_extractor" is used.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="type" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Overrides "type" of the container
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="connectorId" type="string" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						Overrides "connectorId" of the container
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="attributes" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						An optional list of attributes that maps source row keys to the target names.
+					</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="attribute" type="tns:AttributeType" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+
+			<element name="properties" minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation source="description">
+						An list of Extractor-specific properties.
+					</documentation>
+				</annotation>
+
+				<complexType>
+					<sequence>
+						<any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+							<annotation>
+								<documentation source="description">
+									Each property tag name becomes a property name. Often Extractors are using
+									naming conventions, structuring property names like this: "extractor.jdbc.sqltemplate".
+									Here the first part is a
+									fixed prefix ("extractor"), second is Extractor type ("jdbc"),
+									third - property name understood by the given
+									Extractor.
+								</documentation>
+							</annotation>
+						</any>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AttributeType">
+		<sequence>
+			<element name="type" type="string" minOccurs="1" maxOccurs="1" />
+			<element name="source" type="string" minOccurs="0" maxOccurs="1" />
+			<element name="target" type="string" minOccurs="0" maxOccurs="1" />
+		</sequence>
+	</complexType>
+
+
+</schema>

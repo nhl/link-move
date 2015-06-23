@@ -3,12 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.nhl.link.etl</groupId>
-	<artifactId>link-etl</artifactId>
+	<groupId>com.nhl.link.move</groupId>
+	<artifactId>link-move</artifactId>
 	<version>1.4-SNAPSHOT</version>
 
-	<name>Library: link-etl</name>
-	<description>Extract / Transform / Load (ETL) Framework</description>
+	<name>Library: link-move</name>
+	<description>A model-driven dynamically-configurable framework to acquire data 
+	from external sources and save in your application database.</description>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -25,9 +26,9 @@
 	</properties>
 
 	<scm>
-		<connection>scm:git:https://github.com/nhl/link-etl</connection>
-		<developerConnection>scm:git:ssh://git@github.com/nhl/link-etl</developerConnection>
-		<url>https://github.com/nhl/link-etl</url>
+		<connection>scm:git:https://github.com/nhl/link-move</connection>
+		<developerConnection>scm:git:ssh://git@github.com/nhl/link-move</developerConnection>
+		<url>https://github.com/nhl/link-move</url>
 		<tag>HEAD</tag>
 	</scm>
 
