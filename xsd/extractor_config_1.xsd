@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd"
-	xmlns:tns="http://nhl.github.io/link-etl/xsd/extractor_config_1.xsd" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nhl.github.io/link-move/xsd/extractor_config_1.xsd"
+	xmlns:tns="http://nhl.github.io/link-move/xsd/extractor_config_1.xsd" elementFormDefault="qualified">
 
 	<annotation>
 		<documentation xml:lang="en">
-			THIS SCHEMA IS DEPRECATED IN link-etl 1.4 IN FAVOR OF extractor_config_2.xsd
+			THIS SCHEMA IS DEPRECATED IN LinkMove 1.4 IN FAVOR OF extractor_config_2.xsd
 			THAT SUPPORTS MULTIPLE EXTRACTORS IN A SINGLE XML
 			LinkETL Extractor config schema. Provides a structured way to
 			configure an
