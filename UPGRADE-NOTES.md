@@ -1,5 +1,13 @@
 ## Upgrading to 1.4
 
+### Rename LinkETL to LinkMove [#54](https://github.com/nhl/link-etl/issues/54)
+
+LinkETL project was renamed to LinkMove. This means the following to the end users:
+
+* pom.xml should now include com.nhl.link.move:link-move artifact.
+* com.nhl.link.etl package is now com.nhl.link.etl.move. Classes starting with Etl are now starting with Lm 
+(e.g. EtlRuntime -> LmRuntime). So you will need to do renaming in your code. 
+
 ### Straighten mapping by ID [#44](https://github.com/nhl/link-etl/issues/44)
 
 XML descriptors that map ID columns MUST BE CHANGED to use Cayenne db: expression syntax:
