@@ -6,9 +6,9 @@
 		<documentation xml:lang="en">
 			THIS SCHEMA IS DEPRECATED IN LinkMove 1.4 IN FAVOR OF extractor_config_2.xsd
 			THAT SUPPORTS MULTIPLE EXTRACTORS IN A SINGLE XML
-			LinkETL Extractor config schema. Provides a structured way to
+			LinkMove Extractor config schema. Provides a structured way to
 			configure an
-			arbitrary ETL extractor.
+			arbitrary extractor.
 		</documentation>
 	</annotation>
 

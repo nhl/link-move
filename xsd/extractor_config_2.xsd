@@ -4,8 +4,8 @@
 
 	<annotation>
 		<documentation xml:lang="en">
-			LinkETL Extractor config schema. Provides a structured way to configure an
-			arbitrary ETL extractor.
+			LinkMove Extractor config schema. Provides a structured way to configure an
+			arbitrary extractor.
 		</documentation>
 	</annotation>
 
