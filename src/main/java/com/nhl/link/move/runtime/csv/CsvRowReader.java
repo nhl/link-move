@@ -27,8 +27,20 @@ public class CsvRowReader implements RowReader {
         this.readFrom = 1;
     }
 
+    /**
+     * @param delimiter Valid Unicode code point in hexadecimal form (e.g. 0x9 for horizontal tab) or a character literal.
+     */
     public void setDelimiter(String delimiter) {
-        if (delimiter.length() != 1) {
+        if (delimiter.startsWith("0x")) {
+            // we have a character code here
+            int codePoint = Integer.valueOf(delimiter.substring(2, delimiter.length()), 16);
+            if (Character.isValidCodePoint(codePoint) && Character.charCount(codePoint) == 1) {
+                this.delimiter = (char) codePoint;
+            } else {
+                throw new LmRuntimeException("Invalid delimiter (not a valid Unicode code point): "
+                        + delimiter);
+            }
+        } else if (delimiter.length() != 1) {
             throw new LmRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
         }
         this.delimiter = delimiter.charAt(0);
