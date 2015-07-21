@@ -1,11 +1,9 @@
 package com.nhl.link.move.runtime.path;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
+import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
@@ -15,7 +13,12 @@ import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.PathComponent;
 
-import com.nhl.link.move.LmRuntimeException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @since 1.4
@@ -23,9 +26,11 @@ import com.nhl.link.move.LmRuntimeException;
 public class PathNormalizer implements IPathNormalizer {
 
 	private ConcurrentMap<String, EntityPathNormalizer> pathCache;
+	private Map<Integer, JdbcNormalizer> jdbcNormalizers;
 
-	public PathNormalizer() {
+	public PathNormalizer(@Inject(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP) Map<Integer, JdbcNormalizer> jdbcNormalizers) {
 		pathCache = new ConcurrentHashMap<>();
+		this.jdbcNormalizers = jdbcNormalizers;
 	}
 
 	@Override
@@ -50,7 +55,7 @@ public class PathNormalizer implements IPathNormalizer {
 
 		return new EntityPathNormalizer() {
 
-			ConcurrentMap<String, String> cachedAttributes = new ConcurrentHashMap<>();
+			ConcurrentMap<String, AttributeInfo> cachedAttributes = new ConcurrentHashMap<>();
 
 			@Override
 			public String normalize(String path) {
@@ -59,17 +64,39 @@ public class PathNormalizer implements IPathNormalizer {
 					throw new NullPointerException("Null path. Entity: " + entity.getName());
 				}
 
-				String normalized = cachedAttributes.get(path);
-				if (normalized == null) {
-					String newPath = doNormalize(path);
-					String oldPath = cachedAttributes.putIfAbsent(path, newPath);
-					normalized = oldPath != null ? oldPath : newPath;
-				}
-
-				return normalized;
+				return getAttributeInfo(path).getNormalizedPath();
 			}
 
-			private String doNormalize(String path) {
+			@Override
+			public Object normalizeValue(String path, Object value) {
+
+				if (value == null) {
+					return null;
+				}
+
+				AttributeInfo attributeInfo =  getAttributeInfo(path);
+
+				JdbcNormalizer normalizer = jdbcNormalizers.get(attributeInfo.getType());
+				if (normalizer == null) {
+					return value;
+				} else {
+					return normalizer.normalize(value);
+				}
+			}
+
+			private AttributeInfo getAttributeInfo(String path) {
+
+				AttributeInfo normalizedInfo = cachedAttributes.get(path);
+				if (normalizedInfo == null) {
+					AttributeInfo newNormalizedInfo = doNormalize(path);
+					AttributeInfo oldNormalizedInfo = cachedAttributes.putIfAbsent(path, newNormalizedInfo);
+					normalizedInfo = oldNormalizedInfo != null ? oldNormalizedInfo : newNormalizedInfo;
+				}
+
+				return normalizedInfo;
+			}
+
+			private AttributeInfo doNormalize(String path) {
 
 				Expression dbExp = entity.translateToDbPath(ExpressionFactory.exp(path));
 
@@ -90,7 +117,7 @@ public class PathNormalizer implements IPathNormalizer {
 				PathComponent<DbAttribute, DbRelationship> c = components.get(0);
 
 				if (c.getAttribute() != null) {
-					return ASTDbPath.DB_PREFIX + c.getAttribute().getName();
+					return AttributeInfo.forAttribute(c.getAttribute());
 				}
 
 				DbRelationship dbRelationship = c.getRelationship();
@@ -102,9 +129,43 @@ public class PathNormalizer implements IPathNormalizer {
 					// TODO: support for multi-key to-one relationships
 					throw new LmRuntimeException("Multi-column FKs are not yet supported. Path: " + dbExp);
 				} else {
-					return ASTDbPath.DB_PREFIX + joins.get(0).getSourceName();
+					return AttributeInfo.forRelationship(joins.get(0));
 				}
 			}
 		};
+	}
+
+	private static abstract class AttributeInfo {
+
+		public abstract String getNormalizedPath();
+		public abstract int getType();
+
+		public static AttributeInfo forAttribute(final DbAttribute attribute) {
+			return new AttributeInfo() {
+				@Override
+				public String getNormalizedPath() {
+					return ASTDbPath.DB_PREFIX + attribute.getName();
+				}
+
+				@Override
+				public int getType() {
+					return attribute.getType();
+				}
+			};
+		}
+
+		public static AttributeInfo forRelationship(final DbJoin join) {
+			return new AttributeInfo() {
+				@Override
+				public String getNormalizedPath() {
+					return ASTDbPath.DB_PREFIX + join.getSourceName();
+				}
+
+				@Override
+				public int getType() {
+					return join.getSource().getType();
+				}
+			};
+		}
 	}
 }

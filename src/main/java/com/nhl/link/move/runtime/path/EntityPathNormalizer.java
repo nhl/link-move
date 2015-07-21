@@ -6,4 +6,5 @@ package com.nhl.link.move.runtime.path;
 public interface EntityPathNormalizer {
 
 	String normalize(String path);
+	Object normalizeValue(String path, Object value);
 }
