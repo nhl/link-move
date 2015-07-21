@@ -26,9 +26,9 @@ import java.util.concurrent.ConcurrentMap;
 public class PathNormalizer implements IPathNormalizer {
 
 	private ConcurrentMap<String, EntityPathNormalizer> pathCache;
-	private Map<Integer, JdbcNormalizer> jdbcNormalizers;
+	private Map<String, JdbcNormalizer> jdbcNormalizers;
 
-	public PathNormalizer(@Inject(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP) Map<Integer, JdbcNormalizer> jdbcNormalizers) {
+	public PathNormalizer(@Inject(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP) Map<String, JdbcNormalizer> jdbcNormalizers) {
 		pathCache = new ConcurrentHashMap<>();
 		this.jdbcNormalizers = jdbcNormalizers;
 	}
@@ -80,7 +80,7 @@ public class PathNormalizer implements IPathNormalizer {
 
 				AttributeInfo attributeInfo =  getAttributeInfo(path);
 
-				JdbcNormalizer normalizer = jdbcNormalizers.get(attributeInfo.getType());
+				JdbcNormalizer normalizer = jdbcNormalizers.get(Integer.valueOf(attributeInfo.getType()).toString());
 				if (normalizer == null) {
 					return value;
 				} else {
