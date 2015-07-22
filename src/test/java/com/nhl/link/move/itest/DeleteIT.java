@@ -1,15 +1,32 @@
 package com.nhl.link.move.itest;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
-import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import com.nhl.link.move.unit.cayenne.t.Etl6t;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DeleteIT extends LmIntegrationTest {
+
+	@Test
+	public void test_ById_Normalized_IntegerToLong() {
+
+		LmTask task = etl.getTaskService().delete(Etl6t.class)
+				.sourceMatchExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml").task();
+
+		targetRunSql("INSERT INTO utest.etl6t (ID, NAME) VALUES (1, 'a')");
+		targetRunSql("INSERT INTO utest.etl6t (ID, NAME) VALUES (2, 'b')");
+
+		srcRunSql("INSERT INTO utest.etl6 (ID, NAME) VALUES (1, 'a')");
+
+		Execution e2 = task.run();
+		assertExec(1, 0, 0, 1, e2);
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t WHERE NAME = 'a'"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t"));
+	}
 
 	@Test
 	public void test_ByAttribute() {
