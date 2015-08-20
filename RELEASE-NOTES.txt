@@ -1,6 +1,7 @@
 Release 1.5
 
 #56 Support for non printable delimiter characters in CSV extractor
+#61 Delete task @AfterTargetsMapped listener is missing
 
 Release 1.4
 
