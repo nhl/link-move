@@ -1,15 +1,10 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.exp.Property;
-import org.apache.cayenne.map.ObjEntity;
-
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
@@ -20,6 +15,10 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.exp.Expression;
+import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.map.ObjEntity;
 
 /**
  * @since 1.3
@@ -52,7 +51,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 		EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
 
 		this.mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
-		this.listenersBuilder = new ListenersBuilder(AfterSourcesMapped.class, AfterMissingTargetsFiltered.class);
+		this.listenersBuilder = new ListenersBuilder(AfterTargetsMapped.class, AfterMissingTargetsFiltered.class);
 
 		// always add stats listener..
 		stageListener(DeleteStatsListener.instance());
