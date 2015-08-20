@@ -249,10 +249,10 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_TransientProps() {
+	public void test_ExtraSrcColumns() {
 
 		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_transient_props").matchBy(Etl1t.NAME).task();
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_extra_source_columns").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, DESCRIPTION) VALUES ('a', 'dd')");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, DESCRIPTION) VALUES ('b', NULL)");
