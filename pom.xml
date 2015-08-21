@@ -4,7 +4,7 @@
 
 	<groupId>com.nhl.link.move</groupId>
 	<artifactId>link-move</artifactId>
-	<version>1.5-SNAPSHOT</version>
+	<version>1.5</version>
 
 	<name>Library: link-move</name>
 	<description>A model-driven dynamically-configurable framework to acquire data 
@@ -28,7 +28,7 @@
 		<connection>scm:git:https://github.com/nhl/link-move</connection>
 		<developerConnection>scm:git:ssh://git@github.com/nhl/link-move</developerConnection>
 		<url>https://github.com/nhl/link-move</url>
-		<tag>HEAD</tag>
+		<tag>link-move-1.5</tag>
 	</scm>
 
 	<distributionManagement>
