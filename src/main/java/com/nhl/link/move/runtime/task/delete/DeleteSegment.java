@@ -28,10 +28,16 @@ public class DeleteSegment<T> {
 		return targets;
 	}
 
+	/**
+	 * @since 1.6
+	 */
 	public Set<Object> getSourceKeys() {
 		return sourceKeys;
 	}
 
+	/**
+	 * @since 1.6
+	 */
 	public void setSourceKeys(Set<Object> sourceKeys) {
 		this.sourceKeys = sourceKeys;
 	}

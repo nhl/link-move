@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 /**
  * Annotation of a data segment transformation stage listener method that should
  * be called after source keys are calculated.
+ * 
+ * @since 1.6
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
