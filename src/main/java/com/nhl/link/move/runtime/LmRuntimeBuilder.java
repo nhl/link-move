@@ -1,12 +1,15 @@
 package com.nhl.link.move.runtime;
 
 import java.io.File;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
+import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -57,6 +60,8 @@ public class LmRuntimeBuilder {
 	public static final String CONNECTOR_FACTORIES_MAP = "com.nhl.link.move.connector.factories";
 	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.move.extractor.factories";
 
+	public static final String JDBC_NORMALIZERS_MAP = "com.nhl.link.move.jdbc.normalizers";
+
 	/**
 	 * A DI property that defines the root directory to resolve locations of
 	 * extractor config files.
@@ -79,6 +84,8 @@ public class LmRuntimeBuilder {
 	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory>> extractorFactoryTypes;
 
+	private Map<String, JdbcNormalizer> jdbcNormalizers;
+
 	private IExtractorModelLoader extractorModelLoader;
 	private File extractorModelsRoot;
 
@@ -92,12 +99,16 @@ public class LmRuntimeBuilder {
 		this.connectorFactoryTypes = new HashMap<>();
 		this.extractorFactories = new HashMap<>();
 		this.extractorFactoryTypes = new HashMap<>();
+		this.jdbcNormalizers = new HashMap<>();
 		this.adapters = new ArrayList<>();
 
 		// default extractors
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
 		extractorFactoryTypes.put(CSV_EXTRACTOR_TYPE, CsvExtractorFactory.class);
 		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
+
+		// default normalizers
+		jdbcNormalizers.put(Integer.valueOf(Types.BIGINT).toString(), new BigIntNormalizer());
 	}
 
 	/**
@@ -174,6 +185,11 @@ public class LmRuntimeBuilder {
 	 */
 	public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory factory) {
 		extractorFactories.put(extractorType, factory);
+		return this;
+	}
+
+	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer normalizer) {
+		jdbcNormalizers.put(Integer.valueOf(jdbcType).toString(), normalizer);
 		return this;
 	}
 
@@ -267,6 +283,9 @@ public class LmRuntimeBuilder {
 
 					extractorFactories.put(e.getKey(), e.getValue());
 				}
+
+				MapBuilder<JdbcNormalizer> jdbcNormalizers = binder.bindMap(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP);
+				jdbcNormalizers.putAll(LmRuntimeBuilder.this.jdbcNormalizers);
 
 				// Binding CayenneService for the *target*... Note that binding
 				// ServerRuntime directly would result in undesired shutdown

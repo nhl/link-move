@@ -41,7 +41,8 @@ public class RowConverter {
 
 		for (RowAttribute key : source.attributes()) {
 			String path = pathNormalizer.normalize(key.getTargetPath());
-			translated.put(path, source.get(key));
+			Object normalizedValue = pathNormalizer.normalizeValue(key.getTargetPath(), source.get(key));
+			translated.put(path, normalizedValue);
 		}
 
 		return translated;

@@ -38,6 +38,11 @@
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="50"/>
 	</db-entity>
+	<db-entity name="etl6" schema="utest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="name" type="VARCHAR" length="50"/>
+		<db-attribute name="date" type="DATE"/>
+	</db-entity>
 	<db-relationship name="e3s" source="etl2" target="etl3" toMany="true">
 		<db-attribute-pair source="id" target="e2_id"/>
 	</db-relationship>
