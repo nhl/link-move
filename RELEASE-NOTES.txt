@@ -1,3 +1,7 @@
+Release 1.6
+
+#55 DeleteTask - a new callback between getting source keys and matching them against targets
+
 Release 1.5
 
 #56 Support for non printable delimiter characters in CSV extractor
