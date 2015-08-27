@@ -7,6 +7,32 @@ It is an ideal tool for domain-driven application designs, allowing to connect m
 
 ## Getting Started
 
+Declare LinkMove Maven repository in your pom.xml (unless you have your own repo proxy, in which case add this repo to the proxy):
+
+```XML
+<repositories>
+    <repository>
+        <id>lm-repo</id>
+        <name>ObjectStyle LinkMove Repo</name>
+        <url>http://maven.objectstyle.org/nexus/content/repositories/linkrestreleases</url>
+    </repository>
+</repositories>
+```
+
+_TODO: eventually we'll start publishing LinkMove to Central, so the step above will not be needed._
+
+Add LinkMove dependency:
+
+```XML
+<dependency>
+    <groupId>com.nhl.link.move</groupId>
+    <artifactId>link-move</artifactId>
+    <version>1.5</version>
+</dependency>
+```
+
+Use it:
+
 ```Java
 // bootstrap shared runtime that will run tasks
 DataSource srcDS = // define how you'd connect to data source 

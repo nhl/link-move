@@ -231,7 +231,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 
 		task.run();
 	}
-
+	
 	@Test
 	public void test_CapsLower() {
 
@@ -246,9 +246,22 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age is null"));
+	}
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('c')");
-		srcRunSql("UPDATE utest.etl1 SET AGE = 5 WHERE NAME = 'a'");
+	@Test
+	public void test_ExtraSrcColumns() {
+
+		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_extra_source_columns").matchBy(Etl1t.NAME).task();
+
+		srcRunSql("INSERT INTO utest.etl1 (NAME, DESCRIPTION) VALUES ('a', 'dd')");
+		srcRunSql("INSERT INTO utest.etl1 (NAME, DESCRIPTION) VALUES ('b', NULL)");
+
+		Execution e1 = task.run();
+		assertExec(2, 2, 0, 0, e1);
+		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND DESCRIPTION is null AND AGE is null"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND DESCRIPTION is null AND AGE is null"));
 	}
 
 	@Test

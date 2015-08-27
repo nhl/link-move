@@ -55,6 +55,10 @@ public class PathNormalizer implements IPathNormalizer {
 			@Override
 			public String normalize(String path) {
 
+				if (!entity.getAttributeMap().containsKey(path) && !entity.getRelationshipMap().containsKey(path)) {
+					return path;
+				}
+
 				if (path == null) {
 					throw new NullPointerException("Null path. Entity: " + entity.getName());
 				}

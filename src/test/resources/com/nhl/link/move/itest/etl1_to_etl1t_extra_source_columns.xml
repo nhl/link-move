@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
+	xmlns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd">
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>NAME</source>
+				<target>name</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>DL</source>
+				<!-- TODO: invalid target property is NOT OK... 
+				     we are ignoring it per #59, but we should actually throw.
+				     Pending https://github.com/nhl/link-move/issues/63
+				      -->
+				<target>noSuchProperty</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT name, LENGTH(description) as DL FROM utest.etl1
+			]]>
+			</extractor.jdbc.sqltemplate>
+		</properties>
+	</extractor>
+</config>
