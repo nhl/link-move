@@ -4,6 +4,7 @@ import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
+import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -51,10 +52,15 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 		EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
 
 		this.mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
-		this.listenersBuilder = new ListenersBuilder(AfterTargetsMapped.class, AfterMissingTargetsFiltered.class);
+		this.listenersBuilder = createListenersBuilder();
 
 		// always add stats listener..
 		stageListener(DeleteStatsListener.instance());
+	}
+
+	ListenersBuilder createListenersBuilder() {
+		return new ListenersBuilder(AfterTargetsMapped.class, AfterSourceKeysExtracted.class,
+				AfterMissingTargetsFiltered.class);
 	}
 
 	@Override
@@ -128,6 +134,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 		MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>();
 		DeleteTargetStage<T> deleter = new DeleteTargetStage<>();
 
-		return new DeleteSegmentProcessor<>(targetMapper, sourceKeysExtractor, sourceMatcher, deleter, listenersBuilder.getListeners());
+		return new DeleteSegmentProcessor<>(targetMapper, sourceKeysExtractor, sourceMatcher, deleter,
+				listenersBuilder.getListeners());
 	}
 }
