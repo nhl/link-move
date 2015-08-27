@@ -60,7 +60,7 @@ public class PathNormalizer implements IPathNormalizer {
 			@Override
 			public String normalize(String path) {
 
-				if (!entity.getAttributeMap().containsKey(path) && !entity.getRelationshipMap().containsKey(path)) {
+				if (!hasAttribute(entity, path)) {
 					return path;
 				}
 
@@ -74,6 +74,10 @@ public class PathNormalizer implements IPathNormalizer {
 			@Override
 			public Object normalizeValue(String path, Object value) {
 
+				if (!hasAttribute(entity, path)) {
+					return value;
+				}
+
 				if (value == null) {
 					return null;
 				}
@@ -85,6 +89,16 @@ public class PathNormalizer implements IPathNormalizer {
 					return value;
 				} else {
 					return normalizer.normalize(value);
+				}
+			}
+
+			private boolean hasAttribute(ObjEntity entity, String path) {
+				if (path.startsWith(ASTDbPath.DB_PREFIX)) {
+					path = path.replace(ASTDbPath.DB_PREFIX, "");
+					return entity.getDbEntity().getAttributeMap().containsKey(path)
+							|| entity.getDbEntity().getRelationshipMap().containsKey(path);
+				} else {
+					return entity.getAttributeMap().containsKey(path) || entity.getRelationshipMap().containsKey(path);
 				}
 			}
 
