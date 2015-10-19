@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
+/**
+ * @since 1.6
+ */
 public class TargetTransientPropertyWriter implements TargetPropertyWriter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetTransientPropertyWriter.class);

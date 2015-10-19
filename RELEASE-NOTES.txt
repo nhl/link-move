@@ -2,6 +2,7 @@ Release 1.6
 
 #35 Long / Integer values in HashMap keys
 #55 DeleteTask - a new callback between getting source keys and matching them against targets
+#64 Allow mapping source columns to non-persistent target properties
 
 Release 1.5
 

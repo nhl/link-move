@@ -14,18 +14,21 @@ import org.apache.cayenne.reflect.ToOneProperty;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * @since 1.6
+ */
 public class TargetPropertyWriterService implements ITargetPropertyWriterService {
 
     private ITargetCayenneService targetCayenneService;
 
-    private ConcurrentMap<Class<?>, TargetPropertyWriterFactory> writerFactories;
+    private ConcurrentMap<Class<?>, TargetPropertyWriterFactory<?>> writerFactories;
 
     public TargetPropertyWriterService(@Inject ITargetCayenneService targetCayenneService) {
         this.targetCayenneService = targetCayenneService;
         this.writerFactories = new ConcurrentHashMap<>();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public <T> TargetPropertyWriterFactory<T> getWriterFactory(Class<T> type) {
 

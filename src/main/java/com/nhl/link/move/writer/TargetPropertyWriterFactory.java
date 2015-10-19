@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * @since 1.6
+ */
 public class TargetPropertyWriterFactory<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetPropertyWriterFactory.class);
