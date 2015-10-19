@@ -1,8 +1,8 @@
 ## LinkMove
 
-LinkMove is a model-driven dynamically-configurable framework to acquire data from external sources and save it in your application database. It implements a process similar to ETL (Extract-Transform-Load). It can reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. It supports JDBC, LDAP, XML, CSV sources out of the box.
+LinkMove is a model-driven dynamically-configurable framework to acquire data from external sources and save it in your database. It implements a process similar to ETL (Extract-Transform-Load). It can reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. It supports JDBC, LDAP, XML, CSV sources out of the box.
 
-It is an ideal tool for domain-driven application designs, allowing to connect multiple data models together in a flexible way that allows independent changes between sources and targets.
+LinkMove can be used for different purposes, but its primary motivation is facilitation of [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) architectures. It is an ideal tool to synchronize similar data belonging to different ["bounded contexts"](http://martinfowler.com/bliki/BoundedContext.html). It allows to connect multiple data models together in a flexible way that anticipates independent changes between sources and targets.
 
 
 ## Getting Started
