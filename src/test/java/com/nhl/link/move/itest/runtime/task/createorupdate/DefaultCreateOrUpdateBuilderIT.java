@@ -5,6 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 	public void testTask_NoExtractorName() {
 		DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(Etl1t.class, cayenneService,
 				mock(IExtractorService.class), mock(ITokenManager.class), mock(IKeyAdapterFactory.class),
-				mockPathNormalizer);
+				mockPathNormalizer, mock(ITargetPropertyWriterService.class));
 
 		builder.task();
 	}
@@ -48,7 +49,7 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 	public void testTask_ExtractorPresent() {
 		DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(Etl1t.class, cayenneService,
 				mock(IExtractorService.class), mock(ITokenManager.class), mock(IKeyAdapterFactory.class),
-				mockPathNormalizer);
+				mockPathNormalizer, mock(ITargetPropertyWriterService.class));
 
 		builder.sourceExtractor("test");
 		assertNotNull(builder.task());

@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.task;
 
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.map.ObjEntity;
@@ -23,22 +24,24 @@ public class TaskService implements ITaskService {
 	private ITokenManager tokenManager;
 	private IKeyAdapterFactory keyAdapterFactory;
 	private IPathNormalizer pathNormalizer;
+	private ITargetPropertyWriterService writerService;
 
 	public TaskService(@Inject IExtractorService extractorService, @Inject ITargetCayenneService targetCayenneService,
 			@Inject ITokenManager tokenManager, @Inject IKeyAdapterFactory keyAdapterFactory,
-			@Inject IPathNormalizer pathNormalizer) {
+			@Inject IPathNormalizer pathNormalizer, @Inject ITargetPropertyWriterService writerService) {
 
 		this.extractorService = extractorService;
 		this.targetCayenneService = targetCayenneService;
 		this.tokenManager = tokenManager;
 		this.keyAdapterFactory = keyAdapterFactory;
 		this.pathNormalizer = pathNormalizer;
+		this.writerService = writerService;
 	}
 
 	@Override
 	public <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
 		return new DefaultCreateOrUpdateBuilder<>(type, targetCayenneService, extractorService, tokenManager,
-				keyAdapterFactory, pathNormalizer);
+				keyAdapterFactory, pathNormalizer, writerService);
 	}
 
 	@Override

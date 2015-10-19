@@ -43,6 +43,12 @@
 		<db-attribute name="name" type="VARCHAR" length="50"/>
 		<db-attribute name="date" type="DATE"/>
 	</db-entity>
+	<db-entity name="etl7t" schema="utest">
+		<db-attribute name="sex" type="VARCHAR" length="1"/>
+		<db-attribute name="first_name" type="VARCHAR" length="50"/>
+		<db-attribute name="last_name" type="VARCHAR" length="50"/>
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+	</db-entity>
 	<obj-entity name="Etl1t" className="com.nhl.link.move.unit.cayenne.t.Etl1t" dbEntityName="etl1t">
 		<obj-attribute name="age" type="java.lang.Integer" db-attribute-path="age"/>
 		<obj-attribute name="description" type="java.lang.String" db-attribute-path="description"/>
@@ -72,6 +78,11 @@
 	<obj-entity name="Etl6t" className="com.nhl.link.move.unit.cayenne.t.Etl6t" dbEntityName="etl6t">
 		<obj-attribute name="date" type="java.util.Date" db-attribute-path="date"/>
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
+	</obj-entity>
+	<obj-entity name="Etl7t" className="com.nhl.link.move.unit.cayenne.t.Etl7t" dbEntityName="etl7t">
+		<obj-attribute name="sex" type="java.util.String" db-attribute-path="sex"/>
+		<obj-attribute name="firstName" type="java.lang.String" db-attribute-path="first_name"/>
+		<obj-attribute name="lastName" type="java.lang.String" db-attribute-path="last_name"/>
 	</obj-entity>
 	<db-relationship name="e3s" source="etl2t" target="etl3t" toMany="true">
 		<db-attribute-pair source="id" target="e2_id"/>

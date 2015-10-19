@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 import org.slf4j.Logger;
@@ -24,12 +25,12 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 
 	private Class<T> type;
 	private Mapper mapper;
-	private Map<String, TargetPropertyWriter> writers;
+	private TargetPropertyWriterFactory<T> writerFactory;
 
-	public CreateOrUpdateMerger(Class<T> type, Mapper mapper, Map<String, TargetPropertyWriter> writers) {
+	public CreateOrUpdateMerger(Class<T> type, Mapper mapper, TargetPropertyWriterFactory<T> writerFactory) {
 		this.mapper = mapper;
 		this.type = type;
-		this.writers = writers;
+		this.writerFactory = writerFactory;
 	}
 
 	public List<CreateOrUpdateTuple<T>> merge(ObjectContext context, Map<Object, Map<String, Object>> mappedSources,
@@ -84,7 +85,7 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 		boolean updated = false;
 
 		for (Map.Entry<String, Object> e : source.entrySet()) {
-			TargetPropertyWriter writer = writers.get(e.getKey());
+			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
 			if (writer == null) {
 				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
 				continue;

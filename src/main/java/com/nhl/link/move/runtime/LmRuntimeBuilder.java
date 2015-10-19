@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 
 import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
+import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -298,6 +300,7 @@ public class LmRuntimeBuilder {
 				binder.bind(ITokenManager.class).toInstance(tokenManager);
 				binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
 				binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
+				binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);
 				binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
 
 				// apply adapter-contributed bindings

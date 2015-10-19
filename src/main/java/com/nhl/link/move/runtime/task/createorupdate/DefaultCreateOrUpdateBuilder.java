@@ -1,25 +1,5 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.exp.Property;
-import org.apache.cayenne.exp.parser.ASTDbPath;
-import org.apache.cayenne.map.DbAttribute;
-import org.apache.cayenne.map.DbJoin;
-import org.apache.cayenne.map.DbRelationship;
-import org.apache.cayenne.map.ObjEntity;
-import org.apache.cayenne.reflect.AttributeProperty;
-import org.apache.cayenne.reflect.ClassDescriptor;
-import org.apache.cayenne.reflect.PropertyVisitor;
-import org.apache.cayenne.reflect.ToManyProperty;
-import org.apache.cayenne.reflect.ToOneProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
@@ -40,10 +20,13 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import com.nhl.link.move.writer.TargetAttributePropertyWriter;
-import com.nhl.link.move.writer.TargetPkPropertyWriter;
-import com.nhl.link.move.writer.TargetPropertyWriter;
-import com.nhl.link.move.writer.TargetToOnePropertyWriter;
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.map.ObjEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -53,17 +36,15 @@ import com.nhl.link.move.writer.TargetToOnePropertyWriter;
 public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder implements
 		CreateOrUpdateBuilder<T> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultCreateOrUpdateBuilder.class);
-
 	private IExtractorService extractorService;
 	private ITargetCayenneService targetCayenneService;
 	private ITokenManager tokenManager;
-	private ObjEntity entity;
 	private EntityPathNormalizer entityPathNormalizer;
 	private MapperBuilder mapperBuilder;
 	private Mapper mapper;
 	private ListenersBuilder stageListenersBuilder;
 	private Class<T> type;
+	private ITargetPropertyWriterService writerService;
 
 	private ExtractorName extractorName;
 
@@ -72,17 +53,19 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 	public DefaultCreateOrUpdateBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory,
-			IPathNormalizer pathNormalizer) {
+			IPathNormalizer pathNormalizer, ITargetPropertyWriterService writerService) {
 
 		this.type = type;
 		this.targetCayenneService = targetCayenneService;
 		this.extractorService = extractorService;
 		this.tokenManager = tokenManager;
 
-		this.entity = targetCayenneService.entityResolver().getObjEntity(type);
+		ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
 		if (entity == null) {
 			throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
 		}
+
+		this.writerService = writerService;
 
 		this.entityPathNormalizer = pathNormalizer.normalizer(entity);
 
@@ -237,76 +220,15 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private CreateOrUpdateSegmentProcessor<T> createProcessor() {
 
 		Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
-		Map<String, TargetPropertyWriter> writers = createTargetPropertyWriters();
 
 		SourceMapper sourceMapper = new SourceMapper(mapper);
 		TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
-		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, writers);
+		CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, writerService.getWriterFactory(type));
 		RowConverter rowConverter = new RowConverter(entityPathNormalizer);
 
 		return new CreateOrUpdateSegmentProcessor<>(rowConverter, sourceMapper, targetMatcher, merger,
 				stageListenersBuilder.getListeners(), loadListeners);
 	}
 
-	private Map<String, TargetPropertyWriter> createTargetPropertyWriters() {
 
-		// TODO: this should be extracted in a singleton service - property
-		// metadata should be compiled once and reused.
-
-		ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
-
-		final Map<String, TargetPropertyWriter> writers = new HashMap<>();
-
-		// TODO: instead of providing mappings for all possible obj: and db:
-		// invariants, should we normalize the source map instead?
-
-		descriptor.visitProperties(new PropertyVisitor() {
-
-			@Override
-			public boolean visitAttribute(AttributeProperty property) {
-				TargetPropertyWriter writer = new TargetAttributePropertyWriter(property);
-				writers.put(ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributeName(), writer);
-				return true;
-			}
-
-			@Override
-			public boolean visitToOne(ToOneProperty property) {
-				TargetPropertyWriter writer = new TargetToOnePropertyWriter(property);
-
-				List<DbRelationship> dbRelationships = property.getRelationship().getDbRelationships();
-				if (dbRelationships.size() > 1) {
-					// TODO: support for flattened to-one relationships
-					LOGGER.info("TODO: not mapping db: path for a flattened relationship: " + property.getName());
-				} else {
-
-					DbRelationship dbRelationship = dbRelationships.get(0);
-					List<DbJoin> joins = dbRelationship.getJoins();
-
-					if (joins.size() > 1) {
-						// TODO: support for multi-key to-one relationships
-						LOGGER.info("TODO: not mapping db: path for a multi-key relationship: " + property.getName());
-					} else {
-						writers.put(ASTDbPath.DB_PREFIX + joins.get(0).getSourceName(), writer);
-					}
-				}
-
-				return true;
-			}
-
-			@Override
-			public boolean visitToMany(ToManyProperty property) {
-				// nothing for ToMany
-				return true;
-			}
-		});
-
-		for (DbAttribute pk : entity.getDbEntity().getPrimaryKeys()) {
-			String key = ASTDbPath.DB_PREFIX + pk.getName();
-			if (!writers.containsKey(key)) {
-				writers.put(key, new TargetPkPropertyWriter(pk));
-			}
-		}
-
-		return writers;
-	}
 }

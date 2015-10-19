@@ -5,6 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
@@ -15,7 +16,6 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
-import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 
@@ -39,9 +39,10 @@ public class TaskServiceTest {
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
 		IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
+		ITargetPropertyWriterService writerService = mock(ITargetPropertyWriterService.class);
 
 		taskService = new TaskService(extractorService, cayenneService, tokenManager, keyAdapterFactory,
-				mockPathNormalizer);
+				mockPathNormalizer, writerService);
 	}
 
 	@Test
