@@ -28,7 +28,7 @@ public class ContainerAwareExtractorModel implements ExtractorModel {
 	@Override
 	public long getLoadedOn() {
 		long loadedOn = delegate.getLoadedOn();
-		return loadedOn >= 0 ? loadedOn : parent.getLoadedOn();
+		return loadedOn > 0 ? loadedOn : parent.getLoadedOn();
 	}
 
 	@Override
