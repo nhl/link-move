@@ -106,4 +106,14 @@ public class JsonQueryTest {
             assertTrue(node instanceof ObjectNode);
         }
     }
+
+    @Test
+    public void testQuery_ArrayProperties_ByIndex() {
+        JsonQuery query = compiler.compile("$.store.book[*].readers[1]");
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(1, nodes.size());
+        for (JsonNode node : nodes) {
+            assertTrue(node instanceof ObjectNode);
+        }
+    }
 }

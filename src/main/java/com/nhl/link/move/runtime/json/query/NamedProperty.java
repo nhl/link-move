@@ -1,6 +1,7 @@
 package com.nhl.link.move.runtime.json.query;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,23 @@ public class NamedProperty implements JsonQuery {
             return Collections.emptyList();
         }
 
-        JsonNode node = currentNode.get(propertyName);
+        JsonNode node;
+        if (currentNode instanceof ArrayNode) {
+            Integer index;
+            try {
+                 index = Integer.valueOf(propertyName);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Illegal index: " + propertyName);
+            }
+            if (index < 0) {
+                throw new RuntimeException("Illegal index: " + propertyName);
+            }
+            node = currentNode.get(index);
+
+        } else {
+            node = currentNode.get(propertyName);
+        }
+
         if (node == null) {
             return Collections.emptyList();
         }
