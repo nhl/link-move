@@ -26,7 +26,7 @@ public class JsonQueryTest {
     public void setUp() throws IOException {
 
         compiler = new QueryCompiler();
-        document = new ObjectMapper().readTree(new JsonFactory().createParser(
+        document = new JacksonService().parseJson(
                 "{ \"store\": {\n" +
                 "    \"book\": [ \n" +
                 "      { \"category\": \"reference\",\n" +
@@ -64,7 +64,7 @@ public class JsonQueryTest {
                 "      \"price\": 19.95\n" +
                 "    }\n" +
                 "  }\n" +
-                "}"));
+                "}");
     }
 
     @Test

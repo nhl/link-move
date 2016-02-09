@@ -10,6 +10,9 @@ import java.util.Map.Entry;
 
 import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import com.nhl.link.move.runtime.json.IJacksonService;
+import com.nhl.link.move.runtime.json.JacksonService;
+import com.nhl.link.move.runtime.json.JsonExtractorFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
@@ -75,6 +78,7 @@ public class LmRuntimeBuilder {
 	public static final String JDBC_EXTRACTOR_TYPE = "jdbc";
 	public static final String CSV_EXTRACTOR_TYPE = "csv";
 	public static final String XML_EXTRACTOR_TYPE = "xml";
+	public static final String JSON_EXTRACTOR_TYPE = "json";
 
 	public static final String START_TOKEN_VAR = "startToken";
 	public static final String END_TOKEN_VAR = "endToken";
@@ -108,6 +112,7 @@ public class LmRuntimeBuilder {
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
 		extractorFactoryTypes.put(CSV_EXTRACTOR_TYPE, CsvExtractorFactory.class);
 		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
+		extractorFactoryTypes.put(JSON_EXTRACTOR_TYPE, JsonExtractorFactory.class);
 
 		// default normalizers
 		jdbcNormalizers.put(Integer.valueOf(Types.BIGINT).toString(), new BigIntNormalizer());
@@ -302,6 +307,7 @@ public class LmRuntimeBuilder {
 				binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
 				binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);
 				binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
+				binder.bind(IJacksonService.class).to(JacksonService.class);
 
 				// apply adapter-contributed bindings
 				for (LinkEtlAdapter a : adapters) {
