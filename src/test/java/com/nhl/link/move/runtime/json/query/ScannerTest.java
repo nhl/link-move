@@ -1,11 +1,11 @@
-package com.nhl.link.move.runtime.json;
+package com.nhl.link.move.runtime.json.query;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class ScannerTest {
 

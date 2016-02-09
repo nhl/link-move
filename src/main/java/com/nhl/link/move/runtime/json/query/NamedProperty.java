@@ -1,12 +1,11 @@
 package com.nhl.link.move.runtime.json.query;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.Collections;
 import java.util.List;
 
-public class NamedProperty implements JsonQuery {
+class NamedProperty implements JsonQuery {
 
     private JsonQuery clientQuery;
     private String propertyName;

@@ -1,11 +1,6 @@
-package com.nhl.link.move.runtime.json;
+package com.nhl.link.move.runtime.json.query;
 
-import com.nhl.link.move.runtime.json.query.AllProperties;
-import com.nhl.link.move.runtime.json.query.JsonQuery;
-import com.nhl.link.move.runtime.json.Token.Type;
-import com.nhl.link.move.runtime.json.query.NamedProperty;
-import com.nhl.link.move.runtime.json.query.RecursiveDescent;
-import com.nhl.link.move.runtime.json.query.RootNode;
+import com.nhl.link.move.runtime.json.query.Token.Type;
 
 public class QueryCompiler {
 

@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.json;
+package com.nhl.link.move.runtime.json.query;
 
 import org.junit.Before;
 import org.junit.Test;

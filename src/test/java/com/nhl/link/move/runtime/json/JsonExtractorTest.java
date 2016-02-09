@@ -6,6 +6,7 @@ import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
+import com.nhl.link.move.runtime.json.query.QueryCompiler;
 import org.junit.Before;
 import org.junit.Test;
 

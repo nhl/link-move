@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
 
-public class RootNode implements JsonQuery {
+class RootNode implements JsonQuery {
 
     private JsonQuery clientQuery;
 

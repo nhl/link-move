@@ -1,10 +1,10 @@
-package com.nhl.link.move.runtime.json;
-
-import com.nhl.link.move.runtime.json.Token.Type;
+package com.nhl.link.move.runtime.json.query;
 
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
+
+import com.nhl.link.move.runtime.json.query.Token.Type;
 
 class Scanner {
 

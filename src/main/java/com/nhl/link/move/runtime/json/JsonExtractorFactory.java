@@ -6,6 +6,7 @@ import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.runtime.connect.IConnectorService;
 import com.nhl.link.move.runtime.extractor.BaseExtractorFactory;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
+import com.nhl.link.move.runtime.json.query.QueryCompiler;
 import org.apache.cayenne.di.Inject;
 
 public class JsonExtractorFactory extends BaseExtractorFactory<StreamConnector> {

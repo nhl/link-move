@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AllProperties implements JsonQuery {
+class AllProperties implements JsonQuery {
 
     private JsonQuery clientQuery;
 

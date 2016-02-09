@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecursiveDescent implements JsonQuery {
+class RecursiveDescent implements JsonQuery {
 
     private JsonQuery clientQuery;
 
