@@ -78,6 +78,26 @@ public class JsonQueryTest {
     }
 
     @Test
+    public void testQuery_SimpleProperties_Brackets() {
+        JsonQuery query = compiler.compile("$.store.book[*][\"author\"]");
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(4, nodes.size());
+        for (JsonNode node : nodes) {
+            assertTrue(node instanceof TextNode);
+        }
+    }
+
+    @Test
+    public void testQuery_SimpleProperties_Brackets2() {
+        JsonQuery query = compiler.compile("$['store'][\"book\"][*]['author']");
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(4, nodes.size());
+        for (JsonNode node : nodes) {
+            assertTrue(node instanceof TextNode);
+        }
+    }
+
+    @Test
     public void testQuery_SimpleProperties2() {
         JsonQuery query = compiler.compile("$.store..price");
         List<JsonNode> nodes = query.execute(document);
@@ -110,6 +130,16 @@ public class JsonQueryTest {
     @Test
     public void testQuery_ArrayProperties_ByIndex() {
         JsonQuery query = compiler.compile("$.store.book[*].readers[1]");
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(1, nodes.size());
+        for (JsonNode node : nodes) {
+            assertTrue(node instanceof ObjectNode);
+        }
+    }
+
+    @Test
+    public void testQuery_ArrayProperties_ByIndex2() {
+        JsonQuery query = compiler.compile("$.store.book[*].readers.1");
         List<JsonNode> nodes = query.execute(document);
         assertEquals(1, nodes.size());
         for (JsonNode node : nodes) {

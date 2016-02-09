@@ -15,12 +15,15 @@ public class QueryCompiler {
         if (!scanner.hasNext()) {
             throw new RuntimeException("Empty query");
         }
+        return buildRootQuery(scanner);
+    }
+
+    private JsonQuery buildRootQuery(Scanner scanner) {
 
         Token token = scanner.nextToken();
         if (token.getType() != Type.ROOT_NODE_REF) {
-            throw new RuntimeException("Query must begin with root designator '$'");
+            throw new ParseException(token, Type.ROOT_NODE_REF);
         }
-
         return new RootNode(buildQuery(scanner));
     }
 
@@ -38,9 +41,11 @@ public class QueryCompiler {
             case RECURSIVE_DESCENT: {
                 return new RecursiveDescent(buildChildOrFilter(scanner));
             }
+            case FILTER_START: {
+                return buildFilter(scanner);
+            }
             default: {
-                throw new RuntimeException(
-                        "Unexpected token '" + token.getLiteral() + "' at position: " + token.getPosition());
+                throw new ParseException(token, Type.CHILD_ACCESS, Type.RECURSIVE_DESCENT);
             }
         }
     }
@@ -51,8 +56,12 @@ public class QueryCompiler {
 
         Token token = scanner.nextToken();
         switch (token.getType()) {
+            case NUMERIC_VALUE:
             case IDENTIFIER: {
                 return new NamedProperty(buildQueryOrFilter(scanner), token.getLiteral());
+            }
+            case QUOTED_IDENTIFIER: {
+                throw new ParseException("Quoted identifier not allowed here", token.getPosition());
             }
             case FILTER_START: {
                 return buildFilter(scanner);
@@ -61,8 +70,7 @@ public class QueryCompiler {
                 return new AllProperties(buildQuery(scanner));
             }
             default: {
-                throw new RuntimeException(
-                        "Unexpected token '" + token.getLiteral() + "' at position: " + token.getPosition());
+                throw new ParseException(token, Type.IDENTIFIER, Type.FILTER_START, Type.WILDCARD);
             }
         }
     }
@@ -85,8 +93,7 @@ public class QueryCompiler {
                 return new RecursiveDescent(buildChildOrFilter(scanner));
             }
             default: {
-                throw new RuntimeException(
-                        "Unexpected token '" + token.getLiteral() + "' at position: " + token.getPosition());
+                throw new ParseException(token, Type.FILTER_START, Type.CHILD_ACCESS, Type.RECURSIVE_DESCENT);
             }
         }
     }
@@ -97,9 +104,14 @@ public class QueryCompiler {
 
         Token token = scanner.nextToken();
         switch (token.getType()) {
-            case IDENTIFIER: {
+            case NUMERIC_VALUE:
+            case QUOTED_IDENTIFIER: {
                 assertNextToken(scanner, Type.FILTER_END);
                 return new NamedProperty(buildQuery(scanner), token.getLiteral());
+            }
+            case IDENTIFIER: {
+                throw new ParseException(
+                        "Unquoted identifier not allowed here: " + token.getLiteral(), token.getPosition());
             }
             case WILDCARD: {
                 assertNextToken(scanner, Type.FILTER_END);
@@ -109,8 +121,7 @@ public class QueryCompiler {
                 throw new RuntimeException("Predicates not implemented yet");
             }
             default: {
-                throw new RuntimeException(
-                        "Unexpected token '" + token.getLiteral() + "' at position: " + token.getPosition());
+                throw new ParseException(token, Type.IDENTIFIER, Type.WILDCARD, Type.PREDICATE_START);
             }
         }
     }
@@ -125,8 +136,7 @@ public class QueryCompiler {
         assertHasTokens(scanner);
         Token token = scanner.nextToken();
         if (tokenType != token.getType()) {
-            throw new RuntimeException("Expected token of type " + tokenType.name() +
-                    ", but received: " + token.getLiteral() + " at position " + token.getPosition());
+            throw new ParseException(token, tokenType);
         }
     }
 }

@@ -28,19 +28,16 @@ public class NamedProperty implements JsonQuery {
             return Collections.emptyList();
         }
 
-        JsonNode node;
+        JsonNode node = null;
         if (currentNode instanceof ArrayNode) {
+
             Integer index;
             try {
-                 index = Integer.valueOf(propertyName);
+                index = Integer.valueOf(propertyName);
+                node = currentNode.get(index);
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Illegal index: " + propertyName);
+                // ignore
             }
-            if (index < 0) {
-                throw new RuntimeException("Illegal index: " + propertyName);
-            }
-            node = currentNode.get(index);
-
         } else {
             node = currentNode.get(propertyName);
         }
