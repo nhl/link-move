@@ -29,7 +29,7 @@ public class NamedProperty implements JsonQuery {
         }
 
         JsonNode node = null;
-        if (currentNode instanceof ArrayNode) {
+        if (currentNode.isArray()) {
 
             Integer index;
             try {
