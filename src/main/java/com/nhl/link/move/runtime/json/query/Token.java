@@ -2,23 +2,17 @@ package com.nhl.link.move.runtime.json.query;
 
 class Token {
 
-    enum Type {
-        ROOT_NODE_REF, CURRENT_NODE_REF, CHILD_ACCESS, RECURSIVE_DESCENT, WILDCARD, UNION,
-        FILTER_START, FILTER_END, PREDICATE_START, PREDICATE_END, IDENTIFIER, QUOTED_IDENTIFIER,
-        NUMERIC_VALUE
-    }
-
-    private Type type;
+    private TokenType type;
     private String literal;
     private int position;
 
-    Token(Type type, String literal, int position) {
+    Token(TokenType type, String literal, int position) {
         this.type = type;
         this.literal = literal;
         this.position = position;
     }
 
-    Type getType() {
+    TokenType getType() {
         return type;
     }
 

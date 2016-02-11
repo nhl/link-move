@@ -1,16 +1,23 @@
 package com.nhl.link.move.runtime.json.query;
 
-import com.nhl.link.move.runtime.json.query.Token.Type;
-
 class ParseException extends RuntimeException {
 
     private final String message;
+
+    ParseException(String message) {
+        this.message = String.format("Parsing error: %s", message);
+    }
 
     ParseException(String message, int position) {
         this.message = String.format("Parsing error at position %d: %s", position, message);
     }
 
-    ParseException(Token actualToken, Token.Type... expectedTokens) {
+    ParseException(String message, int position, Throwable cause) {
+        super(cause);
+        this.message = String.format("Parsing error at position %d: %s", position, message);
+    }
+
+    ParseException(Token actualToken, TokenType... expectedTokens) {
 
         this.message = String.format("Unexpected token '%s' at position %d. Expected one of: %s",
                 actualToken.getLiteral(), actualToken.getPosition(), buildString(expectedTokens));
@@ -21,7 +28,7 @@ class ParseException extends RuntimeException {
         return message;
     }
 
-    private static String buildString(Type... tokenTypes) {
+    private static String buildString(TokenType... tokenTypes) {
 
         if (tokenTypes == null || tokenTypes.length == 0) {
             return "";

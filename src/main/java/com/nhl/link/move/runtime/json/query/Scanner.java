@@ -3,13 +3,15 @@ package com.nhl.link.move.runtime.json.query;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
-
-import com.nhl.link.move.runtime.json.query.Token.Type;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Scanner {
 
     private final CountingPushbackReader reader;
     private boolean isEOF;
+
+    private Deque<Token> returnedTokens = new ArrayDeque<>();
 
     Scanner(String query) {
         reader = new CountingPushbackReader(new PushbackReader(new StringReader(query)));
@@ -62,6 +64,10 @@ class Scanner {
 
     Token nextToken() {
 
+        if (returnedTokens.size() > 0) {
+            return returnedTokens.removeLast();
+        }
+
         if (isEOF) {
             throw new ParseException("No more tokens to read", reader.getCurrentIndex());
         }
@@ -81,8 +87,12 @@ class Scanner {
             return builder.build();
 
         } catch (Exception e) {
-            throw new ParseException(e.getMessage(), reader.getCurrentIndex());
+            throw new ParseException(e.getMessage(), reader.getCurrentIndex(), e);
         }
+    }
+
+    void returnToken(Token token) {
+        returnedTokens.addLast(token);
     }
 
     private static class TokenBuilder {
@@ -110,7 +120,8 @@ class Scanner {
                 } else if (!isQuoted && isReserved(c)) {
                     return false;
                 } else if (Character.isWhitespace(c)) {
-                    throw new RuntimeException("Whitespace in unquoted identifier");
+                    return false;
+//                    throw new RuntimeException("Whitespace in unquoted identifier");
                 }
 
                 if (buffer == null) {
@@ -128,13 +139,14 @@ class Scanner {
                 if (isQuoted && !isComplete) {
                     throw new RuntimeException("Unmatched quote in identifier");
                 }
+                // TODO: Check for illegal identifiers
                 return buffer.toString();
             }
         }
 
         private int startPosition;
         private IdentifierBuilder identifierBuilder;
-        private Type tokenType;
+        private TokenType tokenType;
         private int lastSeen;
 
         TokenBuilder(int startPosition) {
@@ -155,15 +167,9 @@ class Scanner {
                 return true;
             }
 
-            if (tokenType == Type.CHILD_ACCESS && c == '.') {
-                tokenType = Type.RECURSIVE_DESCENT;
+            if (tokenType == TokenType.CHILD_ACCESS && c == '.') {
+                tokenType = TokenType.RECURSIVE_DESCENT;
                 return true;
-            }
-
-            if (tokenType == Type.PREDICATE_START) {
-                if (c == '(') {
-                    return lastSeen == '?';
-                }
             }
 
             // token type is already known,
@@ -174,8 +180,8 @@ class Scanner {
 
             if (identifierBuilder != null) {
                 boolean accepted =  identifierBuilder.acceptCharacter(c);
-                if (accepted && tokenType == Type.NUMERIC_VALUE && !Character.isDigit(c)) {
-                    tokenType = Type.IDENTIFIER;
+                if (accepted && tokenType == TokenType.NUMERIC_VALUE && !Character.isDigit(c)) {
+                    tokenType = TokenType.IDENTIFIER;
                 }
                 return accepted;
             }
@@ -184,52 +190,56 @@ class Scanner {
             // if we're here, then current token's type is unknown yet
             switch (c) {
                 case '$': {
-                    tokenType = Type.ROOT_NODE_REF;
+                    tokenType = TokenType.ROOT_NODE_REF;
                     return true;
                 }
                 case '@': {
-                    tokenType = Type.CURRENT_NODE_REF;
+                    tokenType = TokenType.CURRENT_NODE_REF;
                     return true;
                 }
                 case '.': {
-                    tokenType = Type.CHILD_ACCESS;
+                    tokenType = TokenType.CHILD_ACCESS;
                     return true;
                 }
                 case '*': {
-                    tokenType = Type.WILDCARD;
+                    tokenType = TokenType.WILDCARD;
                     return true;
                 }
                 case '[': {
-                    tokenType = Type.FILTER_START;
+                    tokenType = TokenType.FILTER_START;
                     return true;
                 }
                 case ']': {
-                    tokenType = Type.FILTER_END;
+                    tokenType = TokenType.FILTER_END;
                     return true;
                 }
                 case '?': {
-                    tokenType = Type.PREDICATE_START;
+                    tokenType = TokenType.PREDICATE_START;
+                    return true;
+                }
+                case '(': {
+                    tokenType = TokenType.SCRIPT_START;
                     return true;
                 }
                 case ')': {
-                    tokenType = Type.PREDICATE_END;
+                    tokenType = TokenType.SCRIPT_END;
                     return true;
                 }
                 case ',': {
-                    tokenType = Type.UNION;
+                    tokenType = TokenType.UNION;
                     return true;
                 }
                 case '\'':
                 case '\"': {
-                    tokenType = Type.QUOTED_IDENTIFIER;
+                    tokenType = TokenType.QUOTED_IDENTIFIER;
                     identifierBuilder = new IdentifierBuilder(true);
                     return true;
                 }
                 default: {
                     if (Character.isDigit(c)) {
-                        tokenType = Type.NUMERIC_VALUE;
+                        tokenType = TokenType.NUMERIC_VALUE;
                     } else {
-                        tokenType = Type.IDENTIFIER;
+                        tokenType = TokenType.IDENTIFIER;
                     }
                     identifierBuilder = new IdentifierBuilder(false);
                     identifierBuilder.acceptCharacter(c);
@@ -251,6 +261,7 @@ class Scanner {
                 case '[':
                 case ']':
                 case '?':
+                case '(':
                 case ')':
                 case ',':
                 case '\'':
@@ -264,8 +275,8 @@ class Scanner {
         Token build() {
 
             String literal;
-            if (tokenType == Type.IDENTIFIER || tokenType == Type.QUOTED_IDENTIFIER
-                    || tokenType == Type.NUMERIC_VALUE) {
+            if (tokenType == TokenType.IDENTIFIER || tokenType == TokenType.QUOTED_IDENTIFIER
+                    || tokenType == TokenType.NUMERIC_VALUE) {
 
                 literal = identifierBuilder.build();
             } else {
@@ -276,7 +287,7 @@ class Scanner {
         }
     }
 
-    static String getTokenLiteral(Type tokenType) {
+    static String getTokenLiteral(TokenType tokenType) {
 
         switch (tokenType) {
             case ROOT_NODE_REF: {
@@ -304,9 +315,12 @@ class Scanner {
                 return "]";
             }
             case PREDICATE_START: {
-                return "?(";
+                return "?";
             }
-            case PREDICATE_END: {
+            case SCRIPT_START: {
+                return "(";
+            }
+            case SCRIPT_END: {
                 return ")";
             }
             case NUMERIC_VALUE: {

@@ -66,4 +66,44 @@ public class QueryCompilerTest {
     public void testCompile_Query10() {
         compiler.compile("$.store.book[*].readers.1");
     }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query11() {
+        compiler.compile("$.store.book[*.readers.1");
+    }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query12() {
+        compiler.compile("$...store");
+    }
+
+    @Test
+    public void testCompile_Query13() {
+        compiler.compile("$..[('store')].book");
+    }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query14() {
+        compiler.compile("$..[('store')].book)");
+    }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query15() {
+        compiler.compile("$.store..readers[?(@.name == 'Bob' &&)]");
+    }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query16() {
+        compiler.compile("$.store..readers[?(@.name == 'Bob' @.age == 60)]");
+    }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query17() {
+        compiler.compile("$.store..readers[?( == 'Bob' && @.age == 60)]");
+    }
+
+    @Test(expected = Exception.class)
+    public void testCompile_Query18() {
+        compiler.compile("$.store..readers[?(@.name == 'Bob' && (@.age == 60)]");
+    }
 }

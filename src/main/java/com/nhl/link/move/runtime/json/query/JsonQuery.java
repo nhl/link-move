@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface JsonQuery {
 
+    // TODO: boolean isConstant(); for optimization
     List<JsonNode> execute(JsonNode rootNode);
     List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode);
 }
