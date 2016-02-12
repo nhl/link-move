@@ -1,3 +1,10 @@
+## Upgrading to 1.6
+
+### Remove methods deprecated since 1.4 or earlier [#81](https://github.com/nhl/link-move/issues/81)
+
+All previously deprecated APIs are removed. Most noticeable one is LoadListener. Use 
+annotated listeners instead.
+
 ## Upgrading to 1.4
 
 ### Rename LinkETL to LinkMove [#54](https://github.com/nhl/link-etl/issues/54)

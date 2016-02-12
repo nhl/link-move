@@ -1,6 +1,5 @@
 package com.nhl.link.move.runtime.task;
 
-import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.map.ObjEntity;
@@ -16,6 +15,7 @@ import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilde
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
 
 public class TaskService implements ITaskService {
 
@@ -56,12 +56,6 @@ public class TaskService implements ITaskService {
 		ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(targetEntityName);
 		return new DefaultSourceKeysBuilder(pathNormalizer.normalizer(targetEntity), extractorService, tokenManager,
 				keyAdapterFactory);
-	}
-
-	@Deprecated
-	@Override
-	public <T extends DataObject> CreateOrUpdateBuilder<T> createTaskBuilder(Class<T> type) {
-		return createOrUpdate(type);
 	}
 
 	@Override

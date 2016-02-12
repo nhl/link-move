@@ -1,5 +1,9 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.map.ObjEntity;
+
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
@@ -9,7 +13,6 @@ import com.nhl.link.move.annotation.AfterTargetsMatched;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
-import com.nhl.link.move.load.LoadListener;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
@@ -21,20 +24,13 @@ import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.exp.Property;
-import org.apache.cayenne.map.ObjEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
  * certain unique attribute on both sides.
  */
-@SuppressWarnings("deprecation")
-public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder implements
-		CreateOrUpdateBuilder<T> {
+public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder
+		implements CreateOrUpdateBuilder<T> {
 
 	private IExtractorService extractorService;
 	private ITargetCayenneService targetCayenneService;
@@ -47,9 +43,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	private ITargetPropertyWriterService writerService;
 
 	private ExtractorName extractorName;
-
-	@Deprecated
-	private List<LoadListener<T>> loadListeners;
 
 	public DefaultCreateOrUpdateBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
 			IExtractorService extractorService, ITokenManager tokenManager, IKeyAdapterFactory keyAdapterFactory,
@@ -75,8 +68,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 		// always add stats listener..
 		stageListener(CreateOrUpdateStatsListener.instance());
-
-		this.loadListeners = new ArrayList<>();
 	}
 
 	@Override
@@ -89,12 +80,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String location) {
 		// v.1 model style config
 		return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
-	}
-
-	@Deprecated
-	@Override
-	public CreateOrUpdateBuilder<T> withExtractor(String extractorName) {
-		return sourceExtractor(extractorName);
 	}
 
 	@Override
@@ -136,67 +121,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		return this;
 	}
 
-	@Deprecated
-	@Override
-	public CreateOrUpdateBuilder<T> withBatchSize(int batchSize) {
-		return batchSize(batchSize);
-	}
-
-	/**
-	 * Does nothing.
-	 * 
-	 * @deprecated since 1.4
-	 */
-	@Deprecated
-	@Override
-	public DefaultCreateOrUpdateBuilder<T> withToOneRelationship(String name,
-			Class<? extends DataObject> relatedObjType, String keyAttribute) {
-		return this;
-	}
-
-	/**
-	 * Does nothing.
-	 * 
-	 * @deprecated since 1.4
-	 */
-	@Deprecated
-	@Override
-	public DefaultCreateOrUpdateBuilder<T> withToManyRelationship(String name,
-			Class<? extends DataObject> relatedObjType, String keyAttribute) {
-		return this;
-	}
-
-	/**
-	 * Does nothing.
-	 * 
-	 * @deprecated since 1.4
-	 */
-	@Deprecated
-	@Override
-	public DefaultCreateOrUpdateBuilder<T> withToOneRelationship(String name,
-			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
-		return this;
-	}
-
-	/**
-	 * Does nothing.
-	 * 
-	 * @deprecated since 1.4
-	 */
-	@Deprecated
-	@Override
-	public DefaultCreateOrUpdateBuilder<T> withToManyRelationship(String name,
-			Class<? extends DataObject> relatedObjType, String keyAttribute, String relationshipKeyAttribute) {
-		return this;
-	}
-
-	@Deprecated
-	@Override
-	public CreateOrUpdateBuilder<T> withListener(LoadListener<T> listener) {
-		this.loadListeners.add(listener);
-		return this;
-	}
-
 	/**
 	 * @since 1.3
 	 */
@@ -213,8 +137,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 			throw new IllegalStateException("Required 'extractorName' is not set");
 		}
 
-		return new CreateOrUpdateTask<T>(extractorName, batchSize, targetCayenneService, extractorService,
-				tokenManager, createProcessor());
+		return new CreateOrUpdateTask<T>(extractorName, batchSize, targetCayenneService, extractorService, tokenManager,
+				createProcessor());
 	}
 
 	private CreateOrUpdateSegmentProcessor<T> createProcessor() {
@@ -227,8 +151,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		RowConverter rowConverter = new RowConverter(entityPathNormalizer);
 
 		return new CreateOrUpdateSegmentProcessor<>(rowConverter, sourceMapper, targetMatcher, merger,
-				stageListenersBuilder.getListeners(), loadListeners);
+				stageListenersBuilder.getListeners());
 	}
-
 
 }

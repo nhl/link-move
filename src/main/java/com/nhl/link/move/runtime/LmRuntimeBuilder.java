@@ -8,13 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
-import com.nhl.link.move.runtime.json.IJacksonService;
-import com.nhl.link.move.runtime.json.JacksonService;
-import com.nhl.link.move.runtime.json.JsonExtractorFactory;
-import com.nhl.link.move.writer.ITargetPropertyWriterService;
-import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
@@ -42,8 +35,13 @@ import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
+import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import com.nhl.link.move.runtime.json.IJacksonService;
+import com.nhl.link.move.runtime.json.JacksonService;
+import com.nhl.link.move.runtime.json.JsonExtractorFactory;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
@@ -53,6 +51,8 @@ import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
 import com.nhl.link.move.runtime.xml.XmlExtractorFactory;
+import com.nhl.link.move.writer.ITargetPropertyWriterService;
+import com.nhl.link.move.writer.TargetPropertyWriterService;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -198,16 +198,6 @@ public class LmRuntimeBuilder {
 	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer normalizer) {
 		jdbcNormalizers.put(Integer.valueOf(jdbcType).toString(), normalizer);
 		return this;
-	}
-
-	/**
-	 * @deprecated since 1.4 in favor of
-	 *             {@link #extractorModelLoader(IExtractorModelLoader)}. Also
-	 *             see {@link #extractorModelsRoot}.
-	 */
-	@Deprecated
-	public LmRuntimeBuilder withExtractorConfigLoader(IExtractorModelLoader extractorModelLoader) {
-		return extractorModelLoader(extractorModelLoader);
 	}
 
 	/**

@@ -5,15 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.DataObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterSourcesMapped;
 import com.nhl.link.move.annotation.AfterTargetsMatched;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
-import com.nhl.link.move.load.LoadListener;
 import com.nhl.link.move.runtime.task.StageListener;
 
 /**
@@ -22,31 +19,22 @@ import com.nhl.link.move.runtime.task.StageListener;
  * 
  * @since 1.3
  */
-@SuppressWarnings("deprecation")
 public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrUpdateSegmentProcessor.class);
 
 	private RowConverter rowConverter;
 	private SourceMapper mapper;
 	private TargetMatcher<T> matcher;
 	private CreateOrUpdateMerger<T> merger;
 
-	@Deprecated
-	private List<LoadListener<T>> loadListeners;
-
 	private Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
 	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper mapper, TargetMatcher<T> matcher,
-			CreateOrUpdateMerger<T> merger,
-			Map<Class<? extends Annotation>, List<StageListener>> stageListeners,
-			List<LoadListener<T>> loadListeners) {
+			CreateOrUpdateMerger<T> merger, Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
 
 		this.rowConverter = rowConverter;
 		this.mapper = mapper;
 		this.matcher = matcher;
 		this.merger = merger;
-		this.loadListeners = loadListeners;
 		this.listeners = stageListeners;
 	}
 
@@ -78,30 +66,6 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 	private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.setMerged(merger.merge(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
 		notifyListeners(AfterTargetsMerged.class, exec, segment);
-		callDeprecatedListeners(exec, segment);
-	}
-
-	@Deprecated
-	private void callDeprecatedListeners(Execution exec, CreateOrUpdateSegment<T> segment) {
-		if (!loadListeners.isEmpty()) {
-
-			LOGGER.warn("*** Calling deprecated LoadListener's. "
-					+ "Consider replacing them with annotated segment listeners. "
-					+ "See 'com.nhl.link.move.annotation' package ");
-
-			for (CreateOrUpdateTuple<T> t : segment.getMerged()) {
-
-				if (t.isCreated()) {
-					for (LoadListener<T> l : loadListeners) {
-						l.targetCreated(exec, t.getSource(), t.getTarget());
-					}
-				} else {
-					for (LoadListener<T> l : loadListeners) {
-						l.targetUpdated(exec, t.getSource(), t.getTarget());
-					}
-				}
-			}
-		}
 	}
 
 	private void commitTarget(CreateOrUpdateSegment<T> segment) {
@@ -118,5 +82,4 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 			}
 		}
 	}
-
 }
