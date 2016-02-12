@@ -34,6 +34,9 @@ public class BatchRunner<S> {
 	/**
 	 * Splits the iterator into segments according to 'batchSize' property and
 	 * runs each segment via a callback {@link BatchProcessor}.
+	 *
+	 * @param source
+	 *            runner input represented as an {@link Iterable} for type S.
 	 */
 	public void run(Iterable<S> source) {
 
