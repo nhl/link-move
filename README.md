@@ -8,20 +8,6 @@ LinkMove connects multiple data models together in a flexible way that anticipat
 
 ## Getting Started
 
-Declare LinkMove Maven repository in your pom.xml (unless you have your own repo proxy, in which case add this repo to the proxy):
-
-```XML
-<repositories>
-    <repository>
-        <id>lm-repo</id>
-        <name>ObjectStyle LinkMove Repo</name>
-        <url>http://maven.objectstyle.org/nexus/content/repositories/linkrestreleases</url>
-    </repository>
-</repositories>
-```
-
-_TODO: eventually we'll start publishing LinkMove to Central, so the step above will not be needed._
-
 Add LinkMove dependency:
 
 ```XML
