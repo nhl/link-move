@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.nhl.link.move</groupId>
@@ -10,6 +11,26 @@
 	<description>A model-driven dynamically-configurable framework to acquire data 
 	from external sources and save in your application database.</description>
 	<packaging>jar</packaging>
+
+	<url>https://github.com/nhl/link-move</url>
+
+	<licenses>
+		<license>
+			<name>BSD License</name>
+			<url>https://github.com/nhl/link-rest/blob/master/LICENSE.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>andrus</id>
+			<name>Andrus Adamchik</name>
+			<email>andrus@objectstyle.com</email>
+			<organization>ObjectStyle</organization>
+			<timezone>America/New_York</timezone>
+		</developer>
+	</developers>
 
 	<properties>
 
@@ -35,9 +56,9 @@
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
-			<id>linkrest-releases</id>
+			<id>oss-sonatype-releases</id>
 			<name>Deployment Repository</name>
-			<url>http://maven.objectstyle.org/nexus/content/repositories/linkrestreleases</url>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
 
@@ -181,8 +202,10 @@
 		</dependency>
 
 
-		<!-- Optional dependencies. Apps that are using them will need to include them explicitly in the POM, and also likely a 
-			corresponding service should be included in the Tapestry module. The rest of the apps will be spared from an extra jar. -->
+		<!-- Optional dependencies. Apps that are using them will need to include 
+			them explicitly in the POM, and also likely a corresponding service should 
+			be included in the Tapestry module. The rest of the apps will be spared from 
+			an extra jar. -->
 
 		<!-- Provided dependencies -->
 		<dependency>
@@ -215,4 +238,27 @@
 		</dependency>
 	</dependencies>
 
+	<!-- Optional profile used to sign artifacts -->
+	<profiles>
+		<profile>
+			<id>gpg</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

@@ -6,6 +6,7 @@ Release 1.6
 #73 Reloadable extractors do not reload
 #75 JSON extractor
 #79 Upgrade to Cayenne 4.0.M3
+#80 Start making releases to Maven central
 
 Release 1.5
 
