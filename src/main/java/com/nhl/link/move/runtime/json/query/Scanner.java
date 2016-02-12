@@ -147,7 +147,6 @@ class Scanner {
         private int startPosition;
         private IdentifierBuilder identifierBuilder;
         private TokenType tokenType;
-        private int lastSeen;
 
         TokenBuilder(int startPosition) {
             this.startPosition = startPosition;
@@ -156,7 +155,6 @@ class Scanner {
         boolean acceptCharacter(char c) throws Exception {
 
             boolean accepted = doAccept(c);
-            lastSeen = c;
             return accepted;
         }
 

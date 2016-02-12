@@ -2,7 +2,9 @@ package com.nhl.link.move.runtime.json.query;
 
 class ParseException extends RuntimeException {
 
-    private final String message;
+	private static final long serialVersionUID = -5288509367410390160L;
+	
+	private final String message;
 
     ParseException(String message) {
         this.message = String.format("Parsing error: %s", message);
