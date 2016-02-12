@@ -14,7 +14,7 @@ Add LinkMove dependency:
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
 </dependency>
 ```
 
