@@ -21,7 +21,7 @@
 		<!-- Custom properties (mostly framework versions) -->
 
 		<slf4j-version>1.6.6</slf4j-version>
-		<cayenne-version>4.0.M3.debfa94</cayenne-version>
+		<cayenne-version>4.0.M3</cayenne-version>
 		<jackson-version>2.6.3</jackson-version>
 	</properties>
 
@@ -40,27 +40,6 @@
 			<url>http://maven.objectstyle.org/nexus/content/repositories/linkrestreleases</url>
 		</repository>
 	</distributionManagement>
-
-	<repositories>
-		<repository>
-			<id>linketl-dependencies</id>
-			<name>Link ETL Dependencies Repo</name>
-			<url>http://maven.objectstyle.org/nexus/content/groups/linkrest</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>linketl-dependencies</id>
-			<name>Link ETL Dependencies Repo</name>
-			<url>http://maven.objectstyle.org/nexus/content/groups/linkrest</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<dependencyManagement>
 		<dependencies>
