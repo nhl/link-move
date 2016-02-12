@@ -15,11 +15,6 @@ public abstract class _Etl6t extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    @Deprecated
-    public static final String DATE_PROPERTY = "date";
-    @Deprecated
-    public static final String NAME_PROPERTY = "name";
-
     public static final String ID_PK_COLUMN = "id";
 
     public static final Property<Date> DATE = new Property<Date>("date");

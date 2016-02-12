@@ -14,14 +14,7 @@ import com.nhl.link.move.unit.cayenne.t.Etl5t;
  */
 public abstract class _Etl3t extends CayenneDataObject {
 
-    @Deprecated
-    public static final String NAME_PROPERTY = "name";
-    @Deprecated
-    public static final String PHONE_NUMBER_PROPERTY = "phoneNumber";
-    @Deprecated
-    public static final String E2_PROPERTY = "e2";
-    @Deprecated
-    public static final String E5_PROPERTY = "e5";
+    private static final long serialVersionUID = 1L; 
 
     public static final String ID_PK_COLUMN = "id";
 

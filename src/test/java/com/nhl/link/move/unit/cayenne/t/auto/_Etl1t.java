@@ -11,12 +11,7 @@ import org.apache.cayenne.exp.Property;
  */
 public abstract class _Etl1t extends CayenneDataObject {
 
-    @Deprecated
-    public static final String AGE_PROPERTY = "age";
-    @Deprecated
-    public static final String DESCRIPTION_PROPERTY = "description";
-    @Deprecated
-    public static final String NAME_PROPERTY = "name";
+    private static final long serialVersionUID = 1L; 
 
     public static final String ID_PK_COLUMN = "id";
 

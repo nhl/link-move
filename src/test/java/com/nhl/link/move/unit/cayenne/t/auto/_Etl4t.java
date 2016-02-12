@@ -14,20 +14,7 @@ import org.apache.cayenne.exp.Property;
  */
 public abstract class _Etl4t extends CayenneDataObject {
 
-    @Deprecated
-    public static final String C_BOOLEAN_PROPERTY = "cBoolean";
-    @Deprecated
-    public static final String C_DATE_PROPERTY = "cDate";
-    @Deprecated
-    public static final String C_DECIMAL_PROPERTY = "cDecimal";
-    @Deprecated
-    public static final String C_INT_PROPERTY = "cInt";
-    @Deprecated
-    public static final String C_TIME_PROPERTY = "cTime";
-    @Deprecated
-    public static final String C_TIMESTAMP_PROPERTY = "cTimestamp";
-    @Deprecated
-    public static final String C_VARCHAR_PROPERTY = "cVarchar";
+    private static final long serialVersionUID = 1L; 
 
     public static final String ID_PK_COLUMN = "id";
 
