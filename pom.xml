@@ -4,7 +4,7 @@
 
 	<groupId>com.nhl.link.move</groupId>
 	<artifactId>link-move</artifactId>
-	<version>1.7-SNAPSHOT</version>
+	<version>1.6-SNAPSHOT</version>
 
 	<name>Library: link-move</name>
 	<description>A model-driven dynamically-configurable framework to acquire data 
