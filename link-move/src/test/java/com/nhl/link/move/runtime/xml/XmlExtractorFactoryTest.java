@@ -2,7 +2,6 @@ package com.nhl.link.move.runtime.xml;
 
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.runtime.extractor.BaseExtractorFactoryTest;
-import com.nhl.link.move.runtime.xml.XmlExtractorFactory;
 
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 
 	@Override
 	protected XmlExtractorFactory createExtractorFactory() {
-		return new XmlExtractorFactory(getConnectorServiceMock());
+		return new XmlExtractorFactory();
 	}
 
 	@Override

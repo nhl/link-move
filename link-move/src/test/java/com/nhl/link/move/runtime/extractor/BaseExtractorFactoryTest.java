@@ -10,9 +10,8 @@ import org.junit.Test;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.model.MutableExtractorModel;
 import com.nhl.link.move.runtime.connect.IConnectorService;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactory;
 
-public abstract class BaseExtractorFactoryTest<T extends Connector, F extends BaseExtractorFactory<T>> {
+public abstract class BaseExtractorFactoryTest<T extends Connector, F extends IExtractorFactory<T>> {
 	protected static final String CONNECTOR_ID = "testConnectorId";
 
 	private F extractorFactory;
@@ -65,6 +64,6 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends Ba
 
 	@Test
 	public void testCreateExtractor() throws Exception {
-		extractorFactory.createExtractor(getModel());
+		extractorFactory.createExtractor(connectorMock, getModel());
 	}
 }

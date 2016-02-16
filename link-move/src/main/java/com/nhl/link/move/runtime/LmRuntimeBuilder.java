@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ServiceLoader;
 
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
@@ -26,7 +27,6 @@ import com.nhl.link.move.runtime.cayenne.TargetConnectorFactory;
 import com.nhl.link.move.runtime.connect.ConnectorService;
 import com.nhl.link.move.runtime.connect.IConnectorFactory;
 import com.nhl.link.move.runtime.connect.IConnectorService;
-import com.nhl.link.move.runtime.csv.CsvExtractorFactory;
 import com.nhl.link.move.runtime.extractor.ExtractorService;
 import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
@@ -47,7 +47,6 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
-import com.nhl.link.move.runtime.xml.XmlExtractorFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 
@@ -71,11 +70,6 @@ public class LmRuntimeBuilder {
 	 * @since 1.4
 	 */
 	public static final String FILE_EXTRACTOR_MODEL_ROOT_DIR = "com.nhl.link.move.extrator.root.dir";
-
-	public static final String JDBC_EXTRACTOR_TYPE = "jdbc";
-	public static final String CSV_EXTRACTOR_TYPE = "csv";
-	public static final String XML_EXTRACTOR_TYPE = "xml";
-	public static final String JSON_EXTRACTOR_TYPE = "json";
 
 	public static final String START_TOKEN_VAR = "startToken";
 	public static final String END_TOKEN_VAR = "endToken";
@@ -104,11 +98,6 @@ public class LmRuntimeBuilder {
 		this.extractorFactoryTypes = new HashMap<>();
 		this.jdbcNormalizers = new HashMap<>();
 		this.adapters = new ArrayList<>();
-
-		// default extractors
-		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
-		extractorFactoryTypes.put(CSV_EXTRACTOR_TYPE, CsvExtractorFactory.class);
-		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
 
 		// default normalizers
 		jdbcNormalizers.put(Integer.valueOf(Types.BIGINT).toString(), new BigIntNormalizer());
@@ -261,8 +250,13 @@ public class LmRuntimeBuilder {
 					connectorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<IExtractorFactory> extractorFactories = binder
-						.<IExtractorFactory> bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
+				MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
+
+				ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
+				for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
+					extractorFactories.put(extractorFactory.getExtractorType(), extractorFactory);
+				}
+
 				extractorFactories.putAll(LmRuntimeBuilder.this.extractorFactories);
 
 				for (Entry<String, Class<? extends IExtractorFactory>> e : extractorFactoryTypes.entrySet()) {

@@ -2,19 +2,19 @@ package com.nhl.link.move.runtime.csv;
 
 import java.nio.charset.Charset;
 
-import org.apache.cayenne.di.Inject;
+import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.runtime.connect.IConnectorService;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactory;
 
 /**
  * @since 1.4
  */
-public class CsvExtractorFactory extends BaseExtractorFactory<StreamConnector> {
+public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
+
+    private static final String CSV_EXTRACTOR_TYPE = "csv";
 
     /**
      * Delimiter character.
@@ -33,17 +33,18 @@ public class CsvExtractorFactory extends BaseExtractorFactory<StreamConnector> {
      */
     public static final String CHARSET_PROPERTY = "extractor.csv.charset";
 
-    public CsvExtractorFactory(@Inject IConnectorService connectorService) {
-        super(connectorService);
+    @Override
+    public String getExtractorType() {
+        return CSV_EXTRACTOR_TYPE;
     }
 
     @Override
-    protected Class<StreamConnector> getConnectorType() {
+    public Class<StreamConnector> getConnectorType() {
         return StreamConnector.class;
     }
 
     @Override
-    protected Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
+    public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
         try {
 
             String charsetName = model.getProperties().get(CHARSET_PROPERTY);

@@ -7,35 +7,39 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.cayenne.di.Inject;
+import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.runtime.connect.IConnectorService;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactory;
 
 /**
  * @since 1.4
  */
-public class XmlExtractorFactory extends BaseExtractorFactory<StreamConnector> {
+public class XmlExtractorFactory implements IExtractorFactory<StreamConnector> {
+
+	private static final String XML_EXTRACTOR_TYPE = "xml";
 	public static final String XPATH_EXPRESSION_PROPERTY = "extractor.xml.xpathexpression";
 
 	private final XPathFactory xPathFactory;
 
-	public XmlExtractorFactory(@Inject IConnectorService connectorService) {
-		super(connectorService);
+	public XmlExtractorFactory() {
 		xPathFactory = XPathFactory.newInstance();
 	}
 
 	@Override
-	protected Class<StreamConnector> getConnectorType() {
+	public String getExtractorType() {
+		return XML_EXTRACTOR_TYPE;
+	}
+
+	@Override
+	public Class<StreamConnector> getConnectorType() {
 		return StreamConnector.class;
 	}
 
 	@Override
-	protected Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
+	public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
 		try {
 			XPathExpression expression = getXPathExpression(model);
 			return new XmlExtractor(connector, model.getAttributes(), expression);

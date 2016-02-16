@@ -3,32 +3,35 @@ package com.nhl.link.move.runtime.json;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.runtime.connect.IConnectorService;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactory;
+import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
 import com.nhl.link.move.runtime.json.query.QueryCompiler;
-import org.apache.cayenne.di.Inject;
 
-public class JsonExtractorFactory extends BaseExtractorFactory<StreamConnector> {
+public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> {
 
+	private static final String JSON_EXTRACTOR_TYPE = "json";
     public static final String JSON_QUERY_PROPERTY = "extractor.json.path";
 
     private IJacksonService jacksonService;
 	private QueryCompiler compiler;
 
-	public JsonExtractorFactory(@Inject IConnectorService connectorService, @Inject IJacksonService jacksonService) {
-		super(connectorService);
-        this.jacksonService = jacksonService;
+	public JsonExtractorFactory() {
+        jacksonService = new JacksonService();
 		compiler = new QueryCompiler();
 	}
 
 	@Override
-	protected Class<StreamConnector> getConnectorType() {
+	public String getExtractorType() {
+		return JSON_EXTRACTOR_TYPE;
+	}
+
+	@Override
+	public Class<StreamConnector> getConnectorType() {
 		return StreamConnector.class;
 	}
 
 	@Override
-	protected Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
+	public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
         return new JsonExtractor(jacksonService, connector, model.getAttributes(), getJsonQuery(model));
 	}
 

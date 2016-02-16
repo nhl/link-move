@@ -1,15 +1,14 @@
 package com.nhl.link.move.runtime.jdbc;
 
-import org.apache.cayenne.di.Inject;
+import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 import org.apache.cayenne.query.CapsStrategy;
 
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.runtime.connect.IConnectorService;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactory;
 
-public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
+public class JdbcExtractorFactory implements IExtractorFactory<JdbcConnector> {
 
+	private static final String JDBC_EXTRACTOR_TYPE = "jdbc";
 	public static final String SQL_TEMPLATE_PROPERTY = "extractor.jdbc.sqltemplate";
 
 	/**
@@ -17,17 +16,18 @@ public class JdbcExtractorFactory extends BaseExtractorFactory<JdbcConnector> {
 	 */
 	public static final String SQL_TEMPLATE_CAPS_PROPERTY = "extractor.jdbc.sqltemplate.caps";
 
-	public JdbcExtractorFactory(@Inject IConnectorService connectorService) {
-		super(connectorService);
+	@Override
+	public String getExtractorType() {
+		return JDBC_EXTRACTOR_TYPE;
 	}
 
 	@Override
-	protected Class<JdbcConnector> getConnectorType() {
+	public Class<JdbcConnector> getConnectorType() {
 		return JdbcConnector.class;
 	}
 
 	@Override
-	protected Extractor createExtractor(JdbcConnector connector, ExtractorModel model) {
+	public Extractor createExtractor(JdbcConnector connector, ExtractorModel model) {
 
 		String sqlTemplate = model.getProperties().get(SQL_TEMPLATE_PROPERTY);
 		if (sqlTemplate == null) {
