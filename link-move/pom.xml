@@ -8,6 +8,7 @@
         <artifactId>parent</artifactId>
         <groupId>com.nhl.link.move</groupId>
         <version>1.7-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>link-move</artifactId>
