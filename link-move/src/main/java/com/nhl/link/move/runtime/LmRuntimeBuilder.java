@@ -39,9 +39,6 @@ import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
-import com.nhl.link.move.runtime.json.IJacksonService;
-import com.nhl.link.move.runtime.json.JacksonService;
-import com.nhl.link.move.runtime.json.JsonExtractorFactory;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
@@ -112,7 +109,6 @@ public class LmRuntimeBuilder {
 		extractorFactoryTypes.put(JDBC_EXTRACTOR_TYPE, JdbcExtractorFactory.class);
 		extractorFactoryTypes.put(CSV_EXTRACTOR_TYPE, CsvExtractorFactory.class);
 		extractorFactoryTypes.put(XML_EXTRACTOR_TYPE, XmlExtractorFactory.class);
-		extractorFactoryTypes.put(JSON_EXTRACTOR_TYPE, JsonExtractorFactory.class);
 
 		// default normalizers
 		jdbcNormalizers.put(Integer.valueOf(Types.BIGINT).toString(), new BigIntNormalizer());
@@ -297,7 +293,6 @@ public class LmRuntimeBuilder {
 				binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
 				binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);
 				binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
-				binder.bind(IJacksonService.class).to(JacksonService.class);
 
 				// apply adapter-contributed bindings
 				for (LinkEtlAdapter a : adapters) {
