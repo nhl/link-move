@@ -3,13 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.nhl.link.move</groupId>
-	<artifactId>link-move</artifactId>
+	<artifactId>parent</artifactId>
 	<version>1.7-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-	<name>Library: link-move</name>
+	<modules>
+		<module>link-move</module>
+	</modules>
+
+	<name>Library: link-move (Parent)</name>
 	<description>A model-driven dynamically-configurable framework to acquire data 
 	from external sources and save in your application database.</description>
-	<packaging>jar</packaging>
 
 	<url>https://github.com/nhl/link-move</url>
 
@@ -180,62 +184,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<dependencies>
-
-		<!-- required runtime dependencies -->
-		<dependency>
-			<groupId>org.apache.cayenne</groupId>
-			<artifactId>cayenne-server</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<scope>compile</scope>
-		</dependency>
-
-
-		<!-- Optional dependencies. Apps that are using them will need to include 
-			them explicitly in the POM, and also likely a corresponding service should 
-			be included in the Tapestry module. The rest of the apps will be spared from 
-			an extra jar. -->
-
-		<!-- Provided dependencies -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-
-		<!-- unit test deps -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 
 	<!-- Optional profile used to sign artifacts -->
 	<profiles>

@@ -298,7 +298,7 @@ class Scanner {
                 return ".";
             }
             case RECURSIVE_DESCENT: {
-                return "..";
+                return "src/test";
             }
             case WILDCARD: {
                 return "*";
