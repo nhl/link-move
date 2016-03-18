@@ -15,6 +15,38 @@ JSON extractor supports an informal query language [JSONPath](http://goessner.ne
 |()|Script expression. Can be used inside a subscript operator or inside another script expression|
 |?()|Filter with a script expression acting as a predicate|
 
+#### Recursive descent
+
+Recursive descent operator produces a collection of all nodes in the current node's subtree. Subsequent query segment (if present) is applied to each node in this "aggregate" collection.
+
+E.g. for the root JSON document:
+```
+{
+  store: {
+    book: [
+      {
+        title: ...,
+        isbn: ...,
+        readers: [...]
+      },
+      {
+        ...,
+        readers: [...]
+      },
+      {
+        ...,
+        readers: [...]
+      }
+    ]
+  }
+}
+```
+
+Recursive descent can be used to select all readers:
+
+`$..readers[*]`
+(note how the wildcard `*` is used to combine three `readers` arrays into one "flattened" collection)
+
 ### Script expressions
 
 Script is an expression that evaluates to some value (or a collection of values). It has a slightly different syntax. Simplest expression is something like this:
