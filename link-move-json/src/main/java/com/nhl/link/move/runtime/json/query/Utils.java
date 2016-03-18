@@ -7,6 +7,10 @@ import java.util.List;
 
 public class Utils {
 
+    public static boolean isValueNode(List<JsonNode> wrappedNode) {
+        return wrappedNode != null && wrappedNode.size() == 1 && wrappedNode.get(0).isValueNode();
+    }
+
     public static JsonNode unwrapValueNode(List<JsonNode> wrappedNode) {
         if (wrappedNode == null || wrappedNode.isEmpty()) {
             return null;

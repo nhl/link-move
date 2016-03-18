@@ -18,9 +18,32 @@ import static org.junit.Assert.assertTrue;
 
 public class JsonQueryTest {
 
-    private JsonNodeFactory nodeFactory;
+    private static JsonNodeFactory nodeFactory;
     private QueryCompiler compiler;
     private JsonNode document;
+    
+    private enum Readers {
+        Bob("Bob", 18, "God save the Queen!"),
+        Rob("Rob", 60, null),
+        John("John", 3, "Goo goo ga ga");
+        
+        private JsonNode node;
+        
+        Readers(String name, Integer age, String motto) {
+            
+            ObjectNode reader = nodeFactory.objectNode();
+            reader.set("name", nodeFactory.textNode(name));
+            reader.set("age", nodeFactory.numberNode(age));
+            if (motto != null) {
+                reader.set("motto", nodeFactory.textNode(motto));
+            }
+            this.node = reader;
+        }
+        
+        public JsonNode toJson() {
+            return node;
+        }
+    }
 
     @Before
     public void setUp() throws IOException {
@@ -35,7 +58,7 @@ public class JsonQueryTest {
                 "        \"title\": \"Sayings of the Century\",\n" +
                 "        \"price\": 8.95,\n" +
                 "        \"readers\": [\n" +
-                "          {\"name\": \"Bob\", \"age\": 18},\n" +
+                "          {\"name\": \"Bob\", \"age\": 18, \"motto\": \"God save the Queen!\"},\n" +
                 "          {\"name\": \"Rob\", \"age\": 60}\n" +
                 "        ]\n" +
                 "      },\n" +
@@ -44,7 +67,7 @@ public class JsonQueryTest {
                 "        \"title\": \"Sword of Honour\",\n" +
                 "        \"price\": 12.99,\n" +
                 "        \"readers\": [\n" +
-                "          {\"name\": \"John\", \"age\": 3}\n" +
+                "          {\"name\": \"John\", \"age\": 3, \"motto\": \"Goo goo ga ga\"}\n" +
                 "        ]\n" +
                 "      },\n" +
                 "      { \"category\": \"fiction\",\n" +
@@ -135,19 +158,11 @@ public class JsonQueryTest {
         }
 
         List<JsonNode> nigelReesReaders = collectNodes((ArrayNode) nodes.get(0));
-        assertTrue(nigelReesReaders.contains(createReader("Bob", 18)));
-        assertTrue(nigelReesReaders.contains(createReader("Rob", 60)));
+        assertTrue(nigelReesReaders.contains(Readers.Bob.toJson()));
+        assertTrue(nigelReesReaders.contains(Readers.Rob.toJson()));
 
         List<JsonNode> evelynWaughReaders = collectNodes((ArrayNode) nodes.get(1));
-        assertTrue(evelynWaughReaders.contains(createReader("John", 3)));
-    }
-
-    private JsonNode createReader(String name, Integer age) {
-
-        ObjectNode reader = nodeFactory.objectNode();
-        reader.set("name", nodeFactory.textNode(name));
-        reader.set("age", nodeFactory.numberNode(age));
-        return reader;
+        assertTrue(evelynWaughReaders.contains(Readers.John.toJson()));
     }
 
     private List<JsonNode> collectNodes(ArrayNode arrayNode) {
@@ -169,9 +184,9 @@ public class JsonQueryTest {
 
         assertEquals(3, nodes.size());
 
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("Rob", 60)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -182,8 +197,8 @@ public class JsonQueryTest {
 
         assertEquals(2, nodes.size());
 
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -194,7 +209,7 @@ public class JsonQueryTest {
 
         assertEquals(1, nodes.size());
 
-        assertTrue(nodes.contains(createReader("Rob", 60)));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
 
     @Test
@@ -205,7 +220,7 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(1, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
     }
 
     @Test
@@ -216,7 +231,7 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(1, nodes.size());
-        assertTrue(nodes.contains(createReader("Rob", 60)));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
 
     @Test
@@ -227,8 +242,8 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(2, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -239,7 +254,7 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(1, nodes.size());
-        assertTrue(nodes.contains(createReader("Rob", 60)));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
 
     @Test
@@ -250,9 +265,9 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(3, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("Rob", 60)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -263,7 +278,7 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(1, nodes.size());
-        assertTrue(nodes.contains(createReader("Rob", 60)));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
 
     @Test
@@ -274,8 +289,8 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(2, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -286,8 +301,8 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(2, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -298,7 +313,7 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(1, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
     }
 
     @Test
@@ -309,8 +324,8 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(2, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("Rob", 60)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
 
     @Test
@@ -321,8 +336,8 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(2, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -333,9 +348,9 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(3, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("Rob", 60)));
-        assertTrue(nodes.contains(createReader("John", 3)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
     @Test
@@ -345,7 +360,37 @@ public class JsonQueryTest {
 
         List<JsonNode> nodes = query.execute(document);
         assertEquals(2, nodes.size());
-        assertTrue(nodes.contains(createReader("Bob", 18)));
-        assertTrue(nodes.contains(createReader("Rob", 60)));
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
+
+    @Test
+    public void testQuery_UntypedPredicate1() {
+
+        JsonQuery query = compiler.compile(
+                "$.store.book[?(@.readers[?(@.age != 3)])]");
+
+        // TODO: BinaryOp should support collections as part of the expression
+        // e.g.: $.store.book[?(@.readers[*].age != 3)]
+        // this will require defining semantics for all
+        // possible combinations of scalars and collections
+
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(1, nodes.size());
+        assertEquals("Sayings of the Century", nodes.get(0).get("title").asText());
+    }
+
+    @Test
+    public void testQuery_UntypedPredicate2() {
+
+        JsonQuery query = compiler.compile(
+                "$.store..readers[?(@.motto)]");
+
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(2, nodes.size());
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
+    }
+
+
 }

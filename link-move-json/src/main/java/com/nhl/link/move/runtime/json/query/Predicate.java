@@ -49,11 +49,13 @@ class Predicate implements JsonQuery {
 
     private boolean applyFilter(JsonNode rootNode, JsonNode elementNode) {
 
-        JsonNode filterResult = Utils.unwrapValueNode(filter.execute(rootNode, elementNode));
-        if (!filterResult.isBoolean()) {
-            throw new RuntimeException("Unexpected value received from filter, expected boolean");
+        List<JsonNode> filterResult = filter.execute(rootNode, elementNode);
+        if (Utils.isValueNode(filterResult)) {
+            JsonNode valueNode = Utils.unwrapValueNode(filterResult);
+            return !valueNode.isBoolean() || valueNode.asBoolean();
+        } else {
+            return !filterResult.isEmpty();
         }
-        return filterResult.asBoolean();
     }
 
     private static ArrayNode toArrayNode(List<JsonNode> nodes) {
