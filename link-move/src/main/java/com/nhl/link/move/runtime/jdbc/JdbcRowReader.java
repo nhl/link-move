@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.nhl.link.move.BaseRowAttribute;
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.ResultIterator;
 import org.apache.cayenne.exp.parser.ASTDbPath;
@@ -77,7 +78,7 @@ public class JdbcRowReader implements RowReader {
 		RowAttribute[] attributes = new RowAttribute[row.size()];
 		for (int i = 0; i < attributes.length; i++) {
 			String name = names.get(i);
-			attributes[i] = new RowAttribute(Object.class, name, ASTDbPath.DB_PREFIX + name, i);
+			attributes[i] = new BaseRowAttribute(Object.class, name, ASTDbPath.DB_PREFIX + name, i);
 		}
 
 		return attributes;

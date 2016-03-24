@@ -3,6 +3,7 @@ package com.nhl.link.move.extractor.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nhl.link.move.BaseRowAttribute;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -192,6 +193,6 @@ public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
 			}
 		}
 
-		attributes.add(new RowAttribute(type, source, target, attributes.size()));
+		attributes.add(new BaseRowAttribute(type, source, target, attributes.size()));
 	}
 }

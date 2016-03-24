@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.nhl.link.move.BaseRowAttribute;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,7 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends IE
 	public void setUpExtratorModel() {
 		model = new MutableExtractorModel("testExtractorConfig");
 		model.setConnectorId(CONNECTOR_ID);
+		model.setAttributes(new BaseRowAttribute[0]);
 	}
 
 	protected abstract F createExtractorFactory();

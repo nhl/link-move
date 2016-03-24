@@ -1,6 +1,5 @@
 package com.nhl.link.move.runtime.xml;
 
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -11,6 +10,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import com.nhl.link.move.BaseRowAttribute;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.NodeList;
@@ -18,7 +18,6 @@ import org.xml.sax.InputSource;
 
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
-import com.nhl.link.move.runtime.xml.XmlRowReader;
 
 public class XmlRowReaderTest {
 
@@ -39,8 +38,8 @@ public class XmlRowReaderTest {
 
 	private void configAttributes() {
 		attributes = new RowAttribute[2];
-		attributes[0] = new RowAttribute(String.class, "k1", "k1", 0);
-		attributes[1] = new RowAttribute(String.class, "k2", "k1", 0);
+		attributes[0] = new BaseRowAttribute(String.class, "k1", "k1", 0);
+		attributes[1] = new BaseRowAttribute(String.class, "k2", "k1", 0);
 	}
 
 	private void configNodes() throws Exception {

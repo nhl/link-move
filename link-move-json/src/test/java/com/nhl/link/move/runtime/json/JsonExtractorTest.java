@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.json;
 
+import com.nhl.link.move.BaseRowAttribute;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
@@ -82,7 +83,7 @@ public class JsonExtractorTest {
     public void testJsonExtractor() {
 
         RowAttribute[] attributes = new RowAttribute[1];
-        RowAttribute readerName = attributes[0] = new RowAttribute(String.class, "name", "readerName", 0);
+        RowAttribute readerName = attributes[0] = new BaseRowAttribute(String.class, "name", "readerName", 0);
 
         JsonQuery query = compiler.compile("$.store.book[*].readers[*]");
 
