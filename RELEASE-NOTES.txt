@@ -1,3 +1,10 @@
+Release 1.7
+
+#78 Split link-move into a multi-module Maven project, with specialized extractors in submodules
+#83 Support untyped predicates in JSONPath queries
+#84 BigIntNormalizer must handle String values
+#86 XmlExtractor should treat attribute's source name as XPath expression
+
 Release 1.6
 
 #35 Long / Integer values in HashMap keys
