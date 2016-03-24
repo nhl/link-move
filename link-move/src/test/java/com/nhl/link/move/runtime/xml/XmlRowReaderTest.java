@@ -17,7 +17,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.nhl.link.move.Row;
-import com.nhl.link.move.RowAttribute;
 
 public class XmlRowReaderTest {
 
@@ -25,21 +24,23 @@ public class XmlRowReaderTest {
 			+ "  <test><k1>v11</k1><k2>v12</k2></test>  <test><k1>v21</k1><k2>v22</k2></test>"
 			+ "  <test><k1>v31</k1><k2>v32</k2></test></tests>";
 
+	private XPathFactory xPathFactory;
 	private XmlRowReader xmlRowReader;
-	private RowAttribute[] attributes;
+	private XmlRowAttribute[] attributes;
 	private NodeList nodes;
 
 	@Before
 	public void setUpXmlRowReader() throws Exception {
+		xPathFactory = XPathFactory.newInstance();
 		configAttributes();
 		configNodes();
 		xmlRowReader = new XmlRowReader(attributes, nodes);
 	}
 
 	private void configAttributes() {
-		attributes = new RowAttribute[2];
-		attributes[0] = new BaseRowAttribute(String.class, "k1", "k1", 0);
-		attributes[1] = new BaseRowAttribute(String.class, "k2", "k1", 0);
+		attributes = new XmlRowAttribute[2];
+		attributes[0] = new XmlRowAttribute(new BaseRowAttribute(String.class, "k1", "k1", 0), xPathFactory);
+		attributes[1] = new XmlRowAttribute(new BaseRowAttribute(String.class, "k2", "k1", 0), xPathFactory);
 	}
 
 	private void configNodes() throws Exception {

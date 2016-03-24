@@ -11,7 +11,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
@@ -22,10 +21,10 @@ import com.nhl.link.move.extractor.Extractor;
 public class XmlExtractor implements Extractor {
 
 	private final StreamConnector connector;
-	private final RowAttribute[] attributes;
+	private final XmlRowAttribute[] attributes;
 	private final XPathExpression expression;
 
-	public XmlExtractor(StreamConnector connector, RowAttribute[] attributes, XPathExpression expression) {
+	public XmlExtractor(StreamConnector connector, XmlRowAttribute[] attributes, XPathExpression expression) {
 		this.connector = connector;
 		this.attributes = attributes;
 		this.expression = expression;

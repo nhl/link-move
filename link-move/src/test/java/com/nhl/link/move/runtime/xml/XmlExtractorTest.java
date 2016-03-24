@@ -1,9 +1,7 @@
 package com.nhl.link.move.runtime.xml;
 
-import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
-import com.nhl.link.move.runtime.xml.XmlExtractor;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +38,7 @@ public class XmlExtractorTest {
 		streamConnectorMock = mock(StreamConnector.class);
 		when(streamConnectorMock.getInputStream()).thenReturn(inputStreamMock);
 		xPathExpressionMock = mock(XPathExpression.class);
-		xmlExtractor = new XmlExtractor(streamConnectorMock, new RowAttribute[0], xPathExpressionMock);
+		xmlExtractor = new XmlExtractor(streamConnectorMock, new XmlRowAttribute[0], xPathExpressionMock);
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package com.nhl.link.move.runtime.xml;
 
 import com.nhl.link.move.Row;
-import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 
 import org.w3c.dom.Node;
@@ -13,10 +12,10 @@ import java.util.Iterator;
  * @since 1.4
  */
 public class XmlRowReader implements RowReader {
-	private final RowAttribute[] attributes;
+	private final XmlRowAttribute[] attributes;
 	private final NodeList nodes;
 
-	public XmlRowReader(RowAttribute[] attributes, NodeList nodes) {
+	public XmlRowReader(XmlRowAttribute[] attributes, NodeList nodes) {
 		this.attributes = attributes;
 		this.nodes = nodes;
 	}

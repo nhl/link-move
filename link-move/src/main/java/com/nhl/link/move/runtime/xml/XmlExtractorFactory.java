@@ -7,6 +7,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 
 import com.nhl.link.move.LmRuntimeException;
@@ -42,7 +43,7 @@ public class XmlExtractorFactory implements IExtractorFactory<StreamConnector> {
 	public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
 		try {
 			XPathExpression expression = getXPathExpression(model);
-			return new XmlExtractor(connector, model.getAttributes(), expression);
+			return new XmlExtractor(connector, mapToXmlAttributes(model.getAttributes()), expression);
 		} catch (XPathExpressionException e) {
 			throw new LmRuntimeException(e);
 		}
@@ -56,5 +57,15 @@ public class XmlExtractorFactory implements IExtractorFactory<StreamConnector> {
 		}
 		XPath xPath = xPathFactory.newXPath();
 		return xPath.compile(expressionString);
+	}
+
+	private XmlRowAttribute[] mapToXmlAttributes(RowAttribute[] attributes) {
+		int len = attributes.length;
+		XmlRowAttribute[] xmlAttributes = new XmlRowAttribute[len];
+
+		for (int i = 0; i < len; i++) {
+			xmlAttributes[i] = new XmlRowAttribute(attributes[i], xPathFactory);
+		}
+		return xmlAttributes;
 	}
 }
