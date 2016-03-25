@@ -66,10 +66,16 @@ Built-in functions (binary operators) that can be used inside a script expressio
 
 |Literal name|Description|
 |---|---|
-|&&, \|\||Logical AND and OR operators. Both sides must evaluate to a boolean value and can be either one of: true/false literal, query or a nested expression)|
-|==, !=|Equality operators. Both sides must have the same type, one of: boolean, string, number|
-|<, <=, >, >=|Comparison operators. Both sides must have the same comparable type, one of: boolean, string, number|
+|&&, \|\||Logical AND and OR operators. Both sides must evaluate to a boolean value|
+|==, !=|Equality operators. Evaluation result of both sides must have the same type, one of: boolean, string, number|
+|<, <=, >, >=|Comparison operators. Evaluation result of both sides must have the same comparable type, one of: boolean, string, number|
 |=~|String match operator. Both sides must evaluate to a string value with the right-hand side being a Java regex|
+
+Both left-hand and right-hand side can be either one of: string, numeric or boolean literal, query or a nested expression
+
+Note that, despite all these functions are binary ops, both left-hand and right-hand sides can evaluate to lists of values of corresponding types. In such case the binary op is applied separately to each element of the cartesian product of LHS and RHS sets of values. The ultimate result is logical conjunction of all individual applications.
+
+E.g. for the query `$.store.book[?(@.readers[*].age >= 21)]` for each book all its readers will be inspected. Only those books that have _only_ adult readers will be returned by the query.
 
 #### Dynamic properties
 
@@ -90,5 +96,6 @@ All readers aged 30+
 `$.store.book[?(@.readers)]`
 All books that have readers
 
-`$.store.book[?(@.readers[?(@.age >= 30)])]`
+`$.store.book[?(@.readers[?(@.age >= 30)])]` or 
+`$.store.book[?(@.readers[*].age >= 30)]`
 All books that have readers aged 30+
