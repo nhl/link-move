@@ -11,6 +11,10 @@ public class Utils {
         return wrappedNode != null && wrappedNode.size() == 1 && wrappedNode.get(0).isValueNode();
     }
 
+    public static boolean isValueMissing(JsonNode node) {
+        return node == null || node.getNodeType() == JsonNodeType.MISSING || node.getNodeType() == JsonNodeType.NULL;
+    }
+
     public static JsonNode unwrapValueNode(List<JsonNode> wrappedNode) {
         if (wrappedNode == null || wrappedNode.isEmpty()) {
             return null;

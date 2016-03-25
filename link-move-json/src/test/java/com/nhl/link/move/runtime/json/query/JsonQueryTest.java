@@ -392,5 +392,37 @@ public class JsonQueryTest {
         assertTrue(nodes.contains(Readers.John.toJson()));
     }
 
+    @Test
+    public void testQuery_UntypedPredicate3() {
+
+        JsonQuery query = compiler.compile(
+                "$.store.book[?(@.readers[*].age <= 18)].readers[*]");
+
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(1, nodes.size());
+        assertTrue(nodes.contains(Readers.John.toJson()));
+    }
+
+    @Test
+    public void testQuery_UntypedPredicate4() {
+
+        JsonQuery query = compiler.compile(
+                "$.store.book[?(@.readers[*].age == 3 || @.readers[*].age >= 18)].readers[*]");
+
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(3, nodes.size());
+        assertTrue(nodes.contains(Readers.Bob.toJson()));
+        assertTrue(nodes.contains(Readers.Rob.toJson()));
+        assertTrue(nodes.contains(Readers.John.toJson()));
+    }
+
+    @Test
+    public void testQuery_Script_MissingProperties1() {
+
+        JsonQuery query = compiler.compile("$.store.book[?(@.someProperty == 'someValue')]");
+
+        List<JsonNode> nodes = query.execute(document);
+        assertEquals(0, nodes.size());
+    }
 
 }

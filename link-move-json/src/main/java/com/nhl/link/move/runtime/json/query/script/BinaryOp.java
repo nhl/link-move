@@ -2,7 +2,7 @@ package com.nhl.link.move.runtime.json.query.script;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
 import com.nhl.link.move.runtime.json.query.Utils;
 
@@ -40,16 +40,38 @@ abstract class BinaryOp implements JsonQuery {
     @Override
     public final List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
 
-        JsonNode leftValue = Utils.unwrapValueNode(lhsValueQuery.execute(rootNode, currentNode));
-        JsonNode rightValue = Utils.unwrapValueNode(rhsValueQuery.execute(rootNode, currentNode));
+        List<JsonNode> leftResult = lhsValueQuery.execute(rootNode, currentNode);
+        List<JsonNode> rightResult = rhsValueQuery.execute(rootNode, currentNode);
 
-        if (isValueMissing(leftValue) || isValueMissing(rightValue)) {
+        if (leftResult.isEmpty() || rightResult.isEmpty()) {
             return FALSE;
         }
-        return apply(leftValue, rightValue) ? TRUE : FALSE;
+
+        for (JsonNode leftValue : leftResult) {
+            if (Utils.isValueMissing(leftValue)) {
+                return FALSE;
+            }
+            if (!leftValue.isValueNode()) {
+                throw new LmRuntimeException(
+                        "Expected (list of) value node(s) as a result of the left-hand side expression, but received: " +
+                        leftValue.getNodeType().name());
+            }
+            for (JsonNode rightValue : rightResult) {
+                if (Utils.isValueMissing(rightValue)) {
+                    return FALSE;
+                }
+                if (!rightValue.isValueNode()) {
+                    throw new LmRuntimeException(
+                            "Expected (list of) value node(s) as a result of the right-hand side expression, but received: " +
+                            rightValue.getNodeType().name());
+                }
+                if (!apply(leftValue, rightValue)) {
+                    return FALSE;
+                }
+            }
+        }
+        return TRUE;
     }
 
-    private static boolean isValueMissing(JsonNode node) {
-        return node == null || node.getNodeType() == JsonNodeType.MISSING || node.getNodeType() == JsonNodeType.NULL;
-    }
+
 }

@@ -1,8 +1,6 @@
 package com.nhl.link.move.runtime.json.query;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +41,11 @@ class Predicate implements JsonQuery {
         if (clientQuery == null) {
             return filteredNodes;
         } else {
-            return clientQuery.execute(rootNode, toArrayNode(filteredNodes));
+            List<JsonNode> result = new ArrayList<>(filteredNodes.size() + 1);
+            for (JsonNode filteredNode : filteredNodes) {
+                result.addAll(clientQuery.execute(rootNode, filteredNode));
+            }
+            return result;
         }
     }
 
@@ -56,14 +58,5 @@ class Predicate implements JsonQuery {
         } else {
             return !filterResult.isEmpty();
         }
-    }
-
-    private static ArrayNode toArrayNode(List<JsonNode> nodes) {
-
-        ArrayNode arrayNode = JsonNodeFactory.instance.arrayNode();
-        for (JsonNode node : nodes) {
-            arrayNode.add(node);
-        }
-        return arrayNode;
     }
 }
