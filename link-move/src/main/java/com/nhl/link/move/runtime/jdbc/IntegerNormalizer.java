@@ -24,7 +24,10 @@ public class IntegerNormalizer extends JdbcNormalizer {
             case "java.lang.Long": {
                 return ((Long) value).intValue(); // truncating the value
             }
-            case "java.lang.String":
+            case "java.lang.String": {
+                String s = (String) value;
+                return s.isEmpty()? null : Integer.valueOf(s);
+            }
             case "java.lang.Byte":
             case "java.lang.Short": {
                 return Integer.valueOf(value.toString());

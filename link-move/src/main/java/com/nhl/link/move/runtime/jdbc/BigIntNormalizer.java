@@ -24,7 +24,10 @@ public class BigIntNormalizer extends JdbcNormalizer {
             case "java.lang.Long": {
                 return value;
             }
-            case "java.lang.String":
+            case "java.lang.String": {
+                String s = (String) value;
+                return s.isEmpty()? null : Long.valueOf(s);
+            }
             case "java.lang.Byte":
             case "java.lang.Short":
             case "java.lang.Integer": {
