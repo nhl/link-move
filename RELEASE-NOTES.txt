@@ -4,6 +4,7 @@ Release 1.7
 #83 Support untyped predicates in JSONPath queries
 #84 BigIntNormalizer must handle String values
 #86 XmlExtractor should treat attribute's source name as XPath expression
+#87 JsonExtractor should treat attribute's source name as JsonPath expression
 #88 JdbcNormalizer for SQL Integer
 
 Release 1.6
