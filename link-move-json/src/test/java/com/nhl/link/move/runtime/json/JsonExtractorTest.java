@@ -139,6 +139,26 @@ public class JsonExtractorTest {
         assertTrue(items.equals(new ArrayList<>(Arrays.asList("red", "red", "red"))));
     }
 
+    @Test
+    public void testJsonExtractor_QueryAttributes_Parent() {
+
+        JsonRowAttribute[] attributes = new JsonRowAttribute[1];
+
+        RowAttribute baseAttr = new BaseRowAttribute(String.class, "@#parent#parent.bicycle.color", "constantAttr", 0);
+        JsonRowAttribute attr = attributes[0] = new JsonRowAttribute(baseAttr, compiler);
+
+        JsonQuery query = compiler.compile("$.store.book[*]");
+
+        List<Row> rows = collectRows(attributes, query);
+
+        List<String> items = new ArrayList<>();
+        for (Row row : rows) {
+            items.add((String) row.get(attr));
+        }
+        assertEquals(4, items.size());
+        assertTrue(items.equals(new ArrayList<>(Arrays.asList("red", "red", "red", "red"))));
+    }
+
     private List<Row> collectRows(JsonRowAttribute[] attributes, JsonQuery query) {
 
         Extractor extractor = new JsonExtractor(jacksonService, connector, attributes, query);

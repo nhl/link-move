@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
 
-class NamedProperty implements JsonQuery {
+class NamedProperty extends BaseQuery {
 
     private JsonQuery clientQuery;
     private String propertyName;
@@ -16,36 +16,29 @@ class NamedProperty implements JsonQuery {
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
-
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-
-        if (currentNode == null) {
-            return Collections.emptyList();
-        }
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
         JsonNode node = null;
-        if (currentNode.isArray()) {
+        JsonNode currentJsonNode = currentNode.getNode();
+        if (currentJsonNode.isArray()) {
 
             Integer index;
             try {
                 index = Integer.valueOf(propertyName);
-                node = currentNode.get(index);
+                node = currentJsonNode.get(index);
             } catch (NumberFormatException e) {
                 // ignore
             }
         } else {
-            node = currentNode.get(propertyName);
+            node = currentJsonNode.get(propertyName);
         }
 
         if (node == null) {
             return Collections.emptyList();
         }
 
+        JsonNodeWrapper wrappedNode = Utils.createWrapperNode(currentNode, node);
         return clientQuery == null?
-                Collections.singletonList(node) : clientQuery.execute(rootNode, node);
+                Collections.singletonList(wrappedNode) : clientQuery.execute(rootNode, wrappedNode);
     }
 }

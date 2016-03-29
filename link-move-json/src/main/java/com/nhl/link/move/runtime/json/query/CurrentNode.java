@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
 
-class CurrentNode implements JsonQuery {
+class CurrentNode extends BaseQuery {
 
     private JsonQuery clientQuery;
 
@@ -14,16 +14,8 @@ class CurrentNode implements JsonQuery {
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-
-        if (currentNode == null) {
-            return Collections.emptyList();
-        }
         return clientQuery == null?
                 Collections.singletonList(currentNode) : clientQuery.execute(rootNode, currentNode);
     }

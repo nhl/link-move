@@ -102,6 +102,9 @@ public class QueryCompiler {
                     }
                     // fall through
                 }
+                case META: {
+                    return buildMeta();
+                }
                 default: {
                     List<TokenType> types = new ArrayList<>();
                     types.addAll(Arrays.asList(TokenType.CHILD_ACCESS, TokenType.RECURSIVE_DESCENT, TokenType.FILTER_START));
@@ -115,6 +118,17 @@ public class QueryCompiler {
                     throw new ParseException(token, types.toArray(new TokenType[types.size()]));
                 }
             }
+        }
+
+        private JsonQuery buildMeta() {
+
+            assertHasTokens();
+
+            Token token = scanner.nextToken();
+            if (token.getType() != TokenType.IDENTIFIER) {
+                throw new ParseException(token, TokenType.IDENTIFIER);
+            }
+            return new MetaProperty(buildSegment(), token.getLiteral());
         }
 
         private JsonQuery buildChildOrFilter() {

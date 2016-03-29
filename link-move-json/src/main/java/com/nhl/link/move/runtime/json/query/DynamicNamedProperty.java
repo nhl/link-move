@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
 
-class DynamicNamedProperty implements JsonQuery {
+class DynamicNamedProperty extends BaseQuery {
 
     private JsonQuery valueQuery, clientQuery;
 
@@ -15,12 +15,7 @@ class DynamicNamedProperty implements JsonQuery {
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
-
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
         JsonNode propertyNameNode = Utils.unwrapValueNode(valueQuery.execute(rootNode, currentNode));
         if (propertyNameNode == null) {

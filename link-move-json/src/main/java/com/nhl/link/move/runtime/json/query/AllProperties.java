@@ -3,10 +3,9 @@ package com.nhl.link.move.runtime.json.query;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-class AllProperties implements JsonQuery {
+class AllProperties extends BaseQuery {
 
     private JsonQuery clientQuery;
 
@@ -15,23 +14,15 @@ class AllProperties implements JsonQuery {
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-
-        if (currentNode == null) {
-            return Collections.emptyList();
-        }
-
-        List<JsonNode> nodes = new ArrayList<>();
-        for (JsonNode childNode : currentNode) {
+        List<JsonNodeWrapper> nodes = new ArrayList<>();
+        for (JsonNode childNode : currentNode.getNode()) {
             if (clientQuery != null) {
-                nodes.addAll(clientQuery.execute(rootNode, childNode));
+                nodes.addAll(clientQuery.execute(rootNode,
+                        Utils.createWrapperNode(currentNode, childNode)));
             } else {
-                nodes.add(childNode);
+                nodes.add(Utils.createWrapperNode(currentNode, childNode));
             }
         }
         return nodes;

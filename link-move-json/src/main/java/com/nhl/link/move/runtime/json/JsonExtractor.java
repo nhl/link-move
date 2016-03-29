@@ -5,6 +5,7 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
+import com.nhl.link.move.runtime.json.query.JsonNodeWrapper;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
 
 import java.io.InputStream;
@@ -35,7 +36,7 @@ class JsonExtractor implements Extractor {
             try (InputStream in = connector.getInputStream()) {
                 source = jacksonService.parseJson(in);
             }
-            List<JsonNode> nodes = query.execute(source);
+            List<JsonNodeWrapper> nodes = query.execute(source);
 			return new JsonRowReader(attributes, source, nodes);
 		} catch (Exception e) {
 			throw new LmRuntimeException(e);

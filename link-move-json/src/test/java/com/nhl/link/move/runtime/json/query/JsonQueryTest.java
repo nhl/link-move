@@ -10,10 +10,14 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class JsonQueryTest {
@@ -106,7 +110,7 @@ public class JsonQueryTest {
     public void testQuery_SimpleProperties_Dot() {
 
         JsonQuery query = compiler.compile("$.store.book[*].author");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(4, nodes.size());
 
@@ -120,7 +124,7 @@ public class JsonQueryTest {
     public void testQuery_SimpleProperties_Brackets() {
 
         JsonQuery query = compiler.compile("$['store'][\"book\"][*]['author']");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(4, nodes.size());
 
@@ -134,7 +138,7 @@ public class JsonQueryTest {
     public void testQuery_SimpleProperties_RecursiveDescent() {
 
         JsonQuery query = compiler.compile("$.store..price");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(5, nodes.size());
 
@@ -149,7 +153,7 @@ public class JsonQueryTest {
     public void testQuery_ArrayProperties() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(2, nodes.size());
 
@@ -180,7 +184,7 @@ public class JsonQueryTest {
     public void testQuery_ArrayProperties_Flattened() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers.*");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(3, nodes.size());
 
@@ -193,7 +197,7 @@ public class JsonQueryTest {
     public void testQuery_ArrayProperties_ByIndex_Brackets() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers[0]");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(2, nodes.size());
 
@@ -205,7 +209,7 @@ public class JsonQueryTest {
     public void testQuery_ArrayProperties_Dot() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers.1");
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
 
         assertEquals(1, nodes.size());
 
@@ -218,7 +222,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == $.allReaders[0].name)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
     }
@@ -229,7 +233,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Rob')]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
@@ -240,7 +244,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?('Rob' != @.name)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
@@ -252,7 +256,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.age == 60)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
@@ -263,7 +267,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(true == true)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(3, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.Rob.toJson()));
@@ -276,7 +280,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Rob' == true)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertTrue(nodes.contains(Readers.Rob.toJson()));
     }
@@ -287,7 +291,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Bob' && @.age == 18 || @.age == 3)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
@@ -299,7 +303,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Bob' && @.age == 18 || @.name == 'John' && @.age == 3)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
@@ -311,7 +315,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Bob' && (@.age == 18 || @.age == 3))]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
     }
@@ -322,7 +326,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?((@.name) == 'Bob' && (@.age == 18 || @.age == 3) || @.name == $.allReaders[1].name && (60) == @.age)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.Rob.toJson()));
@@ -334,7 +338,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[(0)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
@@ -346,7 +350,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].[($.properties[0])].*");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(3, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.Rob.toJson()));
@@ -358,7 +362,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[*][?(@.name =~ '.ob')]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.Rob.toJson()));
@@ -375,7 +379,7 @@ public class JsonQueryTest {
         // this will require defining semantics for all
         // possible combinations of scalars and collections
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertEquals("Sayings of the Century", nodes.get(0).get("title").asText());
     }
@@ -386,7 +390,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store..readers[?(@.motto)]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(2, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
@@ -398,7 +402,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[?(@.readers[*].age <= 18)].readers[*]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(1, nodes.size());
         assertTrue(nodes.contains(Readers.John.toJson()));
     }
@@ -409,7 +413,7 @@ public class JsonQueryTest {
         JsonQuery query = compiler.compile(
                 "$.store.book[?(@.readers[*].age == 3 || @.readers[*].age >= 18)].readers[*]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(3, nodes.size());
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.Rob.toJson()));
@@ -421,8 +425,75 @@ public class JsonQueryTest {
 
         JsonQuery query = compiler.compile("$.store.book[?(@.someProperty == 'someValue')]");
 
-        List<JsonNode> nodes = query.execute(document);
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
         assertEquals(0, nodes.size());
+    }
+
+    @Test
+    public void testQuery_Script_Parents1() {
+
+        JsonQuery query = compiler.compile("$.store.book..readers#parent");
+
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
+        assertEquals(2, nodes.size());
+
+        List<String> titles = new ArrayList<>(3);
+        for (JsonNode node : nodes) {
+            titles.add(node.get("title").textValue());
+        }
+        assertTrue(titles.containsAll(Arrays.asList("Sayings of the Century", "Sword of Honour")));
+    }
+
+    @Test
+    public void testQuery_Script_Parents2() {
+
+        JsonQuery query = compiler.compile("$.store.book#parent#parent");
+
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
+        assertEquals(1, nodes.size());
+        assertNotNull(nodes.get(0).get("store"));
+    }
+
+    @Test
+    public void testQuery_Script_Parents3() {
+
+        JsonQuery query = compiler.compile("$#parent");
+
+        List<JsonNode> nodes = collectJsonNodes(query.execute(document));
+        assertEquals(0, nodes.size());
+    }
+
+    @Test
+    public void testQuery_Script_Parents4() {
+
+        JsonQuery query = compiler.compile("$..*#parent");
+
+        Set<JsonNode> nodes = new HashSet<>(collectJsonNodes(query.execute(document)));
+        Set<JsonNode> parents = collectParents(document);
+        assertEquals(parents.size(), nodes.size());
+        assertTrue(nodes.containsAll(parents));
+    }
+
+    private Set<JsonNode> collectParents(JsonNode node) {
+
+        Set<JsonNode> acc = new HashSet<>();
+        if (node.size() > 0) {
+            acc.add(node);
+        }
+
+        for (JsonNode child : node) {
+            acc.addAll(collectParents(child));
+        }
+        return acc;
+    }
+
+    private List<JsonNode> collectJsonNodes(List<JsonNodeWrapper> wrappers) {
+
+        List<JsonNode> nodes = new ArrayList<>(wrappers.size() + 1);
+        for (JsonNodeWrapper wrapper : wrappers) {
+            nodes.add(wrapper.getNode());
+        }
+        return nodes;
     }
 
 }

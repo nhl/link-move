@@ -227,6 +227,10 @@ class Scanner {
                     tokenType = TokenType.UNION;
                     return true;
                 }
+                case '#': {
+                    tokenType = TokenType.META;
+                    return true;
+                }
                 case '\'':
                 case '\"': {
                     tokenType = TokenType.QUOTED_IDENTIFIER;
@@ -262,6 +266,7 @@ class Scanner {
                 case '(':
                 case ')':
                 case ',':
+                case '#':
                 case '\'':
                 case '\"':
                     return true;
@@ -305,6 +310,9 @@ class Scanner {
             }
             case UNION: {
                 return ",";
+            }
+            case META: {
+                return "#";
             }
             case FILTER_START: {
                 return "[";

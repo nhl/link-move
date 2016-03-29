@@ -4,15 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
+import com.nhl.link.move.runtime.json.query.JsonNodeWrapper;
 
 import java.util.List;
 
 class JsonNodeRow implements Row {
 
     private final JsonRowAttribute[] attributes;
-	private final JsonNode rootNode, currentNode;
+	private final JsonNode rootNode;
+	private final JsonNodeWrapper currentNode;
 
-	public JsonNodeRow(JsonRowAttribute[] attributes, JsonNode rootNode, JsonNode currentNode) {
+	public JsonNodeRow(JsonRowAttribute[] attributes, JsonNode rootNode, JsonNodeWrapper currentNode) {
 		this.attributes = attributes;
 		this.rootNode = rootNode;
 		this.currentNode = currentNode;
@@ -25,7 +27,7 @@ class JsonNodeRow implements Row {
 		// indicating the type of it's attributes? this will require global refactoring though)
 		JsonRowAttribute jsonAttribute = (JsonRowAttribute) attribute;
 
-		List<JsonNode> result = jsonAttribute.getSourceQuery().execute(rootNode, currentNode);
+		List<JsonNodeWrapper> result = jsonAttribute.getSourceQuery().execute(rootNode, currentNode);
 		if (result == null || result.isEmpty()) {
 			return null;
 		}
@@ -34,7 +36,7 @@ class JsonNodeRow implements Row {
 					"). A single value is expected.");
 		}
 
-		JsonNode value = result.get(0);
+		JsonNode value = result.get(0).getNode();
 		if (value.isObject() || value.isArray()) {
 			throw new LmRuntimeException("Expected a value node");
 		}

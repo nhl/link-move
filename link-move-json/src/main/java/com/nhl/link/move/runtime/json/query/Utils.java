@@ -7,22 +7,37 @@ import java.util.List;
 
 public class Utils {
 
-    public static boolean isValueNode(List<JsonNode> wrappedNode) {
-        return wrappedNode != null && wrappedNode.size() == 1 && wrappedNode.get(0).isValueNode();
+    public static JsonNodeWrapper createWrapperNode(final JsonNodeWrapper parent, final JsonNode node) {
+
+        return new JsonNodeWrapper() {
+            @Override
+            public JsonNodeWrapper getParent() {
+                return parent;
+            }
+
+            @Override
+            public JsonNode getNode() {
+                return node;
+            }
+        };
     }
 
-    public static boolean isValueMissing(JsonNode node) {
-        return node == null || node.getNodeType() == JsonNodeType.MISSING || node.getNodeType() == JsonNodeType.NULL;
+    public static boolean isValueNode(List<JsonNodeWrapper> wrappedNode) {
+        return wrappedNode != null && wrappedNode.size() == 1 && wrappedNode.get(0).getNode().isValueNode();
     }
 
-    public static JsonNode unwrapValueNode(List<JsonNode> wrappedNode) {
+    public static boolean isValueMissing(JsonNodeWrapper node) {
+        return node == null || node.getNode().getNodeType() == JsonNodeType.MISSING || node.getNode().getNodeType() == JsonNodeType.NULL;
+    }
+
+    public static JsonNode unwrapValueNode(List<JsonNodeWrapper> wrappedNode) {
         if (wrappedNode == null || wrappedNode.isEmpty()) {
             return null;
         }
         if (wrappedNode.size() > 1) {
             throw new RuntimeException("Unexpected number of results (must be 0 or 1): " + wrappedNode.size());
         }
-        JsonNode valueNode = wrappedNode.get(0);
+        JsonNode valueNode = wrappedNode.get(0).getNode();
         if (!valueNode.isValueNode()) {
             throw new RuntimeException("Expected value node as result, but received: " + valueNode.getNodeType().name());
         }

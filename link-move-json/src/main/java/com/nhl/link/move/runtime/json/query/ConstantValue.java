@@ -6,23 +6,19 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-class ConstantValue implements JsonQuery {
+class ConstantValue extends BaseQuery {
 
-    private final List<JsonNode> wrappedValue;
+    private final JsonNode value;
 
     private ConstantValue(JsonNode value) {
-        wrappedValue = new ArrayList<>(2);
-        wrappedValue.add(value);
+        this.value = value;
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return wrappedValue;
-    }
-
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-        return wrappedValue;
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
+        List<JsonNodeWrapper> result = new ArrayList<>(2);
+        result.add(Utils.createWrapperNode(currentNode, value));
+        return result;
     }
 
     public static ConstantValue valueOf(String value) {

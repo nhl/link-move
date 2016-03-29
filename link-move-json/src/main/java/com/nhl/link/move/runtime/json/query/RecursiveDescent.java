@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 
-class RecursiveDescent implements JsonQuery {
+class RecursiveDescent extends BaseQuery {
 
     private JsonQuery clientQuery;
 
@@ -14,30 +14,25 @@ class RecursiveDescent implements JsonQuery {
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-
-        List<JsonNode> nodes = new ArrayList<>();
+        List<JsonNodeWrapper> nodes = new ArrayList<>();
         traverseNodes(rootNode, currentNode, nodes);
         return nodes;
     }
 
-    public void traverseNodes(JsonNode rootNode, JsonNode currentNode, List<JsonNode> accumulator) {
+    public void traverseNodes(JsonNode rootNode, JsonNodeWrapper currentNode, List<JsonNodeWrapper> accumulator) {
 
         if (currentNode != null) {
-            List<JsonNode> nodes = clientQuery.execute(rootNode, currentNode);
-            for (JsonNode node : nodes) {
+            List<JsonNodeWrapper> nodes = clientQuery.execute(rootNode, currentNode);
+            for (JsonNodeWrapper node : nodes) {
                 if (node != null) {
                     accumulator.add(node);
                 }
             }
 
-            for (JsonNode childNode : currentNode) {
-                traverseNodes(rootNode, childNode, accumulator);
+            for (JsonNode childNode : currentNode.getNode()) {
+                traverseNodes(rootNode, Utils.createWrapperNode(currentNode, childNode), accumulator);
             }
         }
     }

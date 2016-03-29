@@ -3,19 +3,21 @@ package com.nhl.link.move.runtime.json.query.script;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.json.query.BaseQuery;
+import com.nhl.link.move.runtime.json.query.JsonNodeWrapper;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
 import com.nhl.link.move.runtime.json.query.Utils;
 
 import java.util.Collections;
 import java.util.List;
 
-abstract class BinaryOp implements JsonQuery {
+abstract class BinaryOp extends BaseQuery {
 
-    private static final List<JsonNode> TRUE, FALSE;
+    private static final List<JsonNodeWrapper> TRUE, FALSE;
 
     static {
-        TRUE = Collections.<JsonNode>singletonList(JsonNodeFactory.instance.booleanNode(true));
-        FALSE = Collections.<JsonNode>singletonList(JsonNodeFactory.instance.booleanNode(false));
+        TRUE = Collections.singletonList(Utils.createWrapperNode(null, JsonNodeFactory.instance.booleanNode(true)));
+        FALSE = Collections.singletonList(Utils.createWrapperNode(null, JsonNodeFactory.instance.booleanNode(false)));
     }
 
     private JsonQuery lhsValueQuery, rhsValueQuery;
@@ -33,39 +35,34 @@ abstract class BinaryOp implements JsonQuery {
     protected abstract boolean apply(JsonNode lhsValue, JsonNode rhsValue);
 
     @Override
-    public final List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
+    public final List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
-    @Override
-    public final List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-
-        List<JsonNode> leftResult = lhsValueQuery.execute(rootNode, currentNode);
-        List<JsonNode> rightResult = rhsValueQuery.execute(rootNode, currentNode);
+        List<JsonNodeWrapper> leftResult = lhsValueQuery.execute(rootNode, currentNode);
+        List<JsonNodeWrapper> rightResult = rhsValueQuery.execute(rootNode, currentNode);
 
         if (leftResult.isEmpty() || rightResult.isEmpty()) {
             return FALSE;
         }
 
-        for (JsonNode leftValue : leftResult) {
+        for (JsonNodeWrapper leftValue : leftResult) {
             if (Utils.isValueMissing(leftValue)) {
                 return FALSE;
             }
-            if (!leftValue.isValueNode()) {
+            if (!leftValue.getNode().isValueNode()) {
                 throw new LmRuntimeException(
                         "Expected (list of) value node(s) as a result of the left-hand side expression, but received: " +
-                        leftValue.getNodeType().name());
+                        leftValue.getNode().getNodeType().name());
             }
-            for (JsonNode rightValue : rightResult) {
+            for (JsonNodeWrapper rightValue : rightResult) {
                 if (Utils.isValueMissing(rightValue)) {
                     return FALSE;
                 }
-                if (!rightValue.isValueNode()) {
+                if (!rightValue.getNode().isValueNode()) {
                     throw new LmRuntimeException(
                             "Expected (list of) value node(s) as a result of the right-hand side expression, but received: " +
-                            rightValue.getNodeType().name());
+                            rightValue.getNode().getNodeType().name());
                 }
-                if (!apply(leftValue, rightValue)) {
+                if (!apply(leftValue.getNode(), rightValue.getNode())) {
                     return FALSE;
                 }
             }

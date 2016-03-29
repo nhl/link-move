@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class Predicate implements JsonQuery {
+class Predicate extends BaseQuery {
 
     private JsonQuery filter, clientQuery;
 
@@ -16,42 +16,40 @@ class Predicate implements JsonQuery {
     }
 
     @Override
-    public List<JsonNode> execute(JsonNode rootNode) {
-        return execute(rootNode, rootNode);
-    }
+    public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
-    @Override
-    public List<JsonNode> execute(JsonNode rootNode, JsonNode currentNode) {
-
-        List<JsonNode> filteredNodes;
-
-        if (currentNode.isArray()) {
+        List<JsonNodeWrapper> filteredNodes;
+        JsonNode currentJsonNode = currentNode.getNode();
+        if (currentJsonNode.isArray()) {
             filteredNodes = new ArrayList<>();
-            for (JsonNode elementNode : currentNode) {
-                if (applyFilter(rootNode, elementNode)) {
-                    filteredNodes.add(elementNode);
+            for (JsonNode elementNode : currentJsonNode) {
+                JsonNodeWrapper elementNodeWrapped = Utils.createWrapperNode(currentNode, elementNode);
+                if (applyFilter(rootNode, elementNodeWrapped)) {
+                    filteredNodes.add(elementNodeWrapped);
                 }
             }
-        } else if (applyFilter(rootNode, currentNode)) {
-            filteredNodes = Collections.singletonList(currentNode);
         } else {
-            filteredNodes = Collections.emptyList();
+            if (applyFilter(rootNode, currentNode)) {
+                filteredNodes = Collections.singletonList(currentNode);
+            } else {
+                filteredNodes = Collections.emptyList();
+            }
         }
 
         if (clientQuery == null) {
             return filteredNodes;
         } else {
-            List<JsonNode> result = new ArrayList<>(filteredNodes.size() + 1);
-            for (JsonNode filteredNode : filteredNodes) {
+            List<JsonNodeWrapper> result = new ArrayList<>(filteredNodes.size() + 1);
+            for (JsonNodeWrapper filteredNode : filteredNodes) {
                 result.addAll(clientQuery.execute(rootNode, filteredNode));
             }
             return result;
         }
     }
 
-    private boolean applyFilter(JsonNode rootNode, JsonNode elementNode) {
+    private boolean applyFilter(JsonNode rootNode, JsonNodeWrapper elementNode) {
 
-        List<JsonNode> filterResult = filter.execute(rootNode, elementNode);
+        List<JsonNodeWrapper> filterResult = filter.execute(rootNode, elementNode);
         if (Utils.isValueNode(filterResult)) {
             JsonNode valueNode = Utils.unwrapValueNode(filterResult);
             return !valueNode.isBoolean() || valueNode.asBoolean();
