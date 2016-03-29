@@ -71,6 +71,7 @@ public class Execution implements AutoCloseable {
 		report.put("Extracted", stats.getExtracted());
 		report.put("Created", stats.getCreated());
 		report.put("Updated", stats.getUpdated());
+		report.put("Deleted", stats.getDeleted());
 
 		return report;
 	}
