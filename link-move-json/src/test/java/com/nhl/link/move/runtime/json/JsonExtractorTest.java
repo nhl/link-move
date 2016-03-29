@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -42,8 +41,8 @@ public class JsonExtractorTest {
                 "        \"title\": \"Sayings of the Century\",\n" +
                 "        \"price\": 8.95,\n" +
                 "        \"readers\": [\n" +
-                "          {\"name\": \"Bob\"},\n" +
-                "          {\"name\": \"Rob\"}\n" +
+                "          {\"name\": \"Bob\", \"details\": {\"age\":18}},\n" +
+                "          {\"name\": \"Rob\", \"details\": {\"age\":60}}\n" +
                 "        ]\n" +
                 "      },\n" +
                 "      { \"category\": \"fiction\",\n" +
@@ -80,26 +79,75 @@ public class JsonExtractorTest {
     }
 
     @Test
-    public void testJsonExtractor() {
+    public void testJsonExtractor_SimpleAttributes() {
 
-        RowAttribute[] attributes = new RowAttribute[1];
-        RowAttribute readerName = attributes[0] = new BaseRowAttribute(String.class, "name", "readerName", 0);
+        JsonRowAttribute[] attributes = new JsonRowAttribute[1];
+
+        RowAttribute baseAttr = new BaseRowAttribute(String.class, "title", "title", 0);
+        JsonRowAttribute attr = attributes[0] = new JsonRowAttribute(baseAttr, compiler);
+
+        JsonQuery query = compiler.compile("$.store.book[*]");
+
+        List<Row> rows = collectRows(attributes, query);
+
+        List<String> items = new ArrayList<>();
+        for (Row row : rows) {
+            items.add((String) row.get(attr));
+        }
+        assertEquals(4, items.size());
+        assertTrue(items.containsAll(Arrays.asList("Sayings of the Century", "Sword of Honour", "Moby Dick",
+                "The Lord of the Rings")));
+    }
+
+    @Test
+    public void testJsonExtractor_QueryAttributes_Local() {
+
+        JsonRowAttribute[] attributes = new JsonRowAttribute[1];
+
+        RowAttribute baseAttr = new BaseRowAttribute(String.class, "@.details.age", "age", 0);
+        JsonRowAttribute attr = attributes[0] = new JsonRowAttribute(baseAttr, compiler);
 
         JsonQuery query = compiler.compile("$.store.book[*].readers[*]");
 
+        List<Row> rows = collectRows(attributes, query);
+
+        List<String> items = new ArrayList<>();
+        for (Row row : rows) {
+            items.add((String) row.get(attr));
+        }
+        assertEquals(3, items.size());
+        assertTrue(items.containsAll(Arrays.asList("18", "60", null)));
+    }
+
+    @Test
+    public void testJsonExtractor_QueryAttributes_Root() {
+
+        JsonRowAttribute[] attributes = new JsonRowAttribute[1];
+
+        RowAttribute baseAttr = new BaseRowAttribute(String.class, "$.store.bicycle.color", "constantAttr", 0);
+        JsonRowAttribute attr = attributes[0] = new JsonRowAttribute(baseAttr, compiler);
+
+        JsonQuery query = compiler.compile("$.store.book[*].readers[*]");
+
+        List<Row> rows = collectRows(attributes, query);
+
+        List<String> items = new ArrayList<>();
+        for (Row row : rows) {
+            items.add((String) row.get(attr));
+        }
+        assertEquals(3, items.size());
+        assertTrue(items.equals(new ArrayList<>(Arrays.asList("red", "red", "red"))));
+    }
+
+    private List<Row> collectRows(JsonRowAttribute[] attributes, JsonQuery query) {
+
         Extractor extractor = new JsonExtractor(jacksonService, connector, attributes, query);
         RowReader reader = extractor.getReader(new HashMap<String, Object>());
-        Iterator<Row> iter = reader.iterator();
-        List<Row> rows = new ArrayList<>();
-        while (iter.hasNext()) {
-            rows.add(iter.next());
-        }
 
-        List<String> readerNames = new ArrayList<>();
-        for (Row row : rows) {
-            readerNames.add((String) row.get(readerName));
+        List<Row> rows = new ArrayList<>();
+        for (Row row : reader) {
+            rows.add(row);
         }
-        assertEquals(3, readerNames.size());
-        assertTrue(readerNames.containsAll(Arrays.asList("Bob", "John", "Rob")));
+        return rows;
     }
 }

@@ -21,11 +21,14 @@ public class QueryCompiler {
 
     private static class Parser {
 
+        private final String queryStr;
         private IOpService opService;
         private Scanner scanner;
         private Context context;
 
         Parser(String queryStr) {
+
+            this.queryStr = queryStr;
 
             opService = new OpService();
             scanner = new Scanner(queryStr);
@@ -36,22 +39,29 @@ public class QueryCompiler {
         }
 
         JsonQuery parse() {
-            JsonQuery query = buildRootQuery();
+            JsonQuery query = buildQuery();
             if (context.insideScript()) {
                 throw new RuntimeException("Premature end of query string: not all filters and scripts were closed");
             }
             return query;
         }
 
-        private JsonQuery buildRootQuery() {
+        private JsonQuery buildQuery() {
 
             assertHasTokens();
 
             Token token = scanner.nextToken();
-            if (token.getType() != TokenType.ROOT_NODE_REF) {
-                throw new ParseException(token, TokenType.ROOT_NODE_REF);
+            switch (token.getType()) {
+                case ROOT_NODE_REF: {
+                    return new RootNode(buildSegment());
+                }
+                case CURRENT_NODE_REF: {
+                    return new CurrentNode(buildSegment());
+                }
+                default: {
+                    return new NamedProperty(null, queryStr);
+                }
             }
-            return new RootNode(buildSegment());
         }
 
         /**

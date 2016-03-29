@@ -5,27 +5,38 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 
+import java.util.List;
+
 class JsonNodeRow implements Row {
 
-    private final RowAttribute[] attributes;
-	private final JsonNode node;
+    private final JsonRowAttribute[] attributes;
+	private final JsonNode rootNode, currentNode;
 
-	public JsonNodeRow(RowAttribute[] attributes, JsonNode node) {
+	public JsonNodeRow(JsonRowAttribute[] attributes, JsonNode rootNode, JsonNode currentNode) {
 		this.attributes = attributes;
-		this.node = node;
+		this.rootNode = rootNode;
+		this.currentNode = currentNode;
 	}
 
 	@Override
 	public Object get(RowAttribute attribute) {
 
-		JsonNode value = node.get(attribute.getSourceName());
-		if (value == null) {
+		// TODO: remove cast (maybe Row should have a generic type argument,
+		// indicating the type of it's attributes? this will require global refactoring though)
+		JsonRowAttribute jsonAttribute = (JsonRowAttribute) attribute;
+
+		List<JsonNode> result = jsonAttribute.getSourceQuery().execute(rootNode, currentNode);
+		if (result == null || result.isEmpty()) {
 			return null;
 		}
-		// TODO: eventually we might want to support individual expressions
-		// to access nested objects/properties
+		if (result.size() > 1) {
+			throw new LmRuntimeException("Attribute query yielded a list of values (total: " + result.size() +
+					"). A single value is expected.");
+		}
+
+		JsonNode value = result.get(0);
 		if (value.isObject() || value.isArray()) {
-			throw new LmRuntimeException("Expected value or binary node");
+			throw new LmRuntimeException("Expected a value node");
 		}
 		return value.asText();
 	}

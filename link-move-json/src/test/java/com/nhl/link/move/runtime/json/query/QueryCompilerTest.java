@@ -37,7 +37,7 @@ public class QueryCompilerTest {
         compiler.compile("$store.book[*].author");
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testCompile_Query5() {
         compiler.compile("@.store.book[*].author");
     }

@@ -2,7 +2,6 @@ package com.nhl.link.move.runtime.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nhl.link.move.Row;
-import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 
 import java.util.Iterator;
@@ -10,12 +9,14 @@ import java.util.List;
 
 class JsonRowReader implements RowReader {
 
-    private final RowAttribute[] attributes;
-	private final List<JsonNode> nodes;
+    private final JsonRowAttribute[] attributes;
+	private final JsonNode rootNode;
+	private final List<JsonNode> items;
 
-	public JsonRowReader(RowAttribute[] attributes, List<JsonNode> nodes) {
+	public JsonRowReader(JsonRowAttribute[] attributes, JsonNode rootNode, List<JsonNode> items) {
 		this.attributes = attributes;
-		this.nodes = nodes;
+		this.rootNode = rootNode;
+		this.items = items;
 	}
 
 	@Override
@@ -30,13 +31,13 @@ class JsonRowReader implements RowReader {
 
 			@Override
 			public boolean hasNext() {
-				return i < nodes.size();
+				return i < items.size();
 			}
 
 			@Override
 			public Row next() {
-				JsonNode node = nodes.get(i++);
-				return new JsonNodeRow(attributes, node);
+				JsonNode currentNode = items.get(i++);
+				return new JsonNodeRow(attributes, rootNode, currentNode);
 			}
 
 			@Override

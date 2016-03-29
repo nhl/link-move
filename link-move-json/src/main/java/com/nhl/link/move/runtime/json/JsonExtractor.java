@@ -2,7 +2,6 @@ package com.nhl.link.move.runtime.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
@@ -15,13 +14,13 @@ import java.util.Map;
 class JsonExtractor implements Extractor {
 
     private final StreamConnector connector;
-	private final RowAttribute[] attributes;
+	private final JsonRowAttribute[] attributes;
 	private final JsonQuery query;
 
     private IJacksonService jacksonService;
 
     public JsonExtractor(IJacksonService jacksonService, StreamConnector connector,
-                         RowAttribute[] attributes, JsonQuery query) {
+                         JsonRowAttribute[] attributes, JsonQuery query) {
 
         this.jacksonService = jacksonService;
 		this.connector = connector;
@@ -37,7 +36,7 @@ class JsonExtractor implements Extractor {
                 source = jacksonService.parseJson(in);
             }
             List<JsonNode> nodes = query.execute(source);
-			return new JsonRowReader(attributes, nodes);
+			return new JsonRowReader(attributes, source, nodes);
 		} catch (Exception e) {
 			throw new LmRuntimeException(e);
 		}

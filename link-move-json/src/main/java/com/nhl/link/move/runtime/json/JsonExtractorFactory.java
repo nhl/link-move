@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.json;
 
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
@@ -32,15 +33,26 @@ public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> 
 
 	@Override
 	public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
-        return new JsonExtractor(jacksonService, connector, model.getAttributes(), getJsonQuery(model));
+        return new JsonExtractor(jacksonService, connector, mapToJsonAttributes(model.getAttributes()),
+				getRootQuery(model));
 	}
 
-	private JsonQuery getJsonQuery(ExtractorModel model) {
+	private JsonQuery getRootQuery(ExtractorModel model) {
 		String query = model.getProperties().get(JSON_QUERY_PROPERTY);
 		if (query == null) {
 			throw new IllegalArgumentException(String.format(
                     "Missing required property for key '%s'", JSON_QUERY_PROPERTY));
 		}
 		return compiler.compile(query);
+	}
+
+	private JsonRowAttribute[] mapToJsonAttributes(RowAttribute[] attributes) {
+		int len = attributes.length;
+		JsonRowAttribute[] jsonAttributes = new JsonRowAttribute[len];
+
+		for (int i = 0; i < len; i++) {
+			jsonAttributes[i] = new JsonRowAttribute(attributes[i], compiler);
+		}
+		return jsonAttributes;
 	}
 }
