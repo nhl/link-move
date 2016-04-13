@@ -1,6 +1,7 @@
 package com.nhl.link.move.runtime.jdbc;
 
 import com.nhl.link.move.LmRuntimeException;
+import org.apache.cayenne.map.DbAttribute;
 
 import java.sql.Types;
 
@@ -15,6 +16,11 @@ public class BigIntNormalizer extends JdbcNormalizer {
 
     @Override
     public Object normalize(Object value) {
+        return normalize(value, null);
+    }
+
+    @Override
+    public Object normalize(Object value, DbAttribute targetAttribute) {
 
         if (value == null) {
             return null;

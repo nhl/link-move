@@ -88,7 +88,7 @@ public class PathNormalizer implements IPathNormalizer {
 				if (normalizer == null) {
 					return value;
 				} else {
-					return normalizer.normalize(value);
+					return normalizer.normalize(value, attributeInfo.getTarget());
 				}
 			}
 
@@ -157,6 +157,7 @@ public class PathNormalizer implements IPathNormalizer {
 
 		public abstract String getNormalizedPath();
 		public abstract int getType();
+		public abstract DbAttribute getTarget();
 
 		public static AttributeInfo forAttribute(final DbAttribute attribute) {
 			return new AttributeInfo() {
@@ -168,6 +169,11 @@ public class PathNormalizer implements IPathNormalizer {
 				@Override
 				public int getType() {
 					return attribute.getType();
+				}
+
+				@Override
+				public DbAttribute getTarget() {
+					return attribute;
 				}
 			};
 		}
@@ -182,6 +188,11 @@ public class PathNormalizer implements IPathNormalizer {
 				@Override
 				public int getType() {
 					return join.getSource().getType();
+				}
+
+				@Override
+				public DbAttribute getTarget() {
+					return join.getTarget();
 				}
 			};
 		}

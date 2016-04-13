@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
+import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
 import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
@@ -103,6 +104,7 @@ public class LmRuntimeBuilder {
 		// default normalizers
 		jdbcNormalizers.put(Integer.valueOf(Types.BIGINT).toString(), new BigIntNormalizer());
 		jdbcNormalizers.put(Integer.valueOf(Types.INTEGER).toString(), new IntegerNormalizer());
+		jdbcNormalizers.put(Integer.valueOf(Types.DECIMAL).toString(), new DecimalNormalizer());
 	}
 
 	/**

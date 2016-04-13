@@ -1,8 +1,6 @@
 package com.nhl.link.move.itest;
 
 import static org.junit.Assert.assertEquals;
-
-import com.nhl.link.move.unit.cayenne.t.Etl6t;
 import org.junit.Test;
 
 import com.nhl.link.move.LmRuntimeException;
@@ -216,42 +214,6 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		assertExec(2, 0, 0, 0, e3);
 		assertEquals(3, targetScalar("SELECT count(1) from utest.etl5t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl5t WHERE NAME = 'd' AND ID = 45"));
-
-		Execution e4 = task.run();
-		assertExec(2, 0, 0, 0, e4);
-	}
-
-	@Test
-	public void test_ById_Normalized_IntegerToLong() {
-
-		// not specifying "matchById" explicitly ... this should be the default
-		LmTask task = etl.getTaskService().createOrUpdate(Etl6t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml").task();
-
-		srcRunSql("INSERT INTO utest.etl6 (ID, NAME) VALUES (45, 'a')");
-		srcRunSql("INSERT INTO utest.etl6 (ID, NAME) VALUES (11, 'b')");
-
-		Execution e1 = task.run();
-		assertExec(2, 2, 0, 0, e1);
-		assertEquals(2, targetScalar("SELECT count(1) from utest.etl6t"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t WHERE NAME = 'a' AND ID = 45"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t WHERE NAME = 'b' AND ID = 11"));
-
-		srcRunSql("INSERT INTO utest.etl6 (ID, NAME) VALUES (31, 'c')");
-		srcRunSql("UPDATE utest.etl6 SET NAME = 'd' WHERE ID = 45");
-
-		Execution e2 = task.run();
-		assertExec(3, 1, 1, 0, e2);
-		assertEquals(3, targetScalar("SELECT count(1) from utest.etl6t"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t WHERE NAME = 'd' AND ID = 45"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t WHERE NAME = 'c' AND ID = 31"));
-
-		srcRunSql("DELETE FROM utest.etl6 WHERE ID = 45");
-
-		Execution e3 = task.run();
-		assertExec(2, 0, 0, 0, e3);
-		assertEquals(3, targetScalar("SELECT count(1) from utest.etl6t"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl6t WHERE NAME = 'd' AND ID = 45"));
 
 		Execution e4 = task.run();
 		assertExec(2, 0, 0, 0, e4);

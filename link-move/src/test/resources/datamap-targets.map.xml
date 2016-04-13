@@ -49,6 +49,12 @@
 		<db-attribute name="last_name" type="VARCHAR" length="50"/>
 		<db-attribute name="sex" type="VARCHAR" length="1"/>
 	</db-entity>
+	<db-entity name="etl8t" schema="utest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="c_decimal1" type="DECIMAL" length="10" scale="9"/>
+		<db-attribute name="c_decimal2" type="DECIMAL" length="10" scale="6"/>
+		<db-attribute name="c_decimal3" type="DECIMAL" length="10" scale="9"/>
+	</db-entity>
 	<obj-entity name="Etl1t" className="com.nhl.link.move.unit.cayenne.t.Etl1t" dbEntityName="etl1t">
 		<obj-attribute name="age" type="java.lang.Integer" db-attribute-path="age"/>
 		<obj-attribute name="description" type="java.lang.String" db-attribute-path="description"/>
@@ -83,6 +89,11 @@
 		<obj-attribute name="firstName" type="java.lang.String" db-attribute-path="first_name"/>
 		<obj-attribute name="lastName" type="java.lang.String" db-attribute-path="last_name"/>
 		<obj-attribute name="sex" type="java.lang.String" db-attribute-path="sex"/>
+	</obj-entity>
+	<obj-entity name="Etl8t" className="com.nhl.link.move.unit.cayenne.t.Etl8t" dbEntityName="etl8t">
+		<obj-attribute name="cDecimal1" type="java.math.BigDecimal" db-attribute-path="c_decimal1"/>
+		<obj-attribute name="cDecimal2" type="java.math.BigDecimal" db-attribute-path="c_decimal2"/>
+		<obj-attribute name="cDecimal3" type="java.math.BigDecimal" db-attribute-path="c_decimal3"/>
 	</obj-entity>
 	<db-relationship name="e3s" source="etl2t" target="etl3t" toMany="true">
 		<db-attribute-pair source="id" target="e2_id"/>

@@ -48,6 +48,12 @@
 		<db-attribute name="sex" type="VARCHAR" length="1"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
 	</db-entity>
+	<db-entity name="etl8" schema="utest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
+		<db-attribute name="c_decimal1" type="DECIMAL" length="10" scale="6"/>
+		<db-attribute name="c_decimal2" type="DECIMAL" length="10" scale="9"/>
+		<db-attribute name="c_decimal3" type="DECIMAL" length="10" scale="9"/>
+	</db-entity>
 	<db-relationship name="e3s" source="etl2" target="etl3" toMany="true">
 		<db-attribute-pair source="id" target="e2_id"/>
 	</db-relationship>

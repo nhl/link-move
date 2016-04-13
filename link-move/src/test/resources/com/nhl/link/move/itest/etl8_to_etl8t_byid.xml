@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
+	xmlns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd">
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>ID</source>
+				<target>db:id</target>
+			</attribute>
+			<attribute>
+				<type>java.math.BigDecimal</type>
+				<source>C_DECIMAL1</source>
+				<target>db:c_decimal1</target>
+			</attribute>
+			<attribute>
+				<type>java.math.BigDecimal</type>
+				<source>C_DECIMAL2</source>
+				<target>db:c_decimal2</target>
+			</attribute>
+			<attribute>
+				<type>java.math.BigDecimal</type>
+				<source>C_DECIMAL3</source>
+				<target>db:c_decimal3</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT id, c_decimal1, c_decimal2, c_decimal3 FROM utest.etl8
+			]]>
+			</extractor.jdbc.sqltemplate>
+		</properties>
+	</extractor>
+</config>
