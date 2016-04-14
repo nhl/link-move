@@ -9,10 +9,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
 import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
 import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
 import org.apache.cayenne.di.Injector;
@@ -186,8 +188,21 @@ public class LmRuntimeBuilder {
 		return this;
 	}
 
+	@Deprecated
 	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer normalizer) {
-		jdbcNormalizers.put(Integer.valueOf(jdbcType).toString(), normalizer);
+		String javaType = TypesMapping.getJavaBySqlType(jdbcType);
+		if (javaType == null) {
+			throw new LmRuntimeException("Can't map JDBC type to Java type: " + jdbcType);
+		}
+		jdbcNormalizers.put(javaType, normalizer);
+		return this;
+	}
+
+	/**
+	 * @since 1.7
+     */
+	public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer normalizer) {
+		jdbcNormalizers.put(javaType.getName(), normalizer);
 		return this;
 	}
 
