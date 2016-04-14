@@ -88,7 +88,7 @@ public class PathNormalizer implements IPathNormalizer {
 
 				ObjAttribute objAttribute = entity.getAttributeForDbAttribute(attributeInfo.getTarget());
 				String javaType = (objAttribute == null)? TypesMapping.getJavaBySqlType(attributeInfo.getType())
-						: objAttribute.getType();
+						: toObjectType(objAttribute.getType());
 
 				JdbcNormalizer normalizer = jdbcNormalizers.get(javaType);
 				if (normalizer == null) {
@@ -157,6 +157,43 @@ public class PathNormalizer implements IPathNormalizer {
 				}
 			}
 		};
+	}
+
+	private static String toObjectType(String primitiveType) {
+		if (primitiveType == null) {
+			return null;
+		}
+
+		switch (primitiveType) {
+			case "byte": {
+				return Byte.class.getName();
+			}
+			case "char": {
+				return Character.class.getName();
+			}
+			case "short": {
+				return Short.class.getName();
+			}
+			case "int": {
+				return Integer.class.getName();
+			}
+			case "long": {
+				return Long.class.getName();
+			}
+			case "float": {
+				return Float.class.getName();
+			}
+			case "double": {
+				return Double.class.getName();
+			}
+			case "boolean": {
+				return Boolean.class.getName();
+			}
+			default: {
+				// not a primitive type
+				return primitiveType;
+			}
+		}
 	}
 
 	private static abstract class AttributeInfo {
