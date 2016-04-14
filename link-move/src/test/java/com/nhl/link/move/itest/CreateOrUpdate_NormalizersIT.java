@@ -3,6 +3,8 @@ package com.nhl.link.move.itest;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.unit.LmIntegrationTest;
+import com.nhl.link.move.unit.cayenne.t.Etl3t;
+import com.nhl.link.move.unit.cayenne.t.Etl4t;
 import com.nhl.link.move.unit.cayenne.t.Etl6t;
 import com.nhl.link.move.unit.cayenne.t.Etl8t;
 import org.apache.cayenne.DataRow;
@@ -52,6 +54,40 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 
 		Execution e4 = task.run();
 		assertExec(2, 0, 0, 0, e4);
+	}
+
+	@Test
+	public void test_ByAttribute_Normalized_SyncFk() {
+
+		LmTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_normalizers").matchBy(Etl3t.NAME).task();
+
+		srcRunSql("INSERT INTO utest.etl2 (ID, NAME) VALUES (1, 'abc')");
+		srcRunSql("INSERT INTO utest.etl3 (E2_ID, NAME) VALUES (1, 'xyz')");
+		targetRunSql("INSERT INTO utest.etl2t (ID, NAME) VALUES (1, 'abc')");
+
+		Execution e1 = task.run();
+		assertExec(1, 1, 0, 0, e1);
+
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t WHERE E2_ID = 1"));
+	}
+
+	@Test
+	public void test_ById_Normalized_IntegerToBoolean() {
+
+		LmTask task = etl.getTaskService().createOrUpdate(Etl4t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_normalizers").task();
+
+		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (1, true)");
+		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (2, false)");
+		targetRunSql("INSERT INTO utest.etl4t (ID, C_BOOLEAN) VALUES (1, false)");
+		targetRunSql("INSERT INTO utest.etl4t (ID, C_BOOLEAN) VALUES (2, true)");
+
+		Execution e1 = task.run();
+		assertExec(2, 0, 2, 0, e1);
+
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl4t WHERE ID = 1 AND C_BOOLEAN = TRUE"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl4t WHERE ID = 2 AND C_BOOLEAN = FALSE"));
 	}
 
 	@Test

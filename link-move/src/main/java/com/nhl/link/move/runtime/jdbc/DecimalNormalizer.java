@@ -6,21 +6,15 @@ import org.apache.cayenne.map.DbAttribute;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.sql.Types;
 
-public class DecimalNormalizer extends JdbcNormalizer {
+public class DecimalNormalizer extends JdbcNormalizer<BigDecimal> {
 
     public DecimalNormalizer() {
-        super(Types.DECIMAL);
+        super(BigDecimal.class);
     }
 
     @Override
-    public Object normalize(Object value) {
-        return normalize(value, null);
-    }
-
-    @Override
-    public Object normalize(Object value, DbAttribute targetAttribute) {
+    public BigDecimal normalize(Object value, DbAttribute targetAttribute) {
 
         if (value == null) {
             return null;
@@ -55,7 +49,7 @@ public class DecimalNormalizer extends JdbcNormalizer {
                 break;
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to SQL " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
             }
         }
 

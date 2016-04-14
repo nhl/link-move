@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
+	xmlns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd">
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>id</source>
+				<target>db:id</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>c_boolean</source>
+				<target>db:c_boolean</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT id, #result('c_boolean', 'java.lang.Integer') c_boolean FROM utest.etl4
+			]]>
+			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower
+			</extractor.jdbc.sqltemplate.caps>
+		</properties>
+	</extractor>
+</config>

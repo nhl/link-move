@@ -3,6 +3,7 @@ package com.nhl.link.move.runtime.path;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
@@ -10,6 +11,7 @@ import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.DbJoin;
 import org.apache.cayenne.map.DbRelationship;
+import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.PathComponent;
 
@@ -84,7 +86,11 @@ public class PathNormalizer implements IPathNormalizer {
 
 				AttributeInfo attributeInfo =  getAttributeInfo(path);
 
-				JdbcNormalizer normalizer = jdbcNormalizers.get(Integer.valueOf(attributeInfo.getType()).toString());
+				ObjAttribute objAttribute = entity.getAttributeForDbAttribute(attributeInfo.getTarget());
+				String javaType = (objAttribute == null)? TypesMapping.getJavaBySqlType(attributeInfo.getType())
+						: objAttribute.getType();
+
+				JdbcNormalizer normalizer = jdbcNormalizers.get(javaType);
 				if (normalizer == null) {
 					return value;
 				} else {

@@ -3,21 +3,14 @@ package com.nhl.link.move.runtime.jdbc;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.map.DbAttribute;
 
-import java.sql.Types;
-
-public class IntegerNormalizer extends JdbcNormalizer {
+public class IntegerNormalizer extends JdbcNormalizer<Integer> {
 
     public IntegerNormalizer() {
-        super(Types.INTEGER);
+        super(Integer.class);
     }
 
     @Override
-    public Object normalize(Object value) {
-        return normalize(value, null);
-    }
-
-    @Override
-    public Object normalize(Object value, DbAttribute targetAttribute) {
+    public Integer normalize(Object value, DbAttribute targetAttribute) {
 
         if (value == null) {
             return null;
@@ -25,7 +18,7 @@ public class IntegerNormalizer extends JdbcNormalizer {
 
         switch (value.getClass().getName()) {
             case "java.lang.Integer": {
-                return value;
+                return (Integer) value;
             }
             case "java.lang.Long": {
                 return ((Long) value).intValue(); // truncating the value
@@ -39,7 +32,7 @@ public class IntegerNormalizer extends JdbcNormalizer {
                 return Integer.valueOf(value.toString());
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to SQL " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
             }
         }
     }

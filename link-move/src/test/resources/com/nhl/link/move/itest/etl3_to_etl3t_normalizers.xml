@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
+	xmlns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd">
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>e2_id</source>
+				<target>e2</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>name</source>
+				<target>name</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT CAST(e2_id AS CHAR) e2_id, name FROM utest.etl3
+			]]>
+			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower
+			</extractor.jdbc.sqltemplate.caps>
+		</properties>
+	</extractor>
+</config>

@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime;
 
 import java.io.File;
-import java.sql.Types;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
+import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
 import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
 import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import org.apache.cayenne.configuration.server.ServerRuntime;
@@ -102,9 +103,10 @@ public class LmRuntimeBuilder {
 		this.adapters = new ArrayList<>();
 
 		// default normalizers
-		jdbcNormalizers.put(Integer.valueOf(Types.BIGINT).toString(), new BigIntNormalizer());
-		jdbcNormalizers.put(Integer.valueOf(Types.INTEGER).toString(), new IntegerNormalizer());
-		jdbcNormalizers.put(Integer.valueOf(Types.DECIMAL).toString(), new DecimalNormalizer());
+		jdbcNormalizers.put(Long.class.getName(), new BigIntNormalizer());
+		jdbcNormalizers.put(Integer.class.getName(), new IntegerNormalizer());
+		jdbcNormalizers.put(BigDecimal.class.getName(), new DecimalNormalizer());
+		jdbcNormalizers.put(Boolean.class.getName(), new BooleanNormalizer());
 	}
 
 	/**
