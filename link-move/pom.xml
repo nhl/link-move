@@ -22,8 +22,14 @@
 			<artifactId>cayenne-server</artifactId>
 			<scope>compile</scope>
 		</dependency>
+	    <dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <scope>compile</scope>
+	    </dependency>
 
-		<!-- Optional dependencies. Apps that are using them will need to include
+
+	    <!-- Optional dependencies. Apps that are using them will need to include
 			them explicitly in the POM, and also likely a corresponding service should
 			be included in the Tapestry module. The rest of the apps will be spared from
 			an extra jar. -->

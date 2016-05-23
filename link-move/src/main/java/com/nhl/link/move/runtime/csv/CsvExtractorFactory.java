@@ -8,6 +8,7 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
+import org.apache.commons.csv.CSVFormat;
 
 /**
  * @since 1.4
@@ -19,7 +20,7 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
     /**
      * Delimiter character.
      */
-    public static final String DELIMITIER_PROPERTY = "extractor.csv.delimiter";
+    public static final String DELIMITER_PROPERTY = "extractor.csv.delimiter";
 
     /**
      * Line number, that the file should be read from.
@@ -48,16 +49,20 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
         try {
 
             String charsetName = model.getProperties().get(CHARSET_PROPERTY);
-            
+
             // TODO: should we lock default Charset to UTF-8 instead of platform-default?
             Charset charset = charsetName != null ? Charset.forName(charsetName) : Charset.defaultCharset();
-            
-            CsvExtractor extractor = new CsvExtractor(connector, model.getAttributes(), charset);
 
-            String delimiter = model.getProperties().get(DELIMITIER_PROPERTY);
+            CSVFormat csvFormat = CSVFormat.RFC4180;
+            String delimiter = model.getProperties().get(DELIMITER_PROPERTY);
             if (delimiter != null) {
-                extractor.setDelimiter(delimiter);
+                if (delimiter.length() != 1) {
+                    throw new LmRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
+                }
+                csvFormat = csvFormat.withDelimiter(delimiter.charAt(0));
             }
+
+            CsvExtractor extractor = new CsvExtractor(connector, model.getAttributes(), charset, csvFormat);
 
             String readFrom = model.getProperties().get(READ_FROM_PROPERTY);
             if (readFrom != null) {

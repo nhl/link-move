@@ -5,14 +5,14 @@ import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+
 
 /**
  * @since 1.4
@@ -22,46 +22,39 @@ public class CsvExtractor implements Extractor {
 	private StreamConnector connector;
 	private RowAttribute[] attributes;
 	private Charset charset;
-	private String delimiter;
+	private CSVFormat csvFormat;
+
 	private Integer readFrom;
 
 	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes, Charset charset) {
+		this(connector, attributes, charset, CSVFormat.DEFAULT);
+	}
+
+	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes, Charset charset, CSVFormat csvFormat) {
 		this.connector = connector;
 		this.attributes = attributes;
 		this.charset = charset;
+		this.csvFormat = csvFormat;
 	}
 
 	@Override
 	public RowReader getReader(Map<String, ?> parameters) {
-
-		// TODO: this requires reading the entire file in memory. We can
-		// probably turn this into a constant-memory streaming extractor that
-		// reads one line at a time, processes and discards it.
-
-		List<String> lines = new ArrayList<>();
+		CSVParser parser;
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connector.getInputStream(), charset));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				lines.add(line);
-			}
+			parser = csvFormat.parse(new InputStreamReader(connector.getInputStream(), charset));
 		} catch (IOException e) {
-			throw new LmRuntimeException("Failed to read lines from stream", e);
+			throw new LmRuntimeException("Failed to read CSV from stream", e);
 		}
-
-		CsvRowReader reader = new CsvRowReader(attributes, lines);
-		if (delimiter != null) {
-			reader.setDelimiter(delimiter);
-		}
+		CsvRowReader rowReader = new CsvRowReader(attributes, parser);
 		if (readFrom != null) {
-			reader.setReadFrom(readFrom);
+			rowReader.setReadFrom(readFrom);
 		}
-
-		return reader;
+		return rowReader;
 	}
 
+	@Deprecated
 	public void setDelimiter(String delimiter) {
-		this.delimiter = delimiter;
+		csvFormat = csvFormat.withDelimiter(delimiter.charAt(0));
 	}
 
 	public void setReadFrom(Integer readFrom) {

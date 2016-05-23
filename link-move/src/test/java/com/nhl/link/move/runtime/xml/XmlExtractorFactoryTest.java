@@ -36,8 +36,8 @@ public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	}
 
 	@Override
-	public void setUpExtratorModel() {
-		super.setUpExtratorModel();
+	public void setUpExtractorModel() {
+		super.setUpExtractorModel();
 		getModel().getProperties().put(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY, "/test");
 	}
 
