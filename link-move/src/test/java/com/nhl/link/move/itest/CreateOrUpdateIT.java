@@ -344,7 +344,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age is null"));
 	}
 
-	@Test(expected = Exception.class)
+	@Test
 	public void test_ById_RelationshipOnPK() {
 
 		// remove auto_pk_support so that commit would fail if ID is absent
