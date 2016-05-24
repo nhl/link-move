@@ -1,6 +1,8 @@
 package com.nhl.link.move.itest;
 
 import static org.junit.Assert.assertEquals;
+
+import com.nhl.link.move.unit.cayenne.t.Etl9t;
 import org.junit.Test;
 
 import com.nhl.link.move.LmRuntimeException;
@@ -340,5 +342,21 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		assertExec(1, 0, 1, 0, e1);
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age is null"));
+	}
+
+	@Test
+	public void test_ById_RelationshipOnPK() {
+
+		// remove auto_pk_support so that commit would fail if ID is absent
+		targetRunSql("DROP TABLE AUTO_PK_SUPPORT");
+
+		LmTask task = etl.getTaskService().createOrUpdate(Etl9t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl9_to_etl9t.xml").matchById().task();
+
+		srcRunSql("INSERT INTO utest.etl9 (ID, NAME) VALUES (1, 'a')");
+		srcRunSql("INSERT INTO utest.etl9 (ID, NAME) VALUES (2, 'b')");
+
+		Execution e1 = task.run();
+		assertExec(2, 2, 0, 0, e1);
 	}
 }
