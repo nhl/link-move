@@ -66,7 +66,9 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
 
 			@Override
 			public boolean visitToOne(ToOneProperty property) {
-				writerFactory.getOrCreateWriter(property);
+                if (!property.getRelationship().isSourceIndependentFromTargetChange()) {
+                    writerFactory.getOrCreateWriter(property);
+                }
 				return true;
 			}
 
