@@ -13,6 +13,7 @@ Release 1.7
 #93 Boolean normalizer (sync integers to booleans without updates)
 #94 Do not create TargetToOnePropertyWriter for the master side of a to-one relationship
 #95 Switch to Commons CSV parser
+#97 Split CSV module out of LM core
 
 Release 1.6
 
