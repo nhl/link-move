@@ -25,7 +25,7 @@ public class ReloadableExtractor implements Extractor {
 	private Extractor delegate;
 
 	public ReloadableExtractor(IExtractorModelService extractorModelService, IConnectorService connectorService,
-							   Map<String, IExtractorFactory<? extends Connector>> factories, ExtractorName name) {
+			Map<String, IExtractorFactory<? extends Connector>> factories, ExtractorName name) {
 
 		this.extractorModelService = extractorModelService;
 		this.connectorService = connectorService;
@@ -38,7 +38,6 @@ public class ReloadableExtractor implements Extractor {
 		return getDelegate().getReader(parameters);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected Extractor getDelegate() {
 
 		ExtractorModel model = extractorModelService.get(name);
@@ -49,20 +48,24 @@ public class ReloadableExtractor implements Extractor {
 				if (needsReload(model)) {
 
 					this.lastSeen = model.getLoadedOn() + 1;
-
-					IExtractorFactory factory = factories.get(model.getType());
-					if (factory == null) {
-						throw new IllegalStateException("No factory mapped for Extractor type of '" + model.getType()
-								+ "'");
-					}
-
-					Connector connector = connectorService.getConnector(factory.getConnectorType(), model.getConnectorId());
-					this.delegate = factory.createExtractor(connector, model);
+					this.delegate = createExtractor(model);
 				}
 			}
 		}
 
 		return delegate;
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Connector> Extractor createExtractor(ExtractorModel model) {
+
+		IExtractorFactory<T> factory = (IExtractorFactory<T>) factories.get(model.getType());
+		if (factory == null) {
+			throw new IllegalStateException("No factory mapped for Extractor type of '" + model.getType() + "'");
+		}
+
+		T connector = connectorService.getConnector(factory.getConnectorType(), model.getConnectorId());
+		return factory.createExtractor(connector, model);
 	}
 
 	boolean needsReload(ExtractorModel model) {

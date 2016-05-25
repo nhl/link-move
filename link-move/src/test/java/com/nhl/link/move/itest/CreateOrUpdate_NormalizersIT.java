@@ -1,5 +1,14 @@
 package com.nhl.link.move.itest;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.math.BigDecimal;
+
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.SQLSelect;
+import org.junit.Test;
+
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.unit.LmIntegrationTest;
@@ -7,16 +16,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import com.nhl.link.move.unit.cayenne.t.Etl4t;
 import com.nhl.link.move.unit.cayenne.t.Etl6t;
 import com.nhl.link.move.unit.cayenne.t.Etl8t;
-import org.apache.cayenne.DataRow;
-import org.apache.cayenne.QueryResponse;
-import org.apache.cayenne.query.SQLSelect;
-import org.junit.Test;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 
@@ -143,9 +142,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	}
 
 	private DataRow getEtl8(int id) {
-		QueryResponse response = srcStack.runtime().newContext().performGenericQuery(
-				SQLSelect.dataRowQuery("SELECT ID, C_DECIMAL1, C_DECIMAL2, C_DECIMAL3 FROM utest.etl8 WHERE ID = " + id));
-		List first = response.firstList();
-		return first.size() == 0? null : (DataRow) first.get(0);
+		return SQLSelect.dataRowQuery("SELECT ID, C_DECIMAL1, C_DECIMAL2, C_DECIMAL3 FROM utest.etl8 WHERE ID = " + id)
+				.selectFirst(srcStack.runtime().newContext());
 	}
 }

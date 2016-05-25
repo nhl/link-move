@@ -83,10 +83,10 @@ public class LmRuntimeBuilder {
 	private Map<String, IConnectorFactory<? extends Connector>> connectorFactories;
 	private Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
 
-	private Map<String, IExtractorFactory> extractorFactories;
-	private Map<String, Class<? extends IExtractorFactory>> extractorFactoryTypes;
+	private Map<String, IExtractorFactory<?>> extractorFactories;
+	private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
-	private Map<String, JdbcNormalizer> jdbcNormalizers;
+	private Map<String, JdbcNormalizer<?>> jdbcNormalizers;
 
 	private IExtractorModelLoader extractorModelLoader;
 	private File extractorModelsRoot;
@@ -173,7 +173,7 @@ public class LmRuntimeBuilder {
 	 * {@link JdbcExtractorFactory} is loaded by default and does not have to be
 	 * configured explicitly.
 	 */
-	public LmRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory> factoryType) {
+	public LmRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
 		extractorFactoryTypes.put(extractorType, factoryType);
 		return this;
 	}
@@ -183,13 +183,13 @@ public class LmRuntimeBuilder {
 	 * {@link JdbcExtractorFactory} is loaded by default and does not have to be
 	 * configured explicitly.
 	 */
-	public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory factory) {
+	public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory<?> factory) {
 		extractorFactories.put(extractorType, factory);
 		return this;
 	}
 
 	@Deprecated
-	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer normalizer) {
+	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer<?> normalizer) {
 		String javaType = TypesMapping.getJavaBySqlType(jdbcType);
 		if (javaType == null) {
 			throw new LmRuntimeException("Can't map JDBC type to Java type: " + jdbcType);
@@ -201,7 +201,7 @@ public class LmRuntimeBuilder {
 	/**
 	 * @since 1.7
      */
-	public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer normalizer) {
+	public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer<?> normalizer) {
 		jdbcNormalizers.put(javaType.getName(), normalizer);
 		return this;
 	}
@@ -271,7 +271,7 @@ public class LmRuntimeBuilder {
 					connectorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
+				MapBuilder<IExtractorFactory<?>> extractorFactories = binder.bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
 
 				ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
 				for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
@@ -280,7 +280,7 @@ public class LmRuntimeBuilder {
 
 				extractorFactories.putAll(LmRuntimeBuilder.this.extractorFactories);
 
-				for (Entry<String, Class<? extends IExtractorFactory>> e : extractorFactoryTypes.entrySet()) {
+				for (Entry<String, Class<? extends IExtractorFactory<?>>> e : extractorFactoryTypes.entrySet()) {
 
 					// a bit ugly - need to bind all factory types explicitly
 					// before placing then in a map .. also must drop
@@ -292,7 +292,7 @@ public class LmRuntimeBuilder {
 					extractorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<JdbcNormalizer> jdbcNormalizers = binder.bindMap(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP);
+				MapBuilder<JdbcNormalizer<?>> jdbcNormalizers = binder.bindMap(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP);
 				jdbcNormalizers.putAll(LmRuntimeBuilder.this.jdbcNormalizers);
 
 				// Binding CayenneService for the *target*... Note that binding

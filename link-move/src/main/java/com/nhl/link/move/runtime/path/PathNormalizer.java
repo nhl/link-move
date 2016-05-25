@@ -1,8 +1,12 @@
 package com.nhl.link.move.runtime.path;
 
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.LmRuntimeBuilder;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.exp.Expression;
@@ -15,12 +19,9 @@ import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.PathComponent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
+import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
 
 /**
  * @since 1.4
@@ -28,9 +29,10 @@ import java.util.concurrent.ConcurrentMap;
 public class PathNormalizer implements IPathNormalizer {
 
 	private ConcurrentMap<String, EntityPathNormalizer> pathCache;
-	private Map<String, JdbcNormalizer> jdbcNormalizers;
+	private Map<String, JdbcNormalizer<?>> jdbcNormalizers;
 
-	public PathNormalizer(@Inject(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP) Map<String, JdbcNormalizer> jdbcNormalizers) {
+	public PathNormalizer(
+			@Inject(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP) Map<String, JdbcNormalizer<?>> jdbcNormalizers) {
 		pathCache = new ConcurrentHashMap<>();
 		this.jdbcNormalizers = jdbcNormalizers;
 	}
@@ -84,13 +86,13 @@ public class PathNormalizer implements IPathNormalizer {
 					return null;
 				}
 
-				AttributeInfo attributeInfo =  getAttributeInfo(path);
+				AttributeInfo attributeInfo = getAttributeInfo(path);
 
 				ObjAttribute objAttribute = entity.getAttributeForDbAttribute(attributeInfo.getTarget());
-				String javaType = (objAttribute == null)? TypesMapping.getJavaBySqlType(attributeInfo.getType())
+				String javaType = (objAttribute == null) ? TypesMapping.getJavaBySqlType(attributeInfo.getType())
 						: toObjectType(objAttribute.getType());
 
-				JdbcNormalizer normalizer = jdbcNormalizers.get(javaType);
+				JdbcNormalizer<?> normalizer = jdbcNormalizers.get(javaType);
 				if (normalizer == null) {
 					return value;
 				} else {
@@ -165,41 +167,43 @@ public class PathNormalizer implements IPathNormalizer {
 		}
 
 		switch (primitiveType) {
-			case "byte": {
-				return Byte.class.getName();
-			}
-			case "char": {
-				return Character.class.getName();
-			}
-			case "short": {
-				return Short.class.getName();
-			}
-			case "int": {
-				return Integer.class.getName();
-			}
-			case "long": {
-				return Long.class.getName();
-			}
-			case "float": {
-				return Float.class.getName();
-			}
-			case "double": {
-				return Double.class.getName();
-			}
-			case "boolean": {
-				return Boolean.class.getName();
-			}
-			default: {
-				// not a primitive type
-				return primitiveType;
-			}
+		case "byte": {
+			return Byte.class.getName();
+		}
+		case "char": {
+			return Character.class.getName();
+		}
+		case "short": {
+			return Short.class.getName();
+		}
+		case "int": {
+			return Integer.class.getName();
+		}
+		case "long": {
+			return Long.class.getName();
+		}
+		case "float": {
+			return Float.class.getName();
+		}
+		case "double": {
+			return Double.class.getName();
+		}
+		case "boolean": {
+			return Boolean.class.getName();
+		}
+		default: {
+			// not a primitive type
+			return primitiveType;
+		}
 		}
 	}
 
 	private static abstract class AttributeInfo {
 
 		public abstract String getNormalizedPath();
+
 		public abstract int getType();
+
 		public abstract DbAttribute getTarget();
 
 		public static AttributeInfo forAttribute(final DbAttribute attribute) {
