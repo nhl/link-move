@@ -7,6 +7,7 @@ Release 1.7
 #87 JsonExtractor should treat attribute's source name as JsonPath expression
 #88 JdbcNormalizer for SQL Integer
 #89 Implement parent access in JsonPath
+#90 Include deleted count into report
 #91 Similar decimal values cause db update
 #92 Use target's Java type to normalize sources
 #93 Boolean normalizer (sync integers to booleans without updates)
