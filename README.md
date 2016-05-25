@@ -9,15 +9,31 @@ LinkMove connects multiple data models together in a flexible way that anticipat
 ## Getting Started
 
 Add LinkMove dependency:
-
 ```XML
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
 </dependency>
 ```
+The core module above supports relational and XML sources. The following optional modules may be added if you need to work with other formats:
 
+```XML
+<!-- for JSON -->
+<dependency>
+    <groupId>com.nhl.link.move</groupId>
+    <artifactId>link-move-json</artifactId>
+    <version>1.7</version>
+</dependency>
+```
+```XML
+<!-- for CSV -->
+<dependency>
+    <groupId>com.nhl.link.move</groupId>
+    <artifactId>link-move-csv</artifactId>
+    <version>1.7</version>
+</dependency>
+```
 Use it:
 
 ```Java
