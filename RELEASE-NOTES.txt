@@ -11,6 +11,7 @@ Release 1.7
 #92 Use target's Java type to normalize sources
 #93 Boolean normalizer (sync integers to booleans without updates)
 #94 Do not create TargetToOnePropertyWriter for the master side of a to-one relationship
+#95 Switch to Commons CSV parser
 
 Release 1.6
 
