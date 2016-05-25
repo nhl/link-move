@@ -23,7 +23,7 @@ public class DataSourceConnectorFactory implements IConnectorFactory<JdbcConnect
 
 	@Override
 	public JdbcConnector createConnector(String id) {
-		return new DataSourceConnector(connectorDataSource(id));
+		return new DataSourceConnector(id, connectorDataSource(id));
 	}
 
 	DataSource connectorDataSource(String id) {

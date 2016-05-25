@@ -18,7 +18,18 @@ public class DataSourceConnector implements JdbcConnector {
 	private ObjectContext sharedContext;
 
 	public DataSourceConnector(DataSource dataSource) {
-		this.runtime = new ServerRuntimeBuilder().dataSource(dataSource).build();
+		this("dsconnector-" + System.nanoTime(), dataSource);
+	}
+
+	/**
+	 * @since 1.7
+	 */
+	public DataSourceConnector(String name, DataSource dataSource) {
+
+		// assigning explicit name to the Cayenne runtime to avoid transaction
+		// conflicts for similarly named DataNodes between this runtime and
+		// other Cayenne stacks present in the system.
+		this.runtime = new ServerRuntimeBuilder(name).dataSource(dataSource).build();
 		this.sharedContext = runtime.newContext();
 	}
 

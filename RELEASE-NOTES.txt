@@ -1,5 +1,6 @@
 Release 1.7
 
+#72 Conflict between source and target DataSources
 #78 Split link-move into a multi-module Maven project, with specialized extractors in submodules
 #83 Support untyped predicates in JSONPath queries
 #84 BigIntNormalizer must handle String values
