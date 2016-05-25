@@ -1,11 +1,11 @@
 package com.nhl.link.move.runtime.csv;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  * @since 1.4
@@ -13,26 +13,16 @@ import com.nhl.link.move.RowAttribute;
 class CsvDataRow implements Row {
 
 	private RowAttribute[] attributes;
-	private String data;
-	private char delimiter;
-	private String[] values;
+	private CSVRecord record;
 
-	CsvDataRow(RowAttribute[] attributes, String data, char delimiter) {
+	CsvDataRow(RowAttribute[] attributes, CSVRecord record) {
 		this.attributes = attributes;
-		this.data = data;
-		this.delimiter = delimiter;
+		this.record = record;
 	}
 
 	@Override
 	public Object get(RowAttribute attribute) {
-		if (values == null) {
-			try {
-				values = CsvUtils.parse(new String[attributes.length], data, delimiter);
-			} catch (IOException e) {
-				throw new LmRuntimeException("Failed to parse CSV row", e);
-			}
-		}
-		return getValue(attribute.type(), values[attribute.getOrdinal()]);
+		return getValue(attribute.type(), record.get(attribute.getOrdinal()));
 	}
 
 	@Override
