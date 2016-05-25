@@ -1,3 +1,2 @@
-com.nhl.link.move.runtime.csv.CsvExtractorFactory
 com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory
 com.nhl.link.move.runtime.xml.XmlExtractorFactory

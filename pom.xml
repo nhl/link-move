@@ -10,6 +10,7 @@
 	<modules>
 		<module>link-move</module>
 		<module>link-move-json</module>
+		<module>link-move-csv</module>
 	</modules>
 
 	<name>Library: link-move (Parent)</name>
@@ -48,6 +49,7 @@
 		<slf4j-version>1.6.6</slf4j-version>
 		<cayenne-version>4.0.M3</cayenne-version>
 		<jackson-version>2.6.3</jackson-version>
+		<apache-commons-version>1.3</apache-commons-version>
 	</properties>
 
 	<scm>
@@ -111,7 +113,7 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-csv</artifactId>
-				<version>1.3</version>
+				<version>${apache-commons-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

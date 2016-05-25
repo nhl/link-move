@@ -8,35 +8,29 @@
         <artifactId>link-move-parent</artifactId>
         <groupId>com.nhl.link.move</groupId>
         <version>1.7-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>link-move</artifactId>
-	<name>Library: link-move</name>
+    <artifactId>link-move-csv</artifactId>
+    <name>Library: link-move-csv</name>
+    <description>CSV extractor for link-move framework.</description>
 
     <dependencies>
+        <!-- required runtime dependencies -->
+        <dependency>
+            <groupId>com.nhl.link.move</groupId>
+            <artifactId>link-move</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
-		<!-- required runtime dependencies -->
 		<dependency>
-			<groupId>org.apache.cayenne</groupId>
-			<artifactId>cayenne-server</artifactId>
-			<scope>compile</scope>
-		</dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <scope>compile</scope>
+	    </dependency>
 
-	    <!-- Optional dependencies. Apps that are using them will need to include
-			them explicitly in the POM, and also likely a corresponding service should
-			be included in the Tapestry module. The rest of the apps will be spared from
-			an extra jar. -->
-
-		<!-- Provided dependencies -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-
-		<!-- unit test deps -->
+        <!-- unit test deps -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -57,5 +51,6 @@
 			<artifactId>derby</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+    </dependencies>
+
 </project>

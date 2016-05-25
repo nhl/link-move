@@ -34,6 +34,12 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
      */
     public static final String CHARSET_PROPERTY = "extractor.csv.charset";
 
+    private Charset defaultCharset;
+
+    public CsvExtractorFactory() {
+        defaultCharset = Charset.forName("UTF-8");
+    }
+
     @Override
     public String getExtractorType() {
         return CSV_EXTRACTOR_TYPE;
@@ -50,8 +56,7 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
 
             String charsetName = model.getProperties().get(CHARSET_PROPERTY);
 
-            // TODO: should we lock default Charset to UTF-8 instead of platform-default?
-            Charset charset = charsetName != null ? Charset.forName(charsetName) : Charset.defaultCharset();
+            Charset charset = charsetName != null ? Charset.forName(charsetName) : defaultCharset;
 
             CSVFormat csvFormat = CSVFormat.RFC4180;
             String delimiter = model.getProperties().get(DELIMITER_PROPERTY);
