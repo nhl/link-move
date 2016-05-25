@@ -10,6 +10,7 @@ Release 1.7
 #91 Similar decimal values cause db update
 #92 Use target's Java type to normalize sources
 #93 Boolean normalizer (sync integers to booleans without updates)
+#94 Do not create TargetToOnePropertyWriter for the master side of a to-one relationship
 
 Release 1.6
 
