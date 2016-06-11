@@ -22,7 +22,7 @@ public class ExecutionStats {
 	}
 	
 	public boolean isStopped() {
-		return finished > 0 && finished > started;
+		return finished > 0 && finished >= started;
 	}
 	
 	public long getDuration() {
