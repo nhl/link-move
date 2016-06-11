@@ -23,11 +23,20 @@ public class ExecutionTest {
 		assertEquals(r1.toString(), 8, r1.size());
 		assertEquals("in progress", r1.get("Status"));
 
+		execution.getStats().incrementCreated(5);
+		execution.getStats().incrementDeleted(4);
+		execution.getStats().incrementExtracted(55);
+		execution.getStats().incrementUpdated(3);
+
 		execution.close();
 
 		Map<String, Object> r2 = execution.createReport();
 		assertEquals(r2.toString(), 8, r2.size());
 		assertEquals("finished", r2.get("Status"));
+		assertEquals(55l, r2.get("Extracted"));
+		assertEquals(5l, r2.get("Created"));
+		assertEquals(4l, r2.get("Deleted"));
+		assertEquals(3l, r2.get("Updated"));
 	}
 
 	@Test
