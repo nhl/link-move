@@ -10,16 +10,9 @@ public class IntegerNormalizer extends JdbcNormalizer<Integer> {
     }
 
     @Override
-    public Integer normalize(Object value, DbAttribute targetAttribute) {
-
-        if (value == null) {
-            return null;
-        }
+    protected Integer doNormalize(Object value, DbAttribute targetAttribute) {
 
         switch (value.getClass().getName()) {
-            case "java.lang.Integer": {
-                return (Integer) value;
-            }
             case "java.lang.Long": {
                 return ((Long) value).intValue(); // truncating the value
             }

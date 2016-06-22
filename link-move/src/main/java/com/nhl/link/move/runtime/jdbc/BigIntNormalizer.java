@@ -13,16 +13,9 @@ public class BigIntNormalizer extends JdbcNormalizer<Long> {
     }
 
     @Override
-    public Long normalize(Object value, DbAttribute targetAttribute) {
-
-        if (value == null) {
-            return null;
-        }
+    protected Long doNormalize(Object value, DbAttribute targetAttribute) {
 
         switch (value.getClass().getName()) {
-            case "java.lang.Long": {
-                return (Long) value;
-            }
             case "java.lang.String": {
                 String s = (String) value;
                 return s.isEmpty()? null : Long.valueOf(s);

@@ -10,11 +10,7 @@ public class BooleanNormalizer extends JdbcNormalizer<Boolean> {
     }
 
     @Override
-    public Boolean normalize(Object value, DbAttribute targetAttribute) {
-
-        if (value == null) {
-            return null;
-        }
+    protected Boolean doNormalize(Object value, DbAttribute targetAttribute) {
 
         switch (value.getClass().getName()) {
             case "java.lang.Byte":

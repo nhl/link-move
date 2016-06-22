@@ -33,5 +33,31 @@ public abstract class JdbcNormalizer<T> {
 	/**
 	 * @since 1.7
 	 */
-	public abstract T normalize(Object value, DbAttribute targetAttribute);
+	@SuppressWarnings("unchecked")
+	public T normalize(Object value, DbAttribute targetAttribute) {
+
+		T result;
+		if (value == null) {
+			result = null;
+		} else if (type.isAssignableFrom(value.getClass())) {
+			result = (T) value;
+		} else {
+			result = doNormalize(value, targetAttribute);
+		}
+
+		return postNormalize(result, targetAttribute);
+	}
+
+	protected abstract T doNormalize(Object value, DbAttribute targetAttribute);
+
+	/**
+	 * Override this method to do post-processing of the normalized value
+	 * (e.g. additional scaling of a decimal)
+	 *
+	 * @see DecimalNormalizer
+     */
+	protected T postNormalize(T normalized, DbAttribute targetAttribute) {
+		// by default just return the value
+		return normalized;
+	}
 }
