@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjEntity;
@@ -64,7 +65,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
 		this.mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
 		this.stageListenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
-				AfterTargetsMatched.class, AfterTargetsMerged.class);
+				AfterTargetsMatched.class, AfterTargetsMerged.class, AfterTargetsCommitted.class);
 
 		// always add stats listener..
 		stageListener(CreateOrUpdateStatsListener.instance());

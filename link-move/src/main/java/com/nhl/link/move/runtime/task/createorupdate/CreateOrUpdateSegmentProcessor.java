@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import org.apache.cayenne.DataObject;
 
 import com.nhl.link.move.Execution;
@@ -45,7 +46,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 		mapSrc(exec, segment);
 		matchTarget(exec, segment);
 		mergeToTarget(exec, segment);
-		commitTarget(segment);
+		commitTarget(exec, segment);
 	}
 
 	private void convertSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
@@ -68,10 +69,9 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 		notifyListeners(AfterTargetsMerged.class, exec, segment);
 	}
 
-	private void commitTarget(CreateOrUpdateSegment<T> segment) {
+	private void commitTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
 		segment.getContext().commitChanges();
-
-		// TODO: do we care for a listener here?
+		notifyListeners(AfterTargetsCommitted.class, exec, segment);
 	}
 
 	private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateOrUpdateSegment<T> segment) {

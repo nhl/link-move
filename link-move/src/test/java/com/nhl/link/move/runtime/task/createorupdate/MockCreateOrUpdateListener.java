@@ -5,9 +5,9 @@ import static org.mockito.Mockito.mock;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterSourcesMapped;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMatched;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
-import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 
 public class MockCreateOrUpdateListener {
 
@@ -36,6 +36,11 @@ public class MockCreateOrUpdateListener {
 	@AfterTargetsMerged
 	public void afterTargetMerged(Execution execution, CreateOrUpdateSegment<?> segment) {
 		mockDelegate.afterTargetMerged(execution, segment);
+	}
+
+	@AfterTargetsCommitted
+	public void afterTargetCommited(Execution execution, CreateOrUpdateSegment<?> segment) {
+		mockDelegate.afterTargetCommited(execution, segment);
 	}
 
 	public MockCreateOrUpdateListener getMockDelegate() {
