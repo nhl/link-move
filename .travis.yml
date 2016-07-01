@@ -1,11 +1,11 @@
 language: java
 
-jdk:
-  - oraclejdk8
-
 branches:
   only:
-    - master
+    - "master"
+
+jdk:
+  - oraclejdk8
 
 script: 
   - mvn clean source:jar deploy --settings travis_settings.xml
