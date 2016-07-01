@@ -14,18 +14,10 @@ public class DecimalNormalizer extends JdbcNormalizer<BigDecimal> {
     }
 
     @Override
-    public BigDecimal normalize(Object value, DbAttribute targetAttribute) {
-
-        if (value == null) {
-            return null;
-        }
+    protected BigDecimal doNormalize(Object value, DbAttribute targetAttribute) {
 
         BigDecimal normalized;
         switch (value.getClass().getName()) {
-            case "java.math.BigDecimal": {
-                normalized = (BigDecimal) value;
-                break;
-            }
             case "java.lang.String": {
                 String s = (String) value;
                 normalized = s.isEmpty()? null : new BigDecimal(s);
@@ -53,6 +45,11 @@ public class DecimalNormalizer extends JdbcNormalizer<BigDecimal> {
             }
         }
 
+        return normalized;
+    }
+
+    @Override
+    protected BigDecimal postNormalize(BigDecimal normalized, DbAttribute targetAttribute) {
         if (normalized == null) {
             return null;
         } else if (targetAttribute == null) {
