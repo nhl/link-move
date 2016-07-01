@@ -1,4 +1,6 @@
 Release 1.8
+
+#104 Boolean JDBC normalizer fails to normalize a java.lang.Boolean 
 #106 Listener for the after targets committed stage
 
 Release 1.7
