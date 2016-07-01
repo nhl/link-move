@@ -1,10 +1,11 @@
-Release 1.8
+Release 2.0
 
 #71  DataSourceConnector: Out-of-the-box Java 8 support
 #104 Boolean JDBC normalizer fails to normalize a java.lang.Boolean 
 #106 Listener for the after targets committed stage
 #107 Switch to Java 8
 #108 Change license from BSD to Apache 2.0
+#109 Switch version from 1.8 to 2.0
 
 Release 1.7
 
