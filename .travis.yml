@@ -8,7 +8,7 @@ branches:
     - master
 
 script: 
-- mvn clean source:jar deploy --settings travis_settings.xml
+  - mvn clean source:jar deploy --settings travis_settings.xml
 
 # travis encrypt -r nhl/link-move "CI_DEPLOY_USERNAME='name'"
 # travis encrypt -r nhl/link-move "CI_DEPLOY_PASSWORD='password'"
