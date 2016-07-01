@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Annotation of a data segment transformation stage listener method that should
  * be called after objects are committed to the target date store.
  *
- * @since 1.8
+ * @since 2.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

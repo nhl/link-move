@@ -1,3 +1,9 @@
+## Upgrading to 2.0
+
+### Requires Java 8 [#109](https://github.com/nhl/link-move/issues/109)
+
+2.0 release requires Java 8. 
+
 ## Upgrading to 1.6
 
 ### Remove methods deprecated since 1.4 or earlier [#81](https://github.com/nhl/link-move/issues/81)
