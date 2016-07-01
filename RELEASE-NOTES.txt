@@ -1,3 +1,6 @@
+Release 1.8
+#106 Listener for the after targets committed stage
+
 Release 1.7
 
 #72 Conflict between source and target DataSources
