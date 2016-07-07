@@ -68,15 +68,15 @@ Execution e = task.run();
 
 ## Extractor XML Format
 
-Extractor XML format is described by a formal schema: http://nhl.github.io/link-move/xsd/extractor_config_2.xsd
+Extractor XML format is described by a formal schema: http://linkmove.io/xsd/extractor_config_2.xsd
 
 An example using JDBC connector for the source data:
 
 ```XML
 <?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
-	xmlns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd">
+	xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
 	
 	<type>jdbc</type>
 	<connectorId>myconnector</connectorId>

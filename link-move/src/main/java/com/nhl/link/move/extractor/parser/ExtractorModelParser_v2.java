@@ -24,7 +24,7 @@ import com.nhl.link.move.extractor.model.MutableExtractorModelContainer;
  */
 public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
 
-	public static final String NS = "http://nhl.github.io/link-move/xsd/extractor_config_2.xsd";
+	public static final String NS = "http://linkmove.io/xsd/extractor_config_2.xsd";
 
 	@Override
 	public ExtractorModelContainer parse(String location, Element xmlRoot) {

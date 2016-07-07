@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd"
-	xmlns="http://nhl.github.io/link-move/xsd/extractor_config_2.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
 
 	<type>jdbc</type>
 	<connectorId>dummyconnector</connectorId>

@@ -1,3 +1,7 @@
+Release 2.1
+
+#110 Relocate the schema to linkmove.io
+
 Release 2.0
 
 #71  DataSourceConnector: Out-of-the-box Java 8 support
