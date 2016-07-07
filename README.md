@@ -7,6 +7,13 @@ LinkMove is a model-driven dynamically-configurable framework to acquire data fr
 
 LinkMove connects multiple data models together in a flexible way that anticipates independent changes between sources and targets. It will reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. It supports JDBC, XML, JSON, CSV sources out of the box.
 
+## Support
+
+There are two options:
+
+* Open an issue on GitHub with a label of "help wanted" or "question" (or "bug" if you think you found a bug).
+* Post your question on the [LinkMove forum](https://groups.google.com/forum/?#!forum/linkmove-user).
+
 ## Getting Started
 
 Add LinkMove dependency:
