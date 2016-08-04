@@ -49,7 +49,7 @@ public class LmRuntimeBuilderTest {
 		LmRuntime runtime = builder.build();
 
 		assertNotNull(runtime);
-		ITaskService taskService = runtime.getTaskService();
+		ITaskService taskService = runtime.service(ITaskService.class);
 		assertNotNull(taskService);
 		assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
 	}
@@ -68,7 +68,7 @@ public class LmRuntimeBuilderTest {
 		LmRuntime runtime = builder.build();
 		assertNotNull(runtime);
 
-		ITaskService taskService = runtime.getTaskService();
+		ITaskService taskService = runtime.service(ITaskService.class);
 		assertNotNull(taskService);
 		assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
 	}

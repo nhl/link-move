@@ -7,6 +7,12 @@ import com.nhl.link.move.runtime.task.ITaskService;
  */
 public interface LmRuntime {
 
+	/**
+	 * @since 2.1
+     */
+	<T> T service(Class<T> serviceType);
+
+	@Deprecated
 	ITaskService getTaskService();
 	
 	void shutdown();

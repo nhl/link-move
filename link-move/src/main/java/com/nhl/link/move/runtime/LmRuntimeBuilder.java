@@ -321,6 +321,11 @@ public class LmRuntimeBuilder {
 		return new LmRuntime() {
 
 			@Override
+			public <T> T service(Class<T> serviceType) {
+				return injector.getInstance(serviceType);
+			}
+
+			@Override
 			public ITaskService getTaskService() {
 				return injector.getInstance(ITaskService.class);
 			}

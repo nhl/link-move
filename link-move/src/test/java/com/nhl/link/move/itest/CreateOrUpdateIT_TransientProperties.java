@@ -2,6 +2,7 @@ package com.nhl.link.move.itest;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
+import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl7t;
 import org.junit.Test;
@@ -13,7 +14,7 @@ public class CreateOrUpdateIT_TransientProperties extends LmIntegrationTest {
     @Test
 	public void test_ById() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl7t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl7t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl7_to_etl7t_byid.xml").matchById().task();
 
 		srcRunSql("INSERT INTO utest.etl7 (ID, FULL_NAME, SEX) VALUES (1, 'Lennon, John', 'M')");

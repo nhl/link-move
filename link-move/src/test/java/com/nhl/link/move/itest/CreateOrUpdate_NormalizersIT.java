@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
 
+import com.nhl.link.move.runtime.task.ITaskService;
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.query.SQLSelect;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	public void test_ById_Normalized_IntegerToLong() {
 
 		// not specifying "matchById" explicitly ... this should be the default
-		LmTask task = etl.getTaskService().createOrUpdate(Etl6t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl6t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml").task();
 
 		srcRunSql("INSERT INTO utest.etl6 (ID, NAME) VALUES (45, 'a')");
@@ -58,7 +59,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute_Normalized_SyncFk() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_normalizers").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, NAME) VALUES (1, 'abc')");
@@ -74,7 +75,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	@Test
 	public void test_ById_Normalized_IntegerToBoolean() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl4t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_normalizers").task();
 
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (1, true)");
@@ -92,7 +93,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	@Test
 	public void test_ById_Normalized_DecimalToDecimal() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl8t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl8t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml").task();
 
 		BigDecimal c1 = new BigDecimal("1.000000"), c2 = new BigDecimal("1.000000000"), c3 = new BigDecimal("1.000000000");
@@ -114,7 +115,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	@Test(expected = Exception.class)
 	public void test_ById_Normalized_DecimalToDecimal_Exception() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl8t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl8t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml").task();
 
 		BigDecimal c1 = new BigDecimal("1.000000"), c2 = new BigDecimal("1.000000001"), c3 = new BigDecimal("1.000000000");

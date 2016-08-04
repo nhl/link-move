@@ -2,6 +2,7 @@ package com.nhl.link.move.itest;
 
 import static org.junit.Assert.assertEquals;
 
+import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.cayenne.t.Etl9t;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute_v1() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
@@ -53,7 +54,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
@@ -88,7 +89,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByDbAttribute() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy("db:name").task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
@@ -123,7 +124,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttributes() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME, Etl1t.AGE).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
@@ -153,7 +154,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ById() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl5t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid.xml").matchById().task();
 
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
@@ -189,7 +190,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	public void test_ById_Default() {
 
 		// not specifying "matchById" explicitly ... this should be the default
-		LmTask task = etl.getTaskService().createOrUpdate(Etl5t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid.xml").task();
 
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
@@ -224,7 +225,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test(expected = LmRuntimeException.class)
 	public void test_ById_Autoincrement() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_byid.xml").matchById().task();
 
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (45, 'a', 67)");
@@ -236,7 +237,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_CapsLower() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_lower").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
@@ -252,7 +253,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ExtraSrcColumns() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_extra_source_columns").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, DESCRIPTION) VALUES ('a', 'dd')");
@@ -268,7 +269,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute_SyncFk() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
@@ -295,7 +296,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute_SyncFk_Nulls() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl3t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
@@ -332,7 +333,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute_SyncNulls() {
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
@@ -350,7 +351,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		// remove auto_pk_support so that commit would fail if ID is absent
 		targetRunSql("DROP TABLE AUTO_PK_SUPPORT");
 
-		LmTask task = etl.getTaskService().createOrUpdate(Etl9t.class)
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl9t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl9_to_etl9t.xml").matchById().task();
 
 		srcRunSql("INSERT INTO utest.etl9 (ID, NAME) VALUES (1, 'a')");

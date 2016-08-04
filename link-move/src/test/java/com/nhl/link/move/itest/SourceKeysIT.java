@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.nhl.link.move.runtime.task.ITaskService;
 import org.junit.Test;
 
 import com.nhl.link.move.LmTask;
@@ -21,7 +22,7 @@ public class SourceKeysIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = etl.getTaskService().extractSourceKeys(Etl1t.class)
+		LmTask task = etl.service(ITaskService.class).extractSourceKeys(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy("name").task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
