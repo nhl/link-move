@@ -1,5 +1,6 @@
 Release 2.1
 
+#112 API for external access to DI-managed entities
 #110 Relocate the schema to linkmove.io
 
 Release 2.0
