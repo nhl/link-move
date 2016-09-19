@@ -1,3 +1,11 @@
+## Upgrading to 2.1
+
+### Requires XSD location update [#110](https://github.com/nhl/link-move/issues/110)
+
+Change schema lcoation in all XML extractors from http://nhl.github.io/link-move/xsd/extractor_config_2.xsd to http://linkmove.io/xsd/extractor_config_2.xsd
+
+2.0 release requires Java 8. 
+
 ## Upgrading to 2.0
 
 ### Requires Java 8 [#109](https://github.com/nhl/link-move/issues/109)
