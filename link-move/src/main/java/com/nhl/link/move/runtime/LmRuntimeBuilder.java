@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.extractor.model.URLExtractorModelLoader;
 import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
 import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
 import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
@@ -88,8 +90,7 @@ public class LmRuntimeBuilder {
 
 	private Map<String, JdbcNormalizer<?>> jdbcNormalizers;
 
-	private IExtractorModelLoader extractorModelLoader;
-	private File extractorModelsRoot;
+	private ModelLoaderBinder modelLoaderBinder;
 
 	private ITokenManager tokenManager;
 	private ServerRuntime targetRuntime;
@@ -209,9 +210,13 @@ public class LmRuntimeBuilder {
 	/**
 	 * @since 1.4
 	 */
-	public LmRuntimeBuilder extractorModelLoader(IExtractorModelLoader extractorModelLoader) {
-		this.extractorModelLoader = extractorModelLoader;
-		this.extractorModelsRoot = null;
+	public LmRuntimeBuilder extractorModelLoader(final IExtractorModelLoader extractorModelLoader) {
+		modelLoaderBinder = new ModelLoaderBinder() {
+			@Override
+			public void bind(Binder binder) {
+				binder.bind(IExtractorModelLoader.class).toInstance(extractorModelLoader);
+			}
+		};
 		return this;
 	}
 
@@ -219,8 +224,21 @@ public class LmRuntimeBuilder {
 	 * @since 1.4
 	 */
 	public LmRuntimeBuilder extractorModelsRoot(File rootDir) {
-		this.extractorModelLoader = null;
-		this.extractorModelsRoot = rootDir;
+		modelLoaderBinder = new FileModelLoaderBinder(rootDir);
+		return this;
+	}
+
+	/**
+	 * @since 1.8
+     */
+	public LmRuntimeBuilder extractorModelsRoot(final URL rootUrl) {
+		modelLoaderBinder = new ModelLoaderBinder() {
+			@Override
+			public void bind(Binder binder) {
+				binder.bind(IExtractorModelLoader.class).to(URLExtractorModelLoader.class);
+				binder.bind(Key.get(URL.class, FILE_EXTRACTOR_MODEL_ROOT_DIR)).toInstance(rootUrl);
+			}
+		};
 		return this;
 	}
 
@@ -228,8 +246,7 @@ public class LmRuntimeBuilder {
 	 * @since 1.4
 	 */
 	public LmRuntimeBuilder extractorModelsRoot(String rootDirPath) {
-		this.extractorModelLoader = null;
-		this.extractorModelsRoot = new File(rootDirPath);
+		modelLoaderBinder = new FileModelLoaderBinder(new File(rootDirPath));
 		return this;
 	}
 
@@ -338,19 +355,33 @@ public class LmRuntimeBuilder {
 	}
 
 	void bindModelLoader(Binder binder) {
-		if (extractorModelLoader != null) {
-			binder.bind(IExtractorModelLoader.class).toInstance(extractorModelLoader);
-		} else if (extractorModelsRoot != null) {
-
-			if (!extractorModelsRoot.isDirectory()) {
-				LOGGER.warn("Extractor models root is not a valid directory: " + extractorModelsRoot);
-			}
-
-			binder.bind(IExtractorModelLoader.class).to(FileExtractorModelLoader.class);
-			binder.bind(Key.get(File.class, FILE_EXTRACTOR_MODEL_ROOT_DIR)).toInstance(extractorModelsRoot);
+		if (modelLoaderBinder != null) {
+			modelLoaderBinder.bind(binder);
 		} else {
 			binder.bind(IExtractorModelLoader.class).to(ClasspathExtractorModelLoader.class);
 		}
 	}
 
+	private interface ModelLoaderBinder {
+		void bind(Binder binder);
+	}
+
+	private static class FileModelLoaderBinder implements ModelLoaderBinder {
+
+		private File rootDir;
+
+		FileModelLoaderBinder(File rootDir) {
+			this.rootDir = rootDir;
+		}
+
+		@Override
+		public void bind(Binder binder) {
+			if (!rootDir.isDirectory()) {
+				LOGGER.warn("Extractor models root is not a valid directory: " + rootDir);
+			}
+
+			binder.bind(IExtractorModelLoader.class).to(FileExtractorModelLoader.class);
+			binder.bind(Key.get(File.class, FILE_EXTRACTOR_MODEL_ROOT_DIR)).toInstance(rootDir);
+		}
+	};
 }
