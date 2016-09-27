@@ -33,4 +33,9 @@ public class TargetTransientPropertyWriter implements TargetPropertyWriter {
 
         return false;
     }
+
+    @Override
+    public boolean willWrite(DataObject target, Object value) {
+        return true;
+    }
 }

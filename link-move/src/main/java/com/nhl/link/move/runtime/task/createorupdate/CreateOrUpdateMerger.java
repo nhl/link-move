@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.DataObject;
@@ -33,10 +32,18 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 		this.writerFactory = writerFactory;
 	}
 
-	public List<CreateOrUpdateTuple<T>> merge(ObjectContext context, Map<Object, Map<String, Object>> mappedSources,
-			List<T> matchedTargets) {
+	public void merge(List<CreateOrUpdateTuple<T>> mapped) {
+		for (CreateOrUpdateTuple<T> t : mapped) {
+			if (!t.isCreated()) {
+				merge(t.getSource(), t.getTarget());
+			}
+		}
+	}
 
-		// clone mappedSources as we are planning to truncate it in this method
+	public List<CreateOrUpdateTuple<T>> map(ObjectContext context, Map<Object, Map<String, Object>> mappedSources,
+                                              List<T> matchedTargets) {
+
+        // clone mappedSources as we are planning to truncate it in this method
 		Map<Object, Map<String, Object>> localMappedSources = new HashMap<>(mappedSources);
 
 		List<CreateOrUpdateTuple<T>> result = new ArrayList<>();
@@ -54,13 +61,13 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 			}
 
 			// skip phantom updates...
-			if (update(context, src, t)) {
+			if (willUpdate(src, t)) {
 				result.add(new CreateOrUpdateTuple<>(src, t, false));
 			}
 		}
 
 		// everything that's left are new objects
-		for (Entry<Object, Map<String, Object>> e : localMappedSources.entrySet()) {
+		for (Map.Entry<Object, Map<String, Object>> e : localMappedSources.entrySet()) {
 
 			T t = create(context, type, e.getValue());
 
@@ -68,21 +75,13 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 		}
 
 		return result;
-	}
+    }
 
-	protected T create(ObjectContext context, Class<T> type, Map<String, Object> source) {
-		T target = context.newObject(type);
-		update(context, source, target);
-		return target;
-	}
+    protected boolean willUpdate(Map<String, Object> source, T target) {
 
-	protected boolean update(ObjectContext context, Map<String, Object> source, T target) {
-
-		if (source.entrySet().isEmpty()) {
+		if (source.isEmpty()) {
 			return false;
 		}
-
-		boolean updated = false;
 
 		for (Map.Entry<String, Object> e : source.entrySet()) {
 			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
@@ -91,10 +90,49 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 				continue;
 			}
 
-			updated = writer.write(target, e.getValue()) || updated;
+			if (writer.willWrite(target, e.getValue())) {
+                return true;
+            }
 		}
 
-		return updated;
+		return false;
 	}
 
+    protected T create(ObjectContext context, Class<T> type, Map<String, Object> source) {
+
+		T target = context.newObject(type);
+
+		if (source.isEmpty()) {
+			return target;
+		}
+
+		for (Map.Entry<String, Object> e : source.entrySet()) {
+			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
+			if (writer == null) {
+				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
+				continue;
+			}
+			if (writer.willWrite(target, e.getValue())) {
+				writer.write(target, e.getValue());
+			}
+		}
+
+		return target;
+	}
+
+	private void merge(Map<String, Object> source, T target) {
+
+		if (source.isEmpty()) {
+			return;
+		}
+
+		for (Map.Entry<String, Object> e : source.entrySet()) {
+			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
+			if (writer == null) {
+				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
+				continue;
+			}
+			writer.write(target, e.getValue());
+		}
+	}
 }

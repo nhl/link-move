@@ -25,17 +25,16 @@ public class TargetToOnePropertyWriter implements TargetPropertyWriter {
 		// e.g. for the master side of a propagated PK, this property should be
 		// handled via a PK writer (?)
 
-		boolean updated = false;
+		DataObject newValue = resolveRelatedObject(target.getObjectContext(), value);
+		property.setTarget(target, newValue, true);
+		return true;
+	}
 
+	@Override
+	public boolean willWrite(DataObject target, Object value) {
 		Object oldValue = property.readProperty(target);
 		DataObject newValue = resolveRelatedObject(target.getObjectContext(), value);
-
-		if (!Util.nullSafeEquals(oldValue, newValue)) {
-			property.setTarget(target, newValue, true);
-			updated = true;
-		}
-
-		return updated;
+		return !Util.nullSafeEquals(oldValue, newValue);
 	}
 
 	private DataObject resolveRelatedObject(ObjectContext context, Object relatedId) {
