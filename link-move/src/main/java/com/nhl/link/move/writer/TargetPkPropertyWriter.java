@@ -24,12 +24,9 @@ public class TargetPkPropertyWriter implements TargetPropertyWriter {
 	}
 
 	@Override
-	public boolean write(DataObject target, Object value) {
-
+	public void write(DataObject target, Object value) {
 		// regular meaningless PK
 		target.getObjectId().getReplacementIdMap().put(pk.getName(), value);
-
-		return true;
 	}
 
 	@Override

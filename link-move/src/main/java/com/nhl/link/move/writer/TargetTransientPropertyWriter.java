@@ -20,18 +20,13 @@ public class TargetTransientPropertyWriter implements TargetPropertyWriter {
     }
 
     @Override
-    public boolean write(DataObject target, Object value) {
-
+    public void write(DataObject target, Object value) {
         try {
             setter.invoke(target, value);
-            return true;
-
         } catch (Exception e) {
             LOGGER.warn("Failed to invoke setter method with name '" + setter.getName() +
                     "' on object of type: " + target.getClass().getName(), e);
         }
-
-        return false;
     }
 
     @Override

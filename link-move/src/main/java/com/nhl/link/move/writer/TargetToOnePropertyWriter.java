@@ -18,7 +18,7 @@ public class TargetToOnePropertyWriter implements TargetPropertyWriter {
 	}
 
 	@Override
-	public boolean write(DataObject target, Object value) {
+	public void write(DataObject target, Object value) {
 
 		// TODO: the strategy depends on the value of
 		// 'property.getRelationship().isSourceIndependentFromTargetChange()'
@@ -27,7 +27,6 @@ public class TargetToOnePropertyWriter implements TargetPropertyWriter {
 
 		DataObject newValue = resolveRelatedObject(target.getObjectContext(), value);
 		property.setTarget(target, newValue, true);
-		return true;
 	}
 
 	@Override
