@@ -1,29 +1,6 @@
 package com.nhl.link.move.runtime;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ServiceLoader;
-
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
-import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
-import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
-import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.dba.TypesMapping;
-import org.apache.cayenne.di.Binder;
-import org.apache.cayenne.di.DIBootstrap;
-import org.apache.cayenne.di.Injector;
-import org.apache.cayenne.di.Key;
-import org.apache.cayenne.di.MapBuilder;
-import org.apache.cayenne.di.Module;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -41,6 +18,9 @@ import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
 import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
+import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
+import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
+import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
@@ -54,6 +34,25 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
+import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.dba.TypesMapping;
+import org.apache.cayenne.di.Binder;
+import org.apache.cayenne.di.DIBootstrap;
+import org.apache.cayenne.di.Injector;
+import org.apache.cayenne.di.Key;
+import org.apache.cayenne.di.MapBuilder;
+import org.apache.cayenne.di.Module;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.ServiceLoader;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -323,11 +322,6 @@ public class LmRuntimeBuilder {
 			@Override
 			public <T> T service(Class<T> serviceType) {
 				return injector.getInstance(serviceType);
-			}
-
-			@Override
-			public ITaskService getTaskService() {
-				return injector.getInstance(ITaskService.class);
 			}
 
 			@Override

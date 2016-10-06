@@ -12,8 +12,9 @@ public interface LmRuntime {
      */
 	<T> T service(Class<T> serviceType);
 
-	@Deprecated
-	ITaskService getTaskService();
+	default ITaskService getTaskService() {
+		return service(ITaskService.class);
+	}
 	
 	void shutdown();
 }
