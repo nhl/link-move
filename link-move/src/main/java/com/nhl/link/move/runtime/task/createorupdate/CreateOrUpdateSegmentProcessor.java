@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
 import org.apache.cayenne.DataObject;
 
 import com.nhl.link.move.Execution;
@@ -45,6 +46,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 		convertSrc(exec, segment);
 		mapSrc(exec, segment);
 		matchTarget(exec, segment);
+		mapToTarget(exec, segment);
 		mergeToTarget(exec, segment);
 		commitTarget(exec, segment);
 	}
@@ -64,8 +66,13 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 		notifyListeners(AfterTargetsMatched.class, exec, segment);
 	}
 
+	private void mapToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
+		segment.setMerged(merger.map(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
+		notifyListeners(AfterTargetsMapped.class, exec, segment);
+	}
+
 	private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.setMerged(merger.merge(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
+		merger.merge(segment.getMerged());
 		notifyListeners(AfterTargetsMerged.class, exec, segment);
 	}
 

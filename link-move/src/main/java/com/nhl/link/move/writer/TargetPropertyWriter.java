@@ -14,8 +14,11 @@ public interface TargetPropertyWriter {
 	/**
 	 * Sets a value of a property corresponding to this writer of a target
 	 * DataObject.
-	 * 
-	 * @return true if the state of the object was affected, false otherwise.
 	 */
-	boolean write(DataObject target, Object value);
+	void write(DataObject target, Object value);
+
+	/**
+     * @return true if the state of the object will be affected by the update, false otherwise.
+     */
+	boolean willWrite(DataObject target, Object value);
 }

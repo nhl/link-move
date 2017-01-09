@@ -16,16 +16,14 @@ public class TargetAttributePropertyWriter implements TargetPropertyWriter {
 	}
 
 	@Override
-	public boolean write(DataObject target, Object value) {
-		boolean updated = false;
-
+	public void write(DataObject target, Object value) {
 		Object oldValue = property.readProperty(target);
+		property.writeProperty(target, oldValue, value);
+	}
 
-		if (!Util.nullSafeEquals(oldValue, value)) {
-			property.writeProperty(target, oldValue, value);
-			updated = true;
-		}
-
-		return updated;
+	@Override
+	public boolean willWrite(DataObject target, Object value) {
+		Object oldValue = property.readProperty(target);
+		return !Util.nullSafeEquals(oldValue, value);
 	}
 }

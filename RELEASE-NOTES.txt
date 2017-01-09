@@ -1,6 +1,7 @@
 Release 2.2
 
-#113 Upgrade Cayenne to 4.0.M4 to fix overlapping transactions 
+#113 Upgrade Cayenne to 4.0.M4 to fix overlapping transactions
+#114 Targets mapped event before merging update
 
 Release 2.1
 
