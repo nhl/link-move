@@ -7,6 +7,9 @@ import java.sql.Time;
 import java.time.Instant;
 import java.time.LocalTime;
 
+/**
+ * @since 2.2
+ */
 public class LocalTimeNormalizer extends JdbcNormalizer<LocalTime> {
 
     public LocalTimeNormalizer() {

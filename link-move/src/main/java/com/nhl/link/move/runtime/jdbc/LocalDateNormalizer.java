@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ * @since 2.2
+ */
 public class LocalDateNormalizer extends JdbcNormalizer<LocalDate> {
 
     public LocalDateNormalizer() {
