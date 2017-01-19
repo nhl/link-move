@@ -218,9 +218,12 @@ public class NormalizerTest {
         localDateNormalizer.normalize(new Time(Instant.now().toEpochMilli()), null);
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testNormalizer_sqlTimestamp_To_LocalDate() {
-        localDateNormalizer.normalize(new Timestamp(Instant.now().toEpochMilli()), null);
+        Instant now = Instant.now();
+        LocalDate localDate = now.atZone(ZoneId.systemDefault()).toLocalDate();
+        Timestamp timestamp = new Timestamp(now.toEpochMilli());
+        assertEquals(localDate, localDateNormalizer.normalize(timestamp, null));
     }
 
     @Test(expected = LmRuntimeException.class)
@@ -242,9 +245,13 @@ public class NormalizerTest {
         assertEquals(localTime, localTimeNormalizer.normalize(time, null));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testNormalizer_sqlTimestamp_To_LocalTime() {
-        localTimeNormalizer.normalize(new Timestamp(Instant.now().toEpochMilli()), null);
+        LocalTime localTime = LocalTime.now();
+        Calendar calendar = new GregorianCalendar(1970, 0, 1);
+        calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
+        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+        assertEquals(localTime, localTimeNormalizer.normalize(timestamp, null));
     }
 
     @Test

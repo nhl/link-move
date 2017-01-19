@@ -4,6 +4,7 @@ import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.map.DbAttribute;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalTime;
 
@@ -26,9 +27,12 @@ public class LocalTimeNormalizer extends JdbcNormalizer<LocalTime> {
                 return time.toLocalTime().plusNanos(instant.getNano());
             }
             case "java.util.Date":
-            case "java.sql.Date":
-            case "java.sql.Timestamp": {
+            case "java.sql.Date": {
                 throw new LmRuntimeException("Will not perform lossy conversion from " + getTypeName() + ": " + value);
+            }
+            case "java.sql.Timestamp": {
+                Timestamp timestamp = (Timestamp) value;
+                return timestamp.toLocalDateTime().toLocalTime();
             }
             default: {
                 throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
