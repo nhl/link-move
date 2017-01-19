@@ -1,10 +1,22 @@
 package com.nhl.link.move.runtime.jdbc;
 
+import com.nhl.link.move.LmRuntimeException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoField;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -15,6 +27,9 @@ public class NormalizerTest {
     private static BooleanNormalizer booleanNormalizer;
     private static IntegerNormalizer integerNormalizer;
     private static DecimalNormalizer decimalNormalizer;
+    private static LocalDateNormalizer localDateNormalizer;
+    private static LocalTimeNormalizer localTimeNormalizer;
+    private static LocalDateTimeNormalizer localDateTimeNormalizer;
 
     @BeforeClass
     public static void setUp() {
@@ -22,6 +37,9 @@ public class NormalizerTest {
         booleanNormalizer = new BooleanNormalizer();
         decimalNormalizer = new DecimalNormalizer();
         integerNormalizer = new IntegerNormalizer();
+        localDateNormalizer = new LocalDateNormalizer();
+        localTimeNormalizer = new LocalTimeNormalizer();
+        localDateTimeNormalizer = new LocalDateTimeNormalizer();
     }
 
     @Test
@@ -177,5 +195,84 @@ public class NormalizerTest {
     @Test
     public void testNormalizer_BigDecimal_To_BigDecimal() {
         assertEquals(BigDecimal.ONE, decimalNormalizer.normalize(BigDecimal.ONE, null));
+    }
+
+    @Test
+    public void testNormalizer_utilDate_To_LocalDate() {
+        Instant now = Instant.now();
+        LocalDate localDate = now.atZone(ZoneId.systemDefault()).toLocalDate();
+        Date date = new Date(now.toEpochMilli());
+        assertEquals(localDate, localDateNormalizer.normalize(date, null));
+    }
+
+    @Test
+    public void testNormalizer_sqlDate_To_LocalDate() {
+        Instant now = Instant.now();
+        LocalDate localDate = now.atZone(ZoneId.systemDefault()).toLocalDate();
+        java.sql.Date date = new java.sql.Date(now.toEpochMilli());
+        assertEquals(localDate, localDateNormalizer.normalize(date, null));
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_sqlTime_To_LocalDate() {
+        localDateNormalizer.normalize(new Time(Instant.now().toEpochMilli()), null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_sqlTimestamp_To_LocalDate() {
+        localDateNormalizer.normalize(new Timestamp(Instant.now().toEpochMilli()), null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_utilDate_To_LocalTime() {
+        localTimeNormalizer.normalize(Date.from(Instant.now()), null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_sqlDate_To_LocalTime() {
+        localTimeNormalizer.normalize(new java.sql.Date(Instant.now().toEpochMilli()), null);
+    }
+
+    @Test
+    public void testNormalizer_sqlTime_To_LocalTime() {
+        LocalTime localTime = LocalTime.now();
+        Calendar calendar = new GregorianCalendar(1970, 0, 1);
+        calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
+        java.sql.Time time = new Time(calendar.getTimeInMillis());
+        assertEquals(localTime, localTimeNormalizer.normalize(time, null));
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_sqlTimestamp_To_LocalTime() {
+        localTimeNormalizer.normalize(new Timestamp(Instant.now().toEpochMilli()), null);
+    }
+
+    @Test
+    public void testNormalizer_utilDate_To_LocalDateTime() {
+        Instant now = Instant.now();
+        LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        Date date = new Date(now.toEpochMilli());
+        assertEquals(localDateTime, localDateTimeNormalizer.normalize(date, null));
+    }
+
+    @Test
+    public void testNormalizer_sqlDate_To_LocalDateTime() {
+        Instant now = Instant.now();
+        LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        java.sql.Date date = new java.sql.Date(now.toEpochMilli());
+        assertEquals(localDateTime, localDateTimeNormalizer.normalize(date, null));
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_sqlTime_To_LocalDateTime() {
+        localDateTimeNormalizer.normalize(new Time(Instant.now().toEpochMilli()), null);
+    }
+
+    @Test
+    public void testNormalizer_sqlTimestamp_To_LocalDateTime() {
+        Instant now = Instant.now();
+        LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        Timestamp timestamp = new Timestamp(now.toEpochMilli());
+        assertEquals(localDateTime, localDateTimeNormalizer.normalize(timestamp, null));
     }
 }

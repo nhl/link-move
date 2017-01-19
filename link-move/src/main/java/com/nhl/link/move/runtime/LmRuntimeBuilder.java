@@ -24,6 +24,9 @@ import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import com.nhl.link.move.runtime.jdbc.LocalDateNormalizer;
+import com.nhl.link.move.runtime.jdbc.LocalDateTimeNormalizer;
+import com.nhl.link.move.runtime.jdbc.LocalTimeNormalizer;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
@@ -47,6 +50,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -108,6 +114,9 @@ public class LmRuntimeBuilder {
 		jdbcNormalizers.put(Integer.class.getName(), new IntegerNormalizer());
 		jdbcNormalizers.put(BigDecimal.class.getName(), new DecimalNormalizer());
 		jdbcNormalizers.put(Boolean.class.getName(), new BooleanNormalizer());
+		jdbcNormalizers.put(LocalDate.class.getName(), new LocalDateNormalizer());
+		jdbcNormalizers.put(LocalTime.class.getName(), new LocalTimeNormalizer());
+		jdbcNormalizers.put(LocalDateTime.class.getName(), new LocalDateTimeNormalizer());
 	}
 
 	/**
