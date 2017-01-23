@@ -37,9 +37,10 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 	private MapperBuilder mapperBuilder;
 	private ListenersBuilder listenersBuilder;
 
-	public DefaultDeleteBuilder(Class<T> type, ITargetCayenneService targetCayenneService,
+	public DefaultDeleteBuilder(Class<T> type, ITargetCayenneService targetCayenneService, ITokenManager tokenManager,
 			IKeyAdapterFactory keyAdapterFactory, ITaskService taskService, IPathNormalizer pathNormalizer) {
 
+		this.tokenManager = tokenManager;
 		this.taskService = taskService;
 		this.targetCayenneService = targetCayenneService;
 		this.type = type;

@@ -64,7 +64,7 @@ public class DefaultDeleteBuilderTest {
 		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(new DefaultSourceKeysBuilder(
 				mockEntityPathNormalizer, mock(IExtractorService.class), mock(ITokenManager.class), keyAdapterFactory));
 
-		this.builder = new DefaultDeleteBuilder<>(Etl1t.class, cayenneService, keyAdapterFactory, taskService,
+		this.builder = new DefaultDeleteBuilder<>(Etl1t.class, cayenneService, null, keyAdapterFactory, taskService,
 				mockPathNormalizer);
 	}
 

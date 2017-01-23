@@ -60,7 +60,7 @@ public class TaskService implements ITaskService {
 
 	@Override
 	public <T extends DataObject> DeleteBuilder<T> delete(Class<T> type) {
-		return new DefaultDeleteBuilder<T>(type, targetCayenneService, keyAdapterFactory, this, pathNormalizer);
+		return new DefaultDeleteBuilder<T>(type, targetCayenneService, tokenManager, keyAdapterFactory, this, pathNormalizer);
 	}
 
 }
