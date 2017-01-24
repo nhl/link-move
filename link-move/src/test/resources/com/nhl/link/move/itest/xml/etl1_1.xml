@@ -1,0 +1,10 @@
+<docroot>
+    <element>
+        <age>1</age>
+        <name>xxx</name>
+    </element>
+    <element>
+        <age>2</age>
+        <name>yyy</name>
+    </element>
+</docroot>

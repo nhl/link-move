@@ -11,7 +11,6 @@
 
 	<element name="config" type="tns:ConfigType" />
 
-
 	<complexType name="ConfigType">
 
 		<annotation>
@@ -31,16 +30,10 @@
 				</annotation>
 			</element>
 
-			<element name="connectorId" type="string" minOccurs="1" maxOccurs="1">
-				<annotation>
-					<documentation source="description">
-						Defines a symbolic ID of the connector used by the extractor. Connector must
-						be
-						compatible with Extractor type specified above. ExtractorModelContainer's connectorId is inherited (and can be
-						overridden) by extractors.
-					</documentation>
-				</annotation>
-			</element>
+			<choice minOccurs="1" maxOccurs="1">
+				<element name="connectorId" type="tns:ConnectorIdType"/>
+				<element name="connectorIds" type="tns:ConnectorIdsType"/>
+			</choice>
 
 			<element name="extractor" type="tns:ExtractorType" minOccurs="0" maxOccurs="unbounded" />
 
@@ -67,13 +60,15 @@
 				</annotation>
 			</element>
 
-			<element name="connectorId" type="string" minOccurs="0" maxOccurs="1">
+			<choice minOccurs="0" maxOccurs="1">
 				<annotation>
 					<documentation source="description">
-						Overrides "connectorId" of the container
+						Overrides "connectorId"/"connectorIds" of the container
 					</documentation>
 				</annotation>
-			</element>
+				<element name="connectorId" type="tns:ConnectorIdType"/>
+				<element name="connectorIds" type="tns:ConnectorIdsType"/>
+			</choice>
 
 			<element name="attributes" minOccurs="0" maxOccurs="1">
 				<annotation>
@@ -123,5 +118,22 @@
 		</sequence>
 	</complexType>
 
+	<complexType name="ConnectorIdsType">
+		<sequence>
+			<element name="connectorId" type="tns:ConnectorIdType" minOccurs="1" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+
+	<simpleType name="ConnectorIdType">
+		<annotation>
+			<documentation source="description">
+				Defines a symbolic ID of the connector used by the extractor. Connector must
+				be
+				compatible with Extractor type specified above. ExtractorModelContainer's connectorId is inherited (and can be
+				overridden) by extractors.
+			</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
 
 </schema>

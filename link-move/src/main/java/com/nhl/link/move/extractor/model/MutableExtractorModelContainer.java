@@ -2,7 +2,9 @@ package com.nhl.link.move.extractor.model;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -12,7 +14,7 @@ public class MutableExtractorModelContainer implements ExtractorModelContainer {
 
 	private String location;
 	private String type;
-	private String connectorId;
+	private Set<String> connectorIds;
 	private long loadedOn;
 
 	private Map<String, ExtractorModel> extractors;
@@ -20,6 +22,7 @@ public class MutableExtractorModelContainer implements ExtractorModelContainer {
 	public MutableExtractorModelContainer(String location) {
 		this.location = location;
 
+		this.connectorIds = new HashSet<>();
 		// make sure the map is sorted for consistent iteration over
 		// extractors...
 		this.extractors = new TreeMap<>();
@@ -47,7 +50,18 @@ public class MutableExtractorModelContainer implements ExtractorModelContainer {
 
 	@Override
 	public String getConnectorId() {
-		return connectorId;
+		if (connectorIds.isEmpty()) {
+			// connector IDs can be missing
+			return null;
+		} if (connectorIds.size() == 1) {
+			return connectorIds.iterator().next();
+		}
+		throw new IllegalStateException("Multiple connector IDs specified in model");
+	}
+
+	@Override
+	public Collection<String> getConnectorIds() {
+		return connectorIds;
 	}
 
 	@Override
@@ -60,8 +74,8 @@ public class MutableExtractorModelContainer implements ExtractorModelContainer {
 		extractors.put(name, extractor);
 	}
 
-	public void setConnectorId(String connectorId) {
-		this.connectorId = connectorId;
+	public void addConnectorId(String connectorId) {
+		this.connectorIds.add(connectorId);
 	}
 
 	public void setType(String type) {

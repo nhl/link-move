@@ -15,7 +15,14 @@ public interface ExtractorModelContainer {
 
 	String getType();
 
+	@Deprecated
 	String getConnectorId();
+
+	/**
+	 * @return Collection of connector IDs
+	 * @since 2.2
+     */
+	Collection<String> getConnectorIds();
 
 	ExtractorModel getExtractor(String name);
 

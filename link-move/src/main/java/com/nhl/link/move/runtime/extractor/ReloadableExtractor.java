@@ -1,10 +1,14 @@
 package com.nhl.link.move.runtime.extractor;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.Extractor;
+import com.nhl.link.move.extractor.MultiExtractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.connect.IConnectorService;
@@ -64,7 +68,21 @@ public class ReloadableExtractor implements Extractor {
 			throw new IllegalStateException("No factory mapped for Extractor type of '" + model.getType() + "'");
 		}
 
-		T connector = connectorService.getConnector(factory.getConnectorType(), model.getConnectorId());
+		Collection<String> connectorIds = model.getConnectorIds();
+		if (connectorIds.size() == 1) {
+			return createExtractor(model, factory, connectorIds.iterator().next());
+		} else {
+			List<Extractor> extractors = connectorIds.stream()
+					.map(id -> createExtractor(model, factory, id))
+					.collect(Collectors.toList());
+			return new MultiExtractor(extractors);
+		}
+	}
+
+	private <T extends Connector> Extractor createExtractor(ExtractorModel model,
+															IExtractorFactory<T> factory,
+															String connectorId) {
+		T connector = connectorService.getConnector(factory.getConnectorType(), connectorId);
 		return factory.createExtractor(connector, model);
 	}
 

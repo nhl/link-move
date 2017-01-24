@@ -5,6 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class ReloadableExtractorTest {
 
 		this.mockModel = mock(ExtractorModel.class);
 		when(mockModel.getType()).thenReturn("t1");
+		when(mockModel.getConnectorIds()).thenReturn(Collections.singleton("c1"));
 		when(mockModel.getLoadedOn()).thenReturn(System.currentTimeMillis() - 1);
 
 		this.mockModelService = mock(IExtractorModelService.class);

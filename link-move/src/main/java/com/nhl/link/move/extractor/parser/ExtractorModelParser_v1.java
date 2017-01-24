@@ -75,7 +75,7 @@ public class ExtractorModelParser_v1 implements DOMExtractorModelParser {
 				case "connectorId":
 					// enough to set this at the container level.. extractor
 					// will inherit the connectorId
-					container.setConnectorId(e.getTextContent());
+					container.addConnectorId(e.getTextContent());
 					break;
 				case "attributes":
 					processAttributes(e, extractor);

@@ -1,5 +1,6 @@
 package com.nhl.link.move.extractor.model;
 
+import java.util.Collection;
 import java.util.Map;
 
 import com.nhl.link.move.RowAttribute;
@@ -41,6 +42,11 @@ public class ContainerAwareExtractorModel implements ExtractorModel {
 	public String getConnectorId() {
 		String connectorId = delegate.getConnectorId();
 		return connectorId != null ? connectorId : parent.getConnectorId();
+	}
+
+	@Override
+	public Collection<String> getConnectorIds() {
+		return delegate.getConnectorIds().isEmpty() ? parent.getConnectorIds() : delegate.getConnectorIds();
 	}
 
 	@Override

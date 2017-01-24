@@ -35,7 +35,7 @@ public abstract class BaseExtractorFactoryTest<T extends Connector, F extends IE
 	@Before
 	public void setUpExtractorModel() {
 		model = new MutableExtractorModel("testExtractorConfig");
-		model.setConnectorId(CONNECTOR_ID);
+		model.addConnectorId(CONNECTOR_ID);
 		model.setAttributes(new BaseRowAttribute[0]);
 	}
 
