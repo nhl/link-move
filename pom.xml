@@ -47,7 +47,7 @@
 
 		<!-- Custom properties (mostly framework versions) -->
 		<slf4j-version>1.7.21</slf4j-version>
-		<cayenne-version>4.0.M4</cayenne-version>
+		<cayenne-version>4.0.M5</cayenne-version>
 		<jackson-version>2.6.3</jackson-version>
 		<apache-commons-csv-version>1.3</apache-commons-csv-version>
 	</properties>
@@ -58,6 +58,26 @@
 		<url>https://github.com/nhl/link-move</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<repositories>
+		<!-- TODO: delete this once M5 is official -->
+        <repository>
+            <id>linkrest-dependencies</id>
+            <name>Link Rest Dependencies Repo</name>
+            <url>http://maven.objectstyle.org/nexus/content/groups/linkrest</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+		<repository>
+			<id>cayenne-temp</id>
+			<name>Cayenne M5 Vote Repo</name>
+			<url>https://repository.apache.org/content/repositories/orgapachecayenne-1013</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<distributionManagement>
 		<repository>

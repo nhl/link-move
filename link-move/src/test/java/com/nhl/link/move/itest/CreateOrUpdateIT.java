@@ -312,8 +312,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ById_RelationshipOnPK() {
 
-		// remove auto_pk_support so that commit would fail if ID is absent
-		targetRunSql("DROP TABLE AUTO_PK_SUPPORT");
+		// remove PK generator so that commit would fail if ID is absent
+		targetRunSql("DROP SEQUENCE utest.pk_etl9t RESTRICT");
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl9t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl9_to_etl9t.xml").matchById().task();
