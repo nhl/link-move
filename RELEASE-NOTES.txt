@@ -5,6 +5,7 @@ Release 2.2
 #116 tokenManager is null in DefaultDeleteBuilder
 #117 JdbcNormalizer for java.time classes
 #120 Multiple connectors for a single extractor
+#121 upgrade to Cayenne 4.0.M5
 
 Release 2.1
 

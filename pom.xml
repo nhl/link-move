@@ -59,26 +59,6 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<repositories>
-		<!-- TODO: delete this once M5 is official -->
-        <repository>
-            <id>linkrest-dependencies</id>
-            <name>Link Rest Dependencies Repo</name>
-            <url>http://maven.objectstyle.org/nexus/content/groups/linkrest</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-		<repository>
-			<id>cayenne-temp</id>
-			<name>Cayenne M5 Vote Repo</name>
-			<url>https://repository.apache.org/content/repositories/orgapachecayenne-1013</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
