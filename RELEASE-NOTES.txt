@@ -1,3 +1,7 @@
+Release 2.3
+
+#122 Respect original types of JSON source row attributes
+
 Release 2.2
 
 #113 Upgrade Cayenne to 4.0.M4 to fix overlapping transactions
