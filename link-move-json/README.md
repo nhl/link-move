@@ -99,3 +99,7 @@ All books that have readers
 `$.store.book[?(@.readers[?(@.age >= 30)])]` or 
 `$.store.book[?(@.readers[*].age >= 30)]`
 All books that have readers aged 30+
+
+### Extracting data from the top-level array
+
+Use `$.*` to get a list of nodes in the top-level array.
