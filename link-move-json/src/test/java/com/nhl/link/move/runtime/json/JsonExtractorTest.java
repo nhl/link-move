@@ -111,12 +111,12 @@ public class JsonExtractorTest {
 
         List<Row> rows = collectRows(attributes, query);
 
-        List<String> items = new ArrayList<>();
+        List<Object> items = new ArrayList<>();
         for (Row row : rows) {
-            items.add((String) row.get(attr));
+            items.add(row.get(attr));
         }
         assertEquals(3, items.size());
-        assertTrue(items.containsAll(Arrays.asList("18", "60", null)));
+        assertTrue(items.containsAll(Arrays.asList(18, 60, null)));
     }
 
     @Test

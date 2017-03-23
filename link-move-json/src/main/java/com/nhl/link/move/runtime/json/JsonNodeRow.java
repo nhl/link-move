@@ -1,6 +1,7 @@
 package com.nhl.link.move.runtime.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.NumericNode;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
@@ -35,12 +36,55 @@ class JsonNodeRow implements Row {
 			throw new LmRuntimeException("Attribute query yielded a list of values (total: " + result.size() +
 					"). A single value is expected.");
 		}
+		return extractValue(result.get(0).getNode());
+	}
 
-		JsonNode value = result.get(0).getNode();
-		if (value.isObject() || value.isArray()) {
-			throw new LmRuntimeException("Expected a value node");
+	private Object extractValue(JsonNode node) {
+		switch (node.getNodeType()) {
+			case ARRAY:
+			case POJO:
+			case OBJECT: {
+				throw new LmRuntimeException("Expected a value node");
+			}
+			case MISSING:
+			case NULL: {
+				return null;
+			}
+			case BINARY:
+			case STRING: {
+				return node.asText();
+			}
+			case BOOLEAN: {
+				return node.asBoolean();
+			}
+			case NUMBER: {
+				NumericNode numericNode = (NumericNode) node;
+				switch (numericNode.numberType()) {
+					case INT: {
+						return numericNode.intValue();
+					}
+					case LONG: {
+						return numericNode.longValue();
+					}
+					case FLOAT: {
+						return numericNode.floatValue();
+					}
+					case DOUBLE: {
+						return numericNode.doubleValue();
+					}
+					case BIG_INTEGER: {
+						return numericNode.bigIntegerValue();
+					}
+					case BIG_DECIMAL: {
+						return numericNode.decimalValue();
+					}
+					// intentionally fall through
+				}
+			}
+			default: {
+				throw new LmRuntimeException("Unexpected JSON node type: " + node.getNodeType());
+			}
 		}
-		return value.asText();
 	}
 
 	@Override
