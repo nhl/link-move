@@ -20,7 +20,7 @@ public abstract class JdbcNormalizer<T> {
     }
 
     /**
-     * @return JDBC type that this normalizer works with.
+     * @return Default Java equivalent of the JDBC type that this normalizer works with.
      * @see java.sql.Types
      */
     public Class<T> getType() {
