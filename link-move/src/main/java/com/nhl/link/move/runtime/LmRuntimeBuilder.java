@@ -27,6 +27,7 @@ import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
 import com.nhl.link.move.runtime.jdbc.LocalDateNormalizer;
 import com.nhl.link.move.runtime.jdbc.LocalDateTimeNormalizer;
 import com.nhl.link.move.runtime.jdbc.LocalTimeNormalizer;
+import com.nhl.link.move.runtime.jdbc.StringNormalizer;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
@@ -117,6 +118,7 @@ public class LmRuntimeBuilder {
 		jdbcNormalizers.put(LocalDate.class.getName(), new LocalDateNormalizer());
 		jdbcNormalizers.put(LocalTime.class.getName(), new LocalTimeNormalizer());
 		jdbcNormalizers.put(LocalDateTime.class.getName(), new LocalDateTimeNormalizer());
+		jdbcNormalizers.put(String.class.getName(), new StringNormalizer());
 	}
 
 	/**

@@ -30,6 +30,7 @@ public class NormalizerTest {
     private static LocalDateNormalizer localDateNormalizer;
     private static LocalTimeNormalizer localTimeNormalizer;
     private static LocalDateTimeNormalizer localDateTimeNormalizer;
+    private static StringNormalizer stringNormalizer;
 
     @BeforeClass
     public static void setUp() {
@@ -40,6 +41,7 @@ public class NormalizerTest {
         localDateNormalizer = new LocalDateNormalizer();
         localTimeNormalizer = new LocalTimeNormalizer();
         localDateTimeNormalizer = new LocalDateTimeNormalizer();
+        stringNormalizer = new StringNormalizer();
     }
 
     @Test
@@ -281,5 +283,95 @@ public class NormalizerTest {
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
         Timestamp timestamp = new Timestamp(now.toEpochMilli());
         assertEquals(localDateTime, localDateTimeNormalizer.normalize(timestamp, null));
+    }
+
+    @Test
+    public void testNormalizer_Byte_To_String() {
+        assertEquals("1", stringNormalizer.normalize((byte) 1, null));
+    }
+
+    @Test
+    public void testNormalizer_Short_To_String() {
+        assertEquals("1", stringNormalizer.normalize((short) 1, null));
+    }
+
+    @Test
+    public void testNormalizer_Integer_To_String() {
+        assertEquals("1", stringNormalizer.normalize(1, null));
+    }
+
+    @Test
+    public void testNormalizer_Long_To_String() {
+        assertEquals("1", stringNormalizer.normalize(1L, null));
+    }
+
+    @Test
+    public void testNormalizer_BigInteger_To_String() {
+        assertEquals("1", stringNormalizer.normalize(BigInteger.ONE, null));
+    }
+
+    @Test
+    public void testNormalizer_Float_To_String() {
+        assertEquals("1", stringNormalizer.normalize(1f, null));
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Float_To_String_NaN() {
+        stringNormalizer.normalize(Float.NaN, null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Float_To_String_PositiveInfinity() {
+        stringNormalizer.normalize(Float.POSITIVE_INFINITY, null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Float_To_String_NegativeInfinity() {
+        stringNormalizer.normalize(Float.NEGATIVE_INFINITY, null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Float_To_String_FractionalPart() {
+        stringNormalizer.normalize(1.1f, null);
+    }
+
+    @Test
+    public void testNormalizer_Double_To_String() {
+        assertEquals("1", stringNormalizer.normalize(1d, null));
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Double_To_String_NaN() {
+        stringNormalizer.normalize(Double.NaN, null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Double_To_String_PositiveInfinity() {
+        stringNormalizer.normalize(Double.POSITIVE_INFINITY, null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Double_To_String_NegativeInfinity() {
+        stringNormalizer.normalize(Double.NEGATIVE_INFINITY, null);
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_Double_To_String_FractionalPart() {
+        stringNormalizer.normalize(1.1d, null);
+    }
+
+    @Test
+    public void testNormalizer_BigDecimal_To_String() {
+        assertEquals("1", stringNormalizer.normalize(BigDecimal.ONE, null));
+    }
+
+    @Test(expected = LmRuntimeException.class)
+    public void testNormalizer_BigDecimal_To_String_Exception() {
+        stringNormalizer.normalize(BigDecimal.valueOf(1.1d), null);
+    }
+
+    @Test
+    public void testNormalizer_Null_To_String() {
+        assertEquals(null, stringNormalizer.normalize(null, null));
     }
 }

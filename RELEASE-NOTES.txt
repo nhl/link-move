@@ -1,6 +1,7 @@
 Release 2.3
 
 #122 Respect original types of JSON source row attributes
+#123 String normalizer
 
 Release 2.2
 
