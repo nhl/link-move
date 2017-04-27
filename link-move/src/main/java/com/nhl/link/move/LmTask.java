@@ -49,6 +49,8 @@ public interface LmTask {
 	 * the caller to analyze the results. Currently all task implementations are
 	 * synchronous, so this method returns only on task completion.
 	 *
+	 * Any changes will not be committed to the target datasource.
+	 *
 	 * @since 2.3
 	 */
 	Execution dryRun();
@@ -58,6 +60,8 @@ public interface LmTask {
 	 * object that can be used by the caller to analyze the results. Currently
 	 * all task implementations are synchronous, so this method returns only on
 	 * task completion.
+	 *
+	 * Any changes will not be committed to the target datasource.
 	 *
 	 * @since 2.3
 	 */
@@ -69,6 +73,8 @@ public interface LmTask {
 	 * all task implementations are synchronous, so this method returns only on
 	 * task completion.
 	 *
+	 * Any changes will not be committed to the target datasource.
+	 *
 	 * @since 2.3
 	 */
 	Execution dryRun(SyncToken token);
@@ -78,6 +84,8 @@ public interface LmTask {
 	 * object that can be used by the caller to analyze the results. Currently
 	 * all task implementations are synchronous, so this method returns only on
 	 * task completion.
+	 *
+	 * Any changes will not be committed to the target datasource.
 	 *
 	 * @since 2.3
 	 */
