@@ -44,4 +44,43 @@ public interface LmTask {
 	 */
 	Execution run(SyncToken token, Map<String, ?> params);
 
+	/**
+	 * Executes the task returning {@link Execution} object that can be used by
+	 * the caller to analyze the results. Currently all task implementations are
+	 * synchronous, so this method returns only on task completion.
+	 *
+	 * @since 2.3
+	 */
+	Execution dryRun();
+
+	/**
+	 * Executes the task with a map of parameters returning {@link Execution}
+	 * object that can be used by the caller to analyze the results. Currently
+	 * all task implementations are synchronous, so this method returns only on
+	 * task completion.
+	 *
+	 * @since 2.3
+	 */
+	Execution dryRun(Map<String, ?> params);
+
+	/**
+	 * Executes the task with a map of parameters returning {@link Execution}
+	 * object that can be used by the caller to analyze the results. Currently
+	 * all task implementations are synchronous, so this method returns only on
+	 * task completion.
+	 *
+	 * @since 2.3
+	 */
+	Execution dryRun(SyncToken token);
+
+	/**
+	 * Executes the task with a map of parameters returning {@link Execution}
+	 * object that can be used by the caller to analyze the results. Currently
+	 * all task implementations are synchronous, so this method returns only on
+	 * task completion.
+	 *
+	 * @since 2.3
+	 */
+	Execution dryRun(SyncToken token, Map<String, ?> params);
+
 }

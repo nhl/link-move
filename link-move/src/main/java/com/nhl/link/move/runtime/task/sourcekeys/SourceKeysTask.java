@@ -1,12 +1,8 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import com.nhl.link.move.CountingRowReader;
-import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
@@ -16,6 +12,9 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
+
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * An {@link LmTask} that extracts all the keys from the source data store. The
@@ -43,34 +42,23 @@ public class SourceKeysTask extends BaseTask {
 	}
 
 	@Override
-	public Execution run(Map<String, ?> params) {
+	protected void run(Execution execution, Map<String, ?> params) {
+		execution.setAttribute(RESULT_KEY, new HashSet<>());
 
-		if (params == null) {
-			throw new NullPointerException("Null params");
-		}
+		BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
 
-		try (Execution execution = new Execution("SourceKeysTask:" + sourceExtractorName, params);) {
-
-			execution.setAttribute(RESULT_KEY, new HashSet<>());
-
-			BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-
-			try (RowReader data = getRowReader(execution, params)) {
-				BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
-			}
-
-			return execution;
+		try (RowReader data = getRowReader(execution, params)) {
+			BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
 		}
 	}
 
-	protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
-		return new BatchProcessor<Row>() {
+	@Override
+	protected String name() {
+		return "SourceKeysTask:" + sourceExtractorName;
+	}
 
-			@Override
-			public void process(List<Row> rows) {
-				processor.process(execution, new SourceKeysSegment(rows));
-			}
-		};
+	protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
+		return rows -> processor.process(execution, new SourceKeysSegment(rows));
 	}
 
 	/**

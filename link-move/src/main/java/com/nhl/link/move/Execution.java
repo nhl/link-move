@@ -18,8 +18,9 @@ public class Execution implements AutoCloseable {
 	protected Map<String, ?> parameters;
 	protected Map<String, Object> attributes;
 	protected ExecutionStats stats;
+	private boolean dryRun;
 
-	public Execution(String name, Map<String, ?> params) {
+	public Execution(String name, Map<String, ?> params, boolean dryRun) {
 		this.name = name;
 		this.parameters = params;
 
@@ -27,6 +28,7 @@ public class Execution implements AutoCloseable {
 		this.attributes = new HashMap<>();
 
 		this.stats = new ExecutionStats();
+		this.dryRun = dryRun;
 
 		stats.executionStarted();
 	}
@@ -101,4 +103,7 @@ public class Execution implements AutoCloseable {
 		return stats;
 	}
 
+	public boolean isDryRun() {
+		return dryRun;
+	}
 }

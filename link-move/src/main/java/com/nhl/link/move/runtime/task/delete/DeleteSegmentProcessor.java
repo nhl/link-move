@@ -37,7 +37,10 @@ public class DeleteSegmentProcessor<T extends DataObject> {
 		extractSourceKeys(exec, segment);
 		filterMissingTargets(exec, segment);
 		deleteTarget(segment);
-		commitTarget(segment);
+
+		if (!exec.isDryRun()) {
+			commitTarget(segment);
+		}
 	}
 
 	private void mapTarget(Execution exec, DeleteSegment<T> segment) {

@@ -14,4 +14,6 @@ public abstract class BaseTaskBuilder {
 	public BaseTaskBuilder() {
 		this.batchSize = DEFAULT_BATCH_SIZE;
 	}
+
+
 }
