@@ -1,7 +1,5 @@
 package com.nhl.link.move.runtime.extractor;
 
-import java.util.Map;
-
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.Extractor;
@@ -9,6 +7,8 @@ import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.connect.IConnectorService;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+
+import java.util.Map;
 
 /**
  * An extractor decorator that can recreate the underlying {@link Extractor} if
@@ -18,14 +18,14 @@ public class ReloadableExtractor implements Extractor {
 
 	private IExtractorModelService extractorModelService;
 	private IConnectorService connectorService;
-	private Map<String, IExtractorFactory<? extends Connector>> factories;
+	private Map<String, IExtractorFactory> factories;
 	private ExtractorName name;
 
 	private long lastSeen;
 	private Extractor delegate;
 
 	public ReloadableExtractor(IExtractorModelService extractorModelService, IConnectorService connectorService,
-			Map<String, IExtractorFactory<? extends Connector>> factories, ExtractorName name) {
+			Map<String, IExtractorFactory> factories, ExtractorName name) {
 
 		this.extractorModelService = extractorModelService;
 		this.connectorService = connectorService;

@@ -18,10 +18,10 @@ public abstract class _Etl3t extends CayenneDataObject {
 
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<String> NAME = new Property<String>("name");
-    public static final Property<String> PHONE_NUMBER = new Property<String>("phoneNumber");
-    public static final Property<Etl2t> E2 = new Property<Etl2t>("e2");
-    public static final Property<Etl5t> E5 = new Property<Etl5t>("e5");
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<String> PHONE_NUMBER = Property.create("phoneNumber", String.class);
+    public static final Property<Etl2t> E2 = Property.create("e2", Etl2t.class);
+    public static final Property<Etl5t> E5 = Property.create("e5", Etl5t.class);
 
     public void setName(String name) {
         writeProperty("name", name);

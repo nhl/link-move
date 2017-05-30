@@ -1,5 +1,6 @@
 Release 1.9
 
+#127 (1.x) Upgrade to Cayenne 4.0.B1 
 
 Release 1.7
 

@@ -15,15 +15,10 @@ public abstract class _Etl9t extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    @Deprecated
-    public static final String NAME_PROPERTY = "name";
-    @Deprecated
-    public static final String E10_PROPERTY = "e10";
-
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<String> NAME = new Property<String>("name");
-    public static final Property<Etl10t> E10 = new Property<Etl10t>("e10");
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<Etl10t> E10 = Property.create("e10", Etl10t.class);
 
     public void setName(String name) {
         writeProperty("name", name);

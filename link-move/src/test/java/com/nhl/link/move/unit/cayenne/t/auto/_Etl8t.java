@@ -15,18 +15,11 @@ public abstract class _Etl8t extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    @Deprecated
-    public static final String C_DECIMAL1_PROPERTY = "cDecimal1";
-    @Deprecated
-    public static final String C_DECIMAL2_PROPERTY = "cDecimal2";
-    @Deprecated
-    public static final String C_DECIMAL3_PROPERTY = "cDecimal3";
-
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<BigDecimal> C_DECIMAL1 = new Property<BigDecimal>("cDecimal1");
-    public static final Property<BigDecimal> C_DECIMAL2 = new Property<BigDecimal>("cDecimal2");
-    public static final Property<BigDecimal> C_DECIMAL3 = new Property<BigDecimal>("cDecimal3");
+    public static final Property<BigDecimal> C_DECIMAL1 = Property.create("cDecimal1", BigDecimal.class);
+    public static final Property<BigDecimal> C_DECIMAL2 = Property.create("cDecimal2", BigDecimal.class);
+    public static final Property<BigDecimal> C_DECIMAL3 = Property.create("cDecimal3", BigDecimal.class);
 
     public void setCDecimal1(BigDecimal cDecimal1) {
         writeProperty("cDecimal1", cDecimal1);

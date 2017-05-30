@@ -12,7 +12,7 @@ public class CayenneDerbyStack {
 	public CayenneDerbyStack(String derbyName, String cayenneProject) {
 		derbyPath = "target/" + derbyName;
 		derby = new DerbyManager(derbyPath);
-		runtime = new ServerRuntime(cayenneProject);
+		runtime = ServerRuntime.builder().addConfig(cayenneProject).build();
 	}
 
 	public void shutdown() {

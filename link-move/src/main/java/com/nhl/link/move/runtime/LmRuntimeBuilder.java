@@ -1,29 +1,6 @@
 package com.nhl.link.move.runtime;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ServiceLoader;
-
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
-import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
-import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
-import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.dba.TypesMapping;
-import org.apache.cayenne.di.Binder;
-import org.apache.cayenne.di.DIBootstrap;
-import org.apache.cayenne.di.Injector;
-import org.apache.cayenne.di.Key;
-import org.apache.cayenne.di.MapBuilder;
-import org.apache.cayenne.di.Module;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -41,6 +18,9 @@ import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
 import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
+import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
+import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
+import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
@@ -54,6 +34,25 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
+import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.dba.TypesMapping;
+import org.apache.cayenne.di.Binder;
+import org.apache.cayenne.di.DIBootstrap;
+import org.apache.cayenne.di.Injector;
+import org.apache.cayenne.di.Key;
+import org.apache.cayenne.di.MapBuilder;
+import org.apache.cayenne.di.Module;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.ServiceLoader;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -61,12 +60,6 @@ import com.nhl.link.move.writer.TargetPropertyWriterService;
 public class LmRuntimeBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
-
-	public static final String CONNECTORS_MAP = "com.nhl.link.move.connectors";
-	public static final String CONNECTOR_FACTORIES_MAP = "com.nhl.link.move.connector.factories";
-	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.move.extractor.factories";
-
-	public static final String JDBC_NORMALIZERS_MAP = "com.nhl.link.move.jdbc.normalizers";
 
 	/**
 	 * A DI property that defines the root directory to resolve locations of
@@ -80,13 +73,13 @@ public class LmRuntimeBuilder {
 	public static final String END_TOKEN_VAR = "endToken";
 
 	private Map<String, Connector> connectors;
-	private Map<String, IConnectorFactory<? extends Connector>> connectorFactories;
+	private Map<String, IConnectorFactory> connectorFactories;
 	private Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
 
-	private Map<String, IExtractorFactory<?>> extractorFactories;
+	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
-	private Map<String, JdbcNormalizer<?>> jdbcNormalizers;
+	private Map<String, JdbcNormalizer> jdbcNormalizers;
 
 	private IExtractorModelLoader extractorModelLoader;
 	private File extractorModelsRoot;
@@ -251,12 +244,10 @@ public class LmRuntimeBuilder {
 
 				bindModelLoader(binder);
 
-				binder.<Connector> bindMap(LmRuntimeBuilder.CONNECTORS_MAP).putAll(connectors);
+				binder.bindMap(Connector.class).putAll(connectors);
 
-				MapBuilder<IConnectorFactory<? extends Connector>> connectorFactories = binder
-						.<IConnectorFactory<? extends Connector>> bindMap(LmRuntimeBuilder.CONNECTOR_FACTORIES_MAP);
-
-				connectorFactories.putAll(LmRuntimeBuilder.this.connectorFactories);
+				MapBuilder<IConnectorFactory> connectorFactories = binder.bindMap(IConnectorFactory.class)
+						.putAll(LmRuntimeBuilder.this.connectorFactories);
 
 				for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
 						.entrySet()) {
@@ -271,7 +262,7 @@ public class LmRuntimeBuilder {
 					connectorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<IExtractorFactory<?>> extractorFactories = binder.bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
+				MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(IExtractorFactory.class);
 
 				ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
 				for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
@@ -292,7 +283,7 @@ public class LmRuntimeBuilder {
 					extractorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<JdbcNormalizer<?>> jdbcNormalizers = binder.bindMap(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP);
+				MapBuilder<JdbcNormalizer> jdbcNormalizers = binder.bindMap(JdbcNormalizer.class);
 				jdbcNormalizers.putAll(LmRuntimeBuilder.this.jdbcNormalizers);
 
 				// Binding CayenneService for the *target*... Note that binding

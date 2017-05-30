@@ -1,27 +1,25 @@
 package com.nhl.link.move.runtime.extractor;
 
+import com.nhl.link.move.connect.Connector;
+import com.nhl.link.move.extractor.Extractor;
+import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.runtime.connect.IConnectorService;
+import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+import org.apache.cayenne.di.Inject;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import com.nhl.link.move.connect.Connector;
-import com.nhl.link.move.runtime.connect.IConnectorService;
-import org.apache.cayenne.di.Inject;
-
-import com.nhl.link.move.extractor.Extractor;
-import com.nhl.link.move.extractor.model.ExtractorName;
-import com.nhl.link.move.runtime.LmRuntimeBuilder;
-import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
 
 public class ExtractorService implements IExtractorService {
 
 	private IExtractorModelService modelService;
 	private IConnectorService connectorService;
 	private ConcurrentMap<ExtractorName, Extractor> extractors;
-	private Map<String, IExtractorFactory<? extends Connector>> factories;
+	private Map<String, IExtractorFactory> factories;
 
 	public ExtractorService(@Inject IExtractorModelService modelService, @Inject IConnectorService connectorService,
-			@Inject(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP) Map<String, IExtractorFactory<? extends Connector>> factories) {
+			@Inject Map<String, IExtractorFactory> factories) {
 		this.factories = factories;
 		this.modelService = modelService;
 		this.connectorService = connectorService;

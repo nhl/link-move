@@ -1,12 +1,7 @@
 package com.nhl.link.move.runtime.path;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
 import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.exp.Expression;
@@ -19,9 +14,12 @@ import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.PathComponent;
 
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.LmRuntimeBuilder;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @since 1.4
@@ -29,10 +27,9 @@ import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
 public class PathNormalizer implements IPathNormalizer {
 
 	private ConcurrentMap<String, EntityPathNormalizer> pathCache;
-	private Map<String, JdbcNormalizer<?>> jdbcNormalizers;
+	private Map<String, JdbcNormalizer> jdbcNormalizers;
 
-	public PathNormalizer(
-			@Inject(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP) Map<String, JdbcNormalizer<?>> jdbcNormalizers) {
+	public PathNormalizer(@Inject Map<String, JdbcNormalizer> jdbcNormalizers) {
 		pathCache = new ConcurrentHashMap<>();
 		this.jdbcNormalizers = jdbcNormalizers;
 	}

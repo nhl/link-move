@@ -1,17 +1,16 @@
 package com.nhl.link.move.itest;
 
-import static org.junit.Assert.assertEquals;
-
-import com.nhl.link.move.unit.cayenne.t.Etl9t;
-import org.junit.Test;
-
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.Execution;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import com.nhl.link.move.unit.cayenne.t.Etl5t;
+import com.nhl.link.move.unit.cayenne.t.Etl9t;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class CreateOrUpdateIT extends LmIntegrationTest {
 
@@ -347,8 +346,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	@Test
 	public void test_ById_RelationshipOnPK() {
 
-		// remove auto_pk_support so that commit would fail if ID is absent
-		targetRunSql("DROP TABLE AUTO_PK_SUPPORT");
+		// remove PK generator so that commit would fail if ID is absent
+		targetRunSql("DROP SEQUENCE utest.pk_etl9t RESTRICT");
 
 		LmTask task = etl.getTaskService().createOrUpdate(Etl9t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl9_to_etl9t.xml").matchById().task();
