@@ -47,7 +47,7 @@
 		<!-- Custom properties (mostly framework versions) -->
 
 		<slf4j-version>1.7.21</slf4j-version>
-		<cayenne-version>4.0.M6-SNAPSHOT</cayenne-version>
+		<cayenne-version>4.0.B1</cayenne-version>
 		<jackson-version>2.6.3</jackson-version>
 		<apache-commons-version>1.3</apache-commons-version>
 	</properties>
