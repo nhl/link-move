@@ -4,7 +4,7 @@
 
 	<groupId>com.nhl.link.move</groupId>
 	<artifactId>link-move-parent</artifactId>
-	<version>1.7</version>
+	<version>1.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
