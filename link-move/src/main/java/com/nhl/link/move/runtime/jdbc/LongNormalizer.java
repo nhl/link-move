@@ -6,9 +6,9 @@ import org.apache.cayenne.map.DbAttribute;
 /**
  * This normalizer upcasts byte, short and int values to long type.
  */
-public class BigIntNormalizer extends JdbcNormalizer<Long> {
+public class LongNormalizer extends JdbcNormalizer<Long> {
 
-    public BigIntNormalizer() {
+    public LongNormalizer() {
         super(Long.class);
     }
 

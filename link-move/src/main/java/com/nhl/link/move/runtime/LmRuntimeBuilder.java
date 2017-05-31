@@ -17,7 +17,7 @@ import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
-import com.nhl.link.move.runtime.jdbc.BigIntNormalizer;
+import com.nhl.link.move.runtime.jdbc.LongNormalizer;
 import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
 import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
 import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
@@ -111,7 +111,7 @@ public class LmRuntimeBuilder {
 		this.adapters = new ArrayList<>();
 
 		// default normalizers
-		jdbcNormalizers.put(Long.class.getName(), new BigIntNormalizer());
+		jdbcNormalizers.put(Long.class.getName(), new LongNormalizer());
 		jdbcNormalizers.put(Integer.class.getName(), new IntegerNormalizer());
 		jdbcNormalizers.put(BigDecimal.class.getName(), new DecimalNormalizer());
 		jdbcNormalizers.put(Boolean.class.getName(), new BooleanNormalizer());
