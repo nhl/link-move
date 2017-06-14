@@ -15,9 +15,9 @@ public abstract class _Etl7t extends CayenneDataObject {
 
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<String> FIRST_NAME = new Property<String>("firstName");
-    public static final Property<String> LAST_NAME = new Property<String>("lastName");
-    public static final Property<String> SEX = new Property<String>("sex");
+    public static final Property<String> FIRST_NAME = Property.create("firstName", String.class);
+    public static final Property<String> LAST_NAME = Property.create("lastName", String.class);
+    public static final Property<String> SEX = Property.create("sex", String.class);
 
     public void setFirstName(String firstName) {
         writeProperty("firstName", firstName);

@@ -20,9 +20,9 @@ public abstract class _Etl5t extends CayenneDataObject {
 
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<Date> DATE = new Property<Date>("date");
-    public static final Property<String> NAME = new Property<String>("name");
-    public static final Property<List<Etl3t>> E2S = new Property<List<Etl3t>>("e2s");
+    public static final Property<Date> DATE = Property.create("date", Date.class);
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<List<Etl3t>> E2S = Property.create("e2s", List.class);
 
     public void setDate(Date date) {
         writeProperty("date", date);
