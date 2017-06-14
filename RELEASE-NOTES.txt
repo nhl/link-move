@@ -3,6 +3,7 @@ Release 2.3
 #122 Respect original types of JSON source row attributes
 #123 String normalizer
 #128 Support java.math big numeric types in Integer and Long normalizers
+#129 (2.x) Upgrade to Cayenne 4.0.B1
 
 Release 2.2
 

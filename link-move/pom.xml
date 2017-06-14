@@ -30,12 +30,6 @@
 			<artifactId>slf4j-api</artifactId>
 			<scope>compile</scope>
 		</dependency>
-		<!-- Bridging Cayenne logger to SLF -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<scope>compile</scope>
-		</dependency>
 
 		<!-- unit test deps -->
 		<dependency>
