@@ -4,6 +4,9 @@ jdk:
   - oraclejdk8
   - openjdk7
 
+script: 
+  - mvn clean verify javadoc:javadoc
+
 branches:
   only:
-    - master
+    - 1.x
