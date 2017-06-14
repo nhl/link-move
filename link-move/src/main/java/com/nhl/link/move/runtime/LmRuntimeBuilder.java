@@ -68,12 +68,6 @@ public class LmRuntimeBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
 
-	public static final String CONNECTORS_MAP = "com.nhl.link.move.connectors";
-	public static final String CONNECTOR_FACTORIES_MAP = "com.nhl.link.move.connector.factories";
-	public static final String EXTRACTOR_FACTORIES_MAP = "com.nhl.link.move.extractor.factories";
-
-	public static final String JDBC_NORMALIZERS_MAP = "com.nhl.link.move.jdbc.normalizers";
-
 	/**
 	 * A DI property that defines the root directory to resolve locations of
 	 * extractor config files.
@@ -86,13 +80,13 @@ public class LmRuntimeBuilder {
 	public static final String END_TOKEN_VAR = "endToken";
 
 	private Map<String, Connector> connectors;
-	private Map<String, IConnectorFactory<? extends Connector>> connectorFactories;
+	private Map<String, IConnectorFactory> connectorFactories;
 	private Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
 
-	private Map<String, IExtractorFactory<?>> extractorFactories;
+	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
-	private Map<String, JdbcNormalizer<?>> jdbcNormalizers;
+	private Map<String, JdbcNormalizer> jdbcNormalizers;
 
 	private IExtractorModelLoader extractorModelLoader;
 	private File extractorModelsRoot;
@@ -261,12 +255,10 @@ public class LmRuntimeBuilder {
 
 				bindModelLoader(binder);
 
-				binder.<Connector> bindMap(LmRuntimeBuilder.CONNECTORS_MAP).putAll(connectors);
+				binder.bindMap(Connector.class).putAll(connectors);
 
-				MapBuilder<IConnectorFactory<? extends Connector>> connectorFactories = binder
-						.<IConnectorFactory<? extends Connector>> bindMap(LmRuntimeBuilder.CONNECTOR_FACTORIES_MAP);
-
-				connectorFactories.putAll(LmRuntimeBuilder.this.connectorFactories);
+				MapBuilder<IConnectorFactory> connectorFactories = binder.bindMap(IConnectorFactory.class)
+						.putAll(LmRuntimeBuilder.this.connectorFactories);
 
 				for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
 						.entrySet()) {
@@ -281,7 +273,7 @@ public class LmRuntimeBuilder {
 					connectorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<IExtractorFactory<?>> extractorFactories = binder.bindMap(LmRuntimeBuilder.EXTRACTOR_FACTORIES_MAP);
+				MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(IExtractorFactory.class);
 
 				ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
 				for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
@@ -302,8 +294,7 @@ public class LmRuntimeBuilder {
 					extractorFactories.put(e.getKey(), e.getValue());
 				}
 
-				MapBuilder<JdbcNormalizer<?>> jdbcNormalizers = binder.bindMap(LmRuntimeBuilder.JDBC_NORMALIZERS_MAP);
-				jdbcNormalizers.putAll(LmRuntimeBuilder.this.jdbcNormalizers);
+				binder.bindMap(JdbcNormalizer.class).putAll(LmRuntimeBuilder.this.jdbcNormalizers);
 
 				// Binding CayenneService for the *target*... Note that binding
 				// ServerRuntime directly would result in undesired shutdown

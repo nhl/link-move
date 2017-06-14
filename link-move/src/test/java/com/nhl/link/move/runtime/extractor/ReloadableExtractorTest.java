@@ -1,23 +1,22 @@
 package com.nhl.link.move.runtime.extractor;
 
-import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.nhl.link.move.connect.Connector;
+import com.nhl.link.move.extractor.Extractor;
+import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.runtime.connect.IConnectorService;
+import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.nhl.link.move.connect.Connector;
-import com.nhl.link.move.runtime.connect.IConnectorService;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.nhl.link.move.extractor.Extractor;
-import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.extractor.model.ExtractorName;
-import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ReloadableExtractorTest {
 
@@ -25,7 +24,7 @@ public class ReloadableExtractorTest {
 	private IConnectorService connectorService;
 	private ExtractorName name;
 	private ExtractorModel mockModel;
-	private Map<String, IExtractorFactory<? extends Connector>> mockFactories;
+	private Map<String, IExtractorFactory> mockFactories;
 	private Extractor mockExtractor1;
 	private Extractor mockExtractor2;
 	private Extractor mockExtractor3;

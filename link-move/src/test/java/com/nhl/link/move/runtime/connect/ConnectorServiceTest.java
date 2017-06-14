@@ -1,18 +1,15 @@
 package com.nhl.link.move.runtime.connect;
 
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-
+import com.nhl.link.move.connect.Connector;
+import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.connect.Connector;
-import com.nhl.link.move.runtime.connect.ConnectorService;
-import com.nhl.link.move.runtime.connect.IConnectorFactory;
-import com.nhl.link.move.runtime.jdbc.JdbcConnector;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ConnectorServiceTest {
 
@@ -26,7 +23,7 @@ public class ConnectorServiceTest {
 		connectorA = mock(JdbcConnector.class);
 		connectorB = mock(JdbcConnector.class);
 
-		connectorService = new ConnectorService(new HashMap<String, IConnectorFactory<?>>() {
+		connectorService = new ConnectorService(new HashMap<String, IConnectorFactory>() {
 			{
 				@SuppressWarnings("unchecked")
 				IConnectorFactory<JdbcConnector> bFactory = mock(IConnectorFactory.class);

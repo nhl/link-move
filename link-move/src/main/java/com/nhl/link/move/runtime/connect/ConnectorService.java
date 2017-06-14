@@ -1,23 +1,21 @@
 package com.nhl.link.move.runtime.connect;
 
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.connect.Connector;
+import org.apache.cayenne.di.Inject;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.cayenne.di.Inject;
-
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.connect.Connector;
-import com.nhl.link.move.runtime.LmRuntimeBuilder;
-
 public class ConnectorService implements IConnectorService {
 
 	private ConcurrentMap<String, Connector> connectors;
-	private Map<String, IConnectorFactory<?>> factories;
+	private Map<String, IConnectorFactory> factories;
 
 	public ConnectorService(
-			@Inject(LmRuntimeBuilder.CONNECTOR_FACTORIES_MAP) Map<String, IConnectorFactory<?>> factories,
-			@Inject(LmRuntimeBuilder.CONNECTORS_MAP) Map<String, Connector> connectors) {
+			@Inject Map<String, IConnectorFactory> factories,
+			@Inject Map<String, Connector> connectors) {
 		this.factories = factories;
 		this.connectors = new ConcurrentHashMap<>(connectors);
 	}
