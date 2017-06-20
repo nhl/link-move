@@ -15,6 +15,12 @@ JSON extractor supports an informal query language [JSONPath](http://goessner.ne
 |()|Script expression. Can be used inside a subscript operator or inside another script expression|
 |?()|Filter with a script expression acting as a predicate|
 
+### LinkMove extensions to JSONPath syntax
+
+|Element|Description|
+|---|---|
+|#parent|Parent node|
+
 #### Recursive descent
 
 Recursive descent operator produces a collection of all nodes in the current node's subtree. Subsequent query segment (if present) is applied to each node in this "aggregate" collection.
@@ -99,6 +105,18 @@ All books that have readers
 `$.store.book[?(@.readers[?(@.age >= 30)])]` or 
 `$.store.book[?(@.readers[*].age >= 30)]`
 All books that have readers aged 30+
+
+#### Accessing parent node
+
+To access direct ancestor use `#parent` property:
+
+`$.store.book#parent`
+
+Multiple calls to `#parent` can be chained to access arbitrary ancestor nodes. E.g. this will yield the grandparent of current node:
+
+`$.store.book#parent#parent`
+
+If ancestor node is absent, then an empty collection is returned. E.g. `$#parent` yields no results, because root node does not have a parent.
 
 ### Extracting data from the top-level array
 
