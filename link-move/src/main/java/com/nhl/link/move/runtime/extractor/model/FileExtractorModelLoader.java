@@ -1,18 +1,17 @@
 package com.nhl.link.move.runtime.extractor.model;
 
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import com.nhl.link.move.runtime.LmRuntimeBuilder;
+import org.apache.cayenne.di.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-
-import org.apache.cayenne.di.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import com.nhl.link.move.runtime.LmRuntimeBuilder;
 
 /**
  * An {@link IExtractorModelLoader} that resolves
@@ -36,7 +35,7 @@ public class FileExtractorModelLoader extends BaseExtractorModelLoader {
 
 		File file = getFile(name);
 
-		LOGGER.info("Will extractor XML from {}", file.getAbsolutePath());
+		LOGGER.info("Will extract XML from {}", file.getAbsolutePath());
 
 		return new InputStreamReader(new FileInputStream(file), "UTF-8");
 	}
