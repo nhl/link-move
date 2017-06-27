@@ -1,15 +1,12 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.exp.Property;
-import org.apache.cayenne.map.ObjEntity;
-
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterSourcesMapped;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsMatched;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorModel;
@@ -25,6 +22,9 @@ import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.map.ObjEntity;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a
@@ -64,12 +64,18 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 		this.entityPathNormalizer = pathNormalizer.normalizer(entity);
 
 		this.mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
-		this.stageListenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
-				AfterTargetsMatched.class, AfterTargetsMerged.class, AfterTargetsCommitted.class);
+		this.stageListenersBuilder = createListenersBuilder();
 
 		// always add stats listener..
 		stageListener(CreateOrUpdateStatsListener.instance());
 	}
+
+	ListenersBuilder createListenersBuilder() {
+		return new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
+				AfterTargetsMatched.class, AfterTargetsMapped.class,
+                AfterTargetsMerged.class, AfterTargetsCommitted.class);
+	}
+
 
 	@Override
 	public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String location, String name) {

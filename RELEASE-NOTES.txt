@@ -1,3 +1,8 @@
+Release 2.4
+
+#132 @AfterTargetsMapped listeners are not invoked in CreateOrUpdate tasks
+
+
 Release 2.3
 
 #122 Respect original types of JSON source row attributes
