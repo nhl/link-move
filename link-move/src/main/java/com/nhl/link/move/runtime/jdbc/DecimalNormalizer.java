@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-public class DecimalNormalizer extends JdbcNormalizer<BigDecimal> {
+public class DecimalNormalizer extends BaseJdbcNormalizer<BigDecimal> {
 
     public DecimalNormalizer() {
         super(BigDecimal.class);

@@ -6,7 +6,7 @@ import org.apache.cayenne.map.DbAttribute;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class IntegerNormalizer extends JdbcNormalizer<Integer> {
+public class IntegerNormalizer extends BaseJdbcNormalizer<Integer> {
 
     private static final IntegerNormalizer normalizer = new IntegerNormalizer();
 

@@ -9,7 +9,7 @@ import java.math.BigInteger;
 /**
  * This normalizer upcasts byte, short and int values to long type.
  */
-public class LongNormalizer extends JdbcNormalizer<Long> {
+public class LongNormalizer extends BaseJdbcNormalizer<Long> {
 
     private static final LongNormalizer normalizer = new LongNormalizer();
 

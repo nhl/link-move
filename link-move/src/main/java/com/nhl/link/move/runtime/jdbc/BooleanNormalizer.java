@@ -3,7 +3,7 @@ package com.nhl.link.move.runtime.jdbc;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.map.DbAttribute;
 
-public class BooleanNormalizer extends JdbcNormalizer<Boolean> {
+public class BooleanNormalizer extends BaseJdbcNormalizer<Boolean> {
 
     private static final BooleanNormalizer normalizer = new BooleanNormalizer();
 

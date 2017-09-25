@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * @since 2.2
  */
-public class LocalDateTimeNormalizer extends JdbcNormalizer<LocalDateTime> {
+public class LocalDateTimeNormalizer extends BaseJdbcNormalizer<LocalDateTime> {
 
     public LocalDateTimeNormalizer() {
         super(LocalDateTime.class);

@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @since 2.2
  */
-public class LocalDateNormalizer extends JdbcNormalizer<LocalDate> {
+public class LocalDateNormalizer extends BaseJdbcNormalizer<LocalDate> {
 
     public LocalDateNormalizer() {
         super(LocalDate.class);

@@ -5,7 +5,7 @@ import org.apache.cayenne.map.DbAttribute;
 
 import java.math.BigDecimal;
 
-public class StringNormalizer extends JdbcNormalizer<String> {
+public class StringNormalizer extends BaseJdbcNormalizer<String> {
 
     public StringNormalizer() {
         super(String.class);

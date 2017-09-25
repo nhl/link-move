@@ -11,7 +11,7 @@ import java.time.LocalTime;
 /**
  * @since 2.2
  */
-public class LocalTimeNormalizer extends JdbcNormalizer<LocalTime> {
+public class LocalTimeNormalizer extends BaseJdbcNormalizer<LocalTime> {
 
     public LocalTimeNormalizer() {
         super(LocalTime.class);
