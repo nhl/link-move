@@ -47,8 +47,7 @@ public abstract class JdbcNormalizer<T> {
     protected abstract T doNormalize(Object value, DbAttribute targetAttribute);
 
     /**
-     * Override this method to do post-processing of the normalized value
-     * (e.g. additional scaling of a decimal)
+     * Override this method to do post-processing of the normalized value (e.g. additional scaling of a decimal).
      *
      * @see DecimalNormalizer
      */

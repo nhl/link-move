@@ -5,6 +5,12 @@ import org.apache.cayenne.map.DbAttribute;
 
 public class BooleanNormalizer extends JdbcNormalizer<Boolean> {
 
+    private static final BooleanNormalizer normalizer = new BooleanNormalizer();
+
+    public static BooleanNormalizer getNormalizer() {
+        return normalizer;
+    }
+
     public BooleanNormalizer() {
         super(Boolean.class);
     }

@@ -8,6 +8,12 @@ import java.math.BigInteger;
 
 public class IntegerNormalizer extends JdbcNormalizer<Integer> {
 
+    private static final IntegerNormalizer normalizer = new IntegerNormalizer();
+
+    public static IntegerNormalizer getNormalizer() {
+        return normalizer;
+    }
+
     public IntegerNormalizer() {
         super(Integer.class);
     }

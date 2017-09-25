@@ -17,6 +17,7 @@ import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+import com.nhl.link.move.runtime.jdbc.JdbcNormalizerFactory;
 import com.nhl.link.move.runtime.jdbc.LongNormalizer;
 import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
 import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
@@ -105,10 +106,13 @@ public class LmRuntimeBuilder {
 		this.adapters = new ArrayList<>();
 
 		// default normalizers
-		jdbcNormalizers.put(Long.class.getName(), new LongNormalizer());
-		jdbcNormalizers.put(Integer.class.getName(), new IntegerNormalizer());
+		jdbcNormalizers.put(Boolean.class.getName(), BooleanNormalizer.getNormalizer());
+		jdbcNormalizers.put(Boolean.TYPE.getName(), BooleanNormalizer.getNormalizer());
+		jdbcNormalizers.put(Long.class.getName(), LongNormalizer.getNormalizer());
+		jdbcNormalizers.put(Long.TYPE.getName(), LongNormalizer.getNormalizer());
+		jdbcNormalizers.put(Integer.class.getName(), IntegerNormalizer.getNormalizer());
+		jdbcNormalizers.put(Integer.TYPE.getName(), IntegerNormalizer.getNormalizer());
 		jdbcNormalizers.put(BigDecimal.class.getName(), new DecimalNormalizer());
-		jdbcNormalizers.put(Boolean.class.getName(), new BooleanNormalizer());
 		jdbcNormalizers.put(LocalDate.class.getName(), new LocalDateNormalizer());
 		jdbcNormalizers.put(LocalTime.class.getName(), new LocalTimeNormalizer());
 		jdbcNormalizers.put(LocalDateTime.class.getName(), new LocalDateTimeNormalizer());
@@ -297,6 +301,7 @@ public class LmRuntimeBuilder {
             // when the ETL module is shutdown.
             binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
+            binder.bind(JdbcNormalizerFactory.class).to(JdbcNormalizerFactory.class);
             binder.bind(IExtractorService.class).to(ExtractorService.class);
             binder.bind(IConnectorService.class).to(ConnectorService.class);
             binder.bind(ITaskService.class).to(TaskService.class);

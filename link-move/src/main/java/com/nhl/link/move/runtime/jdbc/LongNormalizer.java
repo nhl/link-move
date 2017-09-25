@@ -11,6 +11,12 @@ import java.math.BigInteger;
  */
 public class LongNormalizer extends JdbcNormalizer<Long> {
 
+    private static final LongNormalizer normalizer = new LongNormalizer();
+
+    public static LongNormalizer getNormalizer() {
+        return normalizer;
+    }
+
     public LongNormalizer() {
         super(Long.class);
     }
