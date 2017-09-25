@@ -13,10 +13,6 @@ import java.time.LocalTime;
  */
 public class LocalTimeNormalizer extends BaseJdbcNormalizer<LocalTime> {
 
-    public LocalTimeNormalizer() {
-        super(LocalTime.class);
-    }
-
     @Override
     protected LocalTime doNormalize(Object value, DbAttribute targetAttribute) {
         switch (value.getClass().getName()) {
@@ -28,14 +24,14 @@ public class LocalTimeNormalizer extends BaseJdbcNormalizer<LocalTime> {
             }
             case "java.util.Date":
             case "java.sql.Date": {
-                throw new LmRuntimeException("Will not perform lossy conversion from " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Will not perform lossy conversion from LocalTime: " + value);
             }
             case "java.sql.Timestamp": {
                 Timestamp timestamp = (Timestamp) value;
                 return timestamp.toLocalDateTime().toLocalTime();
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to LocalTime: " + value);
             }
         }
     }

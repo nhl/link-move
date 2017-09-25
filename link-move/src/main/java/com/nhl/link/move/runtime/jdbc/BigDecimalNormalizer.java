@@ -7,11 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-public class DecimalNormalizer extends BaseJdbcNormalizer<BigDecimal> {
-
-    public DecimalNormalizer() {
-        super(BigDecimal.class);
-    }
+public class BigDecimalNormalizer extends BaseJdbcNormalizer<BigDecimal> {
 
     @Override
     protected BigDecimal doNormalize(Object value, DbAttribute targetAttribute) {
@@ -41,7 +37,7 @@ public class DecimalNormalizer extends BaseJdbcNormalizer<BigDecimal> {
                 break;
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to java.math.BigDecimal: " + value);
             }
         }
 

@@ -11,10 +11,6 @@ public class BooleanNormalizer extends BaseJdbcNormalizer<Boolean> {
         return normalizer;
     }
 
-    public BooleanNormalizer() {
-        super(Boolean.class);
-    }
-
     @Override
     protected Boolean doNormalize(Object value, DbAttribute targetAttribute) {
 
@@ -32,7 +28,7 @@ public class BooleanNormalizer extends BaseJdbcNormalizer<Boolean> {
                 // fall through
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to java.lang.Boolean: " + value);
             }
         }
     }

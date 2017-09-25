@@ -6,25 +6,7 @@ import org.apache.cayenne.map.DbAttribute;
  * Used by LM matching runtime to convert extracted sources (on per-attribute basis) into a form that is compatible
  * with target entries. Each instance of this class should handle one JDBC type.
  */
-public abstract class BaseJdbcNormalizer<T> implements JdbcNormalizer<T> {
-
-    private final Class<T> type;
-
-    public BaseJdbcNormalizer(Class<T> javaType) {
-        this.type = javaType;
-    }
-
-    /**
-     * @return Default Java equivalent of the JDBC type that this normalizer works with.
-     * @see java.sql.Types
-     */
-    public Class<T> getType() {
-        return type;
-    }
-
-    protected String getTypeName() {
-        return type.getName();
-    }
+public abstract class BaseJdbcNormalizer<T> implements JdbcNormalizer {
 
     /**
      * @since 1.7
@@ -36,8 +18,6 @@ public abstract class BaseJdbcNormalizer<T> implements JdbcNormalizer<T> {
         T result;
         if (value == null) {
             result = null;
-        } else if (type.isAssignableFrom(value.getClass())) {
-            result = (T) value;
         } else {
             result = doNormalize(value, targetAttribute);
         }
@@ -50,7 +30,7 @@ public abstract class BaseJdbcNormalizer<T> implements JdbcNormalizer<T> {
     /**
      * Override this method to do post-processing of the normalized value (e.g. additional scaling of a decimal).
      *
-     * @see DecimalNormalizer
+     * @see BigDecimalNormalizer
      */
     protected T postNormalize(T normalized, DbAttribute targetAttribute) {
         // by default just return the value

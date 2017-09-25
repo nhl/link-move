@@ -2,7 +2,7 @@ package com.nhl.link.move.runtime.jdbc;
 
 import org.apache.cayenne.map.DbAttribute;
 
-public interface JdbcNormalizer<T> {
+public interface JdbcNormalizer {
 
-    T normalize(Object value, DbAttribute targetAttribute);
+    Object normalize(Object value, DbAttribute targetAttribute);
 }

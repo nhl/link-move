@@ -18,7 +18,7 @@ import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
 import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
-import com.nhl.link.move.runtime.jdbc.DecimalNormalizer;
+import com.nhl.link.move.runtime.jdbc.BigDecimalNormalizer;
 import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
@@ -112,7 +112,7 @@ public class LmRuntimeBuilder {
 		jdbcNormalizers.put(Long.TYPE.getName(), LongNormalizer.getNormalizer());
 		jdbcNormalizers.put(Integer.class.getName(), IntegerNormalizer.getNormalizer());
 		jdbcNormalizers.put(Integer.TYPE.getName(), IntegerNormalizer.getNormalizer());
-		jdbcNormalizers.put(BigDecimal.class.getName(), new DecimalNormalizer());
+		jdbcNormalizers.put(BigDecimal.class.getName(), new BigDecimalNormalizer());
 		jdbcNormalizers.put(LocalDate.class.getName(), new LocalDateNormalizer());
 		jdbcNormalizers.put(LocalTime.class.getName(), new LocalTimeNormalizer());
 		jdbcNormalizers.put(LocalDateTime.class.getName(), new LocalDateTimeNormalizer());
@@ -197,7 +197,7 @@ public class LmRuntimeBuilder {
 	}
 
 	@Deprecated
-	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer<?> normalizer) {
+	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer normalizer) {
 		String javaType = TypesMapping.getJavaBySqlType(jdbcType);
 		if (javaType == null) {
 			throw new LmRuntimeException("Can't map JDBC type to Java type: " + jdbcType);
@@ -209,7 +209,7 @@ public class LmRuntimeBuilder {
 	/**
 	 * @since 1.7
      */
-	public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer<?> normalizer) {
+	public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer normalizer) {
 		jdbcNormalizers.put(javaType.getName(), normalizer);
 		return this;
 	}

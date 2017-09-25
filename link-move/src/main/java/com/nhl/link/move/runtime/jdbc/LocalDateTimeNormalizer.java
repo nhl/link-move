@@ -12,11 +12,7 @@ import java.util.Date;
 /**
  * @since 2.2
  */
-public class LocalDateTimeNormalizer extends BaseJdbcNormalizer<LocalDateTime> {
-
-    public LocalDateTimeNormalizer() {
-        super(LocalDateTime.class);
-    }
+public class LocalDateTimeNormalizer extends BaseJdbcNormalizer {
 
     @Override
     protected LocalDateTime doNormalize(Object value, DbAttribute targetAttribute) {
@@ -31,14 +27,14 @@ public class LocalDateTimeNormalizer extends BaseJdbcNormalizer<LocalDateTime> {
                 return LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
             }
             case "java.sql.Time": {
-                throw new LmRuntimeException("Will not perform lossy conversion from " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Will not perform lossy conversion from LocalDateTime: " + value);
             }
             case "java.sql.Timestamp": {
                 Timestamp timestamp = (Timestamp) value;
                 return timestamp.toLocalDateTime();
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to LocalDateTime: " + value);
             }
         }
     }

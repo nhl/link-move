@@ -14,10 +14,6 @@ public class IntegerNormalizer extends BaseJdbcNormalizer<Integer> {
         return normalizer;
     }
 
-    public IntegerNormalizer() {
-        super(Integer.class);
-    }
-
     @Override
     protected Integer doNormalize(Object value, DbAttribute targetAttribute) {
         switch (value.getClass().getName()) {
@@ -53,7 +49,7 @@ public class IntegerNormalizer extends BaseJdbcNormalizer<Integer> {
                 return s.isEmpty()? null : Integer.valueOf(s);
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to java.lang.Integer: " + value);
             }
         }
     }

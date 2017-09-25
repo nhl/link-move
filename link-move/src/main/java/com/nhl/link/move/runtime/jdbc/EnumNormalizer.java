@@ -8,8 +8,10 @@ import org.apache.cayenne.map.DbAttribute;
  */
 public class EnumNormalizer<T extends Enum<T>> extends BaseJdbcNormalizer<T> {
 
-    public EnumNormalizer(Class<T> javaType) {
-        super(javaType);
+    private Class<T> enumType;
+
+    public EnumNormalizer(Class<T> enumType) {
+        this.enumType = enumType;
     }
 
     @Override
@@ -20,7 +22,7 @@ public class EnumNormalizer<T extends Enum<T>> extends BaseJdbcNormalizer<T> {
         String enumString = value.toString();
 
         try {
-            return Enum.valueOf(getType(), enumString);
+            return Enum.valueOf(enumType, enumString);
         } catch (IllegalArgumentException e) {
             throw new LmRuntimeException("Invalid enum value: " + enumString);
         }

@@ -17,10 +17,6 @@ public class LongNormalizer extends BaseJdbcNormalizer<Long> {
         return normalizer;
     }
 
-    public LongNormalizer() {
-        super(Long.class);
-    }
-
     @Override
     protected Long doNormalize(Object value, DbAttribute targetAttribute) {
         switch (value.getClass().getName()) {
@@ -50,7 +46,7 @@ public class LongNormalizer extends BaseJdbcNormalizer<Long> {
                 return s.isEmpty()? null : Long.valueOf(s);
             }
             default: {
-                throw new LmRuntimeException("Value can not be mapped to " + getTypeName() + ": " + value);
+                throw new LmRuntimeException("Value can not be mapped to java.lang.Long: " + value);
             }
         }
     }

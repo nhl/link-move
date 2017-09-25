@@ -8,9 +8,9 @@ import java.math.BigInteger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class DecimalNormalizerTest {
+public class BigDecimalNormalizerTest {
 
-    private static final DecimalNormalizer normalizer = new DecimalNormalizer();
+    private static final BigDecimalNormalizer normalizer = new BigDecimalNormalizer();
 
     @Test
     public void testNormalize_Null() {
