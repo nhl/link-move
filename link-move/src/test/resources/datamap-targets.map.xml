@@ -32,6 +32,7 @@
 		<db-attribute name="c_boolean" type="BOOLEAN"/>
 		<db-attribute name="c_date" type="DATE"/>
 		<db-attribute name="c_decimal" type="DECIMAL" length="10" scale="2"/>
+		<db-attribute name="c_enum" type="VARCHAR" length="10"/>
 		<db-attribute name="c_int" type="INTEGER"/>
 		<db-attribute name="c_time" type="TIME"/>
 		<db-attribute name="c_timestamp" type="TIMESTAMP"/>
@@ -84,6 +85,7 @@
 		<obj-attribute name="cBoolean" type="java.lang.Boolean" db-attribute-path="c_boolean"/>
 		<obj-attribute name="cDate" type="java.util.Date" db-attribute-path="c_date"/>
 		<obj-attribute name="cDecimal" type="java.math.BigDecimal" db-attribute-path="c_decimal"/>
+		<obj-attribute name="cEnum" type="com.nhl.link.move.unit.cayenne.t.TEnum1" db-attribute-path="c_enum"/>
 		<obj-attribute name="cInt" type="java.lang.Integer" db-attribute-path="c_int"/>
 		<obj-attribute name="cTime" type="java.util.Date" db-attribute-path="c_time"/>
 		<obj-attribute name="cTimestamp" type="java.util.Date" db-attribute-path="c_timestamp"/>

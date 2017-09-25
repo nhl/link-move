@@ -1,27 +1,26 @@
 package com.nhl.link.move.itest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.math.BigDecimal;
-
-import com.nhl.link.move.runtime.task.ITaskService;
-import org.apache.cayenne.DataRow;
-import org.apache.cayenne.query.SQLSelect;
-import org.junit.Test;
-
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
+import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import com.nhl.link.move.unit.cayenne.t.Etl4t;
 import com.nhl.link.move.unit.cayenne.t.Etl6t;
 import com.nhl.link.move.unit.cayenne.t.Etl8t;
+import org.apache.cayenne.DataRow;
+import org.apache.cayenne.query.SQLSelect;
+import org.junit.Test;
 
-public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
+import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 
     @Test
-	public void test_ById_Normalized_IntegerToLong() {
+	public void test_ById_IntegerToLong() {
 
 		// not specifying "matchById" explicitly ... this should be the default
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl6t.class)
@@ -57,10 +56,10 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ByAttribute_Normalized_SyncFk() {
+	public void test_ByAttribute_SyncFk() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_normalizers").matchBy(Etl3t.NAME).task();
+				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_converters").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, NAME) VALUES (1, 'abc')");
 		srcRunSql("INSERT INTO utest.etl3 (E2_ID, NAME) VALUES (1, 'xyz')");
@@ -73,10 +72,10 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ById_Normalized_IntegerToBoolean() {
+	public void test_ById_IntegerToBoolean() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_normalizers").task();
+				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters").task();
 
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (1, true)");
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (2, false)");
@@ -91,7 +90,25 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ById_Normalized_DecimalToDecimal() {
+	public void test_ById_StringToEnum() {
+
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters").task();
+
+		srcRunSql("INSERT INTO utest.etl4 (ID, C_ENUM) VALUES (1, 'str1')");
+		srcRunSql("INSERT INTO utest.etl4 (ID, C_ENUM) VALUES (2, 'str3')");
+		targetRunSql("INSERT INTO utest.etl4t (ID, C_ENUM) VALUES (1, 'str2')");
+		targetRunSql("INSERT INTO utest.etl4t (ID, C_ENUM) VALUES (2, null)");
+
+		Execution e1 = task.run();
+		assertExec(2, 0, 2, 0, e1);
+
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl4t WHERE ID = 1 AND C_ENUM = 'str1'"));
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl4t WHERE ID = 2 AND C_ENUM = 'str3'"));
+	}
+
+	@Test
+	public void test_ById_DecimalToDecimal() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl8t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml").task();
@@ -113,7 +130,7 @@ public class CreateOrUpdate_NormalizersIT extends LmIntegrationTest {
 	}
 
 	@Test(expected = Exception.class)
-	public void test_ById_Normalized_DecimalToDecimal_Exception() {
+	public void test_ById_DecimalToDecimal_Exception() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl8t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml").task();

@@ -15,10 +15,18 @@
 				<source>c_boolean</source>
 				<target>db:c_boolean</target>
 			</attribute>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>c_enum</source>
+				<target>db:c_enum</target>
+			</attribute>
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT id, #result('c_boolean', 'java.lang.Integer') c_boolean FROM utest.etl4
+			<![CDATA[SELECT id,
+			 	#result('c_boolean', 'java.lang.Integer'),
+			 	#result('c_enum', 'java.lang.String')
+				FROM utest.etl4
 			]]>
 			</extractor.jdbc.sqltemplate>
 			<extractor.jdbc.sqltemplate.caps>lower
