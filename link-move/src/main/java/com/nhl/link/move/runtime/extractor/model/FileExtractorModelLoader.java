@@ -52,6 +52,10 @@ public class FileExtractorModelLoader extends BaseExtractorModelLoader {
 
 		File file = new File(rootDir, name);
 
+		if (!file.exists()) {
+			throw new LmRuntimeException(file.getAbsolutePath() + " does not exist");
+		}
+
 		if (!file.isFile()) {
 			throw new LmRuntimeException(file.getAbsolutePath() + " is not a file");
 		}
