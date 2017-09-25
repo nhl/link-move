@@ -247,75 +247,70 @@ public class LmRuntimeBuilder {
 			tokenManager = new InMemoryTokenManager();
 		}
 
-		Module etlModule = new Module() {
+		Module etlModule = binder -> {
 
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			@Override
-			public void configure(Binder binder) {
+            bindModelLoader(binder);
 
-				bindModelLoader(binder);
+            binder.bindMap(Connector.class).putAll(connectors);
 
-				binder.bindMap(Connector.class).putAll(connectors);
+            MapBuilder<IConnectorFactory> connectorFactories = binder.bindMap(IConnectorFactory.class)
+                    .putAll(LmRuntimeBuilder.this.connectorFactories);
 
-				MapBuilder<IConnectorFactory> connectorFactories = binder.bindMap(IConnectorFactory.class)
-						.putAll(LmRuntimeBuilder.this.connectorFactories);
+            for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
+                    .entrySet()) {
 
-				for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
-						.entrySet()) {
+                // a bit ugly - need to bind all factory types explicitly
+                // before placing then in a map .. also must drop
+                // parameterization to be able to bind with non-specific
+                // boundaries (<? extends ...>)
+                Class efType = e.getValue();
+                binder.bind(efType).to(efType);
 
-					// a bit ugly - need to bind all factory types explicitly
-					// before placing then in a map .. also must drop
-					// parameterization to be able to bind with non-specific
-					// boundaries (<? extends ...>)
-					Class efType = e.getValue();
-					binder.bind(efType).to(efType);
+                connectorFactories.put(e.getKey(), e.getValue());
+            }
 
-					connectorFactories.put(e.getKey(), e.getValue());
-				}
+            MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(IExtractorFactory.class);
 
-				MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(IExtractorFactory.class);
+            ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
+            for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
+                extractorFactories.put(extractorFactory.getExtractorType(), extractorFactory);
+            }
 
-				ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
-				for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
-					extractorFactories.put(extractorFactory.getExtractorType(), extractorFactory);
-				}
+            extractorFactories.putAll(LmRuntimeBuilder.this.extractorFactories);
 
-				extractorFactories.putAll(LmRuntimeBuilder.this.extractorFactories);
+            for (Entry<String, Class<? extends IExtractorFactory<?>>> e : extractorFactoryTypes.entrySet()) {
 
-				for (Entry<String, Class<? extends IExtractorFactory<?>>> e : extractorFactoryTypes.entrySet()) {
+                // a bit ugly - need to bind all factory types explicitly
+                // before placing then in a map .. also must drop
+                // parameterization to be able to bind with non-specific
+                // boundaries (<? extends ...>)
+                Class efType = e.getValue();
+                binder.bind(efType).to(efType);
 
-					// a bit ugly - need to bind all factory types explicitly
-					// before placing then in a map .. also must drop
-					// parameterization to be able to bind with non-specific
-					// boundaries (<? extends ...>)
-					Class efType = e.getValue();
-					binder.bind(efType).to(efType);
+                extractorFactories.put(e.getKey(), e.getValue());
+            }
 
-					extractorFactories.put(e.getKey(), e.getValue());
-				}
+            binder.bindMap(JdbcNormalizer.class).putAll(LmRuntimeBuilder.this.jdbcNormalizers);
 
-				binder.bindMap(JdbcNormalizer.class).putAll(LmRuntimeBuilder.this.jdbcNormalizers);
+            // Binding CayenneService for the *target*... Note that binding
+            // ServerRuntime directly would result in undesired shutdown
+            // when the ETL module is shutdown.
+            binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
-				// Binding CayenneService for the *target*... Note that binding
-				// ServerRuntime directly would result in undesired shutdown
-				// when the ETL module is shutdown.
-				binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
+            binder.bind(IExtractorService.class).to(ExtractorService.class);
+            binder.bind(IConnectorService.class).to(ConnectorService.class);
+            binder.bind(ITaskService.class).to(TaskService.class);
+            binder.bind(ITokenManager.class).toInstance(tokenManager);
+            binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
+            binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
+            binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);
+            binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
 
-				binder.bind(IExtractorService.class).to(ExtractorService.class);
-				binder.bind(IConnectorService.class).to(ConnectorService.class);
-				binder.bind(ITaskService.class).to(TaskService.class);
-				binder.bind(ITokenManager.class).toInstance(tokenManager);
-				binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
-				binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
-				binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);
-				binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
-
-				// apply adapter-contributed bindings
-				for (LinkEtlAdapter a : adapters) {
-					a.contributeToRuntime(binder);
-				}
-			}
-		};
+            // apply adapter-contributed bindings
+            for (LinkEtlAdapter a : adapters) {
+                a.contributeToRuntime(binder);
+            }
+        };
 
 		final Injector injector = DIBootstrap.createInjector(etlModule);
 
