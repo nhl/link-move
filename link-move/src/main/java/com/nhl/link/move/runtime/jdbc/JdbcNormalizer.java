@@ -5,11 +5,6 @@ import org.apache.cayenne.map.DbAttribute;
 /**
  * Used by LM matching runtime to convert extracted sources (on per-attribute basis) into a form that is compatible
  * with target entries. Each instance of this class should handle one JDBC type.
- *
- * @see {@link LongNormalizer}
- * @see {@link IntegerNormalizer}
- * @see {@link DecimalNormalizer}
- * @see {@link BooleanNormalizer}
  */
 public abstract class JdbcNormalizer<T> {
 
@@ -27,7 +22,7 @@ public abstract class JdbcNormalizer<T> {
         return type;
     }
 
-    public String getTypeName() {
+    protected String getTypeName() {
         return type.getName();
     }
 
