@@ -1,6 +1,7 @@
 Release 2.4
 
 #132 @AfterTargetsMapped listeners are not invoked in CreateOrUpdate tasks
+#135 Refactoring JdbcNormalizer to ValueConverter
 
 
 Release 2.3

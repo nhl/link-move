@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
 import org.junit.Test;
@@ -12,37 +12,37 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-public class LocalDateNormalizerTest {
+public class LocalDateConverterTest {
 
-    private static LocalDateNormalizer normalizer = new LocalDateNormalizer();
+    private static final LocalDateConverter CONVERTER = new LocalDateConverter();
 
     @Test
-    public void testNormalize_utilDate() {
+    public void testConvert_utilDate() {
         Instant now = Instant.now();
         LocalDate localDate = now.atZone(ZoneId.systemDefault()).toLocalDate();
         Date date = new Date(now.toEpochMilli());
-        assertEquals(localDate, normalizer.normalize(date, null));
+        assertEquals(localDate, CONVERTER.convert(date));
     }
 
     @Test
-    public void testNormalize_sqlDate() {
+    public void testConvert_sqlDate() {
         Instant now = Instant.now();
         LocalDate localDate = now.atZone(ZoneId.systemDefault()).toLocalDate();
         java.sql.Date date = new java.sql.Date(now.toEpochMilli());
-        assertEquals(localDate, normalizer.normalize(date, null));
+        assertEquals(localDate, CONVERTER.convert(date));
     }
 
     @Test(expected = LmRuntimeException.class)
-    public void testNormalize_sqlTime() {
-        normalizer.normalize(new Time(Instant.now().toEpochMilli()), null);
+    public void testConvert_sqlTime() {
+        CONVERTER.convert(new Time(Instant.now().toEpochMilli()));
     }
 
     @Test
-    public void testNormalize_sqlTimestamp() {
+    public void testConvert_sqlTimestamp() {
         Instant now = Instant.now();
         LocalDate localDate = now.atZone(ZoneId.systemDefault()).toLocalDate();
         Timestamp timestamp = new Timestamp(now.toEpochMilli());
-        assertEquals(localDate, normalizer.normalize(timestamp, null));
+        assertEquals(localDate, CONVERTER.convert(timestamp));
     }
 
 }

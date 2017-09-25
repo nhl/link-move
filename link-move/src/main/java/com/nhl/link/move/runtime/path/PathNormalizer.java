@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.path;
 
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizerFactory;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.exp.Expression;
@@ -26,11 +26,11 @@ import java.util.concurrent.ConcurrentMap;
 public class PathNormalizer implements IPathNormalizer {
 
     private ConcurrentMap<String, EntityPathNormalizer> pathCache;
-    private JdbcNormalizerFactory normalizerFactory;
+    private ValueConverterFactory converterFactory;
 
-    public PathNormalizer(@Inject JdbcNormalizerFactory normalizerFactory) {
+    public PathNormalizer(@Inject ValueConverterFactory converterFactory) {
         pathCache = new ConcurrentHashMap<>();
-        this.normalizerFactory = normalizerFactory;
+        this.converterFactory = converterFactory;
     }
 
     @Override
@@ -88,10 +88,9 @@ public class PathNormalizer implements IPathNormalizer {
                 String javaType = (objAttribute != null)
                         ? objAttribute.getType()
                         : TypesMapping.getJavaBySqlType(attributeInfo.getType());
+                int scale = attributeInfo.getTarget().getScale();
 
-                return normalizerFactory
-                        .getNormalizer(javaType)
-                        .normalize(value, attributeInfo.getTarget());
+                return converterFactory.getConverter(javaType).convert(value, scale);
             }
 
             private boolean hasAttribute(ObjEntity entity, String path) {

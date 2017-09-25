@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
 import org.junit.Test;
@@ -12,36 +12,36 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-public class LocalDateTimeNormalizerTest {
+public class LocalDateTimeConverterTest {
 
-    private static final LocalDateTimeNormalizer normalizer = new LocalDateTimeNormalizer();
+    private static final LocalDateTimeConverter normalizer = new LocalDateTimeConverter();
 
     @Test
-    public void testNormalize_utilDate() {
+    public void testConvert_utilDate() {
         Instant now = Instant.now();
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
         Date date = new Date(now.toEpochMilli());
-        assertEquals(localDateTime, normalizer.normalize(date, null));
+        assertEquals(localDateTime, normalizer.convert(date));
     }
 
     @Test
-    public void testNormalize_sqlDate() {
+    public void testConvert_sqlDate() {
         Instant now = Instant.now();
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
         java.sql.Date date = new java.sql.Date(now.toEpochMilli());
-        assertEquals(localDateTime, normalizer.normalize(date, null));
+        assertEquals(localDateTime, normalizer.convert(date));
     }
 
     @Test(expected = LmRuntimeException.class)
-    public void testNormalize_sqlTime() {
-        normalizer.normalize(new Time(Instant.now().toEpochMilli()), null);
+    public void testConvert_sqlTime() {
+        normalizer.convert(new Time(Instant.now().toEpochMilli()));
     }
 
     @Test
-    public void testNormalize_sqlTimestamp() {
+    public void testConvert_sqlTimestamp() {
         Instant now = Instant.now();
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime();
         Timestamp timestamp = new Timestamp(now.toEpochMilli());
-        assertEquals(localDateTime, normalizer.normalize(timestamp, null));
+        assertEquals(localDateTime, normalizer.convert(timestamp));
     }
 }

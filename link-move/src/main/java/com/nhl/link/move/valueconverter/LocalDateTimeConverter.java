@@ -1,7 +1,6 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.map.DbAttribute;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -12,10 +11,15 @@ import java.util.Date;
 /**
  * @since 2.2
  */
-public class LocalDateTimeNormalizer extends BaseJdbcNormalizer {
+public class LocalDateTimeConverter extends SingleTypeConverter<LocalDateTime> {
 
     @Override
-    protected LocalDateTime doNormalize(Object value, DbAttribute targetAttribute) {
+    protected Class<LocalDateTime> targetType() {
+        return LocalDateTime.class;
+    }
+
+    @Override
+    protected LocalDateTime convertNotNull(Object value, int scale) {
         switch (value.getClass().getName()) {
             case "java.util.Date": {
                 Date date = (Date) value;

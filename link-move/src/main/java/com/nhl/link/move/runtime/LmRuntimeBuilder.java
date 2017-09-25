@@ -1,6 +1,5 @@
 package com.nhl.link.move.runtime;
 
-import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -17,18 +16,8 @@ import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
-import com.nhl.link.move.runtime.jdbc.BooleanNormalizer;
-import com.nhl.link.move.runtime.jdbc.BigDecimalNormalizer;
-import com.nhl.link.move.runtime.jdbc.IntegerNormalizer;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizerFactory;
-import com.nhl.link.move.runtime.jdbc.LocalDateNormalizer;
-import com.nhl.link.move.runtime.jdbc.LocalDateTimeNormalizer;
-import com.nhl.link.move.runtime.jdbc.LocalTimeNormalizer;
-import com.nhl.link.move.runtime.jdbc.LongNormalizer;
-import com.nhl.link.move.runtime.jdbc.StringNormalizer;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
@@ -37,10 +26,19 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
+import com.nhl.link.move.valueconverter.BigDecimalConverter;
+import com.nhl.link.move.valueconverter.BooleanConverter;
+import com.nhl.link.move.valueconverter.IntegerConverter;
+import com.nhl.link.move.valueconverter.LocalDateConverter;
+import com.nhl.link.move.valueconverter.LocalDateTimeConverter;
+import com.nhl.link.move.valueconverter.LocalTimeConverter;
+import com.nhl.link.move.valueconverter.LongConverter;
+import com.nhl.link.move.valueconverter.StringConverter;
+import com.nhl.link.move.valueconverter.ValueConverter;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
 import org.apache.cayenne.di.Injector;
@@ -87,7 +85,7 @@ public class LmRuntimeBuilder {
 	private Map<String, IExtractorFactory> extractorFactories;
 	private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
-	private Map<String, JdbcNormalizer> jdbcNormalizers;
+	private Map<String, ValueConverter> valueConverters;
 
 	private IExtractorModelLoader extractorModelLoader;
 	private File extractorModelsRoot;
@@ -102,21 +100,21 @@ public class LmRuntimeBuilder {
 		this.connectorFactoryTypes = new HashMap<>();
 		this.extractorFactories = new HashMap<>();
 		this.extractorFactoryTypes = new HashMap<>();
-		this.jdbcNormalizers = new HashMap<>();
+		this.valueConverters = new HashMap<>();
 		this.adapters = new ArrayList<>();
 
 		// default normalizers
-		jdbcNormalizers.put(Boolean.class.getName(), BooleanNormalizer.getNormalizer());
-		jdbcNormalizers.put(Boolean.TYPE.getName(), BooleanNormalizer.getNormalizer());
-		jdbcNormalizers.put(Long.class.getName(), LongNormalizer.getNormalizer());
-		jdbcNormalizers.put(Long.TYPE.getName(), LongNormalizer.getNormalizer());
-		jdbcNormalizers.put(Integer.class.getName(), IntegerNormalizer.getNormalizer());
-		jdbcNormalizers.put(Integer.TYPE.getName(), IntegerNormalizer.getNormalizer());
-		jdbcNormalizers.put(BigDecimal.class.getName(), new BigDecimalNormalizer());
-		jdbcNormalizers.put(LocalDate.class.getName(), new LocalDateNormalizer());
-		jdbcNormalizers.put(LocalTime.class.getName(), new LocalTimeNormalizer());
-		jdbcNormalizers.put(LocalDateTime.class.getName(), new LocalDateTimeNormalizer());
-		jdbcNormalizers.put(String.class.getName(), new StringNormalizer());
+		valueConverters.put(Boolean.class.getName(), BooleanConverter.getConverter());
+		valueConverters.put(Boolean.TYPE.getName(), BooleanConverter.getConverter());
+		valueConverters.put(Long.class.getName(), LongConverter.getConverter());
+		valueConverters.put(Long.TYPE.getName(), LongConverter.getConverter());
+		valueConverters.put(Integer.class.getName(), IntegerConverter.getConverter());
+		valueConverters.put(Integer.TYPE.getName(), IntegerConverter.getConverter());
+		valueConverters.put(BigDecimal.class.getName(), new BigDecimalConverter());
+		valueConverters.put(LocalDate.class.getName(), new LocalDateConverter());
+		valueConverters.put(LocalTime.class.getName(), new LocalTimeConverter());
+		valueConverters.put(LocalDateTime.class.getName(), new LocalDateTimeConverter());
+		valueConverters.put(String.class.getName(), new StringConverter());
 	}
 
 	/**
@@ -196,21 +194,11 @@ public class LmRuntimeBuilder {
 		return this;
 	}
 
-	@Deprecated
-	public LmRuntimeBuilder withJdbcNormalizer(int jdbcType, JdbcNormalizer normalizer) {
-		String javaType = TypesMapping.getJavaBySqlType(jdbcType);
-		if (javaType == null) {
-			throw new LmRuntimeException("Can't map JDBC type to Java type: " + jdbcType);
-		}
-		jdbcNormalizers.put(javaType, normalizer);
-		return this;
-	}
-
 	/**
-	 * @since 1.7
+	 * @since 2.4
      */
-	public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer normalizer) {
-		jdbcNormalizers.put(javaType.getName(), normalizer);
+	public LmRuntimeBuilder valueConverter(Class<?> javaType, ValueConverter converter) {
+		valueConverters.put(javaType.getName(), converter);
 		return this;
 	}
 
@@ -294,14 +282,14 @@ public class LmRuntimeBuilder {
                 extractorFactories.put(e.getKey(), e.getValue());
             }
 
-            binder.bindMap(JdbcNormalizer.class).putAll(LmRuntimeBuilder.this.jdbcNormalizers);
+            binder.bindMap(ValueConverter.class).putAll(LmRuntimeBuilder.this.valueConverters);
 
             // Binding CayenneService for the *target*... Note that binding
             // ServerRuntime directly would result in undesired shutdown
             // when the ETL module is shutdown.
             binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
-            binder.bind(JdbcNormalizerFactory.class).to(JdbcNormalizerFactory.class);
+            binder.bind(ValueConverterFactory.class).to(ValueConverterFactory.class);
             binder.bind(IExtractorService.class).to(ExtractorService.class);
             binder.bind(IConnectorService.class).to(ConnectorService.class);
             binder.bind(ITaskService.class).to(TaskService.class);

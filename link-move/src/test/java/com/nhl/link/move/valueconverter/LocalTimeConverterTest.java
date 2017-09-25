@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
 import org.junit.Test;
@@ -14,35 +14,35 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 
-public class LocalTimeNormalizerTest {
+public class LocalTimeConverterTest {
 
-    private static final LocalTimeNormalizer normalizer = new LocalTimeNormalizer();
+    private static final LocalTimeConverter CONVERTER = new LocalTimeConverter();
 
     @Test(expected = LmRuntimeException.class)
-    public void testNormalize_utilDate() {
-        normalizer.normalize(Date.from(Instant.now()), null);
+    public void testConvert_utilDate() {
+        CONVERTER.convert(Date.from(Instant.now()));
     }
 
     @Test(expected = LmRuntimeException.class)
-    public void testNormalize_sqlDate() {
-        normalizer.normalize(new java.sql.Date(Instant.now().toEpochMilli()), null);
+    public void testConvert_sqlDate() {
+        CONVERTER.convert(new java.sql.Date(Instant.now().toEpochMilli()));
     }
 
     @Test
-    public void testNormalize_sqlTime() {
+    public void testConvert_sqlTime() {
         LocalTime localTime = LocalTime.now();
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
         calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
         java.sql.Time time = new Time(calendar.getTimeInMillis());
-        assertEquals(localTime, normalizer.normalize(time, null));
+        assertEquals(localTime, CONVERTER.convert(time));
     }
 
     @Test
-    public void testNormalize_sqlTimestamp() {
+    public void testConvert_sqlTimestamp() {
         LocalTime localTime = LocalTime.now();
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
         calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
-        assertEquals(localTime, normalizer.normalize(timestamp, null));
+        assertEquals(localTime, CONVERTER.convert(timestamp));
     }
 }

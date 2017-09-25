@@ -1,63 +1,57 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.map.DbAttribute;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-public class BigDecimalNormalizer extends BaseJdbcNormalizer<BigDecimal> {
+public class BigDecimalConverter extends SingleTypeConverter<BigDecimal> {
 
     @Override
-    protected BigDecimal doNormalize(Object value, DbAttribute targetAttribute) {
-
-        BigDecimal normalized;
-        switch (value.getClass().getName()) {
-            case "java.lang.String": {
-                String s = (String) value;
-                normalized = s.isEmpty()? null : new BigDecimal(s);
-                break;
-            }
-            case "java.lang.Byte":
-            case "java.lang.Short":
-            case "java.lang.Integer":
-            case "java.lang.Long": {
-                normalized = BigDecimal.valueOf(Long.valueOf(value.toString()));
-                break;
-            }
-            case "java.lang.Float":
-            case "java.lang.Double": {
-                normalized = BigDecimal.valueOf(Double.valueOf(value.toString()));
-                break;
-            }
-            case "java.math.BigInteger": {
-                BigInteger bi = (BigInteger) value;
-                normalized = new BigDecimal(bi);
-                break;
-            }
-            default: {
-                throw new LmRuntimeException("Value can not be mapped to java.math.BigDecimal: " + value);
-            }
-        }
-
-        return normalized;
+    protected Class<BigDecimal> targetType() {
+        return BigDecimal.class;
     }
 
     @Override
-    protected BigDecimal postNormalize(BigDecimal normalized, DbAttribute targetAttribute) {
-        if (normalized == null) {
-            return null;
-        } else if (targetAttribute == null) {
-            return normalized;
-        } else {
-            return scale(normalized, targetAttribute.getScale());
+    protected BigDecimal convertAsCast(Object value, int scale) {
+        BigDecimal converted = super.convertAsCast(value, scale);
+        return scale >= 0 ? scale(converted, scale) : converted;
+    }
+
+    @Override
+    protected BigDecimal convertNotNull(Object value, int scale) {
+        BigDecimal converted = convertNoScale(value);
+        return scale >= 0 ? scale(converted, scale) : converted;
+    }
+
+    private BigDecimal convertNoScale(Object value) {
+        switch (value.getClass().getName()) {
+            case "java.lang.String":
+                String s = (String) value;
+                return s.isEmpty() ? null : new BigDecimal(s);
+
+            case "java.lang.Byte":
+            case "java.lang.Short":
+            case "java.lang.Integer":
+            case "java.lang.Long":
+                return BigDecimal.valueOf(Long.valueOf(value.toString()));
+
+            case "java.lang.Float":
+            case "java.lang.Double":
+                return BigDecimal.valueOf(Double.valueOf(value.toString()));
+
+            case "java.math.BigInteger":
+                BigInteger bi = (BigInteger) value;
+                return new BigDecimal(bi);
+
+            default:
+                throw new LmRuntimeException("Value can not be mapped to java.math.BigDecimal: " + value);
         }
     }
 
     /**
-     * Returns a copy of {@code decimal} with {@code newScale} or
-     * throws an exception if scaling would result in precision loss.
+     * Returns a copy of {@code decimal} with {@code newScale} or throws an exception if scaling would result in precision loss.
      */
     private BigDecimal scale(BigDecimal decimal, int newScale) {
 

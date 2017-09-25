@@ -1,21 +1,26 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.map.DbAttribute;
 
 import java.math.BigDecimal;
 
-public class StringNormalizer extends BaseJdbcNormalizer<String> {
+public class StringConverter extends SingleTypeConverter<String> {
 
     @Override
-    protected String doNormalize(Object value, DbAttribute targetAttribute) {
+    protected Class<String> targetType() {
+        return String.class;
+    }
+
+    @Override
+    protected String convertNotNull(Object value, int scale) {
+
         switch (value.getClass().getName()) {
             case "java.lang.Byte":
             case "java.lang.Short":
             case "java.lang.Integer":
             case "java.lang.Long":
             case "java.math.BigInteger": {
-                    return value.toString();
+                return value.toString();
             }
             case "java.lang.Float": {
                 Float f = (Float) value;

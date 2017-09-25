@@ -1,21 +1,25 @@
-package com.nhl.link.move.runtime.jdbc;
+package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.map.DbAttribute;
 
 /**
  * @since 2.4
  */
-public class EnumNormalizer<T extends Enum<T>> extends BaseJdbcNormalizer<T> {
+public class EnumConverter<T extends Enum<T>> extends SingleTypeConverter<T> {
 
     private Class<T> enumType;
 
-    public EnumNormalizer(Class<T> enumType) {
+    public EnumConverter(Class<T> enumType) {
         this.enumType = enumType;
     }
 
     @Override
-    protected T doNormalize(Object value, DbAttribute targetAttribute) {
+    protected Class<T> targetType() {
+        return enumType;
+    }
+
+    @Override
+    protected T convertNotNull(Object value, int scale) {
 
         // TODO: should we support enum ordinals?
 
