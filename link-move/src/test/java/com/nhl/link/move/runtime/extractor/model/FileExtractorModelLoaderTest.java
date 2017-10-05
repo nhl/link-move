@@ -1,11 +1,8 @@
 package com.nhl.link.move.runtime.extractor.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +10,14 @@ import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
-
+@Deprecated
 public class FileExtractorModelLoaderTest {
 
 	private FileExtractorModelLoader loader;
@@ -74,5 +73,4 @@ public class FileExtractorModelLoaderTest {
 		when(mockContainer.getLoadedOn()).thenReturn(file.lastModified() - 1);
 		assertTrue(loader.needsReload(mockContainer));
 	}
-
 }

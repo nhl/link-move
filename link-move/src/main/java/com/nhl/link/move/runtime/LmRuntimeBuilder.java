@@ -16,6 +16,7 @@ import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
+import com.nhl.link.move.runtime.extractor.model.URLExtractorModelLoader;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
@@ -41,10 +42,8 @@ import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.dba.TypesMapping;
-import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
 import org.apache.cayenne.di.Injector;
-import org.apache.cayenne.di.Key;
 import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
 import org.apache.cayenne.map.DbAttribute;
@@ -53,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -61,7 +61,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.function.Supplier;
 
 /**
  * A builder class that helps to assemble working LinkEtl stack.
@@ -73,8 +75,10 @@ public class LmRuntimeBuilder {
      * extractor config files.
      *
      * @since 1.4
+     * @deprecated since 2.4 unused
      */
     public static final String FILE_EXTRACTOR_MODEL_ROOT_DIR = "com.nhl.link.move.extrator.root.dir";
+
     public static final String START_TOKEN_VAR = "startToken";
     public static final String END_TOKEN_VAR = "endToken";
     private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
@@ -86,9 +90,7 @@ public class LmRuntimeBuilder {
     private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
     private Map<String, ValueConverter> valueConverters;
-
-    private IExtractorModelLoader extractorModelLoader;
-    private File extractorModelsRoot;
+    private Supplier<IExtractorModelLoader> modelLoaderFactory;
 
     private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
@@ -102,6 +104,7 @@ public class LmRuntimeBuilder {
         this.extractorFactoryTypes = new HashMap<>();
         this.valueConverters = new HashMap<>();
         this.adapters = new ArrayList<>();
+        this.modelLoaderFactory = () -> new ClasspathExtractorModelLoader();
 
         // default normalizers
         valueConverters.put(Boolean.class.getName(), BooleanConverter.getConverter());
@@ -219,9 +222,9 @@ public class LmRuntimeBuilder {
     /**
      * @since 1.4
      */
-    public LmRuntimeBuilder extractorModelLoader(IExtractorModelLoader extractorModelLoader) {
-        this.extractorModelLoader = extractorModelLoader;
-        this.extractorModelsRoot = null;
+    public LmRuntimeBuilder extractorModelLoader(IExtractorModelLoader loader) {
+        Objects.requireNonNull(loader);
+        this.modelLoaderFactory = () -> loader;
         return this;
     }
 
@@ -229,8 +232,22 @@ public class LmRuntimeBuilder {
      * @since 1.4
      */
     public LmRuntimeBuilder extractorModelsRoot(File rootDir) {
-        this.extractorModelLoader = null;
-        this.extractorModelsRoot = rootDir;
+
+        Objects.requireNonNull(rootDir);
+        if (!rootDir.isDirectory()) {
+            LOGGER.warn("Extractor models root is not a valid directory: " + rootDir);
+        }
+
+        this.modelLoaderFactory = () -> new FileExtractorModelLoader(rootDir);
+        return this;
+    }
+
+    /**
+     * @since 2.4
+     */
+    public LmRuntimeBuilder extractorModelsRoot(URL baseUrl) {
+        Objects.requireNonNull(baseUrl);
+        this.modelLoaderFactory = () -> new URLExtractorModelLoader(baseUrl);
         return this;
     }
 
@@ -238,9 +255,7 @@ public class LmRuntimeBuilder {
      * @since 1.4
      */
     public LmRuntimeBuilder extractorModelsRoot(String rootDirPath) {
-        this.extractorModelLoader = null;
-        this.extractorModelsRoot = new File(rootDirPath);
-        return this;
+        return extractorModelsRoot(new File(rootDirPath));
     }
 
     public LmRuntime build() throws IllegalStateException {
@@ -254,8 +269,6 @@ public class LmRuntimeBuilder {
         }
 
         Module etlModule = binder -> {
-
-            bindModelLoader(binder);
 
             binder.bindMap(Connector.class).putAll(connectors);
 
@@ -303,6 +316,7 @@ public class LmRuntimeBuilder {
             // when the ETL module is shutdown.
             binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
+            binder.bind(IExtractorModelLoader.class).toInstance(modelLoaderFactory.get());
             binder.bind(ValueConverterFactory.class).to(ValueConverterFactory.class);
             binder.bind(IExtractorService.class).to(ExtractorService.class);
             binder.bind(IConnectorService.class).to(ConnectorService.class);
@@ -319,7 +333,7 @@ public class LmRuntimeBuilder {
             }
         };
 
-        final Injector injector = DIBootstrap.createInjector(etlModule);
+        Injector injector = DIBootstrap.createInjector(etlModule);
 
         return new LmRuntime() {
 
@@ -334,21 +348,4 @@ public class LmRuntimeBuilder {
             }
         };
     }
-
-    void bindModelLoader(Binder binder) {
-        if (extractorModelLoader != null) {
-            binder.bind(IExtractorModelLoader.class).toInstance(extractorModelLoader);
-        } else if (extractorModelsRoot != null) {
-
-            if (!extractorModelsRoot.isDirectory()) {
-                LOGGER.warn("Extractor models root is not a valid directory: " + extractorModelsRoot);
-            }
-
-            binder.bind(IExtractorModelLoader.class).to(FileExtractorModelLoader.class);
-            binder.bind(Key.get(File.class, FILE_EXTRACTOR_MODEL_ROOT_DIR)).toInstance(extractorModelsRoot);
-        } else {
-            binder.bind(IExtractorModelLoader.class).to(ClasspathExtractorModelLoader.class);
-        }
-    }
-
 }

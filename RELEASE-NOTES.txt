@@ -1,5 +1,6 @@
 Release 2.4
 
+#101 Create a URLExtractorModelLoader
 #132 @AfterTargetsMapped listeners are not invoked in CreateOrUpdate tasks
 #134 ValueConverter for enums
 #135 Refactoring JdbcNormalizer to ValueConverter
