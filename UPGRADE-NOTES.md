@@ -1,8 +1,17 @@
+## Upgrading to 2.4
+
+### IExtractorModelLoader is replaced by ResourceResolver/IExtractorModelParser [#138](https://github.com/nhl/link-move/issues/138)
+
+`IExtractorModelLoader` did two things - loading from XML and parsing the extractor model. With a bunch of subclasses for 
+different XML sources this became confusing. So we need to split this into two separate interfaces: `ResourceResolver` and
+`IExtractorModelParser`. This is a breaking change if you used custom model loaders. Very likely you will need to modify 
+your custom loader to implement `ResourceResolver` and use `LmRuntimeBuilder.extractorResolver(..)` to load it in the stack.
+
 ## Upgrading to 2.1
 
 ### Requires XSD location update [#110](https://github.com/nhl/link-move/issues/110)
 
-Change schema lcoation in all XML extractors from http://nhl.github.io/link-move/xsd/extractor_config_2.xsd to http://linkmove.io/xsd/extractor_config_2.xsd
+Change schema location in all XML extractors from http://nhl.github.io/link-move/xsd/extractor_config_2.xsd to http://linkmove.io/xsd/extractor_config_2.xsd
 
 ## Upgrading to 2.0
 
