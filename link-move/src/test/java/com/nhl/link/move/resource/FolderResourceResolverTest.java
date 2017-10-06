@@ -14,9 +14,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class FileResourceResolverTest {
+public class FolderResourceResolverTest {
 
-    private FileResourceResolver resolver;
+    private FolderResourceResolver resolver;
     private File rootDir;
 
     @Before
@@ -27,7 +27,7 @@ public class FileResourceResolverTest {
         this.rootDir = new File(extractorResource.toURI()).getParentFile();
         assertTrue(rootDir.isDirectory());
 
-        this.resolver = new FileResourceResolver(rootDir);
+        this.resolver = new FolderResourceResolver(rootDir);
     }
 
     @Test

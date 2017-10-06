@@ -11,17 +11,17 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 /**
- * A {@link ResourceResolver} that loads resources from files located in a given resource directory.
+ * A {@link ResourceResolver} that loads resources from files located in a given directory.
  *
  * @since 2.4
  */
-public class FileResourceResolver implements ResourceResolver {
+public class FolderResourceResolver implements ResourceResolver {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileResourceResolver.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FolderResourceResolver.class);
 
     private File baseDir;
 
-    public FileResourceResolver(File baseDir) {
+    public FolderResourceResolver(File baseDir) {
         LOGGER.info("Extractor XML files will be located under '{}'", baseDir);
         this.baseDir = baseDir;
     }

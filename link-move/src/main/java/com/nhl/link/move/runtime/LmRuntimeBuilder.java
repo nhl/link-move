@@ -4,7 +4,7 @@ import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
 import com.nhl.link.move.resource.ClasspathResourceResolver;
-import com.nhl.link.move.resource.FileResourceResolver;
+import com.nhl.link.move.resource.FolderResourceResolver;
 import com.nhl.link.move.resource.ResourceResolver;
 import com.nhl.link.move.resource.URLResourceResolver;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
@@ -240,7 +240,7 @@ public class LmRuntimeBuilder {
             LOGGER.warn("Extractor models root is not a valid directory: " + rootDir);
         }
 
-        this.extractorResolverFactory = () -> new FileResourceResolver(rootDir);
+        this.extractorResolverFactory = () -> new FolderResourceResolver(rootDir);
         return this;
     }
 
