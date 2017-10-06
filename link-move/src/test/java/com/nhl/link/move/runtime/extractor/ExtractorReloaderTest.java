@@ -18,7 +18,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ReloadableExtractorTest {
+public class ExtractorReloaderTest {
 
 	private IExtractorModelService mockModelService;
 	private IConnectorService connectorService;
@@ -29,7 +29,7 @@ public class ReloadableExtractorTest {
 	private Extractor mockExtractor2;
 	private Extractor mockExtractor3;
 
-	private ReloadableExtractor extractor;
+	private ExtractorReloader reloader;
 
 	@Before
 	public void before() {
@@ -58,22 +58,22 @@ public class ReloadableExtractorTest {
 		this.mockFactories = new HashMap<>();
 		mockFactories.put(mockModel.getType(), mockExtractorFactory);
 
-		this.extractor = new ReloadableExtractor(mockModelService, connectorService, mockFactories, name);
+		this.reloader = new ExtractorReloader(mockModelService, connectorService, mockFactories, name);
 	}
 
 	@Test
 	public void testGetDelegate() {
 
-		Extractor d1 = extractor.getDelegate();
+		Extractor d1 = reloader.getOrReload();
 		assertSame(mockExtractor1, d1);
 
-		Extractor d2 = extractor.getDelegate();
+		Extractor d2 = reloader.getOrReload();
 		assertSame(mockExtractor1, d2);
 
 		// 'touch' model to force resync
 		when(mockModel.getLoadedOn()).thenReturn(System.currentTimeMillis() + 1);
 
-		Extractor d3 = extractor.getDelegate();
+		Extractor d3 = reloader.getOrReload();
 		assertSame(mockExtractor2, d3);
 	}
 
