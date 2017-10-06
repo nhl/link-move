@@ -49,17 +49,6 @@ public class MutableExtractorModelContainer implements ExtractorModelContainer {
 	}
 
 	@Override
-	public String getConnectorId() {
-		if (connectorIds.isEmpty()) {
-			// connector IDs can be missing
-			return null;
-		} if (connectorIds.size() == 1) {
-			return connectorIds.iterator().next();
-		}
-		throw new IllegalStateException("Multiple connector IDs specified in model");
-	}
-
-	@Override
 	public Collection<String> getConnectorIds() {
 		return connectorIds;
 	}

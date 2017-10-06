@@ -1,10 +1,10 @@
 package com.nhl.link.move.extractor.model;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.extractor.Extractor;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * A model of a single {@link Extractor}.
@@ -18,9 +18,6 @@ public interface ExtractorModel {
 	String getName();
 
 	String getType();
-
-	@Deprecated
-	String getConnectorId();
 
 	/**
 	 * @return Collection of connector IDs

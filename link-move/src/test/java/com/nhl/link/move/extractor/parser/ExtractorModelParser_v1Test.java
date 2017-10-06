@@ -1,19 +1,17 @@
 package com.nhl.link.move.extractor.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-
+import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorModelContainer;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
-import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import com.nhl.link.move.extractor.parser.ExtractorModelParser_v1;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ExtractorModelParser_v1Test extends BaseParserTest {
 
@@ -34,7 +32,7 @@ public class ExtractorModelParser_v1Test extends BaseParserTest {
 
 		assertEquals("alocation", container.getLocation());
 		assertEquals("atype", container.getType());
-		assertEquals("aconnector", container.getConnectorId());
+		assertTrue(container.getConnectorIds().contains("aconnector"));
 
 		Collection<String> extractorNames = container.getExtractorNames();
 		assertEquals(1, extractorNames.size());
@@ -43,7 +41,7 @@ public class ExtractorModelParser_v1Test extends BaseParserTest {
 		ExtractorModel model = container.getExtractor(ExtractorModel.DEFAULT_NAME);
 
 		assertEquals("atype", model.getType());
-		assertEquals("aconnector", model.getConnectorId());
+		assertTrue(model.getConnectorIds().contains("aconnector"));
 
 		assertEquals(3, model.getAttributes().length);
 

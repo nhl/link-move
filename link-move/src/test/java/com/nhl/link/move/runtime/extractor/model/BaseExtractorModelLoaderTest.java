@@ -1,9 +1,9 @@
 package com.nhl.link.move.runtime.extractor.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,12 +11,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Collection;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import com.nhl.link.move.runtime.extractor.model.BaseExtractorModelLoader;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class BaseExtractorModelLoaderTest {
 
@@ -48,7 +46,7 @@ public class BaseExtractorModelLoaderTest {
 		assertNotNull(container);
 		assertEquals("extractor_v1.xml", container.getLocation());
 		assertEquals("atype", container.getType());
-		assertEquals("aconnector", container.getConnectorId());
+		assertTrue(container.getConnectorIds().contains("aconnector"));
 
 		assertEquals(1, container.getExtractorNames().size());
 
@@ -56,7 +54,7 @@ public class BaseExtractorModelLoaderTest {
 
 		assertEquals(ExtractorModel.DEFAULT_NAME, model.getName());
 		assertEquals("atype", model.getType());
-		assertEquals("aconnector", model.getConnectorId());
+		assertTrue(model.getConnectorIds().contains("aconnector"));
 
 		assertEquals(3, model.getAttributes().length);
 
@@ -87,7 +85,7 @@ public class BaseExtractorModelLoaderTest {
 		assertNotNull(container);
 		assertEquals("extractor_v2.xml", container.getLocation());
 		assertEquals("atype", container.getType());
-		assertEquals("aconnector", container.getConnectorId());
+		assertTrue(container.getConnectorIds().contains("aconnector"));
 
 		Collection<String> extractorNames = container.getExtractorNames();
 		assertEquals(3, extractorNames.size());
@@ -98,7 +96,7 @@ public class BaseExtractorModelLoaderTest {
 		ExtractorModel m1 = container.getExtractor("e1");
 
 		assertEquals("atype", m1.getType());
-		assertEquals("aconnector", m1.getConnectorId());
+		assertTrue(m1.getConnectorIds().contains("aconnector"));
 
 		assertEquals(3, m1.getAttributes().length);
 
@@ -123,7 +121,7 @@ public class BaseExtractorModelLoaderTest {
 
 		ExtractorModel m2 = container.getExtractor("e2");
 		assertEquals("atype2", m2.getType());
-		assertEquals("aconnector2", m2.getConnectorId());
+		assertTrue(m2.getConnectorIds().contains("aconnector2"));
 		assertNull(m2.getAttributes());
 
 		assertEquals(2, m2.getProperties().size());

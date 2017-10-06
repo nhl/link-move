@@ -1,8 +1,8 @@
 package com.nhl.link.move.extractor.model;
 
-import java.util.Collection;
-
 import com.nhl.link.move.extractor.Extractor;
+
+import java.util.Collection;
 
 /**
  * A container that groups together one or more {@link Extractor}'s.
@@ -14,9 +14,6 @@ public interface ExtractorModelContainer {
 	String getLocation();
 
 	String getType();
-
-	@Deprecated
-	String getConnectorId();
 
 	/**
 	 * @return Collection of connector IDs

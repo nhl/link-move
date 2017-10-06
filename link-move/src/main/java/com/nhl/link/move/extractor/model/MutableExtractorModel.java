@@ -1,13 +1,12 @@
 package com.nhl.link.move.extractor.model;
 
+import com.nhl.link.move.RowAttribute;
+
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.nhl.link.move.RowAttribute;
 
 /**
  * @since 1.4
@@ -40,17 +39,6 @@ public class MutableExtractorModel implements ExtractorModel {
 	@Override
 	public String getType() {
 		return type;
-	}
-
-	@Override
-	public String getConnectorId() {
-		if (connectorIds.isEmpty()) {
-			// connector IDs can be missing if this model is a part of a model container
-			return null;
-		} if (connectorIds.size() == 1) {
-			return connectorIds.iterator().next();
-		}
-		throw new IllegalStateException("Multiple connector IDs specified in model");
 	}
 
 	@Override

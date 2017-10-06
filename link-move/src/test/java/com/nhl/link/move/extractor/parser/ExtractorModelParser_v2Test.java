@@ -1,19 +1,17 @@
 package com.nhl.link.move.extractor.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-
+import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorModelContainer;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
-import com.nhl.link.move.extractor.model.ExtractorModel;
-import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import com.nhl.link.move.extractor.parser.ExtractorModelParser_v2;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ExtractorModelParser_v2Test extends BaseParserTest {
 
@@ -38,7 +36,7 @@ public class ExtractorModelParser_v2Test extends BaseParserTest {
 		assertNotNull(container);
 		assertEquals("alocation", container.getLocation());
 		assertEquals("atype", container.getType());
-		assertEquals("aconnector", container.getConnectorId());
+		assertTrue(container.getConnectorIds().contains("aconnector"));
 
 		assertTrue(container.getLoadedOn() > t0);
 		assertTrue(container.getLoadedOn() < t1);
@@ -52,7 +50,7 @@ public class ExtractorModelParser_v2Test extends BaseParserTest {
 		ExtractorModel m1 = container.getExtractor("e1");
 
 		assertEquals("atype", m1.getType());
-		assertEquals("aconnector", m1.getConnectorId());
+        assertTrue(m1.getConnectorIds().contains("aconnector"));
 
 		assertEquals(3, m1.getAttributes().length);
 
@@ -77,8 +75,8 @@ public class ExtractorModelParser_v2Test extends BaseParserTest {
 		
 		ExtractorModel m2 = container.getExtractor("e2");
 		assertEquals("atype2", m2.getType());
-		assertEquals("aconnector2", m2.getConnectorId());
-		assertNull(m2.getAttributes());
+        assertTrue(m2.getConnectorIds().contains("aconnector2"));
+        assertNull(m2.getAttributes());
 
 		assertEquals(2, m2.getProperties().size());
 		assertEquals("AB2", m2.getProperties().get("a.b"));
