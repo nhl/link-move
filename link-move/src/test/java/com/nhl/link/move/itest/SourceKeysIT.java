@@ -1,20 +1,19 @@
 package com.nhl.link.move.itest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmTask;
+import com.nhl.link.move.runtime.task.ITaskService;
+import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
+import com.nhl.link.move.unit.LmIntegrationTest;
+import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.nhl.link.move.runtime.task.ITaskService;
-import org.junit.Test;
-
-import com.nhl.link.move.LmTask;
-import com.nhl.link.move.Execution;
-import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
-import com.nhl.link.move.unit.LmIntegrationTest;
-import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SourceKeysIT extends LmIntegrationTest {
 
@@ -23,7 +22,7 @@ public class SourceKeysIT extends LmIntegrationTest {
 	public void test_ByAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).extractSourceKeys(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy("name").task();
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy("name").task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");

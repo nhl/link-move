@@ -1,15 +1,14 @@
 package com.nhl.link.move.itest;
 
-import static org.junit.Assert.assertEquals;
-
-import com.nhl.link.move.runtime.task.ITaskService;
-import org.junit.Test;
-
-import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmTask;
+import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl5t;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
@@ -26,7 +25,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 	private void test_MatchByKey(String key) {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_implicit").matchBy(key).task();
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_implicit.xml").matchBy(key).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
 		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
@@ -61,7 +60,9 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 	public void test_ById() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid_implicit.xml").matchById().task();
+				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid_implicit.xml")
+				.matchById()
+				.task();
 
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
 		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, 'b')");

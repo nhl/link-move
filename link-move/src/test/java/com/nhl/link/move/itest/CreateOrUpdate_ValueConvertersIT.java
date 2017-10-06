@@ -59,7 +59,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 	public void test_ByAttribute_SyncFk() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_converters").matchBy(Etl3t.NAME).task();
+				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_converters.xml").matchBy(Etl3t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl2 (ID, NAME) VALUES (1, 'abc')");
 		srcRunSql("INSERT INTO utest.etl3 (E2_ID, NAME) VALUES (1, 'xyz')");
@@ -75,7 +75,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 	public void test_ById_IntegerToBoolean() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters").task();
+				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters.xml")
+				.task();
 
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (1, true)");
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_BOOLEAN) VALUES (2, false)");
@@ -93,7 +94,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 	public void test_ById_StringToEnum() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters").task();
+				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters.xml")
+                .task();
 
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_ENUM) VALUES (1, 'str1')");
 		srcRunSql("INSERT INTO utest.etl4 (ID, C_ENUM) VALUES (2, 'str3')");

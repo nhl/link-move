@@ -1,6 +1,5 @@
 package com.nhl.link.move.resource;
 
-import com.nhl.link.move.resource.URLResourceResolver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +45,7 @@ public class URLResourceResolverTest {
 	@Test
 	public void testGetXmlSource_NoExtension() throws IOException {
 
-		try (Reader r = loader.reader("dummy")) {
+		try (Reader r = loader.reader("dummy.xml")) {
 
 			assertNotNull(r);
 

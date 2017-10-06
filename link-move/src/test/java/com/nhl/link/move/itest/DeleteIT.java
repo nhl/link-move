@@ -33,7 +33,7 @@ public class DeleteIT extends LmIntegrationTest {
 	public void test_ByAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).delete(Etl1t.class)
-				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
+				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('b', NULL)");
@@ -58,7 +58,7 @@ public class DeleteIT extends LmIntegrationTest {
 	public void test_ByAttribute_MultiBatch() {
 
 		LmTask task = etl.service(ITaskService.class).delete(Etl1t.class).batchSize(2)
-				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t").matchBy(Etl1t.NAME).task();
+				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME).task();
 
 		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('a')");
 		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('b')");

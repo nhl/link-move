@@ -27,8 +27,8 @@ public class URLResourceResolver implements ResourceResolver {
     @Override
     public Reader reader(String name) {
 
-        // TODO: get rid of the XML extension convention
         if (!name.endsWith(".xml")) {
+            complainOfExtension(name);
             name = name + ".xml";
         }
 
@@ -46,5 +46,14 @@ public class URLResourceResolver implements ResourceResolver {
         } catch (IOException e) {
             throw new LmRuntimeException("Error reading extractor config XML from URL " + modelUrl, e);
         }
+    }
+
+    /**
+     * @param name
+     * @deprecated since 2.4
+     */
+    @Deprecated
+    private void complainOfExtension(String name) {
+        LOGGER.warn("*** Implicit extension name is deprecated. Use '{}.xml' instead of '{}'", name, name);
     }
 }

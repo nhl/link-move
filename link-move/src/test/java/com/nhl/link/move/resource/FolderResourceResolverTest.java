@@ -31,7 +31,7 @@ public class FolderResourceResolverTest {
     }
 
     @Test
-    public void testGetXmlSource() throws IOException {
+    public void testReader() throws IOException {
 
         try (Reader r = resolver.reader("dummy.xml")) {
 
@@ -43,8 +43,9 @@ public class FolderResourceResolverTest {
         }
     }
 
+    @Deprecated
     @Test
-    public void testGetXmlSource_NoExtension() throws IOException {
+    public void testReader_Deprecated() throws IOException {
 
         try (Reader r = resolver.reader("dummy")) {
 

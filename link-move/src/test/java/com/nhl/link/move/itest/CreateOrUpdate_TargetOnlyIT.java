@@ -1,16 +1,15 @@
 package com.nhl.link.move.itest;
 
-import static org.junit.Assert.assertEquals;
-
-import com.nhl.link.move.runtime.task.ITaskService;
-import org.junit.Test;
-
-import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.LmRuntime;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
+import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl2t;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class CreateOrUpdate_TargetOnlyIT extends LmIntegrationTest {
 
@@ -25,7 +24,7 @@ public class CreateOrUpdate_TargetOnlyIT extends LmIntegrationTest {
 	public void test_ByAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl2t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1t_to_etl2t").matchBy(Etl2t.NAME).task();
+				.sourceExtractor("com/nhl/link/move/itest/etl1t_to_etl2t.xml").matchBy(Etl2t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME) VALUES ('a')");
 		targetRunSql("INSERT INTO utest.etl1t (NAME) VALUES ('b')");

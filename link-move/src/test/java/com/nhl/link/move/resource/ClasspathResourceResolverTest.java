@@ -19,8 +19,9 @@ public class ClasspathResourceResolverTest {
 		loader = new ClasspathResourceResolver();
 	}
 
+	@Deprecated
 	@Test
-	public void testGetXmlSource() throws IOException {
+	public void testReader_Deprecated() throws IOException {
 
 		try (Reader r = loader.reader("com/nhl/link/move/resource/dummy")) {
 
@@ -33,7 +34,7 @@ public class ClasspathResourceResolverTest {
 	}
 
 	@Test
-	public void testGetXmlSource_WithExtension() throws IOException {
+	public void testReader_WithExtension() throws IOException {
 
 		try (Reader r = loader.reader("com/nhl/link/move/resource/dummy.xml")) {
 
@@ -47,7 +48,7 @@ public class ClasspathResourceResolverTest {
 	}
 
 	@Test(expected = LmRuntimeException.class)
-	public void testGetXmlSource_Invalid() throws IOException {
-		loader.reader("no-such-resource");
+	public void testReader_Invalid() throws IOException {
+		loader.reader("no-such-resource.xml");
 	}
 }
