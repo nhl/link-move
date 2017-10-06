@@ -1,6 +1,12 @@
 package com.nhl.link.move.runtime;
 
 import com.nhl.link.move.connect.Connector;
+import com.nhl.link.move.extractor.parser.ExtractorModelParser;
+import com.nhl.link.move.extractor.parser.IExtractorModelParser;
+import com.nhl.link.move.resource.ClasspathResourceResolver;
+import com.nhl.link.move.resource.FileResourceResolver;
+import com.nhl.link.move.resource.ResourceResolver;
+import com.nhl.link.move.resource.URLResourceResolver;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.cayenne.TargetCayenneService;
@@ -11,12 +17,8 @@ import com.nhl.link.move.runtime.connect.IConnectorService;
 import com.nhl.link.move.runtime.extractor.ExtractorService;
 import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
-import com.nhl.link.move.runtime.extractor.model.ClasspathExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
-import com.nhl.link.move.runtime.extractor.model.FileExtractorModelLoader;
-import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
-import com.nhl.link.move.runtime.extractor.model.URLExtractorModelLoader;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
@@ -90,7 +92,7 @@ public class LmRuntimeBuilder {
     private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
     private Map<String, ValueConverter> valueConverters;
-    private Supplier<IExtractorModelLoader> modelLoaderFactory;
+    private Supplier<ResourceResolver> extractorResolverFactory;
 
     private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
@@ -104,7 +106,7 @@ public class LmRuntimeBuilder {
         this.extractorFactoryTypes = new HashMap<>();
         this.valueConverters = new HashMap<>();
         this.adapters = new ArrayList<>();
-        this.modelLoaderFactory = () -> new ClasspathExtractorModelLoader();
+        this.extractorResolverFactory = () -> new ClasspathResourceResolver();
 
         // default normalizers
         valueConverters.put(Boolean.class.getName(), BooleanConverter.getConverter());
@@ -220,11 +222,11 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @since 1.4
+     * @since 2.4
      */
-    public LmRuntimeBuilder extractorModelLoader(IExtractorModelLoader loader) {
+    public LmRuntimeBuilder extractorResolver(ResourceResolver loader) {
         Objects.requireNonNull(loader);
-        this.modelLoaderFactory = () -> loader;
+        this.extractorResolverFactory = () -> loader;
         return this;
     }
 
@@ -238,7 +240,7 @@ public class LmRuntimeBuilder {
             LOGGER.warn("Extractor models root is not a valid directory: " + rootDir);
         }
 
-        this.modelLoaderFactory = () -> new FileExtractorModelLoader(rootDir);
+        this.extractorResolverFactory = () -> new FileResourceResolver(rootDir);
         return this;
     }
 
@@ -247,13 +249,15 @@ public class LmRuntimeBuilder {
      */
     public LmRuntimeBuilder extractorModelsRoot(URL baseUrl) {
         Objects.requireNonNull(baseUrl);
-        this.modelLoaderFactory = () -> new URLExtractorModelLoader(baseUrl);
+        this.extractorResolverFactory = () -> new URLResourceResolver(baseUrl);
         return this;
     }
 
     /**
      * @since 1.4
+     * @deprecated since 2.4 in favor of {@link #extractorModelsRoot(File)} to avoid confusion between file and URL Strings.
      */
+    @Deprecated
     public LmRuntimeBuilder extractorModelsRoot(String rootDirPath) {
         return extractorModelsRoot(new File(rootDirPath));
     }
@@ -316,7 +320,7 @@ public class LmRuntimeBuilder {
             // when the ETL module is shutdown.
             binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
 
-            binder.bind(IExtractorModelLoader.class).toInstance(modelLoaderFactory.get());
+            binder.bind(ResourceResolver.class).toInstance(extractorResolverFactory.get());
             binder.bind(ValueConverterFactory.class).to(ValueConverterFactory.class);
             binder.bind(IExtractorService.class).to(ExtractorService.class);
             binder.bind(IConnectorService.class).to(ConnectorService.class);
@@ -326,6 +330,7 @@ public class LmRuntimeBuilder {
             binder.bind(IPathNormalizer.class).to(PathNormalizer.class);
             binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);
             binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
+            binder.bind(IExtractorModelParser.class).to(ExtractorModelParser.class);
 
             // apply adapter-contributed bindings
             for (LinkEtlAdapter a : adapters) {

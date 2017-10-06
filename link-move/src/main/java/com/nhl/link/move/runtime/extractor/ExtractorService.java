@@ -17,9 +17,11 @@ public class ExtractorService implements IExtractorService {
     private ConcurrentMap<ExtractorName, Extractor> extractors;
     private Map<String, IExtractorFactory> factories;
 
-    public ExtractorService(@Inject IExtractorModelService modelService,
-                            @Inject IConnectorService connectorService,
-                            @Inject Map<String, IExtractorFactory> factories) {
+    public ExtractorService(
+            @Inject IExtractorModelService modelService,
+            @Inject IConnectorService connectorService,
+            @Inject Map<String, IExtractorFactory> factories) {
+
         this.factories = factories;
         this.modelService = modelService;
         this.connectorService = connectorService;

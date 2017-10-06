@@ -4,6 +4,7 @@ Release 2.4
 #132 @AfterTargetsMapped listeners are not invoked in CreateOrUpdate tasks
 #134 ValueConverter for enums
 #135 Refactoring JdbcNormalizer to ValueConverter
+#138 Split IExtractorModelLoader into ResourceResolver and ExtractorModelParser
 
 
 Release 2.3

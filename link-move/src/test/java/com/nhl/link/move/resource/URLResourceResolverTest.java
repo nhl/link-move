@@ -1,5 +1,6 @@
-package com.nhl.link.move.runtime.extractor.model;
+package com.nhl.link.move.resource;
 
+import com.nhl.link.move.resource.URLResourceResolver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,9 +14,9 @@ import java.net.URL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class URLExtractorModelLoaderTest {
+public class URLResourceResolverTest {
 
-    private URLExtractorModelLoader loader;
+    private URLResourceResolver loader;
 	private URL rootUrl;
 
 	@Before
@@ -26,13 +27,13 @@ public class URLExtractorModelLoaderTest {
 
         this.rootUrl = new File(extractorResource.toURI()).getParentFile().toURI().toURL();
 
-		this.loader = new URLExtractorModelLoader(rootUrl);
+		this.loader = new URLResourceResolver(rootUrl);
 	}
 
 	@Test
 	public void testGetXmlSource() throws IOException {
 
-		try (Reader r = loader.getXmlSource("dummy.xml")) {
+		try (Reader r = loader.reader("dummy.xml")) {
 
 			assertNotNull(r);
 
@@ -45,7 +46,7 @@ public class URLExtractorModelLoaderTest {
 	@Test
 	public void testGetXmlSource_NoExtension() throws IOException {
 
-		try (Reader r = loader.getXmlSource("dummy")) {
+		try (Reader r = loader.reader("dummy")) {
 
 			assertNotNull(r);
 

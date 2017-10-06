@@ -16,10 +16,8 @@ import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.runtime.LmRuntime;
-import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
-import com.nhl.link.move.runtime.extractor.model.IExtractorModelLoader;
+import com.nhl.link.move.resource.ResourceResolver;
 import com.nhl.link.move.runtime.task.ITaskService;
 
 public class LmRuntimeBuilderTest {
@@ -57,14 +55,14 @@ public class LmRuntimeBuilderTest {
 	@Test(expected = IllegalStateException.class)
 	public void testBuild_NoTargetRuntime() {
 		LmRuntimeBuilder builder = new LmRuntimeBuilder()
-				.extractorModelLoader(mock(IExtractorModelLoader.class));
+				.extractorResolver(mock(ResourceResolver.class));
 		builder.build();
 	}
 
 	@Test
 	public void testBuild() {
-		LmRuntimeBuilder builder = new LmRuntimeBuilder().extractorModelLoader(
-				mock(IExtractorModelLoader.class)).withTargetRuntime(cayenneRuntime);
+		LmRuntimeBuilder builder = new LmRuntimeBuilder().extractorResolver(
+				mock(ResourceResolver.class)).withTargetRuntime(cayenneRuntime);
 		LmRuntime runtime = builder.build();
 		assertNotNull(runtime);
 

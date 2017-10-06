@@ -2,10 +2,11 @@ package com.nhl.link.move.runtime.extractor.model;
 
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import com.nhl.link.move.extractor.parser.ExtractorModelParser;
+import com.nhl.link.move.extractor.parser.IExtractorModelParser;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,33 +17,29 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class BaseExtractorModelLoaderTest {
+public class ExtractorModelParserTest {
 
-	private BaseExtractorModelLoader loader;
+	private IExtractorModelParser parser;
 
 	@Before
 	public void before() {
-
-		this.loader = new BaseExtractorModelLoader() {
-
-			@Override
-			protected Reader getXmlSource(String name) throws IOException {
-				InputStream in = BaseExtractorModelLoaderTest.class.getResourceAsStream(name);
-				assertNotNull("Resource not found: " + name, in);
-				return new InputStreamReader(in);
-			}
-
-			@Override
-			public boolean needsReload(ExtractorModelContainer container) {
-				return true;
-			}
-		};
+		parser = new ExtractorModelParser();
 	}
+
+	private  ExtractorModelContainer parse(String resourceName) {
+	    return parser.parse(resourceName, reader(resourceName));
+    }
+
+	private Reader reader(String resourceName) {
+        InputStream in = ExtractorModelParserTest.class.getResourceAsStream(resourceName);
+        assertNotNull("Resource not found: " + resourceName, in);
+        return new InputStreamReader(in);
+    }
 
 	@Test
 	public void testLoad_v1() {
 
-		ExtractorModelContainer container = loader.load("extractor_v1.xml");
+		ExtractorModelContainer container = parse("extractor_v1.xml");
 		assertNotNull(container);
 		assertEquals("extractor_v1.xml", container.getLocation());
 		assertEquals("atype", container.getType());
@@ -81,7 +78,7 @@ public class BaseExtractorModelLoaderTest {
 	@Test
 	public void testLoad_v2() {
 
-		ExtractorModelContainer container = loader.load("extractor_v2.xml");
+        ExtractorModelContainer container = parse("extractor_v2.xml");
 		assertNotNull(container);
 		assertEquals("extractor_v2.xml", container.getLocation());
 		assertEquals("atype", container.getType());
