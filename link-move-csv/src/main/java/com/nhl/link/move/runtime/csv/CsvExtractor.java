@@ -52,11 +52,6 @@ public class CsvExtractor implements Extractor {
 		return rowReader;
 	}
 
-	@Deprecated
-	public void setDelimiter(String delimiter) {
-		csvFormat = csvFormat.withDelimiter(delimiter.charAt(0));
-	}
-
 	public void setReadFrom(Integer readFrom) {
 		this.readFrom = readFrom;
 	}
