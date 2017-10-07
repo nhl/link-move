@@ -6,7 +6,7 @@ Release 2.4
 #135 Refactoring JdbcNormalizer to ValueConverter
 #138 Split IExtractorModelLoader into ResourceResolver and ExtractorModelParser
 #139 Deprecate implicit .xml extension
-
+#140 Upgrade to Cayenne 4.0.B2
 
 Release 2.3
 
