@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.org/nhl/link-move.svg?branch=master)](https://travis-ci.org/nhl/link-move)
 
-## LinkMove
+## LinkMove 
+
+_This branch "1.x" is compatible with Java 1.7. It is a maintenance-only branch, as there as some users that can not
+ upgrade. All the fun stuff happens on "master" and requires Java 8 or newer._
 
 LinkMove is a model-driven dynamically-configurable framework to acquire data from external sources and save it in your database. Its primary motivation is to facilitate [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) architectures. In DDD terms LinkMove is a tool to synchronize related models from different ["bounded contexts"](http://martinfowler.com/bliki/BoundedContext.html). Additionally it can be used as a general purpose ETL framework.
 
