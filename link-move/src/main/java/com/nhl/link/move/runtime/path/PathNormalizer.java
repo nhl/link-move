@@ -95,7 +95,7 @@ public class PathNormalizer implements IPathNormalizer {
 
             private boolean hasAttribute(ObjEntity entity, String path) {
                 if (path.startsWith(ASTDbPath.DB_PREFIX)) {
-                    path = path.replace(ASTDbPath.DB_PREFIX, "");
+                    path = path.substring(ASTDbPath.DB_PREFIX.length());
                     return entity.getDbEntity().getAttributeMap().containsKey(path)
                             || entity.getDbEntity().getRelationshipMap().containsKey(path);
                 } else {
