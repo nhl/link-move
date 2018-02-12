@@ -14,8 +14,7 @@ public class ExecutionTest {
 
 	@Test
 	public void testCreateReport() {
-
-		Execution execution = new Execution("xsync", Collections.singletonMap("a", 5));
+		Execution execution = new Execution("xsync", Collections.singletonMap("a", 5), true);
 
 		Map<String, Object> r1 = execution.createReport();
 		assertEquals("xsync", r1.get("Task"));
@@ -41,7 +40,7 @@ public class ExecutionTest {
 
 	@Test
 	public void testAttribute() {
-		try (Execution execution = new Execution("xsync", Collections.<String, Object> emptyMap())) {
+		try (Execution execution = new Execution("xsync", Collections.<String, Object> emptyMap(), true)) {
 			assertNull(execution.getAttribute("a"));
 
 			execution.setAttribute("a", "MMM");

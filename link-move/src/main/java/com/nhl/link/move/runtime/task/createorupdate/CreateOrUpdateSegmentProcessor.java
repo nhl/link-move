@@ -41,14 +41,16 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 	}
 
 	public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
-
 		// execute create-or-update pipeline stages
 		convertSrc(exec, segment);
 		mapSrc(exec, segment);
 		matchTarget(exec, segment);
 		mapToTarget(exec, segment);
 		mergeToTarget(exec, segment);
-		commitTarget(exec, segment);
+
+		if (!exec.isDryRun()) {
+			commitTarget(exec, segment);
+		}
 	}
 
 	private void convertSrc(Execution exec, CreateOrUpdateSegment<T> segment) {

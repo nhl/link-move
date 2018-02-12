@@ -21,22 +21,62 @@ public abstract class BaseTask implements LmTask {
 		this.tokenManager = tokenManager;
 	}
 
-	@Override
-	public abstract Execution run(Map<String, ?> params);
+	protected abstract void run(Execution execution, Map<String, ?> params);
+
+	protected abstract String name();
 
 	@Override
 	public Execution run() {
-		return run(Collections.<String, Object> emptyMap());
+		return run(Collections.emptyMap(), false);
+	}
+
+	@Override
+	public Execution run(Map<String, ?> params) {
+		return run(params, false);
 	}
 
 	@Override
 	public Execution run(SyncToken token) {
-		return run(token, Collections.<String, Object> emptyMap());
+		return run(token, Collections.emptyMap(), false);
 	}
 
 	@Override
 	public Execution run(SyncToken token, Map<String, ?> params) {
+		return run(token, params, false);
+	}
 
+	@Override
+	public Execution dryRun() {
+		return run(Collections.emptyMap(), true);
+	}
+
+	@Override
+	public Execution dryRun(Map<String, ?> params) {
+		return run(params, true);
+	}
+
+	@Override
+	public Execution dryRun(SyncToken token) {
+		return run(token, Collections.emptyMap(), true);
+	}
+
+	@Override
+	public Execution dryRun(SyncToken token, Map<String, ?> params) {
+		return run(token, params, true);
+	}
+
+	private Execution run(Map<String, ?> params, boolean dryRun) {
+		if (params == null) {
+			throw new NullPointerException("Null params");
+		}
+
+		try (Execution execution = new Execution(name(), params, dryRun)) {
+			run(execution, params);
+			return execution;
+		}
+	}
+
+	private Execution run(SyncToken token, Map<String, ?> params, boolean dryRun) {
 		Map<String, Object> combinedParams = new HashMap<>();
 
 		SyncToken startToken = tokenManager.previousToken(token);
@@ -45,7 +85,7 @@ public abstract class BaseTask implements LmTask {
 
 		combinedParams.putAll(params);
 
-		Execution exec = run(combinedParams);
+		Execution exec = run(combinedParams, dryRun);
 
 		// if we ever start using delayed executions, token should be
 		// saved inside the execution...
@@ -53,5 +93,4 @@ public abstract class BaseTask implements LmTask {
 
 		return exec;
 	}
-
 }
