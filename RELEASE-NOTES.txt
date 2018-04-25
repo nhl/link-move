@@ -1,3 +1,7 @@
+Release 2.6
+
+#146 Cayenne 4.0.RC1 is out... upgrading
+
 Release 2.5
 
 # 143 The use of String.replace(..) in PathNormalizer causes massive Pattern creation
