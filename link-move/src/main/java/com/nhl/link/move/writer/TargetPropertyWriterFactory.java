@@ -16,6 +16,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 /**
  * @since 1.6
@@ -46,7 +47,7 @@ public class TargetPropertyWriterFactory<T> {
         return getOrCreateWriter(
                 pkAttribute.getName(),
                 ASTDbPath.DB_PREFIX + pkAttribute.getName(),
-                new TargetPkPropertyWriter(pkAttribute)
+                () -> new TargetPkPropertyWriter(pkAttribute)
         );
     }
 
@@ -59,7 +60,7 @@ public class TargetPropertyWriterFactory<T> {
         return getOrCreateWriter(
                 property.getName(),
                 ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributeName(),
-                new TargetAttributePropertyWriter(property)
+                () -> new TargetAttributePropertyWriter(property)
         );
     }
 
@@ -73,38 +74,37 @@ public class TargetPropertyWriterFactory<T> {
         if (dbRelationships.size() > 1) {
             // TODO: support for flattened to-one relationships
             LOGGER.info("TODO: not mapping db: path for a flattened relationship: " + property.getName());
-        } else {
-
-            DbRelationship dbRelationship = dbRelationships.get(0);
-            List<DbJoin> joins = dbRelationship.getJoins();
-
-            if (joins.size() > 1) {
-                // TODO: support for multi-key to-one relationships
-                LOGGER.info("TODO: not mapping db: path for a multi-key relationship: " + property.getName());
-            } else {
-                return getOrCreateWriter(
-                        property.getName(),
-                        ASTDbPath.DB_PREFIX + joins.get(0).getSourceName(),
-                        new TargetToOnePropertyWriter(property)
-                );
-            }
+            return null;
         }
 
-        return null;
+        DbRelationship dbRelationship = dbRelationships.get(0);
+        List<DbJoin> joins = dbRelationship.getJoins();
+
+        if (joins.size() > 1) {
+            // TODO: support for multi-key to-one relationships
+            LOGGER.info("TODO: not mapping db: path for a multi-key relationship: " + property.getName());
+            return null;
+        }
+
+        return getOrCreateWriter(
+                property.getName(),
+                ASTDbPath.DB_PREFIX + joins.get(0).getSourceName(),
+                () -> new TargetToOnePropertyWriter(property)
+        );
     }
 
     public TargetPropertyWriter getOrCreateWriter(String property) {
         return getOrCreateWriter(property, property, null);
     }
 
-    public TargetPropertyWriter getOrCreateWriter(String propertyName, String dbName, TargetPropertyWriter defaultWriter) {
-        return writers.computeIfAbsent(dbName, dbn -> createWriter(propertyName, defaultWriter));
+    public TargetPropertyWriter getOrCreateWriter(String propertyName, String dbName, Supplier<TargetPropertyWriter> defaultWriterSupplier) {
+        return writers.computeIfAbsent(dbName, dbn -> createWriter(propertyName, defaultWriterSupplier));
     }
 
-    private TargetPropertyWriter createWriter(String propertyName, TargetPropertyWriter defaultWriter) {
+    private TargetPropertyWriter createWriter(String propertyName, Supplier<TargetPropertyWriter> defaultWriterSupplier) {
         Method setter = getSetter(propertyName);
 
-        if(setter != null) {
+        if (setter != null) {
             LOGGER.info(
                     "Found setter method for property '{}' in class: {}. Will create transient property writer...",
                     propertyName,
@@ -113,7 +113,7 @@ public class TargetPropertyWriterFactory<T> {
             return new TargetTransientPropertyWriter(setter);
         }
 
-        return defaultWriter != null ? defaultWriter : null;
+        return defaultWriterSupplier != null ? defaultWriterSupplier.get() : null;
     }
 
     private Method getSetter(String propertyName) {
