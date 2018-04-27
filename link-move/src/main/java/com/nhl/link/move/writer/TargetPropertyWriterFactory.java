@@ -33,6 +33,10 @@ public class TargetPropertyWriterFactory<T> {
         this.entity = entity;
     }
 
+    private static String getSetterName(String propertyName) {
+        return "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+    }
+
     public TargetPropertyWriter getOrCreatePkWriter(DbAttribute pkAttribute) {
 
         if (!entity.getDbEntity().equals(pkAttribute.getEntity())) {
@@ -94,24 +98,22 @@ public class TargetPropertyWriterFactory<T> {
     }
 
     public TargetPropertyWriter getOrCreateWriter(String propertyName, String dbName, TargetPropertyWriter defaultWriter) {
+        return writers.computeIfAbsent(dbName, dbn -> createWriter(propertyName, defaultWriter));
+    }
 
-        TargetPropertyWriter writer = writers.get(dbName);
-        if (writer == null) {
+    private TargetPropertyWriter createWriter(String propertyName, TargetPropertyWriter defaultWriter) {
+        Method setter = getSetter(propertyName);
 
-            Method setter = getSetter(propertyName);
+        if(setter != null) {
+            LOGGER.info(
+                    "Found setter method for property '{}' in class: {}. Will create transient property writer...",
+                    propertyName,
+                    type.getName());
 
-            if (setter == null) {
-                if (defaultWriter != null) {
-                    writer = putIfAbsent(dbName, defaultWriter);
-                }
-            } else {
-                LOGGER.info("Found setter method for property '" + propertyName + "' in class: " + type.getName() +
-                        ". Will create transient property writer...");
-                writer = putIfAbsent(dbName, new TargetTransientPropertyWriter(setter));
-            }
+            return new TargetTransientPropertyWriter(setter);
         }
 
-        return writer;
+        return defaultWriter != null ? defaultWriter : null;
     }
 
     private Method getSetter(String propertyName) {
@@ -126,15 +128,5 @@ public class TargetPropertyWriterFactory<T> {
         }
 
         return setter;
-    }
-
-    private static String getSetterName(String propertyName) {
-        return "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-    }
-
-    private TargetPropertyWriter putIfAbsent(String key, TargetPropertyWriter writer) {
-
-        TargetPropertyWriter existing = writers.putIfAbsent(key, writer);
-        return existing == null? writer : existing;
     }
 }
