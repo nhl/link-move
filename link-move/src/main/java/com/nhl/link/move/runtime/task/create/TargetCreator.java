@@ -5,8 +5,6 @@ import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +16,6 @@ import java.util.Map;
  * @since 2.6
  */
 public class TargetCreator<T extends DataObject> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TargetCreator.class);
 
     private Class<T> type;
     private TargetPropertyWriterFactory<T> writerFactory;
@@ -53,10 +49,6 @@ public class TargetCreator<T extends DataObject> {
 
         for (Map.Entry<String, Object> e : source.entrySet()) {
             TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
-            if (writer == null) {
-                LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
-                continue;
-            }
             if (writer.willWrite(target, e.getValue())) {
                 writer.write(target, e.getValue());
             }

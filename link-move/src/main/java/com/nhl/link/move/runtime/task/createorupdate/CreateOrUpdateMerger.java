@@ -1,27 +1,22 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.mapper.Mapper;
+import com.nhl.link.move.runtime.task.SourceTargetPair;
+import com.nhl.link.move.writer.TargetPropertyWriter;
+import com.nhl.link.move.writer.TargetPropertyWriterFactory;
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.ObjectContext;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.runtime.task.SourceTargetPair;
-import com.nhl.link.move.writer.TargetPropertyWriterFactory;
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.ObjectContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.mapper.Mapper;
-import com.nhl.link.move.writer.TargetPropertyWriter;
-
 /**
  * @since 1.3
  */
 public class CreateOrUpdateMerger<T extends DataObject> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateOrUpdateMerger.class);
 
 	private Class<T> type;
 	private Mapper mapper;
@@ -86,11 +81,6 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 
 		for (Map.Entry<String, Object> e : source.entrySet()) {
 			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
-			if (writer == null) {
-				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
-				continue;
-			}
-
 			if (writer.willWrite(target, e.getValue())) {
                 return true;
             }
@@ -109,10 +99,6 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 
 		for (Map.Entry<String, Object> e : source.entrySet()) {
 			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
-			if (writer == null) {
-				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
-				continue;
-			}
 			if (writer.willWrite(target, e.getValue())) {
 				writer.write(target, e.getValue());
 			}
@@ -129,10 +115,6 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 
 		for (Map.Entry<String, Object> e : source.entrySet()) {
 			TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
-			if (writer == null) {
-				LOGGER.info("Source contains property not mapped in the target: " + e.getKey() + ". Skipping...");
-				continue;
-			}
 			writer.write(target, e.getValue());
 		}
 	}

@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -22,6 +23,9 @@ import java.util.function.Supplier;
  * @since 1.6
  */
 public class TargetPropertyWriterFactory<T> {
+
+    public static final TargetPropertyWriter NULL_WRITER = (t, v) -> {
+    };
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetPropertyWriterFactory.class);
 
@@ -54,7 +58,7 @@ public class TargetPropertyWriterFactory<T> {
     public TargetPropertyWriter getOrCreateWriter(AttributeProperty property) {
 
         if (!entity.equals(property.getAttribute().getEntity())) {
-            throw new LmRuntimeException("Property belongs to different entity: " + property.getName());
+            throw new LmRuntimeException("Property belongs to a different entity: " + property.getName());
         }
 
         return getOrCreateWriter(
@@ -67,14 +71,14 @@ public class TargetPropertyWriterFactory<T> {
     public TargetPropertyWriter getOrCreateWriter(ToOneProperty property) {
 
         if (!entity.equals(property.getRelationship().getSourceEntity())) {
-            throw new LmRuntimeException("Property belongs to different entity: " + property.getName());
+            throw new LmRuntimeException("Property belongs to a different entity: " + property.getName());
         }
 
         List<DbRelationship> dbRelationships = property.getRelationship().getDbRelationships();
         if (dbRelationships.size() > 1) {
             // TODO: support for flattened to-one relationships
             LOGGER.info("TODO: not mapping db: path for a flattened relationship: " + property.getName());
-            return null;
+            return NULL_WRITER;
         }
 
         DbRelationship dbRelationship = dbRelationships.get(0);
@@ -83,7 +87,7 @@ public class TargetPropertyWriterFactory<T> {
         if (joins.size() > 1) {
             // TODO: support for multi-key to-one relationships
             LOGGER.info("TODO: not mapping db: path for a multi-key relationship: " + property.getName());
-            return null;
+            return NULL_WRITER;
         }
 
         return getOrCreateWriter(
@@ -94,10 +98,14 @@ public class TargetPropertyWriterFactory<T> {
     }
 
     public TargetPropertyWriter getOrCreateWriter(String property) {
-        return getOrCreateWriter(property, property, () -> null);
+        return getOrCreateWriter(property, property, () -> NULL_WRITER);
     }
 
-    public TargetPropertyWriter getOrCreateWriter(String propertyName, String dbName, Supplier<TargetPropertyWriter> defaultWriterSupplier) {
+    public TargetPropertyWriter getOrCreateWriter(
+            String propertyName,
+            String dbName,
+            Supplier<TargetPropertyWriter> defaultWriterSupplier) {
+
         return writers.computeIfAbsent(dbName, dbn -> createWriter(propertyName, defaultWriterSupplier));
     }
 
@@ -116,7 +124,7 @@ public class TargetPropertyWriterFactory<T> {
             return new TargetTransientPropertyWriter(setter);
         }
 
-        return defaultWriterSupplier.get();
+        return Objects.requireNonNull(defaultWriterSupplier.get(), () -> "Null property writer for " + propertyName);
     }
 
     private Method getSetter(String propertyName) {
