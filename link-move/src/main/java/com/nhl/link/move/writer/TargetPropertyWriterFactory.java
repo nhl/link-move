@@ -113,7 +113,7 @@ public class TargetPropertyWriterFactory<T> {
             return new TargetTransientPropertyWriter(setter);
         }
 
-        return defaultWriterSupplier != null ? defaultWriterSupplier.get() : null;
+        return defaultWriterSupplier.get();
     }
 
     private Method getSetter(String propertyName) {
