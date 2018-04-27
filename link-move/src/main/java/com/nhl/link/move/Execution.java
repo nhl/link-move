@@ -3,10 +3,10 @@ package com.nhl.link.move;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents a single execution of an {@link LmTask}. Tracks task parameters
@@ -22,13 +22,10 @@ public class Execution implements AutoCloseable {
 	public Execution(String name, Map<String, ?> params) {
 		this.name = name;
 		this.parameters = params;
-
-		// a "parallel" execution should have this turned into a ConcurrentMap
-		this.attributes = new HashMap<>();
-
+		this.attributes = new ConcurrentHashMap<>();
 		this.stats = new ExecutionStats();
 
-		stats.executionStarted();
+		this.stats.executionStarted();
 	}
 
 	@Override
