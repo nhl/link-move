@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  */
 public class TargetPropertyWriterFactory<T> {
 
-    public static final TargetPropertyWriter NULL_WRITER = (t, v) -> {
+    private static final TargetPropertyWriter NULL_WRITER = (t, v) -> {
     };
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetPropertyWriterFactory.class);
