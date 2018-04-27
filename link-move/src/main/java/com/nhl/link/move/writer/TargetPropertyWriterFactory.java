@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
 /**
@@ -27,7 +27,7 @@ public class TargetPropertyWriterFactory<T> {
 
     private Class<T> type;
     private ObjEntity entity;
-    private ConcurrentMap<String, TargetPropertyWriter> writers = new ConcurrentHashMap<>();
+    private Map<String, TargetPropertyWriter> writers = new ConcurrentHashMap<>();
 
     public TargetPropertyWriterFactory(Class<T> type, ObjEntity entity) {
         this.type = type;
