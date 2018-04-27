@@ -3,7 +3,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.runtime.task.SourceTargetTuple;
+import com.nhl.link.move.runtime.task.SourceTargetPair;
 import org.apache.cayenne.ObjectContext;
 
 import com.nhl.link.move.Row;
@@ -19,7 +19,7 @@ public class CreateOrUpdateSegment<T> {
 	private List<Map<String, Object>> sources;
 	private Map<Object, Map<String, Object>> mappedSources;
 	private List<T> matchedTargets;
-	private List<SourceTargetTuple<T>> merged;
+	private List<SourceTargetPair<T>> merged;
 
 	public CreateOrUpdateSegment(ObjectContext context, List<Row> rows) {
 		this.sourceRows = rows;
@@ -58,11 +58,11 @@ public class CreateOrUpdateSegment<T> {
 		this.matchedTargets = matchedTargets;
 	}
 
-	public List<SourceTargetTuple<T>> getMerged() {
+	public List<SourceTargetPair<T>> getMerged() {
 		return merged;
 	}
 
-	public void setMerged(List<SourceTargetTuple<T>> merged) {
+	public void setMerged(List<SourceTargetPair<T>> merged) {
 		this.merged = merged;
 	}
 

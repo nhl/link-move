@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.task.create;
 
-import com.nhl.link.move.runtime.task.SourceTargetTuple;
+import com.nhl.link.move.runtime.task.SourceTargetPair;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.DataObject;
@@ -29,15 +29,15 @@ public class TargetCreator<T extends DataObject> {
         this.writerFactory = writerFactory;
     }
 
-    public List<SourceTargetTuple<T>> create(ObjectContext context, Collection<Map<String, Object>> sources) {
+    public List<SourceTargetPair<T>> create(ObjectContext context, Collection<Map<String, Object>> sources) {
 
-        List<SourceTargetTuple<T>> result = new ArrayList<>();
+        List<SourceTargetPair<T>> result = new ArrayList<>();
 
         for (Map<String, Object> s : sources) {
 
             T t = create(context, type, s);
 
-            result.add(new SourceTargetTuple<>(s, t, true));
+            result.add(new SourceTargetPair<>(s, t, true));
         }
 
         return result;

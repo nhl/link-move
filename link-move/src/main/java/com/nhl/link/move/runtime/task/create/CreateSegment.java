@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.Row;
-import com.nhl.link.move.runtime.task.SourceTargetTuple;
+import com.nhl.link.move.runtime.task.SourceTargetPair;
 import org.apache.cayenne.ObjectContext;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class CreateSegment<T> {
     private ObjectContext context;
     private List<Row> sourceRows;
     private List<Map<String, Object>> sources;
-    private List<SourceTargetTuple<T>> merged;
+    private List<SourceTargetPair<T>> merged;
 
     public CreateSegment(ObjectContext context, List<Row> rows) {
         this.sourceRows = rows;
@@ -39,11 +39,11 @@ public class CreateSegment<T> {
         this.sources = translatedSegment;
     }
 
-    public List<SourceTargetTuple<T>> getMerged() {
+    public List<SourceTargetPair<T>> getMerged() {
         return merged;
     }
 
-    public void setMerged(List<SourceTargetTuple<T>> merged) {
+    public void setMerged(List<SourceTargetPair<T>> merged) {
         this.merged = merged;
     }
 }

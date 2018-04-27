@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.runtime.task.SourceTargetTuple;
+import com.nhl.link.move.runtime.task.SourceTargetPair;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -33,21 +33,21 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 		this.writerFactory = writerFactory;
 	}
 
-	public void merge(List<SourceTargetTuple<T>> mapped) {
-		for (SourceTargetTuple<T> t : mapped) {
+	public void merge(List<SourceTargetPair<T>> mapped) {
+		for (SourceTargetPair<T> t : mapped) {
 			if (!t.isCreated()) {
 				merge(t.getSource(), t.getTarget());
 			}
 		}
 	}
 
-	public List<SourceTargetTuple<T>> map(ObjectContext context, Map<Object, Map<String, Object>> mappedSources,
-										  List<T> matchedTargets) {
+	public List<SourceTargetPair<T>> map(ObjectContext context, Map<Object, Map<String, Object>> mappedSources,
+										 List<T> matchedTargets) {
 
         // clone mappedSources as we are planning to truncate it in this method
 		Map<Object, Map<String, Object>> localMappedSources = new HashMap<>(mappedSources);
 
-		List<SourceTargetTuple<T>> result = new ArrayList<>();
+		List<SourceTargetPair<T>> result = new ArrayList<>();
 
 		for (T t : matchedTargets) {
 
@@ -63,7 +63,7 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 
 			// skip phantom updates...
 			if (willUpdate(src, t)) {
-				result.add(new SourceTargetTuple<>(src, t, false));
+				result.add(new SourceTargetPair<>(src, t, false));
 			}
 		}
 
@@ -72,7 +72,7 @@ public class CreateOrUpdateMerger<T extends DataObject> {
 
 			T t = create(context, type, e.getValue());
 
-			result.add(new SourceTargetTuple<>(e.getValue(), t, true));
+			result.add(new SourceTargetPair<>(e.getValue(), t, true));
 		}
 
 		return result;

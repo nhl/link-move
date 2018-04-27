@@ -3,7 +3,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
-import com.nhl.link.move.runtime.task.SourceTargetTuple;
+import com.nhl.link.move.runtime.task.SourceTargetPair;
 
 /**
  * A listener that collects task stats and stores them in the Execution's
@@ -24,7 +24,7 @@ public class CreateOrUpdateStatsListener {
 
 		ExecutionStats stats = e.getStats();
 
-		for (SourceTargetTuple<?> t : segment.getMerged()) {
+		for (SourceTargetPair<?> t : segment.getMerged()) {
 			if (t.isCreated()) {
 				stats.incrementCreated(1);
 			} else {

@@ -5,13 +5,13 @@ import java.util.Map;
 /**
  * @since 2.6
  */
-public class SourceTargetTuple<T> {
+public class SourceTargetPair<T> {
 
     private T target;
     private Map<String, Object> source;
     private boolean created;
 
-    public SourceTargetTuple(Map<String, Object> source, T target, boolean created) {
+    public SourceTargetPair(Map<String, Object> source, T target, boolean created) {
         this.target = target;
         this.source = source;
         this.created = created;
