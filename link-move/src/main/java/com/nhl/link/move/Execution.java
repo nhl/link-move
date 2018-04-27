@@ -14,88 +14,92 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Execution implements AutoCloseable {
 
-	protected String name;
-	protected Map<String, ?> parameters;
-	protected Map<String, Object> attributes;
-	protected ExecutionStats stats;
+    protected String name;
+    protected Map<String, ?> parameters;
+    protected Map<String, Object> attributes;
+    protected ExecutionStats stats;
 
-	public Execution(String name, Map<String, ?> params) {
-		this.name = name;
-		this.parameters = params;
-		this.attributes = new ConcurrentHashMap<>();
-		this.stats = new ExecutionStats();
+    public Execution(String name, Map<String, ?> params) {
+        this.name = name;
+        this.parameters = params;
+        this.attributes = new ConcurrentHashMap<>();
+        this.stats = new ExecutionStats();
 
-		this.stats.executionStarted();
-	}
+        this.stats.executionStarted();
+    }
 
-	@Override
-	public void close() {
-		stats.executionStopped();
-	}
+    @Override
+    public void close() {
+        stats.executionStopped();
+    }
 
-	@Override
-	public String toString() {
-		return createReport().toString();
-	}
+    @Override
+    public String toString() {
+        return createReport().toString();
+    }
 
-	/**
-	 * Creates task execution report as a map of labels vs. values.
-	 */
-	public Map<String, Object> createReport() {
+    /**
+     * Creates task execution report as a map of labels vs. values.
+     */
+    public Map<String, Object> createReport() {
 
-		// let's keep order of insertion consistent so that the report is easily
-		// printable
-		Map<String, Object> report = new LinkedHashMap<>();
+        // let's keep order of insertion consistent so that the report is easily
+        // printable
+        Map<String, Object> report = new LinkedHashMap<>();
 
-		if (name != null) {
-			report.put("Task", name);
-		}
+        if (name != null) {
+            report.put("Task", name);
+        }
 
-		for (Entry<String, ?> p : parameters.entrySet()) {
-			report.put("Parameter[" + p.getKey() + "]", p.getValue());
-		}
+        for (Entry<String, ?> p : parameters.entrySet()) {
+            report.put("Parameter[" + p.getKey() + "]", p.getValue());
+        }
 
-		DateFormat format = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
+        DateFormat format = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
 
-		if (stats.isStopped()) {
-			report.put("Status", "finished");
-			report.put("Duration", stats.getDuration());
-		} else {
-			report.put("Status", "in progress");
-			report.put("Started on ", format.format(new Date(stats.getStarted())));
-		}
+        if (stats.isStopped()) {
+            report.put("Status", "finished");
+            report.put("Duration", stats.getDuration());
+        } else {
+            report.put("Status", "in progress");
+            report.put("Started on ", format.format(new Date(stats.getStarted())));
+        }
 
-		report.put("Extracted", stats.getExtracted());
-		report.put("Created", stats.getCreated());
-		report.put("Updated", stats.getUpdated());
-		report.put("Deleted", stats.getDeleted());
+        report.put("Extracted", stats.getExtracted());
+        report.put("Created", stats.getCreated());
+        report.put("Updated", stats.getUpdated());
+        report.put("Deleted", stats.getDeleted());
 
-		return report;
-	}
+        return report;
+    }
 
-	/**
-	 * @since 1.3
-	 */
-	public Object getAttribute(String key) {
-		return attributes.get(key);
-	}
+    /**
+     * @since 1.3
+     */
+    public Object getAttribute(String key) {
+        return attributes.get(key);
+    }
 
-	/**
-	 * @since 1.3
-	 */
-	public void setAttribute(String key, Object value) {
-		attributes.put(key, value);
-	}
+    /**
+     * @since 1.3
+     */
+    public void setAttribute(String key, Object value) {
+        if (value == null) {
+            attributes.remove(key);
+        } else {
+            attributes.put(key, value);
+        }
+    }
 
-	/**
-	 * @since 1.3
-	 */
-	public Map<String, ?> getParameters() {
-		return parameters;
-	}
+    /**
+     * @since 1.3
+     */
+    public Map<String, ?> getParameters() {
+        return parameters;
+    }
 
-	public ExecutionStats getStats() {
-		return stats;
-	}
+    public ExecutionStats getStats() {
+        return stats;
+    }
 
 }
