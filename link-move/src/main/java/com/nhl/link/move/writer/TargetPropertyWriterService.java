@@ -28,23 +28,15 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
         this.writerFactories = new ConcurrentHashMap<>();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public <T> TargetPropertyWriterFactory<T> getWriterFactory(Class<T> type) {
 
         if (targetCayenneService.entityResolver().getObjEntity(type) == null) {
-			throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
-		}
-
-        TargetPropertyWriterFactory<T> writerFactory = (TargetPropertyWriterFactory<T>) writerFactories.get(type);
-        if (writerFactory == null) {
-            writerFactory = createWriterFactory(type);
-            TargetPropertyWriterFactory existing = writerFactories.putIfAbsent(type, writerFactory);
-            if (existing != null) {
-                writerFactory = existing;
-            }
+            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
         }
-        return writerFactory;
+
+        return (TargetPropertyWriterFactory<T>) writerFactories.computeIfAbsent(type, this::createWriterFactory);
     }
 
     private <T> TargetPropertyWriterFactory<T> createWriterFactory(Class<T> type) {
@@ -53,36 +45,36 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
         final TargetPropertyWriterFactory<T> writerFactory = new TargetPropertyWriterFactory<>(type, entity);
         ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
 
-		// TODO: instead of providing mappings for all possible obj: and db:
-		// invariants, should we normalize the source map instead?
+        // TODO: instead of providing mappings for all possible obj: and db:
+        // invariants, should we normalize the source map instead?
 
-		descriptor.visitProperties(new PropertyVisitor() {
+        descriptor.visitProperties(new PropertyVisitor() {
 
-			@Override
-			public boolean visitAttribute(AttributeProperty property) {
-				writerFactory.getOrCreateWriter(property);
-				return true;
-			}
+            @Override
+            public boolean visitAttribute(AttributeProperty property) {
+                writerFactory.getOrCreateWriter(property);
+                return true;
+            }
 
-			@Override
-			public boolean visitToOne(ToOneProperty property) {
+            @Override
+            public boolean visitToOne(ToOneProperty property) {
                 if (!property.getRelationship().isSourceIndependentFromTargetChange()) {
                     writerFactory.getOrCreateWriter(property);
                 }
-				return true;
-			}
+                return true;
+            }
 
-			@Override
-			public boolean visitToMany(ToManyProperty property) {
-				// nothing for ToMany
-				return true;
-			}
-		});
+            @Override
+            public boolean visitToMany(ToManyProperty property) {
+                // nothing for ToMany
+                return true;
+            }
+        });
 
-		for (DbAttribute pk : entity.getDbEntity().getPrimaryKeys()) {
+        for (DbAttribute pk : entity.getDbEntity().getPrimaryKeys()) {
             writerFactory.getOrCreatePkWriter(pk);
-		}
+        }
 
         return writerFactory;
-	}
+    }
 }

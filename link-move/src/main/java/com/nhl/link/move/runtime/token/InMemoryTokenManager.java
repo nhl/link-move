@@ -1,9 +1,9 @@
 package com.nhl.link.move.runtime.token;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.nhl.link.move.SyncToken;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A simple token manager that stores a map of task tokens in memory. An
@@ -13,34 +13,20 @@ import com.nhl.link.move.SyncToken;
  */
 public class InMemoryTokenManager implements ITokenManager {
 
-	private ConcurrentMap<String, SyncToken> tokens;
+    private Map<String, SyncToken> tokens;
 
-	public InMemoryTokenManager() {
-		this.tokens = new ConcurrentHashMap<>();
-	}
+    public InMemoryTokenManager() {
+        this.tokens = new ConcurrentHashMap<>();
+    }
 
-	@Override
-	public SyncToken previousToken(SyncToken token) {
+    @Override
+    public SyncToken previousToken(SyncToken token) {
+        return tokens.computeIfAbsent(token.getName(), n -> token.getInitialToken());
+    }
 
-		SyncToken previousToken = tokens.get(token.getName());
-		if (previousToken == null) {
-			SyncToken newToken = token.getInitialToken();
-
-			// even though we are pretending we are trying to avoid race
-			// conditions here, the current token API is not designed to
-			// reliably assign non-conflicting token ranges to tasks, so a task
-			// may still end up processing the same range as another task.
-			// Callers must ensure that the same task is only run serially
-			SyncToken existing = tokens.putIfAbsent(token.getName(), newToken);
-			previousToken = existing != null ? existing : newToken;
-		}
-
-		return previousToken;
-	}
-
-	@Override
-	public void saveToken(SyncToken token) {
-		tokens.put(token.getName(), token);
-	}
+    @Override
+    public void saveToken(SyncToken token) {
+        tokens.put(token.getName(), token);
+    }
 
 }

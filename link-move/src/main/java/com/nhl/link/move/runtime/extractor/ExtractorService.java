@@ -31,16 +31,10 @@ public class ExtractorService implements IExtractorService {
     @Override
     public Extractor getExtractor(ExtractorName name) {
 
-        Extractor extractor = extractors.get(name);
-
-        if (extractor == null) {
-            ExtractorReloader reloader = new ExtractorReloader(modelService, connectorService, factories, name);
-            Extractor newExtractor = params -> reloader.getOrReload().getReader(params);
-            Extractor oldExtractor = extractors.putIfAbsent(name, newExtractor);
-            extractor = oldExtractor != null ? oldExtractor : newExtractor;
-        }
-
-        return extractor;
+        return extractors.computeIfAbsent(name, n ->
+                params -> new ExtractorReloader(modelService, connectorService, factories, name)
+                        .getOrReload()
+                        .getReader(params));
     }
 
 }

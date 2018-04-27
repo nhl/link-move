@@ -40,15 +40,7 @@ public class PathNormalizer implements IPathNormalizer {
             throw new NullPointerException("Null root entity");
         }
 
-        EntityPathNormalizer normalizer = pathCache.get(root.getName());
-
-        if (normalizer == null) {
-            EntityPathNormalizer newNormalizer = createNormalizer(root);
-            EntityPathNormalizer oldNormalizer = pathCache.putIfAbsent(root.getName(), newNormalizer);
-            normalizer = oldNormalizer != null ? oldNormalizer : newNormalizer;
-        }
-
-        return normalizer;
+        return pathCache.computeIfAbsent(root.getName(), n -> createNormalizer(root));
     }
 
     private EntityPathNormalizer createNormalizer(final ObjEntity entity) {
@@ -104,15 +96,7 @@ public class PathNormalizer implements IPathNormalizer {
             }
 
             private AttributeInfo getAttributeInfo(String path) {
-
-                AttributeInfo normalizedInfo = cachedAttributes.get(path);
-                if (normalizedInfo == null) {
-                    AttributeInfo newNormalizedInfo = doNormalize(path);
-                    AttributeInfo oldNormalizedInfo = cachedAttributes.putIfAbsent(path, newNormalizedInfo);
-                    normalizedInfo = oldNormalizedInfo != null ? oldNormalizedInfo : newNormalizedInfo;
-                }
-
-                return normalizedInfo;
+                return cachedAttributes.computeIfAbsent(path, this::doNormalize);
             }
 
             private AttributeInfo doNormalize(String path) {
