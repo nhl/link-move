@@ -1,5 +1,6 @@
 Release 2.6
 
+#137 CreateTask for data migrations
 #146 Cayenne 4.0.RC1 is out... upgrading
 
 Release 2.5

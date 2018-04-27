@@ -1,24 +1,23 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.link.move.Execution;
+import com.nhl.link.move.annotation.AfterSourceRowsConverted;
+import com.nhl.link.move.annotation.AfterSourcesMapped;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMatched;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.runtime.task.StageListener;
+import org.apache.cayenne.DataObject;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import org.apache.cayenne.DataObject;
-
-import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
-import com.nhl.link.move.runtime.task.StageListener;
-
 /**
  * A stateless thread-safe processor for batch segments of a create-or-update
  * ETL task.
- * 
+ *
  * @since 1.3
  */
 public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
@@ -30,8 +29,12 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
 	private Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
-	public CreateOrUpdateSegmentProcessor(RowConverter rowConverter, SourceMapper mapper, TargetMatcher<T> matcher,
-			CreateOrUpdateMerger<T> merger, Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
+	public CreateOrUpdateSegmentProcessor(
+			RowConverter rowConverter,
+			SourceMapper mapper,
+			TargetMatcher<T> matcher,
+			CreateOrUpdateMerger<T> merger,
+			Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
 
 		this.rowConverter = rowConverter;
 		this.mapper = mapper;

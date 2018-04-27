@@ -7,10 +7,8 @@ import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsMatched;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
-import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
-import com.nhl.link.move.runtime.path.IPathNormalizer;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
+import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.delete.DeleteSegment;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -51,25 +49,22 @@ public class DefaultCreateOrUpdateBuilderTest {
         ITargetCayenneService cayenneService = mock(ITargetCayenneService.class);
         when(cayenneService.entityResolver()).thenReturn(resolver);
 
-        IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
-
-        EntityPathNormalizer mockEntityPathNormalizer = mock(EntityPathNormalizer.class);
-
-        IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
-        when(mockPathNormalizer.normalizer(targetEntity)).thenReturn(mockEntityPathNormalizer);
+        MapperBuilder mapperBuilder = mock(MapperBuilder.class);
 
         ITokenManager mockTokenManager = mock(ITokenManager.class);
 
         ITargetPropertyWriterService mockWriterService = mock(ITargetPropertyWriterService.class);
 
-        this.builder = new DefaultCreateOrUpdateBuilder<>(Etl1t.class, cayenneService, null,
+        this.builder = new DefaultCreateOrUpdateBuilder<>(
+                Etl1t.class,
+                mock(RowConverter.class),
+                cayenneService,
+                null,
                 mockTokenManager,
-                keyAdapterFactory,
-                mockPathNormalizer,
+                mapperBuilder,
                 mockWriterService
         );
     }
-
 
     @Test
     public void testCreateListenersBuilder() {

@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.task.createorupdate;
+package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
@@ -11,6 +11,7 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -19,26 +20,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A task that reads streamed source data and creates/updates records in a
- * target DB.
- *
- * @since 1.3
+ * @param <T>
+ * @since 2.6
  */
-public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
+public class CreateTask<T extends DataObject> extends BaseTask {
 
     private ExtractorName extractorName;
     private int batchSize;
     private ITargetCayenneService targetCayenneService;
     private IExtractorService extractorService;
-    private CreateOrUpdateSegmentProcessor<T> processor;
+    private CreateSegmentProcessor<T> processor;
 
-    public CreateOrUpdateTask(
+    public CreateTask(
             ExtractorName extractorName,
             int batchSize,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            CreateOrUpdateSegmentProcessor<T> processor) {
+            CreateSegmentProcessor<T> processor) {
 
         super(tokenManager);
 
@@ -56,7 +55,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             throw new NullPointerException("Null params");
         }
 
-        try (Execution execution = new Execution("CreateOrUpdateTask:" + extractorName, params);) {
+        try (Execution execution = new Execution("CreateTask:" + extractorName, params);) {
 
             BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
 
@@ -75,18 +74,16 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
             @Override
             public void process(List<Row> rows) {
-                processor.process(execution, new CreateOrUpdateSegment<T>(context, rows));
+                processor.process(execution, new CreateSegment<T>(context, rows));
             }
         };
     }
 
     /**
-     * Returns a RowReader obtained from a named extractor and wrapped in a read
-     * stats counter.
+     * Returns a RowReader obtained from a named extractor and wrapped in a read stats counter.
      */
     protected RowReader getRowReader(Execution execution, Map<String, ?> extractorParams) {
         Extractor extractor = extractorService.getExtractor(extractorName);
         return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
     }
-
 }
