@@ -5,7 +5,7 @@
 
 ## Release 2.5
 
-* # 143 The use of String.replace(..) in PathNormalizer causes massive Pattern creation
+* #143 The use of String.replace(..) in PathNormalizer causes massive Pattern creation
 
 ## Release 2.4
 
