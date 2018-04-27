@@ -94,7 +94,7 @@ public class TargetPropertyWriterFactory<T> {
     }
 
     public TargetPropertyWriter getOrCreateWriter(String property) {
-        return getOrCreateWriter(property, property, null);
+        return getOrCreateWriter(property, property, () -> null);
     }
 
     public TargetPropertyWriter getOrCreateWriter(String propertyName, String dbName, Supplier<TargetPropertyWriter> defaultWriterSupplier) {
