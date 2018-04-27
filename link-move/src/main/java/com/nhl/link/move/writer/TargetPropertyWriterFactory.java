@@ -102,6 +102,9 @@ public class TargetPropertyWriterFactory<T> {
     }
 
     private TargetPropertyWriter createWriter(String propertyName, Supplier<TargetPropertyWriter> defaultWriterSupplier) {
+
+        // TODO: setter lookup does not check for the value type. E.g. a setter for to-one relationship will not
+        // work properly if the value is presented as an FK (e.g. an "int" or a "long").
         Method setter = getSetter(propertyName);
 
         if (setter != null) {
