@@ -4,6 +4,7 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import org.apache.cayenne.DataObject;
@@ -20,21 +21,26 @@ public class CreateSegmentProcessor<T extends DataObject> {
 
     private RowConverter rowConverter;
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
-    private TargetCreator<T> targetCreator;
+    private CreateTargetMapper<T> mapper;
+    private CreateTargetMerger<T> merger;
+
 
     public CreateSegmentProcessor(
             RowConverter rowConverter,
-            TargetCreator<T> targetCreator,
+            CreateTargetMapper<T> mapper,
+            CreateTargetMerger<T> merger,
             Map<Class<? extends Annotation>, List<StageListener>> listeners) {
 
         this.rowConverter = rowConverter;
         this.listeners = listeners;
-        this.targetCreator = targetCreator;
+        this.mapper = mapper;
+        this.merger = merger;
     }
 
     public void process(Execution exec, CreateSegment<T> segment) {
         convertSrc(exec, segment);
         mapToTarget(exec, segment);
+        mergeToTarget(exec, segment);
         commitTarget(exec, segment);
     }
 
@@ -44,10 +50,13 @@ public class CreateSegmentProcessor<T extends DataObject> {
     }
 
     private void mapToTarget(Execution exec, CreateSegment<T> segment) {
-
-        // in case of "create" task, "mapping" means simply creating a new target object for each source map
-        segment.setMerged(targetCreator.create(segment.getContext(), segment.getSources()));
+        segment.setMapped(mapper.map(segment.getContext(), segment.getSources()));
         notifyListeners(AfterTargetsMapped.class, exec, segment);
+    }
+
+    private void mergeToTarget(Execution exec, CreateSegment<T> segment) {
+        segment.setMerged(merger.merge(segment.getMapped()));
+        notifyListeners(AfterTargetsMerged.class, exec, segment);
     }
 
     private void commitTarget(Execution exec, CreateSegment<T> segment) {

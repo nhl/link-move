@@ -2,6 +2,7 @@
 
 * #137 CreateTask for data migrations
 * #146 Cayenne 4.0.RC1 is out... upgrading
+* #149 Both new and updated targets must be merged during the "merge" stage
 
 ## Release 2.5
 

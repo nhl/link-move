@@ -22,74 +22,77 @@ import java.util.Map;
  */
 public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
-	private RowConverter rowConverter;
-	private SourceMapper mapper;
-	private TargetMatcher<T> matcher;
-	private CreateOrUpdateMerger<T> merger;
+    private RowConverter rowConverter;
+    private SourceMapper sourceMapper;
+    private TargetMatcher<T> matcher;
+    private TargetMapper<T> mapper;
+    private TargetMerger<T> merger;
 
-	private Map<Class<? extends Annotation>, List<StageListener>> listeners;
+    private Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
-	public CreateOrUpdateSegmentProcessor(
-			RowConverter rowConverter,
-			SourceMapper mapper,
-			TargetMatcher<T> matcher,
-			CreateOrUpdateMerger<T> merger,
-			Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
+    public CreateOrUpdateSegmentProcessor(
+            RowConverter rowConverter,
+            SourceMapper sourceMapper,
+            TargetMatcher<T> matcher,
+            TargetMapper<T> mapper,
+            TargetMerger<T> merger,
+            Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
 
-		this.rowConverter = rowConverter;
-		this.mapper = mapper;
-		this.matcher = matcher;
-		this.merger = merger;
-		this.listeners = stageListeners;
-	}
+        this.rowConverter = rowConverter;
+        this.sourceMapper = sourceMapper;
+        this.matcher = matcher;
+        this.mapper = mapper;
+        this.merger = merger;
+        this.listeners = stageListeners;
+    }
 
-	public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
+    public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
 
-		// execute create-or-update pipeline stages
-		convertSrc(exec, segment);
-		mapSrc(exec, segment);
-		matchTarget(exec, segment);
-		mapToTarget(exec, segment);
-		mergeToTarget(exec, segment);
-		commitTarget(exec, segment);
-	}
+        // execute create-or-update pipeline stages
+        convertSrc(exec, segment);
+        mapSrc(exec, segment);
+        matchTarget(exec, segment);
+        mapToTarget(exec, segment);
+        mergeToTarget(exec, segment);
+        commitTarget(exec, segment);
+    }
 
-	private void convertSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.setSources(rowConverter.convert(segment.getSourceRows()));
-		notifyListeners(AfterSourceRowsConverted.class, exec, segment);
-	}
+    private void convertSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.setSources(rowConverter.convert(segment.getSourceRows()));
+        notifyListeners(AfterSourceRowsConverted.class, exec, segment);
+    }
 
-	private void mapSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.setMappedSources(mapper.map(segment.getSources()));
-		notifyListeners(AfterSourcesMapped.class, exec, segment);
-	}
+    private void mapSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.setMappedSources(sourceMapper.map(segment.getSources()));
+        notifyListeners(AfterSourcesMapped.class, exec, segment);
+    }
 
-	private void matchTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.setMatchedTargets(matcher.match(segment.getContext(), segment.getMappedSources()));
-		notifyListeners(AfterTargetsMatched.class, exec, segment);
-	}
+    private void matchTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.setMatchedTargets(matcher.match(segment.getContext(), segment.getMappedSources()));
+        notifyListeners(AfterTargetsMatched.class, exec, segment);
+    }
 
-	private void mapToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.setMerged(merger.map(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
-		notifyListeners(AfterTargetsMapped.class, exec, segment);
-	}
+    private void mapToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.setMapped(mapper.map(segment.getContext(), segment.getMappedSources(), segment.getMatchedTargets()));
+        notifyListeners(AfterTargetsMapped.class, exec, segment);
+    }
 
-	private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-		merger.merge(segment.getMerged());
-		notifyListeners(AfterTargetsMerged.class, exec, segment);
-	}
+    private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.setMerged(merger.merge(segment.getMapped()));
+        notifyListeners(AfterTargetsMerged.class, exec, segment);
+    }
 
-	private void commitTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-		segment.getContext().commitChanges();
-		notifyListeners(AfterTargetsCommitted.class, exec, segment);
-	}
+    private void commitTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.getContext().commitChanges();
+        notifyListeners(AfterTargetsCommitted.class, exec, segment);
+    }
 
-	private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateOrUpdateSegment<T> segment) {
-		List<StageListener> listenersOfType = listeners.get(type);
-		if (listenersOfType != null) {
-			for (StageListener l : listenersOfType) {
-				l.afterStageFinished(exec, segment);
-			}
-		}
-	}
+    private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateOrUpdateSegment<T> segment) {
+        List<StageListener> listenersOfType = listeners.get(type);
+        if (listenersOfType != null) {
+            for (StageListener l : listenersOfType) {
+                l.afterStageFinished(exec, segment);
+            }
+        }
+    }
 }

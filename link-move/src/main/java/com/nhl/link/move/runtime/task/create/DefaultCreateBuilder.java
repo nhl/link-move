@@ -20,7 +20,8 @@ import org.apache.cayenne.DataObject;
  */
 public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder implements CreateBuilder<T> {
 
-    private TargetCreator<T> creator;
+    private CreateTargetMapper<T> mapper;
+    private CreateTargetMerger<T> merger;
     private ITokenManager tokenManager;
     private ExtractorName extractorName;
     private ListenersBuilder stageListenersBuilder;
@@ -29,13 +30,15 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     private RowConverter rowConverter;
 
     public DefaultCreateBuilder(
-            TargetCreator<T> creator,
+            CreateTargetMapper<T> mapper,
+            CreateTargetMerger<T> merger,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager) {
 
-        this.creator = creator;
+        this.mapper = mapper;
+        this.merger = merger;
         this.tokenManager = tokenManager;
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
@@ -84,6 +87,6 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     }
 
     private CreateSegmentProcessor<T> createProcessor() {
-        return new CreateSegmentProcessor<>(rowConverter, creator, stageListenersBuilder.getListeners());
+        return new CreateSegmentProcessor<>(rowConverter, mapper, merger, stageListenersBuilder.getListeners());
     }
 }

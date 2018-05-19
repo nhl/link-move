@@ -10,8 +10,9 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.path.EntityPathNormalizer;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
+import com.nhl.link.move.runtime.task.create.CreateTargetMerger;
 import com.nhl.link.move.runtime.task.create.DefaultCreateBuilder;
-import com.nhl.link.move.runtime.task.create.TargetCreator;
+import com.nhl.link.move.runtime.task.create.CreateTargetMapper;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
@@ -50,13 +51,15 @@ public class TaskService implements ITaskService {
     @Override
     public <T extends DataObject> CreateBuilder<T> create(Class<T> type) {
 
-        TargetCreator<T> creator = new TargetCreator<>(type, writerService.getWriterFactory(type));
+        CreateTargetMapper<T> mapper = new CreateTargetMapper<>(type);
+        CreateTargetMerger<T> merger = new CreateTargetMerger<>(writerService.getWriterFactory(type));
         ObjEntity entity = lookupEntity(type);
         EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
         RowConverter rowConverter = new RowConverter(entityPathNormalizer);
 
         return new DefaultCreateBuilder(
-                creator,
+                mapper,
+                merger,
                 rowConverter,
                 targetCayenneService,
                 extractorService,

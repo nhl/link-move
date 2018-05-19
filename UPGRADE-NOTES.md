@@ -1,3 +1,13 @@
+## Upgrading to 2.6
+
+### @AfterTargetsMapped listener won't see the state of new objects [#XXX](https://github.com/nhl/link-move/issues/XXX)
+
+Since new objects are now populated with values during "merge" stage (as they should) instead of "map" stage, users
+should review their use of @AfterTargetsMapped listener to ensure it (a) does not depend on new objects having their properties set
+and (b) does not access segment's "merged" collection (as it will be null after the map stage), using the new "mapped"
+collection. Notice that "mapped" may potentially contain "phantom" updates that are later weeded out during the "merge" stage.
+Potentially @AfterTargetsMerged listener may also be affected, though it is less clear how.
+
 ## Upgrading to 2.4
 
 ### IExtractorModelLoader is replaced by ResourceResolver/IExtractorModelParser [#138](https://github.com/nhl/link-move/issues/138)

@@ -16,6 +16,7 @@ public class CreateSegment<T> {
     private ObjectContext context;
     private List<Row> sourceRows;
     private List<Map<String, Object>> sources;
+    private List<SourceTargetPair<T>> mapped;
     private List<SourceTargetPair<T>> merged;
 
     public CreateSegment(ObjectContext context, List<Row> rows) {
@@ -45,5 +46,13 @@ public class CreateSegment<T> {
 
     public void setMerged(List<SourceTargetPair<T>> merged) {
         this.merged = merged;
+    }
+
+    public List<SourceTargetPair<T>> getMapped() {
+        return mapped;
+    }
+
+    public void setMapped(List<SourceTargetPair<T>> mapped) {
+        this.mapped = mapped;
     }
 }

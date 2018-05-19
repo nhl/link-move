@@ -3,6 +3,7 @@ package com.nhl.link.move;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 
 /**
@@ -52,7 +53,8 @@ public interface CreateBuilder<T> {
 
     /**
      * Adds a listener of transformation stages of batch segments. It should have methods annotated with
-     * {@link AfterSourceRowsConverted}, {@link AfterTargetsMapped}, {@link AfterTargetsCommitted}, etc.
+     * {@link AfterSourceRowsConverted}, {@link AfterTargetsMapped}, {@link AfterTargetsMerged},
+     * {@link AfterTargetsCommitted}, etc.
      *
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance

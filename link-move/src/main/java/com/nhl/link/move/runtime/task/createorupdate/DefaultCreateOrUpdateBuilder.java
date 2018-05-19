@@ -142,9 +142,15 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
 
         SourceMapper sourceMapper = new SourceMapper(mapper);
         TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
-        CreateOrUpdateMerger<T> merger = new CreateOrUpdateMerger<>(type, mapper, writerService.getWriterFactory(type));
+        TargetMapper<T> targetMapper = new TargetMapper<>(type, mapper);
+        TargetMerger<T> merger = new TargetMerger<>(writerService.getWriterFactory(type));
 
-        return new CreateOrUpdateSegmentProcessor<>(rowConverter, sourceMapper, targetMatcher, merger,
+        return new CreateOrUpdateSegmentProcessor<>(
+                rowConverter,
+                sourceMapper,
+                targetMatcher,
+                targetMapper,
+                merger,
                 stageListenersBuilder.getListeners());
     }
 }
