@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,21 +57,22 @@ public class DefaultDeleteBuilderTest {
 
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
-		TargetEntity mockEntityPathNormalizer = mock(TargetEntity.class);
+		TargetEntity mockTargetEntity = mock(TargetEntity.class);
+		when(mockTargetEntity.getAttribute(any(String.class))).thenReturn(Optional.empty());
 
 		TargetEntityMap mockPathNormalizer = mock(TargetEntityMap.class);
-		when(mockPathNormalizer.get(targetEntity)).thenReturn(mockEntityPathNormalizer);
+		when(mockPathNormalizer.get(targetEntity)).thenReturn(mockTargetEntity);
 
 		ITaskService taskService = mock(ITaskService.class);
 		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(
 						new DefaultSourceKeysBuilder(
-								mockEntityPathNormalizer,
+                                mockTargetEntity,
 								mock(IExtractorService.class),
 								mock(ITokenManager.class),
 								keyAdapterFactory,
                                 mock(ValueConverterFactory.class)));
 
-		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockEntityPathNormalizer, keyAdapterFactory);
+		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockTargetEntity, keyAdapterFactory);
 
 		this.builder = new DefaultDeleteBuilder<>(Etl1t.class,
 				cayenneService,

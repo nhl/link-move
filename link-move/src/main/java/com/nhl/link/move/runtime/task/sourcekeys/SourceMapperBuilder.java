@@ -40,8 +40,7 @@ class SourceMapperBuilder {
 
         this.paths = new ArrayList<>(paths.length);
         for (String p : paths) {
-            TargetAttribute attribute = targetEntity.getAttribute(p);
-            String normalized = attribute != null ? attribute.getNormalizedPath() : p;
+            String normalized = targetEntity.getAttribute(p).map(TargetAttribute::getNormalizedPath).orElse(p);
             this.paths.add(normalized);
         }
 

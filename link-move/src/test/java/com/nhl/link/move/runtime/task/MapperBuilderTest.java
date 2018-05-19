@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -26,9 +27,9 @@ public class MapperBuilderTest {
 
 		ObjEntity e = mock(ObjEntity.class);
 		TargetEntity targetEntity = mock(TargetEntity.class);
-		when(targetEntity.getAttribute("a")).thenReturn(new TargetAttribute("db:a", 1, "java.lang.Object"));
-		when(targetEntity.getAttribute("b")).thenReturn(new TargetAttribute("db:b", 1, "java.lang.Object"));
-		when(targetEntity.getAttribute("c")).thenReturn(new TargetAttribute("db:c", 1, "java.lang.Object"));
+		when(targetEntity.getAttribute("a")).thenReturn(Optional.of(new TargetAttribute("db:a", 1, "java.lang.Object")));
+		when(targetEntity.getAttribute("b")).thenReturn(Optional.of(new TargetAttribute("db:b", 1, "java.lang.Object")));
+		when(targetEntity.getAttribute("c")).thenReturn(Optional.of(new TargetAttribute("db:c", 1, "java.lang.Object")));
 
 		builder = new MapperBuilder(e, targetEntity, new KeyAdapterFactory());
 	}

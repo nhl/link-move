@@ -140,10 +140,11 @@ public class MapperBuilder {
         Map<String, Mapper> mappers = new LinkedHashMap<>();
         for (String path : orderedPaths) {
 
-            TargetAttribute attribute = targetEntity.getAttribute(path);
-
             // TODO: should we skip invalid paths? Or are those for transient properties?
-            String normalizedPath = attribute != null ? attribute.getNormalizedPath() : path;
+            String normalizedPath = targetEntity
+                    .getAttribute(path)
+                    .map(TargetAttribute::getNormalizedPath)
+                    .orElse(path);
             mappers.put(normalizedPath, new PathMapper(normalizedPath));
         }
 

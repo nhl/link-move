@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,43 +24,24 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultTargetEntity implements TargetEntity {
 
-    static final TargetAttribute INVALID_ATTRIBUTE = new TargetAttribute(null, -1, null) {
-        @Override
-        public String getNormalizedPath() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getType() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getScale() {
-            throw new UnsupportedOperationException();
-        }
-    };
-
     private ObjEntity entity;
     // may contain more than one entry for a single logical attribute (for normalized and un-normalized paths).
-    private Map<String, TargetAttribute> attributes;
+    private Map<String, Optional<TargetAttribute>> attributes;
 
     public DefaultTargetEntity(ObjEntity entity) {
         this.entity = entity;
         this.attributes = new ConcurrentHashMap<>();
     }
-
-
+    
     @Override
-    public TargetAttribute getAttribute(String path) {
-        TargetAttribute attribute = attributes.computeIfAbsent(path, this::createAttribute);
-        return attribute == INVALID_ATTRIBUTE ? null : attribute;
+    public Optional<TargetAttribute> getAttribute(String path) {
+        return attributes.computeIfAbsent(path, this::createAttribute);
     }
 
-    protected TargetAttribute createAttribute(String path) {
+    protected Optional<TargetAttribute> createAttribute(String path) {
 
         if (!hasAttributeOrRelationship(path)) {
-            return INVALID_ATTRIBUTE;
+            return Optional.empty();
         }
 
         // this "normalizes" the path
@@ -82,7 +64,7 @@ public class DefaultTargetEntity implements TargetEntity {
         PathComponent<DbAttribute, DbRelationship> c = components.get(0);
 
         if (c.getAttribute() != null) {
-            return createAttribute(c.getAttribute());
+            return Optional.of(createAttribute(c.getAttribute()));
         }
 
         DbRelationship dbRelationship = c.getRelationship();
@@ -95,7 +77,7 @@ public class DefaultTargetEntity implements TargetEntity {
 
         // previous implementation used target attribute of a join to map Java class and scale... I think this was
         // wrong, but maybe there were some edge cases?
-        return createAttribute(joins.get(0).getSource());
+        return Optional.of(createAttribute(joins.get(0).getSource()));
     }
 
     private boolean hasAttributeOrRelationship(String path) {

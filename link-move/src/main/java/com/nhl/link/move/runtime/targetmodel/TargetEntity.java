@@ -1,5 +1,7 @@
 package com.nhl.link.move.runtime.targetmodel;
 
+import java.util.Optional;
+
 /**
  * A collection of {@link TargetAttribute TargetAttributes}.
  *
@@ -8,10 +10,11 @@ package com.nhl.link.move.runtime.targetmodel;
 public interface TargetEntity {
 
     /**
-     * Returns attribute matching the path. Path can be different forms - object, db:.
+     * Returns attribute matching the path, wrapped in an optional. Path can be different forms - object, db:.
      *
      * @param path a Cayenne path. Can be "db:" or "obj:" or implicit.
-     * @return a target attribute or null if the path is invalid.
+     * @return a target attribute wrapped in an optional. Empty optional is returned for paths that are not valid
+     * Cayenne paths.
      */
-    TargetAttribute getAttribute(String path);
+    Optional<TargetAttribute> getAttribute(String path);
 }

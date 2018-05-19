@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Re-maps a list of {@link Row} objects to a Map with keys in the target namespace.
@@ -42,9 +43,9 @@ public class RowConverter {
         Map<String, Object> converted = new HashMap<>();
 
         for (RowAttribute key : source.attributes()) {
-            TargetAttribute attribute = targetEntity.getAttribute(key.getTargetPath());
-            String path = attribute != null ? attribute.getNormalizedPath() : key.getTargetPath();
-            Object value = attribute != null ? convertValue(attribute, source.get(key)) : source.get(key);
+            Optional<TargetAttribute> attribute = targetEntity.getAttribute(key.getTargetPath());
+            String path = attribute.isPresent() ? attribute.get().getNormalizedPath() : key.getTargetPath();
+            Object value = attribute.isPresent() ? convertValue(attribute.get(), source.get(key)) : source.get(key);
             converted.put(path, value);
         }
 
