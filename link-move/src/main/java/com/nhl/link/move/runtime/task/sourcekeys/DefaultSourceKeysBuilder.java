@@ -7,10 +7,11 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 
 /**
  * @since 1.3
@@ -20,20 +21,23 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
     private IExtractorService extractorService;
     private ITokenManager tokenManager;
     private SourceMapperBuilder mapperBuilder;
-    private EntityPathNormalizer pathNormalizer;
+    private TargetEntity targetEntity;
+    private ValueConverterFactory valueConverterFactory;
 
     private ExtractorName sourceExtractorName;
 
     public DefaultSourceKeysBuilder(
-            EntityPathNormalizer pathNormalizer,
+            TargetEntity targetEntity,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            IKeyAdapterFactory keyAdapterFactory) {
+            IKeyAdapterFactory keyAdapterFactory,
+            ValueConverterFactory valueConverterFactory) {
 
         this.extractorService = extractorService;
         this.tokenManager = tokenManager;
-        this.mapperBuilder = new SourceMapperBuilder(pathNormalizer, keyAdapterFactory);
-        this.pathNormalizer = pathNormalizer;
+        this.mapperBuilder = new SourceMapperBuilder(targetEntity, keyAdapterFactory);
+        this.targetEntity = targetEntity;
+        this.valueConverterFactory = valueConverterFactory;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
 
         Mapper mapper = mapperBuilder.build();
         SourceKeysCollector sourceMapper = new SourceKeysCollector(mapper);
-        RowConverter converter = new RowConverter(pathNormalizer);
+        RowConverter converter = new RowConverter(targetEntity, valueConverterFactory);
         return new SourceKeysSegmentProcessor(converter, sourceMapper);
     }
 

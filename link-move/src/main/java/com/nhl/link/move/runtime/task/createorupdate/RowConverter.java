@@ -2,7 +2,9 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +18,12 @@ import java.util.Map;
  */
 public class RowConverter {
 
-    private EntityPathNormalizer pathNormalizer;
+    private TargetEntity targetEntity;
+    private ValueConverterFactory converterFactory;
 
-    public RowConverter(EntityPathNormalizer pathNormalizer) {
-        this.pathNormalizer = pathNormalizer;
+    public RowConverter(TargetEntity targetEntity, ValueConverterFactory converterFactory) {
+        this.targetEntity = targetEntity;
+        this.converterFactory = converterFactory;
     }
 
     public List<Map<String, Object>> convert(List<Row> rows) {
@@ -38,11 +42,18 @@ public class RowConverter {
         Map<String, Object> converted = new HashMap<>();
 
         for (RowAttribute key : source.attributes()) {
-            String path = pathNormalizer.normalize(key.getTargetPath());
-            Object normalizedValue = pathNormalizer.normalizeValue(key.getTargetPath(), source.get(key));
-            converted.put(path, normalizedValue);
+            TargetAttribute attribute = targetEntity.getAttribute(key.getTargetPath());
+            String path = attribute != null ? attribute.getNormalizedPath() : key.getTargetPath();
+            Object value = attribute != null ? convertValue(attribute, source.get(key)) : source.get(key);
+            converted.put(path, value);
         }
 
         return converted;
+    }
+
+    private Object convertValue(TargetAttribute attribute, Object value) {
+        return value != null
+                ? converterFactory.getConverter(attribute.getType()).convert(value, attribute.getScale())
+                : null;
     }
 }

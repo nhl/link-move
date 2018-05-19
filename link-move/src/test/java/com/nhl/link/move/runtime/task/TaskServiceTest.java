@@ -1,23 +1,23 @@
 package com.nhl.link.move.runtime.task;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import com.nhl.link.move.DeleteBuilder;
+import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
+import com.nhl.link.move.runtime.extractor.IExtractorService;
+import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
+import com.nhl.link.move.runtime.token.ITokenManager;
+import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.DeleteBuilder;
-import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
-import com.nhl.link.move.runtime.extractor.IExtractorService;
-import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.IPathNormalizer;
-import com.nhl.link.move.runtime.token.ITokenManager;
-import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TaskServiceTest {
 
@@ -38,11 +38,17 @@ public class TaskServiceTest {
 		ITokenManager tokenManager = mock(ITokenManager.class);
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
-		IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
+		TargetEntityMap mockPathNormalizer = mock(TargetEntityMap.class);
 		ITargetPropertyWriterService writerService = mock(ITargetPropertyWriterService.class);
 
-		taskService = new TaskService(extractorService, cayenneService, tokenManager, keyAdapterFactory,
-				mockPathNormalizer, writerService);
+		taskService = new TaskService(
+				extractorService,
+				cayenneService,
+				tokenManager,
+				keyAdapterFactory,
+				mockPathNormalizer,
+				writerService,
+				mock(ValueConverterFactory.class));
 	}
 
 	@Test

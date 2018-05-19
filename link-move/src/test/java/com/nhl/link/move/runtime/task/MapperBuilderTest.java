@@ -4,7 +4,8 @@ import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.mapper.MultiPathMapper;
 import com.nhl.link.move.mapper.PathMapper;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
@@ -24,12 +25,12 @@ public class MapperBuilderTest {
 	public void before() {
 
 		ObjEntity e = mock(ObjEntity.class);
-		EntityPathNormalizer pathNormalizer = mock(EntityPathNormalizer.class);
-		when(pathNormalizer.normalize("a")).thenReturn("db:a");
-		when(pathNormalizer.normalize("b")).thenReturn("db:b");
-		when(pathNormalizer.normalize("c")).thenReturn("db:c");
+		TargetEntity targetEntity = mock(TargetEntity.class);
+		when(targetEntity.getAttribute("a")).thenReturn(new TargetAttribute("db:a", 1, "java.lang.Object"));
+		when(targetEntity.getAttribute("b")).thenReturn(new TargetAttribute("db:b", 1, "java.lang.Object"));
+		when(targetEntity.getAttribute("c")).thenReturn(new TargetAttribute("db:c", 1, "java.lang.Object"));
 
-		builder = new MapperBuilder(e, pathNormalizer, new KeyAdapterFactory());
+		builder = new MapperBuilder(e, targetEntity, new KeyAdapterFactory());
 	}
 
 	@Test

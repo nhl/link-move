@@ -6,8 +6,8 @@ import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
-import com.nhl.link.move.runtime.path.IPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
+import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
@@ -15,6 +15,7 @@ import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
@@ -55,10 +56,10 @@ public class DefaultDeleteBuilderTest {
 
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
-		EntityPathNormalizer mockEntityPathNormalizer = mock(EntityPathNormalizer.class);
+		TargetEntity mockEntityPathNormalizer = mock(TargetEntity.class);
 
-		IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
-		when(mockPathNormalizer.normalizer(targetEntity)).thenReturn(mockEntityPathNormalizer);
+		TargetEntityMap mockPathNormalizer = mock(TargetEntityMap.class);
+		when(mockPathNormalizer.get(targetEntity)).thenReturn(mockEntityPathNormalizer);
 
 		ITaskService taskService = mock(ITaskService.class);
 		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(
@@ -66,7 +67,8 @@ public class DefaultDeleteBuilderTest {
 								mockEntityPathNormalizer,
 								mock(IExtractorService.class),
 								mock(ITokenManager.class),
-								keyAdapterFactory));
+								keyAdapterFactory,
+                                mock(ValueConverterFactory.class)));
 
 		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockEntityPathNormalizer, keyAdapterFactory);
 

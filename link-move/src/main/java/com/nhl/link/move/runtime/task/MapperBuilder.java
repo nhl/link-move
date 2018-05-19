@@ -6,7 +6,8 @@ import com.nhl.link.move.mapper.MultiPathMapper;
 import com.nhl.link.move.mapper.PathMapper;
 import com.nhl.link.move.mapper.SafeMapKeyMapper;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.exp.parser.ASTDbPath;
@@ -34,15 +35,16 @@ import java.util.Set;
 public class MapperBuilder {
 
     private IKeyAdapterFactory keyAdapterFactory;
-    private EntityPathNormalizer pathNormalizer;
+    private TargetEntity targetEntity;
 
+    // TODO: now that we have TargetEntity, can we use it here instead of Cayenne ObjEntity
     private ObjEntity entity;
     private Set<String> paths;
 
-    public MapperBuilder(ObjEntity entity, EntityPathNormalizer pathNormalizer, IKeyAdapterFactory keyAdapterFactory) {
+    public MapperBuilder(ObjEntity entity, TargetEntity targetEntity, IKeyAdapterFactory keyAdapterFactory) {
         this.entity = entity;
         this.keyAdapterFactory = keyAdapterFactory;
-        this.pathNormalizer = pathNormalizer;
+        this.targetEntity = targetEntity;
 
         // Set will weed out simple duplicates , however we don't check for
         // invariants... so duplication is possible via db: vs obj: expressions
@@ -136,9 +138,13 @@ public class MapperBuilder {
         Collections.sort(orderedPaths);
 
         Map<String, Mapper> mappers = new LinkedHashMap<>();
-        for (String a : orderedPaths) {
-            String na = pathNormalizer.normalize(a);
-            mappers.put(na, new PathMapper(na));
+        for (String path : orderedPaths) {
+
+            TargetAttribute attribute = targetEntity.getAttribute(path);
+
+            // TODO: should we skip invalid paths? Or are those for transient properties?
+            String normalizedPath = attribute != null ? attribute.getNormalizedPath() : path;
+            mappers.put(normalizedPath, new PathMapper(normalizedPath));
         }
 
         return mappers;

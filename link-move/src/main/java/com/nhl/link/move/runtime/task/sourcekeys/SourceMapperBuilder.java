@@ -6,7 +6,8 @@ import com.nhl.link.move.mapper.MultiPathMapper;
 import com.nhl.link.move.mapper.PathMapper;
 import com.nhl.link.move.mapper.SafeMapKeyMapper;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,11 +22,11 @@ class SourceMapperBuilder {
     private IKeyAdapterFactory keyAdapterFactory;
     private List<String> paths;
     private Mapper mapper;
-    private EntityPathNormalizer pathNormalizer;
+    private TargetEntity targetEntity;
 
-    public SourceMapperBuilder(EntityPathNormalizer pathNormalizer, IKeyAdapterFactory keyAdapterFactory) {
+    public SourceMapperBuilder(TargetEntity targetEntity, IKeyAdapterFactory keyAdapterFactory) {
         this.keyAdapterFactory = keyAdapterFactory;
-        this.pathNormalizer = pathNormalizer;
+        this.targetEntity = targetEntity;
     }
 
     public SourceMapperBuilder matchBy(Mapper mapper) {
@@ -39,7 +40,9 @@ class SourceMapperBuilder {
 
         this.paths = new ArrayList<>(paths.length);
         for (String p : paths) {
-            this.paths.add(pathNormalizer.normalize(p));
+            TargetAttribute attribute = targetEntity.getAttribute(p);
+            String normalized = attribute != null ? attribute.getNormalizedPath() : p;
+            this.paths.add(normalized);
         }
 
         return this;

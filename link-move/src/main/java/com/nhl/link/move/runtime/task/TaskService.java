@@ -8,8 +8,8 @@ import com.nhl.link.move.SourceKeysBuilder;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
-import com.nhl.link.move.runtime.path.IPathNormalizer;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
+import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.task.create.CreateTargetMapper;
 import com.nhl.link.move.runtime.task.create.CreateTargetMerger;
 import com.nhl.link.move.runtime.task.create.DefaultCreateBuilder;
@@ -19,6 +19,7 @@ import com.nhl.link.move.runtime.task.createorupdate.TargetMerger;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.di.Inject;
@@ -30,23 +31,26 @@ public class TaskService implements ITaskService {
     private ITargetCayenneService targetCayenneService;
     private ITokenManager tokenManager;
     private IKeyAdapterFactory keyAdapterFactory;
-    private IPathNormalizer pathNormalizer;
+    private TargetEntityMap targetEntityMap;
     private ITargetPropertyWriterService writerService;
+    private ValueConverterFactory valueConverterFactory;
 
     public TaskService(
             @Inject IExtractorService extractorService,
             @Inject ITargetCayenneService targetCayenneService,
             @Inject ITokenManager tokenManager,
             @Inject IKeyAdapterFactory keyAdapterFactory,
-            @Inject IPathNormalizer pathNormalizer,
-            @Inject ITargetPropertyWriterService writerService) {
+            @Inject TargetEntityMap targetEntityMap,
+            @Inject ITargetPropertyWriterService writerService,
+            @Inject ValueConverterFactory valueConverterFactory) {
 
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
         this.tokenManager = tokenManager;
         this.keyAdapterFactory = keyAdapterFactory;
-        this.pathNormalizer = pathNormalizer;
+        this.targetEntityMap = targetEntityMap;
         this.writerService = writerService;
+        this.valueConverterFactory = valueConverterFactory;
     }
 
     @Override
@@ -55,8 +59,8 @@ public class TaskService implements ITaskService {
         CreateTargetMapper<T> mapper = new CreateTargetMapper<>(type);
         CreateTargetMerger<T> merger = new CreateTargetMerger<>(writerService.getWriterFactory(type));
         ObjEntity entity = lookupEntity(type);
-        EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
-        RowConverter rowConverter = new RowConverter(entityPathNormalizer);
+        TargetEntity targetEntity = targetEntityMap.get(entity);
+        RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
         return new DefaultCreateBuilder(
                 mapper,
@@ -69,11 +73,11 @@ public class TaskService implements ITaskService {
 
     @Override
     public <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
-        
+
         ObjEntity entity = lookupEntity(type);
-        EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
+        TargetEntity entityPathNormalizer = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
-        RowConverter rowConverter = new RowConverter(entityPathNormalizer);
+        RowConverter rowConverter = new RowConverter(entityPathNormalizer, valueConverterFactory);
         TargetMerger<T> merger = new TargetMerger<>(writerService.getWriterFactory(type));
 
         return new DefaultCreateOrUpdateBuilder<>(
@@ -97,18 +101,23 @@ public class TaskService implements ITaskService {
     @Override
     public <T extends DataObject> SourceKeysBuilder extractSourceKeys(Class<T> type) {
         ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(type);
-        return new DefaultSourceKeysBuilder(pathNormalizer.normalizer(targetEntity), extractorService, tokenManager,
-                keyAdapterFactory);
+        return new DefaultSourceKeysBuilder(
+                targetEntityMap.get(targetEntity),
+                extractorService,
+                tokenManager,
+                keyAdapterFactory,
+                valueConverterFactory);
     }
 
     @Override
     public SourceKeysBuilder extractSourceKeys(String targetEntityName) {
         ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(targetEntityName);
         return new DefaultSourceKeysBuilder(
-                pathNormalizer.normalizer(targetEntity),
+                targetEntityMap.get(targetEntity),
                 extractorService,
                 tokenManager,
-                keyAdapterFactory);
+                keyAdapterFactory,
+                valueConverterFactory);
     }
 
     @Override
@@ -119,8 +128,8 @@ public class TaskService implements ITaskService {
             throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
         }
 
-        EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
-        MapperBuilder mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
+        TargetEntity targetEntity = targetEntityMap.get(entity);
+        MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
 
         return new DefaultDeleteBuilder<>(
                 type,
