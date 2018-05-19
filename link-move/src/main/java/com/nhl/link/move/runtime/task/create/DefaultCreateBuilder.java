@@ -83,7 +83,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
             throw new IllegalStateException("Required 'extractorName' is not set");
         }
 
-        return new CreateTask<T>(extractorName,
+        return new CreateTask<>(extractorName,
                 batchSize,
                 targetCayenneService,
                 extractorService,

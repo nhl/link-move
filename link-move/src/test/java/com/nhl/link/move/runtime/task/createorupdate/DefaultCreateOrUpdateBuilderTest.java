@@ -13,7 +13,6 @@ import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.delete.DeleteSegment;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
-import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
@@ -53,16 +52,14 @@ public class DefaultCreateOrUpdateBuilderTest {
 
         ITokenManager mockTokenManager = mock(ITokenManager.class);
 
-        ITargetPropertyWriterService mockWriterService = mock(ITargetPropertyWriterService.class);
-
         this.builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
+                mock(TargetMerger.class),
                 mock(RowConverter.class),
                 cayenneService,
                 null,
                 mockTokenManager,
-                mapperBuilder,
-                mockWriterService
+                mapperBuilder
         );
     }
 

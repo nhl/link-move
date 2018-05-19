@@ -6,10 +6,10 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
+import com.nhl.link.move.runtime.task.createorupdate.TargetMerger;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.DerbySrcTargetTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
-import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,12 +31,12 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 
         DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
+                mock(TargetMerger.class),
                 mock(RowConverter.class),
                 cayenneService,
                 mock(IExtractorService.class),
                 mock(ITokenManager.class),
-                mock(MapperBuilder.class),
-                mock(ITargetPropertyWriterService.class));
+                mock(MapperBuilder.class));
 
         builder.task();
     }
@@ -45,12 +45,12 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
     public void testTask_ExtractorPresent() {
         DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
+                mock(TargetMerger.class),
                 mock(RowConverter.class),
                 cayenneService,
                 mock(IExtractorService.class),
                 mock(ITokenManager.class),
-                mock(MapperBuilder.class),
-                mock(ITargetPropertyWriterService.class));
+                mock(MapperBuilder.class));
 
         builder.sourceExtractor("test.xml");
         assertNotNull(builder.task());

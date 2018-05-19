@@ -16,8 +16,9 @@ import org.apache.cayenne.map.PathComponent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @since 2.6
@@ -25,41 +26,33 @@ import java.util.concurrent.ConcurrentMap;
 public class DefaultEntityPathNormalizer implements EntityPathNormalizer {
 
     private ObjEntity entity;
-    private ConcurrentMap<String, AttributeInfo> cachedAttributes;
+    private Map<String, AttributeInfo> attributes;
     private ValueConverterFactory converterFactory;
 
     public DefaultEntityPathNormalizer(ObjEntity entity, ValueConverterFactory converterFactory) {
         this.entity = entity;
         this.converterFactory = converterFactory;
-        this.cachedAttributes = new ConcurrentHashMap<>();
+        this.attributes = new ConcurrentHashMap<>();
     }
 
     @Override
     public String normalize(String path) {
-
-        if (!hasAttribute(entity, path)) {
-            return path;
-        }
-
-        if (path == null) {
-            throw new NullPointerException("Null path. Entity: " + entity.getName());
-        }
-
-        return getAttributeInfo(path).getNormalizedPath();
+        Objects.requireNonNull(path, () -> "Null path. Entity: " + entity.getName());
+        AttributeInfo attributeInfo = getAttributeInfo(path);
+        return attributeInfo == AttributeInfo.INVALID ? path : attributeInfo.getNormalizedPath();
     }
 
     @Override
     public Object normalizeValue(String path, Object value) {
-
-        if (!hasAttribute(entity, path)) {
-            return value;
-        }
 
         if (value == null) {
             return null;
         }
 
         AttributeInfo attributeInfo = getAttributeInfo(path);
+        if (attributeInfo == AttributeInfo.INVALID) {
+            return value;
+        }
 
         ObjAttribute objAttribute = entity.getAttributeForDbAttribute(attributeInfo.getTarget());
         String javaType = (objAttribute != null)
@@ -70,27 +63,21 @@ public class DefaultEntityPathNormalizer implements EntityPathNormalizer {
         return converterFactory.getConverter(javaType).convert(value, scale);
     }
 
-    private boolean hasAttribute(ObjEntity entity, String path) {
-        if (path.startsWith(ASTDbPath.DB_PREFIX)) {
-            path = path.substring(ASTDbPath.DB_PREFIX.length());
-            return entity.getDbEntity().getAttributeMap().containsKey(path)
-                    || entity.getDbEntity().getRelationshipMap().containsKey(path);
-        } else {
-            return entity.getAttributeMap().containsKey(path) || entity.getRelationshipMap().containsKey(path);
-        }
-    }
-
     private AttributeInfo getAttributeInfo(String path) {
-        return cachedAttributes.computeIfAbsent(path, this::doNormalize);
+        return attributes.computeIfAbsent(path, this::createAttributeInfo);
     }
 
-    private AttributeInfo doNormalize(String path) {
+    private AttributeInfo createAttributeInfo(String path) {
+
+        if (!hasAttributeOrRelationship(path)) {
+            return AttributeInfo.INVALID;
+        }
 
         Expression dbExp = entity.translateToDbPath(ExpressionFactory.exp(path));
 
         List<PathComponent<DbAttribute, DbRelationship>> components = new ArrayList<>(2);
-        for (PathComponent<DbAttribute, DbRelationship> c : entity.getDbEntity().resolvePath(dbExp,
-                Collections.emptyMap())) {
+        for (PathComponent<DbAttribute, DbRelationship> c : entity.getDbEntity()
+                .resolvePath(dbExp, Collections.emptyMap())) {
             components.add(c);
         }
 
@@ -121,7 +108,37 @@ public class DefaultEntityPathNormalizer implements EntityPathNormalizer {
         }
     }
 
+    private boolean hasAttributeOrRelationship(String path) {
+        if (path.startsWith(ASTDbPath.DB_PREFIX)) {
+
+            path = path.substring(ASTDbPath.DB_PREFIX.length());
+            return entity.getDbEntity().getAttributeMap().containsKey(path)
+                    || entity.getDbEntity().getRelationshipMap().containsKey(path);
+        } else {
+            return entity.getAttributeMap().containsKey(path)
+                    || entity.getRelationshipMap().containsKey(path);
+        }
+    }
+
     private static abstract class AttributeInfo {
+
+        static final AttributeInfo INVALID = new AttributeInfo() {
+            @Override
+            public String getNormalizedPath() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public int getType() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public DbAttribute getTarget() {
+                throw new UnsupportedOperationException();
+            }
+        };
+
 
         public static AttributeInfo forAttribute(DbAttribute attribute) {
             return new AttributeInfo() {

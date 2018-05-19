@@ -11,7 +11,6 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
-import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -55,7 +54,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
             throw new NullPointerException("Null params");
         }
 
-        try (Execution execution = new Execution("CreateTask:" + extractorName, params);) {
+        try (Execution execution = new Execution("CreateTask:" + extractorName, params)) {
 
             BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
 

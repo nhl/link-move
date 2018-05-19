@@ -16,7 +16,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
 
@@ -28,6 +27,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
         extends BaseTaskBuilder
         implements CreateOrUpdateBuilder<T> {
 
+    private Class<T> type;
+    private TargetMerger<T> merger;
     private IExtractorService extractorService;
     private ITargetCayenneService targetCayenneService;
     private ITokenManager tokenManager;
@@ -35,24 +36,22 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
     private MapperBuilder mapperBuilder;
     private Mapper mapper;
     private ListenersBuilder stageListenersBuilder;
-    private Class<T> type;
-    private ITargetPropertyWriterService writerService;
     private ExtractorName extractorName;
 
     public DefaultCreateOrUpdateBuilder(
             Class<T> type,
+            TargetMerger<T> merger,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            MapperBuilder mapperBuilder,
-            ITargetPropertyWriterService writerService) {
+            MapperBuilder mapperBuilder) {
 
         this.type = type;
+        this.merger = merger;
         this.targetCayenneService = targetCayenneService;
         this.extractorService = extractorService;
         this.tokenManager = tokenManager;
-        this.writerService = writerService;
         this.rowConverter = rowConverter;
         this.mapperBuilder = mapperBuilder;
         this.stageListenersBuilder = createListenersBuilder();
@@ -143,7 +142,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
         SourceMapper sourceMapper = new SourceMapper(mapper);
         TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
         TargetMapper<T> targetMapper = new TargetMapper<>(type, mapper);
-        TargetMerger<T> merger = new TargetMerger<>(writerService.getWriterFactory(type));
 
         return new CreateOrUpdateSegmentProcessor<>(
                 rowConverter,
