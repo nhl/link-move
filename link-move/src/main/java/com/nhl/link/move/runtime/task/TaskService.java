@@ -91,10 +91,6 @@ public class TaskService implements ITaskService {
         return entity;
     }
 
-    protected EntityPathNormalizer entityPathNormalizer(ObjEntity entity) {
-        return pathNormalizer.normalizer(entity);
-    }
-
     @Override
     public <T extends DataObject> SourceKeysBuilder extractSourceKeys(Class<T> type) {
         ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(type);
@@ -105,13 +101,30 @@ public class TaskService implements ITaskService {
     @Override
     public SourceKeysBuilder extractSourceKeys(String targetEntityName) {
         ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(targetEntityName);
-        return new DefaultSourceKeysBuilder(pathNormalizer.normalizer(targetEntity), extractorService, tokenManager,
+        return new DefaultSourceKeysBuilder(
+                pathNormalizer.normalizer(targetEntity),
+                extractorService,
+                tokenManager,
                 keyAdapterFactory);
     }
 
     @Override
     public <T extends DataObject> DeleteBuilder<T> delete(Class<T> type) {
-        return new DefaultDeleteBuilder<T>(type, targetCayenneService, tokenManager, keyAdapterFactory, this, pathNormalizer);
+
+        ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
+        if (entity == null) {
+            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+        }
+
+        EntityPathNormalizer entityPathNormalizer = pathNormalizer.normalizer(entity);
+        MapperBuilder mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
+
+        return new DefaultDeleteBuilder<>(
+                type,
+                targetCayenneService,
+                tokenManager,
+                this,
+                mapperBuilder);
     }
 
 }

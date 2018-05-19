@@ -1,24 +1,5 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.map.EntityResolver;
-import org.apache.cayenne.map.ObjAttribute;
-import org.apache.cayenne.map.ObjEntity;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
@@ -29,10 +10,29 @@ import com.nhl.link.move.runtime.path.EntityPathNormalizer;
 import com.nhl.link.move.runtime.path.IPathNormalizer;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
+import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import org.apache.cayenne.exp.Expression;
+import org.apache.cayenne.map.EntityResolver;
+import org.apache.cayenne.map.ObjAttribute;
+import org.apache.cayenne.map.ObjEntity;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DefaultDeleteBuilderTest {
 
@@ -61,11 +61,20 @@ public class DefaultDeleteBuilderTest {
 		when(mockPathNormalizer.normalizer(targetEntity)).thenReturn(mockEntityPathNormalizer);
 
 		ITaskService taskService = mock(ITaskService.class);
-		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(new DefaultSourceKeysBuilder(
-				mockEntityPathNormalizer, mock(IExtractorService.class), mock(ITokenManager.class), keyAdapterFactory));
+		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(
+						new DefaultSourceKeysBuilder(
+								mockEntityPathNormalizer,
+								mock(IExtractorService.class),
+								mock(ITokenManager.class),
+								keyAdapterFactory));
 
-		this.builder = new DefaultDeleteBuilder<>(Etl1t.class, cayenneService, null, keyAdapterFactory, taskService,
-				mockPathNormalizer);
+		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockEntityPathNormalizer, keyAdapterFactory);
+
+		this.builder = new DefaultDeleteBuilder<>(Etl1t.class,
+				cayenneService,
+				mock(ITokenManager.class),
+				taskService,
+                mapperBuilder);
 	}
 
 	@Test(expected = IllegalStateException.class)

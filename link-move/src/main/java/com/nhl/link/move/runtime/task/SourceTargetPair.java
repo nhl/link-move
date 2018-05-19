@@ -3,6 +3,8 @@ package com.nhl.link.move.runtime.task;
 import java.util.Map;
 
 /**
+ * A pair of matched source row and target object.
+ *
  * @since 2.6
  */
 public class SourceTargetPair<T> {
@@ -24,7 +26,7 @@ public class SourceTargetPair<T> {
     public Map<String, Object> getSource() {
         return source;
     }
-    
+
     public boolean isCreated() {
         return created;
     }
