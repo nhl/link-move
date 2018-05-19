@@ -5,6 +5,7 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
@@ -50,7 +51,11 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     }
 
     ListenersBuilder createListenersBuilder() {
-        return new ListenersBuilder(AfterSourceRowsConverted.class, AfterTargetsMapped.class, AfterTargetsCommitted.class);
+        return new ListenersBuilder(
+                AfterSourceRowsConverted.class,
+                AfterTargetsMapped.class,
+                AfterTargetsMerged.class,
+                AfterTargetsCommitted.class);
     }
 
     @Override
