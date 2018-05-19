@@ -78,7 +78,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
     }
 
     private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-        segment.setMerged(merger.merge(segment.getMapped()));
+        segment.setMerged(merger.merge(segment.getContext(), segment.getMapped()));
         notifyListeners(AfterTargetsMerged.class, exec, segment);
     }
 
