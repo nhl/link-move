@@ -9,16 +9,16 @@ public class TargetAttribute {
 
     private String normalizedPath;
     private int scale;
-    private String type;
+    private String javaType;
 
-    public TargetAttribute(String normalizedPath, int scale, String type) {
+    public TargetAttribute(String normalizedPath, int scale, String javaType) {
         this.normalizedPath = normalizedPath;
         this.scale = scale;
-        this.type = type;
+        this.javaType = javaType;
     }
 
-    public String getType() {
-        return type;
+    public String getJavaType() {
+        return javaType;
     }
 
     public int getScale() {

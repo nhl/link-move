@@ -54,7 +54,7 @@ public class RowConverter {
 
     private Object convertValue(TargetAttribute attribute, Object value) {
         return value != null
-                ? converterFactory.getConverter(attribute.getType()).convert(value, attribute.getScale())
+                ? converterFactory.getConverter(attribute.getJavaType()).convert(value, attribute.getScale())
                 : null;
     }
 }
