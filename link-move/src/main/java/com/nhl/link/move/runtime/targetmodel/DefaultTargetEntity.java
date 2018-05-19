@@ -6,6 +6,7 @@ import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.map.DbAttribute;
+import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.DbJoin;
 import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjAttribute;
@@ -13,6 +14,7 @@ import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.PathComponent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +26,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultTargetEntity implements TargetEntity {
 
+    private TargetEntityMap entityMap;
     private ObjEntity entity;
     // may contain more than one entry for a single logical attribute (for normalized and un-normalized paths).
     private Map<String, Optional<TargetAttribute>> attributes;
 
-    public DefaultTargetEntity(ObjEntity entity) {
+    public DefaultTargetEntity(TargetEntityMap entityMap, ObjEntity entity) {
+        this.entityMap = entityMap;
         this.entity = entity;
         this.attributes = new ConcurrentHashMap<>();
     }
-    
+
     @Override
     public Optional<TargetAttribute> getAttribute(String path) {
         return attributes.computeIfAbsent(path, this::createAttribute);
@@ -68,16 +72,7 @@ public class DefaultTargetEntity implements TargetEntity {
         }
 
         DbRelationship dbRelationship = c.getRelationship();
-        List<DbJoin> joins = dbRelationship.getJoins();
-
-        if (joins.size() > 1) {
-            // TODO: support for multi-key to-one relationships
-            throw new LmRuntimeException("Multi-column FKs are not yet supported. Path: " + dbExp);
-        }
-
-        // previous implementation used target attribute of a join to map Java class and scale... I think this was
-        // wrong, but maybe there were some edge cases?
-        return Optional.of(createAttribute(joins.get(0).getSource()));
+        return Optional.of(createAttribute(dbRelationship));
     }
 
     private boolean hasAttributeOrRelationship(String path) {
@@ -95,7 +90,54 @@ public class DefaultTargetEntity implements TargetEntity {
         return new TargetAttribute(
                 ASTDbPath.DB_PREFIX + attribute.getName(),
                 attribute.getScale(),
-                javaType(attribute));
+                javaType(attribute),
+                Optional.empty());
+    }
+
+    protected TargetAttribute createAttribute(DbRelationship relationship) {
+
+        List<DbJoin> joins = relationship.getJoins();
+
+        if (joins.size() > 1) {
+            // TODO: support for multi-key to-one relationships, resolved to multiple TargetAttributes
+            throw new LmRuntimeException("Multi-column FKs are not yet supported. Relationship: "
+                    + relationship.getSourceEntityName()
+                    + "."
+                    + relationship.getName());
+        }
+
+        DbJoin firstJoin = joins.get(0);
+
+        return new TargetAttribute(
+                ASTDbPath.DB_PREFIX + firstJoin.getSourceName(),
+                firstJoin.getSource().getScale(),
+                javaType(firstJoin.getSource()),
+                createFk(firstJoin));
+    }
+
+    private Optional<ForeignKey> createFk(DbJoin join) {
+
+        // for now only relationships to master PK and those that have explicit ObjEntity mapping should be treated as FK
+        DbRelationship relationship = join.getRelationship();
+        if (!relationship.isToMasterPK()) {
+            return Optional.empty();
+        }
+
+        DbEntity targetDbEntity = relationship.getTargetEntity();
+        Collection<ObjEntity> targetEntities = targetDbEntity.getDataMap().getMappedEntities(targetDbEntity);
+
+        switch (targetEntities.size()) {
+            case 0:
+                return Optional.empty();
+            case 1:
+                return Optional.of(new ForeignKey(entityMap,
+                        targetEntities.iterator().next(),
+                        ASTDbPath.DB_PREFIX + join.getTargetName()));
+            default:
+                throw new LmRuntimeException("Unsupported FK: DbEntity "
+                        + targetDbEntity.getName()
+                        + " maps to more than one ObjEntity");
+        }
     }
 
     private String javaType(DbAttribute attribute) {
