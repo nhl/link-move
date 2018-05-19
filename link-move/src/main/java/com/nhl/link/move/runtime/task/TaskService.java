@@ -75,10 +75,10 @@ public class TaskService implements ITaskService {
     public <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
 
         ObjEntity entity = lookupEntity(type);
-        TargetEntity entityPathNormalizer = targetEntityMap.get(entity);
-        MapperBuilder mapperBuilder = new MapperBuilder(entity, entityPathNormalizer, keyAdapterFactory);
-        RowConverter rowConverter = new RowConverter(entityPathNormalizer, valueConverterFactory);
-        TargetMerger<T> merger = new TargetMerger<>(writerService.getWriterFactory(type));
+        TargetEntity targetEntity = targetEntityMap.get(entity);
+        MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
+        RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
+        TargetMerger<T> merger = new TargetMerger<>(targetEntity, writerService.getWriterFactory(type));
 
         return new DefaultCreateOrUpdateBuilder<>(
                 type,

@@ -22,14 +22,18 @@ public class MapperBuilderTest {
 
 	private MapperBuilder builder;
 
+	private Optional<TargetAttribute> createAttribute(TargetEntity entity, String baseName) {
+		return Optional.of(new TargetAttribute(entity, "db:" + baseName, 1, "java.lang.Object", Optional.empty()));
+	}
+
 	@Before
 	public void before() {
 
 		ObjEntity e = mock(ObjEntity.class);
 		TargetEntity targetEntity = mock(TargetEntity.class);
-		when(targetEntity.getAttribute("a")).thenReturn(Optional.of(new TargetAttribute("db:a", 1, "java.lang.Object")));
-		when(targetEntity.getAttribute("b")).thenReturn(Optional.of(new TargetAttribute("db:b", 1, "java.lang.Object")));
-		when(targetEntity.getAttribute("c")).thenReturn(Optional.of(new TargetAttribute("db:c", 1, "java.lang.Object")));
+		when(targetEntity.getAttribute("a")).thenReturn(createAttribute(targetEntity, "a"));
+		when(targetEntity.getAttribute("b")).thenReturn(createAttribute(targetEntity, "b"));
+		when(targetEntity.getAttribute("c")).thenReturn(createAttribute(targetEntity, "c"));
 
 		builder = new MapperBuilder(e, targetEntity, new KeyAdapterFactory());
 	}

@@ -24,6 +24,6 @@ public class DefaultTargetEntityMap implements TargetEntityMap {
     }
 
     private TargetEntity createEntity(ObjEntity entity) {
-        return new DefaultTargetEntity(entity);
+        return new DefaultTargetEntity(this, entity);
     }
 }

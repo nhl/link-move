@@ -12,17 +12,20 @@ import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.QueryResponse;
 import org.apache.cayenne.graph.GraphDiff;
 import org.apache.cayenne.map.EntityResolver;
+import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.Query;
-import org.apache.cayenne.query.SelectById;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
@@ -66,12 +69,14 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
         assertExec(3, 2, 1, 0, e1);
 
         EntityResolver resolver = targetContext.getEntityResolver();
-        List<String> resolvedEntities = QUERY_CAPTURE.getOfType(SelectById.class)
+        List<String> resolvedEntities = QUERY_CAPTURE.getOfType(ObjectSelect.class)
                 .map(q -> q.getMetaData(resolver).getClassDescriptor().getEntity().getName())
                 .collect(toList());
 
-        assertEquals("Each id must have been resolved only once. Instead got " + resolvedEntities,
-                2, resolvedEntities.size());
+        assertEquals("Each id (including root target) must have been resolved only once. Instead got " + resolvedEntities,
+                3, resolvedEntities.size());
+        Set<String> expectedRoots = new HashSet<>(asList("Etl3t", "Etl2t", "Etl5t"));
+        assertEquals(expectedRoots, new HashSet<>(resolvedEntities));
     }
 
     static class QueryCapture implements DataChannelFilter {

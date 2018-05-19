@@ -1,5 +1,7 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.task.SourceTargetPair;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
@@ -7,15 +9,14 @@ import org.apache.cayenne.Cayenne;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.Persistent;
-import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.query.ObjectSelect;
-import org.apache.cayenne.reflect.ToOneProperty;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,10 +27,12 @@ import java.util.stream.Stream;
  */
 public class TargetMerger<T extends DataObject> {
 
+    private TargetEntity targetEntity;
     private TargetPropertyWriterFactory<T> writerFactory;
 
-    public TargetMerger(TargetPropertyWriterFactory<T> writerFactory) {
+    public TargetMerger(TargetEntity targetEntity, TargetPropertyWriterFactory<T> writerFactory) {
         this.writerFactory = writerFactory;
+        this.targetEntity = targetEntity;
     }
 
     public List<SourceTargetPair<T>> merge(ObjectContext context, List<SourceTargetPair<T>> mapped) {
@@ -49,8 +52,8 @@ public class TargetMerger<T extends DataObject> {
     }
 
     protected List<SourceTargetPair<T>> resolveFks(ObjectContext context, List<SourceTargetPair<T>> withUnresolvedFks) {
-        Map<ToOneProperty, Set<Object>> fks = collectFks(withUnresolvedFks.stream().map(SourceTargetPair::getSource));
-        Map<String, Map<Object, Object>> related = fetchRelated(context, fks);
+        Map<TargetAttribute, Set<Object>> fks = collectFks(withUnresolvedFks.stream().map(SourceTargetPair::getSource));
+        Map<TargetAttribute, Map<Object, Object>> related = fetchRelated(context, fks);
         return resolveFks(withUnresolvedFks, related);
     }
 
@@ -79,31 +82,54 @@ public class TargetMerger<T extends DataObject> {
         return changed;
     }
 
-    private Map<ToOneProperty, Set<Object>> collectFks(Stream<Map<String, Object>> sources) {
+    private Map<TargetAttribute, Set<Object>> collectFks(Stream<Map<String, Object>> sources) {
 
-        // TODO: implement me
+        // using ForeignKey as a map key will work reliably only if sources already have normalized paths
+        Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
+
+        sources.forEach(s ->
+                s.forEach((k, v) -> {
+
+                    if(v != null) {
+                        targetEntity
+                                .getAttribute(k)
+                                .filter(a -> a.getForeignKey().isPresent())
+                                .ifPresent(a -> fks.computeIfAbsent(a, ak -> new HashSet<>()).add(v));
+                    }
+                }));
+
+        return fks;
     }
 
-    private Map<String, Map<Object, Object>> fetchRelated(ObjectContext context, Map<ToOneProperty, Set<Object>> fkMap) {
+    private Map<TargetAttribute, Map<Object, Object>> fetchRelated(
+            ObjectContext context,
+            Map<TargetAttribute, Set<Object>> fkMap) {
 
         if (fkMap.isEmpty()) {
             return Collections.emptyMap();
         }
 
-        Map<String, Map<Object, Object>> related = new HashMap<>();
+        // map of *path* to map of *pk* to *object*...
+        Map<TargetAttribute, Map<Object, Object>> related = new HashMap<>();
 
-        fkMap.forEach((property, fks) -> {
+        fkMap.forEach((a, fks) -> {
 
             if (!fks.isEmpty()) {
 
-                Map<Object, Object> relatedForProperty = new HashMap<>((int) (fks.size() / 0.75));
+                TargetAttribute relatedPk = a.getForeignKey().get().getTarget();
+                String relatedPath = relatedPk.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length());
+                String relatedEntityName = relatedPk.getEntity().getName();
+
+                Map<Object, Object> relatedFetched = new HashMap<>((int) (fks.size() / 0.75));
                 ObjectSelect
-                        .query(property.getTargetDescriptor().getObjectClass())
-                        // TODO: PK IN expression
-                        .where()
+                        .query(Object.class)
+                        .entityName(relatedEntityName)
+                        .where(ExpressionFactory.inDbExp(relatedPath, fks))
                         .select(context)
                         // map by fk value (which is a PK of the matched object of course)
-                        .forEach(r -> relatedForProperty.put(Cayenne.pkForObject((Persistent) r), r));
+                        .forEach(r -> relatedFetched.put(Cayenne.pkForObject((Persistent) r), r));
+
+                related.put(a, relatedFetched);
             }
         });
 
@@ -112,7 +138,7 @@ public class TargetMerger<T extends DataObject> {
 
     private List<SourceTargetPair<T>> resolveFks(
             List<SourceTargetPair<T>> unresolved,
-            Map<String, Map<Object, Object>> related) {
+            Map<TargetAttribute, Map<Object, Object>> related) {
 
         if (related.isEmpty()) {
             return unresolved;
@@ -124,15 +150,17 @@ public class TargetMerger<T extends DataObject> {
             Map<String, Object> originalSrc = pair.getSource();
             Map<String, Object> resolvedSrc = new HashMap<>(pair.getSource());
 
-            related.forEach((property, resolvedByFk) -> {
+            related.forEach((attribute, resolvedByFk) -> {
 
-                Object fk = originalSrc.get(property);
+                String path = attribute.getNormalizedPath();
+
+                Object fk = originalSrc.get(path);
                 if (fk != null) {
                     Object fkObject = resolvedByFk.get(fk);
 
                     // TODO: do we care if an FK is invalid (i.e. 'fkObject' is null) ? The old impl just quietly set the
                     // relationship to null. Doing the same here...
-                    resolvedSrc.put(property, fkObject);
+                    resolvedSrc.put(path, fkObject);
                 }
             });
 

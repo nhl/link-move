@@ -9,16 +9,28 @@ import java.util.Optional;
  */
 public class TargetAttribute {
 
+    private TargetEntity entity;
     private String normalizedPath;
     private int scale;
     private String javaType;
     private Optional<ForeignKey> foreignKey;
 
-    public TargetAttribute(String normalizedPath, int scale, String javaType, Optional<ForeignKey> foreignKey) {
+    public TargetAttribute(
+            TargetEntity entity,
+            String normalizedPath,
+            int scale,
+            String javaType,
+            Optional<ForeignKey> foreignKey) {
+
+        this.entity = entity;
         this.normalizedPath = normalizedPath;
         this.scale = scale;
         this.javaType = javaType;
         this.foreignKey = foreignKey;
+    }
+
+    public TargetEntity getEntity() {
+        return entity;
     }
 
     public String getJavaType() {

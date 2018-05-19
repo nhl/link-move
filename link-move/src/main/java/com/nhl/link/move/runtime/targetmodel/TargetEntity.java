@@ -9,8 +9,11 @@ import java.util.Optional;
  */
 public interface TargetEntity {
 
+    String getName();
+
     /**
-     * Returns attribute matching the path, wrapped in an optional. Path can be different forms - object, db:.
+     * Returns an attribute matching the path, wrapped in an optional. Path can be in different forms compatible with
+     * Cayenne path expressions ("db:", "obj:" or implicit object path).
      *
      * @param path a Cayenne path. Can be "db:" or "obj:" or implicit.
      * @return a target attribute wrapped in an optional. Empty optional is returned for paths that are not valid

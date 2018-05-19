@@ -38,7 +38,15 @@ public class DefaultTargetEntity implements TargetEntity {
     }
 
     @Override
+    public String getName() {
+        return entity.getName();
+    }
+
+    @Override
     public Optional<TargetAttribute> getAttribute(String path) {
+        // TODO: ensure we don't create duplicate attributes for path invariants..
+        // while this doesn't seem to harm anything, it just feels dirty.. And sooner or later we'd allow to iterate
+        // over entitye attributes and then it becomes a problem
         return attributes.computeIfAbsent(path, this::createAttribute);
     }
 
@@ -67,12 +75,11 @@ public class DefaultTargetEntity implements TargetEntity {
 
         PathComponent<DbAttribute, DbRelationship> c = components.get(0);
 
-        if (c.getAttribute() != null) {
-            return Optional.of(createAttribute(c.getAttribute()));
-        }
+        TargetAttribute attribute = c.getAttribute() != null
+                ? createAttribute(c.getAttribute())
+                : createAttribute(c.getRelationship());
 
-        DbRelationship dbRelationship = c.getRelationship();
-        return Optional.of(createAttribute(dbRelationship));
+        return Optional.of(attribute);
     }
 
     private boolean hasAttributeOrRelationship(String path) {
@@ -87,11 +94,15 @@ public class DefaultTargetEntity implements TargetEntity {
     }
 
     protected TargetAttribute createAttribute(DbAttribute attribute) {
+
+        Optional<ForeignKey> fk = findAnyJoin(attribute).map(this::createFk).orElse(Optional.empty());
+
         return new TargetAttribute(
+                this,
                 ASTDbPath.DB_PREFIX + attribute.getName(),
                 attribute.getScale(),
                 javaType(attribute),
-                Optional.empty());
+                fk);
     }
 
     protected TargetAttribute createAttribute(DbRelationship relationship) {
@@ -109,6 +120,7 @@ public class DefaultTargetEntity implements TargetEntity {
         DbJoin firstJoin = joins.get(0);
 
         return new TargetAttribute(
+                this,
                 ASTDbPath.DB_PREFIX + firstJoin.getSourceName(),
                 firstJoin.getSource().getScale(),
                 javaType(firstJoin.getSource()),
@@ -117,13 +129,23 @@ public class DefaultTargetEntity implements TargetEntity {
 
     private Optional<ForeignKey> createFk(DbJoin join) {
 
-        // for now only relationships to master PK and those that have explicit ObjEntity mapping should be treated as FK
+        // for now only relationships to a single master PK and those that have explicit ObjEntity mapping should
+        // be treated as FK
+
         DbRelationship relationship = join.getRelationship();
-        if (!relationship.isToMasterPK()) {
+
+        // TODO: 1..1 relationships?
+        if (!relationship.isToPK() || relationship.isToMany()) {
             return Optional.empty();
         }
 
         DbEntity targetDbEntity = relationship.getTargetEntity();
+        if (targetDbEntity.getPrimaryKeys().size() > 1) {
+            throw new LmRuntimeException("Unsupported FK: DbEntity "
+                    + targetDbEntity.getName()
+                    + " has multiple PK columns.");
+        }
+
         Collection<ObjEntity> targetEntities = targetDbEntity.getDataMap().getMappedEntities(targetDbEntity);
 
         switch (targetEntities.size()) {
@@ -145,5 +167,19 @@ public class DefaultTargetEntity implements TargetEntity {
         return (objAttribute != null)
                 ? objAttribute.getType()
                 : TypesMapping.getJavaBySqlType(attribute.getType());
+    }
+
+    private Optional<DbJoin> findAnyJoin(DbAttribute attribute) {
+        String attributeName = attribute.getName();
+
+        for (DbRelationship relationship : attribute.getEntity().getRelationships()) {
+            for (DbJoin join : relationship.getJoins()) {
+                if (attributeName.equals(join.getSourceName())) {
+                    return Optional.of(join);
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 }

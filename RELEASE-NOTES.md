@@ -1,6 +1,7 @@
 ## Release 2.6
 
 * #137 CreateTask for data migrations
+* #145 Batch-fault and/or cache target to-one relationships (performance)
 * #146 Cayenne 4.0.RC1 is out... upgrading
 * #149 Both new and updated targets must be merged during the "merge" stage
 
