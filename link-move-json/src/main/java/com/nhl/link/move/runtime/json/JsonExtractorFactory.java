@@ -38,7 +38,7 @@ public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> 
 	}
 
 	private JsonQuery getRootQuery(ExtractorModel model) {
-		String query = model.getProperties().get(JSON_QUERY_PROPERTY);
+		String query = model.getSingletonProperty(JSON_QUERY_PROPERTY);
 		if (query == null) {
 			throw new IllegalArgumentException(String.format(
                     "Missing required property for key '%s'", JSON_QUERY_PROPERTY));

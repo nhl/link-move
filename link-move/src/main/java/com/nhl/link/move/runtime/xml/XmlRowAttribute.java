@@ -2,6 +2,9 @@ package com.nhl.link.move.runtime.xml;
 
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowAttribute;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -12,9 +15,17 @@ public class XmlRowAttribute implements RowAttribute {
     private XPathExpression sourceExpression;
 
     public XmlRowAttribute(RowAttribute attribute, XPathFactory xPathFactory) {
+        this(attribute, xPathFactory, null);
+    }
+
+    public XmlRowAttribute(RowAttribute attribute, XPathFactory xPathFactory, NamespaceContext namespaceContext) {
         this.attribute = attribute;
         try {
-            this.sourceExpression = xPathFactory.newXPath().compile(attribute.getSourceName());
+            XPath xPath = xPathFactory.newXPath();
+            if (namespaceContext != null) {
+                xPath.setNamespaceContext(namespaceContext);
+            }
+            this.sourceExpression = xPath.compile(attribute.getSourceName());
         } catch (XPathExpressionException e) {
             throw new LmRuntimeException("Invalid xPath expression: " + attribute.getSourceName(), e);
         }

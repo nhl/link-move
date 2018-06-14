@@ -44,8 +44,13 @@ public class ContainerAwareExtractorModel implements ExtractorModel {
 	}
 
 	@Override
-	public Map<String, String> getProperties() {
+	public Map<String, Collection<String>> getProperties() {
 		return delegate.getProperties();
+	}
+
+	@Override
+	public String getSingletonProperty(String propertyName) {
+		return delegate.getSingletonProperty(propertyName);
 	}
 
 	@Override

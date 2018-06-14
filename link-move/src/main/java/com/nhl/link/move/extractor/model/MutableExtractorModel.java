@@ -1,5 +1,6 @@
 package com.nhl.link.move.extractor.model;
 
+import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowAttribute;
 
 import java.util.Collection;
@@ -18,7 +19,7 @@ public class MutableExtractorModel implements ExtractorModel {
 	private Set<String> connectorIds;
 	private long loadedOn;
 	private RowAttribute[] attributes;
-	private Map<String, String> properties;
+	private Map<String, Collection<String>> properties;
 
 	public MutableExtractorModel(String name) {
 		this.name = name;
@@ -27,8 +28,19 @@ public class MutableExtractorModel implements ExtractorModel {
 	}
 
 	@Override
-	public Map<String, String> getProperties() {
+	public Map<String, Collection<String>> getProperties() {
 		return properties;
+	}
+
+	@Override
+	public String getSingletonProperty(String propertyName) {
+		Collection<String> values = properties.get(propertyName);
+		if (values == null || values.isEmpty()) {
+			return null;
+		} else if (values.size() > 1) {
+			throw new LmRuntimeException("Multiple values are present for property: " + propertyName);
+		}
+		return values.iterator().next();
 	}
 
 	@Override
@@ -75,4 +87,7 @@ public class MutableExtractorModel implements ExtractorModel {
 		this.loadedOn = loadedOn;
 	}
 
+	public void addProperty(String name, String value) {
+		this.properties.computeIfAbsent(name, it -> new HashSet<>()).add(value);
+	}
 }

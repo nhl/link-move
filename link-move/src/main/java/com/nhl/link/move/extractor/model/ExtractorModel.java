@@ -25,7 +25,9 @@ public interface ExtractorModel {
      */
 	Collection<String> getConnectorIds();
 
-	Map<String, String> getProperties();
+	Map<String, Collection<String>> getProperties();
+
+	String getSingletonProperty(String propertyName);
 
 	RowAttribute[] getAttributes();
 	

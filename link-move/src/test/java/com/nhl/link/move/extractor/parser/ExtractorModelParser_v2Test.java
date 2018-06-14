@@ -70,8 +70,8 @@ public class ExtractorModelParser_v2Test extends BaseParserTest {
 		assertNull(m1.getAttributes()[2].getTargetPath());
 
 		assertEquals(2, m1.getProperties().size());
-		assertEquals("AB1", m1.getProperties().get("a.b"));
-		assertEquals("XY1", m1.getProperties().get("x.y"));
+		assertEquals("AB1", m1.getSingletonProperty("a.b"));
+		assertEquals("XY1", m1.getSingletonProperty("x.y"));
 		
 		ExtractorModel m2 = container.getExtractor("e2");
 		assertEquals("atype2", m2.getType());
@@ -79,8 +79,8 @@ public class ExtractorModelParser_v2Test extends BaseParserTest {
         assertNull(m2.getAttributes());
 
 		assertEquals(2, m2.getProperties().size());
-		assertEquals("AB2", m2.getProperties().get("a.b"));
-		assertEquals("XY2", m2.getProperties().get("x.y"));	
+		assertEquals("AB2", m2.getSingletonProperty("a.b"));
+		assertEquals("XY2", m2.getSingletonProperty("x.y"));
 		
 		ExtractorModel m3 = container.getExtractor(ExtractorModel.DEFAULT_NAME);
 		assertNotNull(m3);

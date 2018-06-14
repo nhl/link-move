@@ -108,7 +108,7 @@ public class ExtractorModelParser_v1 implements DOMExtractorModelParser {
         extractor.setAttributes(attributes.toArray(new RowAttribute[attributes.size()]));
     }
 
-    protected void processProperties(Element propertiesNode, ExtractorModel extractor) throws DOMException {
+    protected void processProperties(Element propertiesNode, MutableExtractorModel extractor) throws DOMException {
 
         NodeList nodes = propertiesNode.getChildNodes();
         int len = nodes.getLength();
@@ -117,7 +117,7 @@ public class ExtractorModelParser_v1 implements DOMExtractorModelParser {
             Node c = nodes.item(i);
             if (Node.ELEMENT_NODE == c.getNodeType()) {
                 Element e = (Element) c;
-                extractor.getProperties().put(e.getTagName(), e.getTextContent());
+                extractor.addProperty(e.getTagName(), e.getTextContent());
             }
         }
     }
