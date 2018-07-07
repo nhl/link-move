@@ -45,4 +45,11 @@ public class LocalDateConverterTest {
         assertEquals(localDate, CONVERTER.convert(timestamp));
     }
 
+    @Test
+    public void testConvert_string() {
+        LocalDate localDate = LocalDate.of(2018, 1, 1);
+        String date = "2018-01-01";
+        assertEquals(localDate, CONVERTER.convert(date));
+    }
+
 }

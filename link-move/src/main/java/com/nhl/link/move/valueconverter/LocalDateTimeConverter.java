@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -36,6 +37,10 @@ public class LocalDateTimeConverter extends SingleTypeConverter<LocalDateTime> {
             case "java.sql.Timestamp": {
                 Timestamp timestamp = (Timestamp) value;
                 return timestamp.toLocalDateTime();
+            }
+            case "java.lang.String": {
+                String date = (String) value;
+                return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             }
             default: {
                 throw new LmRuntimeException("Value can not be mapped to LocalDateTime: " + value);
