@@ -10,48 +10,38 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ConnectorService implements IConnectorService {
 
-	private ConcurrentMap<String, Connector> connectors;
-	private Map<String, IConnectorFactory> factories;
+    private ConcurrentMap<String, Connector> connectors;
+    private Map<String, IConnectorFactory> factories;
 
-	public ConnectorService(
-			@Inject Map<String, IConnectorFactory> factories,
-			@Inject Map<String, Connector> connectors) {
-		this.factories = factories;
-		this.connectors = new ConcurrentHashMap<>(connectors);
-	}
+    public ConnectorService(
+            @Inject Map<String, IConnectorFactory> factories,
+            @Inject Map<String, Connector> connectors) {
+        this.factories = factories;
+        this.connectors = new ConcurrentHashMap<>(connectors);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends Connector> T getConnector(Class<T> type, String id) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends Connector> T getConnector(Class<T> type, String id) {
 
-		if (id == null) {
-			throw new LmRuntimeException("Null connector id");
-		}
+        if (id == null) {
+            throw new LmRuntimeException("Null connector id");
+        }
 
-		Connector connector = connectors.get(id);
-		if (connector == null) {
+        Connector connector = connectors.computeIfAbsent(id, i -> {
+            IConnectorFactory<?> factory = factories.get(type.getName());
+            if (factory == null) {
+                throw new IllegalStateException("No factory mapped for Connector type of '" + type.getName() + "'");
+            }
 
-			IConnectorFactory<?> factory = factories.get(type.getName());
-			if (factory == null) {
-				throw new IllegalStateException("No factory mapped for Connector type of '" + type.getName() + "'");
-			}
+            return factory.createConnector(id);
+        });
 
-			Connector newConnector = factory.createConnector(id);
-			Connector oldConnector = connectors.putIfAbsent(id, newConnector);
+        if (!type.isAssignableFrom(connector.getClass())) {
+            throw new LmRuntimeException("Connector for id '" + id + "' is not a " + type.getName()
+                    + ". The actual type is " + connector.getClass().getName());
+        }
 
-			if (oldConnector != null) {
-				connector = oldConnector;
-				newConnector.shutdown();
-			} else {
-				connector = newConnector;
-			}
-		}
-
-		if (!type.isAssignableFrom(connector.getClass())) {
-			throw new LmRuntimeException("Connector for id '" + id + "' is not a " + type.getName()
-					+ ". The actual type is " + connector.getClass().getName());
-		}
-
-		return (T) connector;
-	}
+        return (T) connector;
+    }
 }

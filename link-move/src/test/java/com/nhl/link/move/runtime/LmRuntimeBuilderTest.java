@@ -1,5 +1,21 @@
 package com.nhl.link.move.runtime;
 
+import com.nhl.link.move.resource.ResourceResolver;
+import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
+import com.nhl.link.move.runtime.task.ITaskService;
+import org.apache.cayenne.CayenneDataObject;
+import org.apache.cayenne.DataChannel;
+import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.di.Binder;
+import org.apache.cayenne.map.DbEntity;
+import org.apache.cayenne.map.EntityResolver;
+import org.apache.cayenne.map.ObjEntity;
+import org.apache.cayenne.reflect.ClassDescriptor;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Collections;
+
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -7,79 +23,75 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import org.apache.cayenne.CayenneDataObject;
-import org.apache.cayenne.DataChannel;
-import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.di.Binder;
-import org.apache.cayenne.map.EntityResolver;
-import org.apache.cayenne.map.ObjEntity;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
-import com.nhl.link.move.resource.ResourceResolver;
-import com.nhl.link.move.runtime.task.ITaskService;
-
 public class LmRuntimeBuilderTest {
 
-	private ServerRuntime cayenneRuntime;
+    private ServerRuntime cayenneRuntime;
 
-	@Before
-	public void before() {
+    @Before
+    public void before() {
 
-		ObjEntity mockEntity = mock(ObjEntity.class);
-		when(mockEntity.getName()).thenReturn("me");
+        DbEntity mockDbEntity = mock(DbEntity.class);
+        when(mockDbEntity.getName()).thenReturn("medb");
+        when(mockDbEntity.getPrimaryKeys()).thenReturn(Collections.emptyList());
 
-		EntityResolver resolver = mock(EntityResolver.class);
-		when(resolver.getObjEntity(any(Class.class))).thenReturn(mockEntity);
+        ObjEntity mockEntity = mock(ObjEntity.class);
+        when(mockEntity.getName()).thenReturn("me");
+        when(mockEntity.getDbEntity()).thenReturn(mockDbEntity);
 
-		DataChannel channel = mock(DataChannel.class);
-		when(channel.getEntityResolver()).thenReturn(resolver);
+        ClassDescriptor mockDescriptor = mock(ClassDescriptor.class);
 
-		this.cayenneRuntime = mock(ServerRuntime.class);
-		when(cayenneRuntime.getChannel()).thenReturn(channel);
-	}
+        EntityResolver resolver = mock(EntityResolver.class);
+        when(resolver.getObjEntity(any(Class.class))).thenReturn(mockEntity);
+        when(resolver.getClassDescriptor(any(String.class))).thenReturn(mockDescriptor);
 
-	@Test
-	public void testBuild_DefaultConfigLoader() {
+        DataChannel channel = mock(DataChannel.class);
+        when(channel.getEntityResolver()).thenReturn(resolver);
 
-		LmRuntimeBuilder builder = new LmRuntimeBuilder().withTargetRuntime(cayenneRuntime);
-		LmRuntime runtime = builder.build();
+        this.cayenneRuntime = mock(ServerRuntime.class);
+        when(cayenneRuntime.getChannel()).thenReturn(channel);
+    }
 
-		assertNotNull(runtime);
-		ITaskService taskService = runtime.service(ITaskService.class);
-		assertNotNull(taskService);
-		assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
-	}
+    @Test
+    public void testBuild_DefaultConfigLoader() {
 
-	@Test(expected = IllegalStateException.class)
-	public void testBuild_NoTargetRuntime() {
-		LmRuntimeBuilder builder = new LmRuntimeBuilder()
-				.extractorResolver(mock(ResourceResolver.class));
-		builder.build();
-	}
+        LmRuntimeBuilder builder = new LmRuntimeBuilder().withTargetRuntime(cayenneRuntime);
+        LmRuntime runtime = builder.build();
 
-	@Test
-	public void testBuild() {
-		LmRuntimeBuilder builder = new LmRuntimeBuilder().extractorResolver(
-				mock(ResourceResolver.class)).withTargetRuntime(cayenneRuntime);
-		LmRuntime runtime = builder.build();
-		assertNotNull(runtime);
+        assertNotNull(runtime);
+        ITaskService taskService = runtime.service(ITaskService.class);
+        assertNotNull(taskService);
+        assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
+    }
 
-		ITaskService taskService = runtime.service(ITaskService.class);
-		assertNotNull(taskService);
-		assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
-	}
+    @Test(expected = IllegalStateException.class)
+    public void testBuild_NoTargetRuntime() {
+        LmRuntimeBuilder builder = new LmRuntimeBuilder()
+                .extractorResolver(mock(ResourceResolver.class));
+        builder.build();
+    }
 
-	@Test
-	public void testAdapter() {
+    @Test
+    public void testBuild() {
+        LmRuntimeBuilder builder = new LmRuntimeBuilder()
+                .extractorResolver(mock(ResourceResolver.class))
+                .withTargetRuntime(cayenneRuntime);
+        LmRuntime runtime = builder.build();
+        assertNotNull(runtime);
 
-		LinkEtlAdapter adapter = mock(LinkEtlAdapter.class);
-		LmRuntimeBuilder builder = new LmRuntimeBuilder().withTargetRuntime(cayenneRuntime).adapter(adapter);
+        ITaskService taskService = runtime.service(ITaskService.class);
+        assertNotNull(taskService);
+        assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
+    }
 
-		verifyZeroInteractions(adapter);
-		builder.build();
-		verify(adapter).contributeToRuntime(any(Binder.class));
-	}
+    @Test
+    public void testAdapter() {
+
+        LinkEtlAdapter adapter = mock(LinkEtlAdapter.class);
+        LmRuntimeBuilder builder = new LmRuntimeBuilder().withTargetRuntime(cayenneRuntime).adapter(adapter);
+
+        verifyZeroInteractions(adapter);
+        builder.build();
+        verify(adapter).contributeToRuntime(any(Binder.class));
+    }
 
 }

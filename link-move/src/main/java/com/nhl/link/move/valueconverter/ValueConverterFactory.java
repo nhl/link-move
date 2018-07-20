@@ -19,10 +19,10 @@ public class ValueConverterFactory {
     }
 
     public ValueConverter getConverter(String valueType) {
-        return converters.computeIfAbsent(valueType, this::createNormalizer);
+        return converters.computeIfAbsent(valueType, this::createConverter);
     }
 
-    private ValueConverter createNormalizer(String valueType) {
+    private ValueConverter createConverter(String valueType) {
         Class<?> type = ClassNameResolver.typeForName(valueType);
         return (type.isEnum())
                 ? new EnumConverter<>((Class<? extends Enum>) type)

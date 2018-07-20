@@ -1,17 +1,21 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
-
+import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
+import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
+import com.nhl.link.move.runtime.extractor.IExtractorService;
+import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
+import com.nhl.link.move.runtime.targetmodel.TargetEntity;
+import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
+import com.nhl.link.move.runtime.task.ITaskService;
+import com.nhl.link.move.runtime.task.ListenersBuilder;
+import com.nhl.link.move.runtime.task.MapperBuilder;
+import com.nhl.link.move.runtime.task.StageListener;
+import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
+import com.nhl.link.move.runtime.token.ITokenManager;
+import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
@@ -19,20 +23,18 @@ import org.apache.cayenne.map.ObjEntity;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
-import com.nhl.link.move.runtime.extractor.IExtractorService;
-import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
-import com.nhl.link.move.runtime.path.EntityPathNormalizer;
-import com.nhl.link.move.runtime.path.IPathNormalizer;
-import com.nhl.link.move.runtime.task.ITaskService;
-import com.nhl.link.move.runtime.task.ListenersBuilder;
-import com.nhl.link.move.runtime.task.StageListener;
-import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
-import com.nhl.link.move.runtime.token.ITokenManager;
-import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DefaultDeleteBuilderTest {
 
@@ -55,17 +57,28 @@ public class DefaultDeleteBuilderTest {
 
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
-		EntityPathNormalizer mockEntityPathNormalizer = mock(EntityPathNormalizer.class);
+		TargetEntity mockTargetEntity = mock(TargetEntity.class);
+		when(mockTargetEntity.getAttribute(any(String.class))).thenReturn(Optional.empty());
 
-		IPathNormalizer mockPathNormalizer = mock(IPathNormalizer.class);
-		when(mockPathNormalizer.normalizer(targetEntity)).thenReturn(mockEntityPathNormalizer);
+		TargetEntityMap mockPathNormalizer = mock(TargetEntityMap.class);
+		when(mockPathNormalizer.get(targetEntity)).thenReturn(mockTargetEntity);
 
 		ITaskService taskService = mock(ITaskService.class);
-		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(new DefaultSourceKeysBuilder(
-				mockEntityPathNormalizer, mock(IExtractorService.class), mock(ITokenManager.class), keyAdapterFactory));
+		when(taskService.extractSourceKeys(Etl1t.class)).thenReturn(
+						new DefaultSourceKeysBuilder(
+                                mockTargetEntity,
+								mock(IExtractorService.class),
+								mock(ITokenManager.class),
+								keyAdapterFactory,
+                                mock(ValueConverterFactory.class)));
 
-		this.builder = new DefaultDeleteBuilder<>(Etl1t.class, cayenneService, null, keyAdapterFactory, taskService,
-				mockPathNormalizer);
+		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockTargetEntity, keyAdapterFactory);
+
+		this.builder = new DefaultDeleteBuilder<>(Etl1t.class,
+				cayenneService,
+				mock(ITokenManager.class),
+				taskService,
+                mapperBuilder);
 	}
 
 	@Test(expected = IllegalStateException.class)

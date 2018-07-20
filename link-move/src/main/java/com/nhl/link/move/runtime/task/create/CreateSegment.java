@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.task.createorupdate;
+package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.Row;
 import com.nhl.link.move.runtime.task.SourceTargetPair;
@@ -8,20 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since 1.3
+ * @param <T>
+ * @since 2.6
  */
-public class CreateOrUpdateSegment<T> {
+public class CreateSegment<T> {
 
     private ObjectContext context;
     private List<Row> sourceRows;
-
     private List<Map<String, Object>> sources;
-    private Map<Object, Map<String, Object>> mappedSources;
-    private List<T> matchedTargets;
     private List<SourceTargetPair<T>> mapped;
     private List<SourceTargetPair<T>> merged;
 
-    public CreateOrUpdateSegment(ObjectContext context, List<Row> rows) {
+    public CreateSegment(ObjectContext context, List<Row> rows) {
         this.sourceRows = rows;
         this.context = context;
     }
@@ -42,36 +40,6 @@ public class CreateOrUpdateSegment<T> {
         this.sources = translatedSegment;
     }
 
-    public Map<Object, Map<String, Object>> getMappedSources() {
-        return mappedSources;
-    }
-
-    public void setMappedSources(Map<Object, Map<String, Object>> mappedSegment) {
-        this.mappedSources = mappedSegment;
-    }
-
-    public List<T> getMatchedTargets() {
-        return matchedTargets;
-    }
-
-    public void setMatchedTargets(List<T> matchedTargets) {
-        this.matchedTargets = matchedTargets;
-    }
-
-    /**
-     * @since 2.6
-     */
-    public List<SourceTargetPair<T>> getMapped() {
-        return mapped;
-    }
-
-    /**
-     * @since 2.6
-     */
-    public void setMapped(List<SourceTargetPair<T>> mapped) {
-        this.mapped = mapped;
-    }
-
     public List<SourceTargetPair<T>> getMerged() {
         return merged;
     }
@@ -80,4 +48,11 @@ public class CreateOrUpdateSegment<T> {
         this.merged = merged;
     }
 
+    public List<SourceTargetPair<T>> getMapped() {
+        return mapped;
+    }
+
+    public void setMapped(List<SourceTargetPair<T>> mapped) {
+        this.mapped = mapped;
+    }
 }
