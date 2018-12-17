@@ -1,3 +1,7 @@
+## Release 2.7
+
+* #160 Upgrade Jackson to 2.9.5
+
 ## Release 2.6
 
 * #137 CreateTask for data migrations
