@@ -8,6 +8,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>link-move-dataframe</module>
 		<module>link-move</module>
 		<module>link-move-json</module>
 		<module>link-move-csv</module>
