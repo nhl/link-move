@@ -63,9 +63,4 @@ public class LazyDataFrame implements DataFrame {
             }
         };
     }
-
-    @Override
-    public int estimatedLength() {
-        return -1;
-    }
 }

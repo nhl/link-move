@@ -19,11 +19,6 @@ public class EagerDataFrame implements DataFrame {
     }
 
     @Override
-    public int estimatedLength() {
-        return rows.size();
-    }
-
-    @Override
     public Iterator<DataRow> iterator() {
         return rows.iterator();
     }

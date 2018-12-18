@@ -31,11 +31,6 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public int estimatedLength() {
-        return len;
-    }
-
-    @Override
     public DataFrame renameColumns(Map<String, String> oldToNewNames) {
         return new HeadDataFrame(delegate.renameColumns(oldToNewNames), len);
     }

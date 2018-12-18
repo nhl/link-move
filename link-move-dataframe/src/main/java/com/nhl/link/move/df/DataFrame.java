@@ -31,8 +31,6 @@ public interface DataFrame extends Iterable<DataRow> {
     @Override
     Iterator<DataRow> iterator();
 
-    int estimatedLength();
-
     default void consumeAsBatches(Consumer<DataFrame> consumer, int batchSize) {
 
         if (batchSize <= 0) {
