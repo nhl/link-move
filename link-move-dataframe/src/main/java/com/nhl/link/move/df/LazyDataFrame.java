@@ -2,57 +2,48 @@ package com.nhl.link.move.df;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 /**
- * A DataFrame over an iterable of unknown (possibly very long) length. Most operations on this DataFrame are not applied
+ * A DataFrame over an Iterable of unknown (possibly very long) length. Its per-row operations are not applied
  * immediately and are instead deferred until the caller iterates over the contents.
  */
 public class LazyDataFrame implements DataFrame {
 
     private Iterable<DataRow> source;
-    private Columns columns;
-    private UnaryOperator<DataRow> rowTransformer;
+    private Index columns;
+    private DataRowMapper rowMapper;
 
-    public LazyDataFrame(Columns columns, Iterable<DataRow> source) {
-        this(columns, source, UnaryOperator.identity());
+    public LazyDataFrame(Index columns, Iterable<DataRow> source) {
+        this(columns, source, DataRowMapper.identity());
     }
 
-    protected LazyDataFrame(Columns columns, Iterable<DataRow> source, UnaryOperator<DataRow> rowTransformer) {
+    protected LazyDataFrame(Index columns, Iterable<DataRow> source, DataRowMapper rowMapper) {
         this.source = source;
         this.columns = columns;
-        this.rowTransformer = rowTransformer;
+        this.rowMapper = rowMapper;
     }
 
     @Override
-    public Columns getColumns() {
+    public Index getColumns() {
         return columns;
     }
 
     @Override
     public DataFrame renameColumns(Map<String, String> oldToNewNames) {
-        Columns newColumns = columns.rename(oldToNewNames);
-        UnaryOperator<DataRow> newTransformer = r -> rowTransformer.apply(r).columns(newColumns);
-        return new LazyDataFrame(newColumns, source, newTransformer);
+        Index newColumns = columns.rename(oldToNewNames);
+        DataRowMapper m = r -> r.reindex(newColumns);
+        return new LazyDataFrame(newColumns, source, rowMapper.andThen(m));
     }
 
     @Override
-    public <T> DataFrame convertType(String columnName, Class<T> targetType, Function<Object, T> typeConverter) {
+    public DataFrame map(DataRowMapper m) {
+        return new LazyDataFrame(columns, source, rowMapper.andThen(m));
+    }
 
+    @Override
+    public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> typeConverter) {
         int ci = columns.position(columnName);
-
-        int width = columns.size();
-
-        // convert header
-        Column<?>[] newColumnsArray = new Column<?>[width];
-        System.arraycopy(columns.getColumns(), 0, newColumnsArray, 0, width);
-        newColumnsArray[ci] = new Column<>(columnName, targetType);
-        Columns newColumns = new Columns(newColumnsArray);
-
-        UnaryOperator<DataRow> newTransformer = r -> rowTransformer.apply(r).convertColumn(newColumns, ci, typeConverter);
-
-        return new LazyDataFrame(newColumns, source, newTransformer);
+        return map(r -> r.mapColumn(ci, typeConverter));
     }
 
     @Override
@@ -68,7 +59,7 @@ public class LazyDataFrame implements DataFrame {
 
             @Override
             public DataRow next() {
-                return rowTransformer.apply(delegateIt.next());
+                return rowMapper.apply(delegateIt.next());
             }
         };
     }

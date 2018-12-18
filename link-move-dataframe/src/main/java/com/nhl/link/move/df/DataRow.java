@@ -1,24 +1,18 @@
 package com.nhl.link.move.df;
 
-import java.util.function.Function;
-
 public interface DataRow {
-
-    default <T> T get(Column<T> column) {
-        return (T) get(column.getName());
-    }
 
     Object get(String columnName);
 
     Object get(int position);
 
-    Columns getColumns();
+    Index getIndex();
 
-    DataRow columns(Columns columns);
+    DataRow reindex(Index columns);
 
-    <T> DataRow convertColumn(Columns newColumns, int position, Function<Object, T> typeConverter);
+    <V, VR> DataRow mapColumn(int position, ValueMapper<V, VR> m);
 
     default int size() {
-        return getColumns().size();
+        return getIndex().size();
     }
 }

@@ -3,16 +3,21 @@ package com.nhl.link.move.df;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 
 public class HeadDataFrame implements DataFrame {
 
     private DataFrame delegate;
     private int len;
+    private DataRowMapper rowMapper;
 
     public HeadDataFrame(DataFrame delegate, int len) {
+        this(delegate, len, DataRowMapper.identity());
+    }
+
+    public HeadDataFrame(DataFrame delegate, int len, DataRowMapper rowMapper) {
         this.delegate = delegate;
         this.len = len;
+        this.rowMapper = rowMapper;
     }
 
     @Override
@@ -21,7 +26,7 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public Columns getColumns() {
+    public Index getColumns() {
         return delegate.getColumns();
     }
 
@@ -36,8 +41,13 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public <T> DataFrame convertType(String columnName, Class<T> targetType, Function<Object, T> typeConverter) {
-        return new HeadDataFrame(delegate.convertType(columnName, targetType, typeConverter), len);
+    public DataFrame map(DataRowMapper m) {
+        return new HeadDataFrame(delegate, len, rowMapper.andThen(m));
+    }
+
+    @Override
+    public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> typeConverter) {
+        return new HeadDataFrame(delegate.mapColumn(columnName, typeConverter), len);
     }
 
     @Override
@@ -60,7 +70,7 @@ public class HeadDataFrame implements DataFrame {
                 }
 
                 counter++;
-                return delegateIt.next();
+                return rowMapper.apply(delegateIt.next());
             }
         };
     }

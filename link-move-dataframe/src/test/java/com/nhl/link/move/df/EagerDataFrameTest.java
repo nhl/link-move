@@ -9,7 +9,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
-public class LazyDataFrameTest {
+public class EagerDataFrameTest {
 
     private Index columns;
     private List<DataRow> rows;
@@ -29,7 +29,7 @@ public class LazyDataFrameTest {
 
         List<DataRow> consumed = new ArrayList<>();
 
-        new LazyDataFrame(columns, rows).forEach(consumed::add);
+        new EagerDataFrame(columns, rows).forEach(consumed::add);
 
         assertEquals(4, consumed.size());
         assertEquals(rows, consumed);
@@ -40,7 +40,7 @@ public class LazyDataFrameTest {
 
         List<DataRow> consumed = new ArrayList<>();
 
-        new LazyDataFrame(columns, rows).head(3).forEach(consumed::add);
+        new EagerDataFrame(columns, rows).head(3).forEach(consumed::add);
 
         assertEquals(3, consumed.size());
         assertEquals(rows.subList(0, 3), consumed);
@@ -49,7 +49,7 @@ public class LazyDataFrameTest {
     @Test
     public void testRenameColumn() {
 
-        DataFrame df = new LazyDataFrame(columns, rows).renameColumn("b", "c");
+        DataFrame df = new EagerDataFrame(columns, rows).renameColumn("b", "c");
 
         assertEquals(2, df.getColumns().size());
         assertNotSame(columns, df.getColumns());
@@ -69,7 +69,7 @@ public class LazyDataFrameTest {
     @Test
     public void testMapColumn() {
 
-        DataFrame df = new LazyDataFrame(columns, rows).mapColumn("b", Object::toString);
+        DataFrame df = new EagerDataFrame(columns, rows).mapColumn("b", Object::toString);
 
         assertEquals(2, df.getColumns().size());
         assertSame(columns, df.getColumns());
@@ -91,7 +91,7 @@ public class LazyDataFrameTest {
     @Test
     public void testMap() {
 
-        DataFrame df = new LazyDataFrame(columns, rows)
+        DataFrame df = new EagerDataFrame(columns, rows)
                 .map(r -> r
                         .mapColumn(0, (String v) -> v + "_")
                         .mapColumn(1, (Integer i) -> i * 10));

@@ -3,25 +3,21 @@ package com.nhl.link.move.df;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Columns {
+public class Index {
 
-    private Column<?>[] columns;
+    private String[] columns;
     private Map<String, Integer> columnIndex;
 
-    public Columns(Column<?>... columns) {
+    public Index(String... columns) {
         this.columns = columns;
     }
 
-    public Column<?>[] getColumns() {
+    public String[] getColumns() {
         return columns;
     }
 
     public int size() {
         return columns.length;
-    }
-
-    public int position(Column<?> column) {
-        return position(column.getName());
     }
 
     public int position(String columnName) {
@@ -30,9 +26,9 @@ public class Columns {
             Map<String, Integer> index = new HashMap<>();
 
             for (int i = 0; i < columns.length; i++) {
-                Integer previous = index.put(columns[i].getName(), i);
+                Integer previous = index.put(columns[i], i);
                 if (previous != null) {
-                    throw new IllegalStateException("Duplicate column '" + columns[i].getName() +
+                    throw new IllegalStateException("Duplicate column '" + columns[i] +
                             "'. Found at " + previous + " and " + i);
                 }
             }
@@ -45,16 +41,16 @@ public class Columns {
         });
     }
 
-    public Columns rename(Map<String, String> oldToNewNames) {
+    public Index rename(Map<String, String> oldToNewNames) {
 
         int len = size();
 
-        Column<?>[] newColumns = new Column<?>[len];
+        String[] newColumns = new String[len];
         for (int i = 0; i < len; i++) {
-            String newName = oldToNewNames.get(columns[i].getName());
-            newColumns[i] = newName != null ? new Column<>(newName, columns[i].getType()) : columns[i];
+            String newName = oldToNewNames.get(columns[i]);
+            newColumns[i] = newName != null ? newName : columns[i];
         }
 
-        return new Columns(newColumns);
+        return new Index(newColumns);
     }
 }

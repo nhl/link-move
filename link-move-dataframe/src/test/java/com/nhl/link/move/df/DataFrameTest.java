@@ -14,15 +14,15 @@ public class DataFrameTest {
 
     @Before
     public void initDataFrame() {
-        Columns columns = new Columns(new Column<>("a", String.class));
+        Index columns = new Index("a");
         List<DataRow> rows = asList(
-                new SimpleDataRow(columns, "one"),
-                new SimpleDataRow(columns, "two"),
-                new SimpleDataRow(columns, "three"),
-                new SimpleDataRow(columns, "four"));
+                new ArrayDataRow(columns, "one"),
+                new ArrayDataRow(columns, "two"),
+                new ArrayDataRow(columns, "three"),
+                new ArrayDataRow(columns, "four"));
 
 
-        this.df = new SimpleDataFrame(columns, rows);
+        this.df = new EagerDataFrame(columns, rows);
     }
 
     @Test
