@@ -45,14 +45,14 @@ public interface DataFrame extends Iterable<DataRow> {
             rows.add(dr);
 
             if (rows.size() % batchSize == 0) {
-                consumer.accept(new EagerDataFrame(columns, rows));
+                consumer.accept(new LazyDataFrame(columns, rows));
                 rows = new ArrayList<>(batchSize);
             }
         }
 
         // consume leftovers
         if (!rows.isEmpty()) {
-            consumer.accept(new EagerDataFrame(columns, rows));
+            consumer.accept(new LazyDataFrame(columns, rows));
         }
     }
 }

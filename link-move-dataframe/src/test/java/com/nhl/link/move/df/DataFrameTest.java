@@ -22,7 +22,7 @@ public class DataFrameTest {
                 new ArrayDataRow(columns, "four"));
 
 
-        this.df = new EagerDataFrame(columns, rows);
+        this.df = new LazyDataFrame(columns, rows);
     }
 
     @Test

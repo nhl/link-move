@@ -30,7 +30,7 @@ public class HeadDataFrameTest {
 
         List<DataRow> consumed = new ArrayList<>();
 
-        HeadDataFrame df = new HeadDataFrame(new EagerDataFrame(columns, rows), 3);
+        HeadDataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 3);
 
         df.forEach(consumed::add);
 
@@ -41,7 +41,7 @@ public class HeadDataFrameTest {
     @Test
     public void testHead() {
 
-        HeadDataFrame df = new HeadDataFrame(new EagerDataFrame(columns, rows), 3);
+        HeadDataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 3);
 
         DataFrame df1 = df.head(3);
         assertSame(df, df1);
@@ -62,7 +62,7 @@ public class HeadDataFrameTest {
     @Test
     public void testMap() {
 
-        DataFrame df =  new HeadDataFrame(new EagerDataFrame(columns, rows), 3)
+        DataFrame df =  new HeadDataFrame(new LazyDataFrame(columns, rows), 3)
                 .map(r -> r.mapColumn(0, (String v) -> v + "_"));
 
         assertEquals(1, df.getColumns().size());
