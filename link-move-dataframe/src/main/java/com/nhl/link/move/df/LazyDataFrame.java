@@ -1,6 +1,5 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.print.StringBuilderSink;
 import com.nhl.link.move.df.print.TabularPrinter;
 
 import java.util.Iterator;
@@ -24,11 +23,6 @@ public class LazyDataFrame implements DataFrame {
         this.source = source;
         this.columns = columns;
         this.rowMapper = rowMapper;
-    }
-
-    @Override
-    public String toString() {
-        return TabularPrinter.getInstance().print(new StringBuilderSink(), this).toString();
     }
 
     @Override
@@ -70,5 +64,11 @@ public class LazyDataFrame implements DataFrame {
                 return rowMapper.apply(delegateIt.next());
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder("LazyDataFrame").append(System.lineSeparator());
+        return TabularPrinter.getInstance().print(out, this).toString();
     }
 }

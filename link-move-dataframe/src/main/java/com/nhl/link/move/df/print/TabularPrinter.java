@@ -2,7 +2,6 @@ package com.nhl.link.move.df.print;
 
 import com.nhl.link.move.df.DataFrame;
 import com.nhl.link.move.df.DataRow;
-import com.nhl.link.move.df.Index;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,7 +10,7 @@ import java.util.NoSuchElementException;
  * A utility class for outputting DataFrames and DataRows, mainly for debugging purposes.
  */
 public class TabularPrinter {
-
+    
     private static final int MAX_DISPLAY_ROWS = 3;
     private static final int MAX_DISPLAY_COLUMN_WIDTH = 30;
 
@@ -33,12 +32,12 @@ public class TabularPrinter {
         return DEFAULT_PRINTER;
     }
 
-    public Sink print(Sink out, DataFrame df) {
-        return print(out, df.getColumns(), df.iterator());
+    public StringBuilder print(StringBuilder out, DataFrame df) {
+        return newWorker(out).print(df.getColumns(), df.iterator());
     }
 
-    public Sink print(Sink out, DataRow dr) {
-        return print(out, dr.getIndex(), new Iterator<DataRow>() {
+    public StringBuilder print(StringBuilder out, DataRow dr) {
+        return newWorker(out).print(dr.getIndex(), new Iterator<DataRow>() {
 
             int count;
 
@@ -60,7 +59,8 @@ public class TabularPrinter {
         });
     }
 
-    protected Sink print(Sink out, Index columns, Iterator<DataRow> values) {
-        return out;
+    private TabularPrinterWorker newWorker(StringBuilder out) {
+        return new TabularPrinterWorker(out, maxDisplayRows, maxDisplayColumnWith);
     }
+
 }

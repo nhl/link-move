@@ -1,5 +1,7 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.print.TabularPrinter;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -68,5 +70,11 @@ public class HeadDataFrame implements DataFrame {
                 return rowMapper.apply(delegateIt.next());
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder("HeadDataFrame").append(System.lineSeparator());
+        return TabularPrinter.getInstance().print(out, this).toString();
     }
 }

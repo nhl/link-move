@@ -15,7 +15,7 @@ public class LazyDataFrameTest {
     private List<DataRow> rows;
 
     @Before
-    public void initDataFrame() {
+    public void initDataFrameParts() {
         this.columns = new Index("a", "b");
         this.rows = asList(
                 new ArrayDataRow(columns, "one", 1),
@@ -122,7 +122,7 @@ public class LazyDataFrameTest {
     public void testToString() {
         DataFrame df = new LazyDataFrame(columns, rows);
         assertEquals("" +
-                "LazyDataFrame: " + System.lineSeparator() +
+                "LazyDataFrame" + System.lineSeparator() +
                 "a     b" + System.lineSeparator() +
                 "----- -" + System.lineSeparator() +
                 "one   1" + System.lineSeparator() +

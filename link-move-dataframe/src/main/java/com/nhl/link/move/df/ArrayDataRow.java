@@ -1,5 +1,7 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.print.TabularPrinter;
+
 public class ArrayDataRow implements DataRow {
 
     private Index index;
@@ -40,5 +42,11 @@ public class ArrayDataRow implements DataRow {
         newValues[position] = m.apply((V) values[position]);
 
         return new ArrayDataRow(index, newValues);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder("ArrayDataRow").append(System.lineSeparator());
+        return TabularPrinter.getInstance().print(out, this).toString();
     }
 }
