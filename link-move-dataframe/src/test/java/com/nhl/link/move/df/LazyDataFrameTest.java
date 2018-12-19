@@ -117,4 +117,17 @@ public class LazyDataFrameTest {
         assertEquals("four_", consumed.get(3).get("a"));
         assertEquals(40, consumed.get(3).get("b"));
     }
+
+    @Test
+    public void testToString() {
+        DataFrame df = new LazyDataFrame(columns, rows);
+        assertEquals("" +
+                "LazyDataFrame: " + System.lineSeparator() +
+                "a     b" + System.lineSeparator() +
+                "----- -" + System.lineSeparator() +
+                "one   1" + System.lineSeparator() +
+                "two   2" + System.lineSeparator() +
+                "three 3" + System.lineSeparator() +
+                "...", df.toString());
+    }
 }
