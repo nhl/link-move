@@ -8,6 +8,14 @@ public class ArrayDataRow implements DataRow {
     private Object[] values;
 
     public ArrayDataRow(Index index, Object... values) {
+
+        if (index.size() != values.length) {
+            throw new IllegalArgumentException(String.format(
+                    "Index size of %s is not the same as values size of %s",
+                    index.size(),
+                    values.length));
+        }
+
         this.index = index;
         this.values = values;
     }
@@ -28,8 +36,8 @@ public class ArrayDataRow implements DataRow {
     }
 
     @Override
-    public DataRow reindex(Index columns) {
-        return new ArrayDataRow(columns, values);
+    public DataRow reindex(Index index) {
+        return new ArrayDataRow(index, values);
     }
 
     @Override
