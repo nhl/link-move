@@ -121,13 +121,6 @@ public class LazyDataFrameTest {
     @Test
     public void testToString() {
         DataFrame df = new LazyDataFrame(columns, rows);
-        assertEquals("" +
-                "LazyDataFrame" + System.lineSeparator() +
-                "a     b" + System.lineSeparator() +
-                "----- -" + System.lineSeparator() +
-                "one   1" + System.lineSeparator() +
-                "two   2" + System.lineSeparator() +
-                "three 3" + System.lineSeparator() +
-                "...", df.toString());
+        assertEquals("LazyDataFrame [{a:one,b:1},{a:two,b:2},{a:three,b:3},...]", df.toString());
     }
 }

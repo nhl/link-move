@@ -1,6 +1,6 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.print.TabularPrinter;
+import com.nhl.link.move.df.print.InlinePrinter;
 
 public class ArrayDataRow implements DataRow {
 
@@ -46,7 +46,6 @@ public class ArrayDataRow implements DataRow {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("ArrayDataRow").append(System.lineSeparator());
-        return TabularPrinter.getInstance().print(out, this).toString();
+        return InlinePrinter.getInstance().print(new StringBuilder("ArrayDataRow "), this).toString();
     }
 }

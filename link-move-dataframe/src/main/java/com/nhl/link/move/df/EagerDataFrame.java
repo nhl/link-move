@@ -1,6 +1,6 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.print.TabularPrinter;
+import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,7 +72,6 @@ public class EagerDataFrame implements DataFrame {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("EagerDataFrame").append(System.lineSeparator());
-        return TabularPrinter.getInstance().print(out, this).toString();
+        return InlinePrinter.getInstance().print(new StringBuilder("EagerDataFrame ["), this).append("]").toString();
     }
 }

@@ -17,10 +17,6 @@ public class ArrayDataRowTest {
     @Test
     public void testToString() {
         ArrayDataRow dr = new ArrayDataRow(index, "ABC", 1);
-        assertEquals("" +
-                "ArrayDataRow" + System.lineSeparator() +
-                "a   b" + System.lineSeparator() +
-                "--- -" + System.lineSeparator() +
-                "ABC 1", dr.toString());
+        assertEquals("ArrayDataRow {a:ABC,b:1}", dr.toString());
     }
 }

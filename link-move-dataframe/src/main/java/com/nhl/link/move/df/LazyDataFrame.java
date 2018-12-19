@@ -1,6 +1,6 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.print.TabularPrinter;
+import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -68,7 +68,6 @@ public class LazyDataFrame implements DataFrame {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("LazyDataFrame").append(System.lineSeparator());
-        return TabularPrinter.getInstance().print(out, this).toString();
+        return InlinePrinter.getInstance().print(new StringBuilder("LazyDataFrame ["), this).append("]").toString();
     }
 }

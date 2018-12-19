@@ -7,34 +7,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class TabularPrinterWorker {
-
-    private StringBuilder out;
-    private int maxDisplayColumnWith;
-    private int maxDisplayRows;
+class TabularPrinterWorker extends BasePrinterWorker {
 
     TabularPrinterWorker(StringBuilder out, int maxDisplayRows, int maxDisplayColumnWith) {
-        this.out = out;
-        this.maxDisplayColumnWith = maxDisplayColumnWith;
-        this.maxDisplayRows = maxDisplayRows;
-    }
-
-    static String truncate(String string, int width) {
-
-        int len = string.length();
-        if (len <= width) {
-            return string;
-        }
-
-        if (width <= 2) {
-            return "..";
-        }
-
-        int offset = width / 2 - 1;
-        int startOffset = offset + width % 2;
-        int endOffset = len - offset;
-
-        return string.substring(0, startOffset) + ".." + string.substring(endOffset);
+        super(out, maxDisplayRows, maxDisplayColumnWith);
     }
 
     StringBuilder print(Index columns, Iterator<DataRow> values) {

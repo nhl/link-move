@@ -1,6 +1,6 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.print.TabularPrinter;
+import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -74,7 +74,6 @@ public class HeadDataFrame implements DataFrame {
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("HeadDataFrame").append(System.lineSeparator());
-        return TabularPrinter.getInstance().print(out, this).toString();
+        return InlinePrinter.getInstance().print(new StringBuilder("HeadDataFrame ["), this).append("]").toString();
     }
 }

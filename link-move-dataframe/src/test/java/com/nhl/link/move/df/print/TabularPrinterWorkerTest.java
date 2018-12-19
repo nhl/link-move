@@ -71,18 +71,4 @@ public class TabularPrinterWorkerTest {
                 "t..e 3   " + System.lineSeparator() +
                 "four 4   ", w.print(columns, rows.iterator()).toString());
     }
-
-    @Test
-    public void testTruncate() {
-        assertEquals("..", TabularPrinterWorker.truncate("abc", 1));
-        assertEquals("..", TabularPrinterWorker.truncate("abc", 2));
-        assertEquals("abc", TabularPrinterWorker.truncate("abc", 3));
-        assertEquals("a..", TabularPrinterWorker.truncate("abcd", 3));
-        assertEquals("abc", TabularPrinterWorker.truncate("abc", 4));
-        assertEquals("abcd", TabularPrinterWorker.truncate("abcd", 4));
-        assertEquals("a..e", TabularPrinterWorker.truncate("abcde", 4));
-        assertEquals("a..f", TabularPrinterWorker.truncate("abcdef", 4));
-        assertEquals("ab..g", TabularPrinterWorker.truncate("abcdefg", 5));
-        assertEquals("ab..h", TabularPrinterWorker.truncate("abcdefgh", 5));
-    }
 }
