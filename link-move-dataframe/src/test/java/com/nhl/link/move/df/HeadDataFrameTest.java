@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -77,5 +78,47 @@ public class HeadDataFrameTest {
         assertEquals("one_", consumed.get(0).get("a"));
         assertEquals("two_", consumed.get(1).get("a"));
         assertEquals("three_", consumed.get(2).get("a"));
+    }
+
+    @Test
+    public void testMap_ChangeRowStructure() {
+
+        Index altColumns = new Index("c");
+
+        DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 2)
+                .map(r -> new ArrayDataRow(
+                        altColumns,
+                        r.get(0) != null ? r.get(0) + "_" : ""));
+
+        assertEquals(1, df.getColumns().size());
+        assertSame(altColumns, df.getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df.forEach(consumed::add);
+
+        assertEquals(2, consumed.size());
+        assertNotEquals(rows, consumed);
+
+        assertEquals("one_", consumed.get(0).get("c"));
+        assertEquals("two_", consumed.get(1).get("c"));
+    }
+
+    @Test
+    public void testMap_ChangeRowStructure_EmptyDF() {
+
+        Index altColumns = new Index("c");
+
+        DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, Collections.emptyList()), 2)
+                .map(r -> new ArrayDataRow(
+                        altColumns,
+                        r.get(0) != null ? r.get(0) + "_" : ""));
+
+        assertEquals(1, df.getColumns().size());
+        assertSame(altColumns, df.getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df.forEach(consumed::add);
+
+        assertEquals(0, consumed.size());
     }
 }

@@ -39,7 +39,7 @@ public class LazyDataFrame implements DataFrame {
 
     @Override
     public DataFrame map(DataRowMapper m) {
-        return new LazyDataFrame(columns, source, rowMapper.andThen(m));
+        return new LazyDataFrame(m.mapIndex(columns), source, rowMapper.andThen(m));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LazyDataFrame implements DataFrame {
 
             @Override
             public DataRow next() {
-                return rowMapper.apply(delegateIt.next());
+                return rowMapper.map(delegateIt.next());
             }
         };
     }

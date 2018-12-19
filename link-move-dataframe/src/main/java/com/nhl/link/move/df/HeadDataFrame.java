@@ -39,7 +39,7 @@ public class HeadDataFrame implements DataFrame {
 
     @Override
     public DataFrame map(DataRowMapper m) {
-        return new HeadDataFrame(delegate, len, rowMapper.andThen(m));
+        return new LazyDataFrame(m.mapIndex(getColumns()), this, m);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class HeadDataFrame implements DataFrame {
                 }
 
                 counter++;
-                return rowMapper.apply(delegateIt.next());
+                return rowMapper.map(delegateIt.next());
             }
         };
     }

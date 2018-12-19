@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -116,6 +117,65 @@ public class LazyDataFrameTest {
 
         assertEquals("four_", consumed.get(3).get("a"));
         assertEquals(40, consumed.get(3).get("b"));
+    }
+
+    @Test
+    public void testMap_ChangeRowStructure() {
+
+        Index altColumns = new Index("c", "d", "e");
+
+        DataFrame df = new LazyDataFrame(columns, rows)
+                .map(r -> new ArrayDataRow(
+                        altColumns,
+                        r.get(0),
+                        r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
+                        r.get(1)));
+
+        assertEquals(3, df.getColumns().size());
+        assertSame(altColumns, df.getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df.forEach(consumed::add);
+
+        assertEquals(4, consumed.size());
+        assertNotEquals(rows, consumed);
+
+        assertEquals("one", consumed.get(0).get("c"));
+        assertEquals(10, consumed.get(0).get("d"));
+        assertEquals(1, consumed.get(0).get("e"));
+
+        assertEquals("two", consumed.get(1).get("c"));
+        assertEquals(20, consumed.get(1).get("d"));
+        assertEquals(2, consumed.get(1).get("e"));
+
+        assertEquals("three", consumed.get(2).get("c"));
+        assertEquals(30, consumed.get(2).get("d"));
+        assertEquals(3, consumed.get(2).get("e"));
+
+        assertEquals("four", consumed.get(3).get("c"));
+        assertEquals(40, consumed.get(3).get("d"));
+        assertEquals(4, consumed.get(3).get("e"));
+    }
+
+    @Test
+    public void testMap_ChangeRowStructure_EmptyDF() {
+
+        Index altColumns = new Index("c", "d", "e");
+
+        DataFrame df = new LazyDataFrame(columns, Collections.emptyList())
+                .map(r -> new ArrayDataRow(
+                        altColumns,
+                        r.get(0),
+                        r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
+                        r.get(1)));
+
+        assertEquals(3, df.getColumns().size());
+        assertSame(altColumns, df.getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df.forEach(consumed::add);
+
+        assertEquals(0, consumed.size());
     }
 
     @Test
