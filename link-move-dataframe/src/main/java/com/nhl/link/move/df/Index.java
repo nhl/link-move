@@ -20,6 +20,18 @@ public class Index {
         return columns.length;
     }
 
+    public int[] positions(String... columnNames) {
+
+        int len = columnNames.length;
+        int[] positions = new int[len];
+
+        for (int i = 0; i < len; i++) {
+            positions[i] = position(columnNames[i]);
+        }
+
+        return positions;
+    }
+
     public int position(String columnName) {
 
         if (columnIndex == null) {
