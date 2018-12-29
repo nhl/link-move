@@ -1,5 +1,7 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.map.ValueMapper;
+
 public interface DataRow {
 
     Object get(String columnName);
