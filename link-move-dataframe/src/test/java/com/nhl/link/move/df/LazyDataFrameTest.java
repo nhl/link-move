@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -93,7 +92,7 @@ public class LazyDataFrameTest {
     public void testMap() {
 
         DataFrame df = new LazyDataFrame(columns, rows)
-                .map(r -> r
+                .map(i -> columns, r -> r
                         .mapColumn(0, (String v) -> v + "_")
                         .mapColumn(1, (Integer i) -> i != null ? i * 10 : null));
 
@@ -125,7 +124,7 @@ public class LazyDataFrameTest {
         Index i1 = new Index("c", "d", "e");
 
         DataFrame df = new LazyDataFrame(columns, rows)
-                .map(r -> new ArrayDataRow(
+                .map(i -> i1, r -> new ArrayDataRow(
                         i1,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
@@ -163,12 +162,12 @@ public class LazyDataFrameTest {
         Index i2 = new Index("f", "g");
 
         DataFrame df = new LazyDataFrame(columns, rows)
-                .map(r -> new ArrayDataRow(
+                .map(i -> i1, r -> new ArrayDataRow(
                         i1,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
                         r.get(1)))
-                .map(r -> new ArrayDataRow(
+                .map(i -> i2, r -> new ArrayDataRow(
                         i2,
                         r.get(0),
                         r.get(1)));
@@ -197,22 +196,36 @@ public class LazyDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure_EmptyDF() {
 
-        Index altColumns = new Index("c", "d", "e");
+        Index i1 = new Index("c", "d", "e");
 
-        DataFrame df = new LazyDataFrame(columns, Collections.emptyList())
-                .map(r -> new ArrayDataRow(
-                        altColumns,
+        DataFrame df = new LazyDataFrame(columns)
+                .map(i -> i1, r -> new ArrayDataRow(
+                        i1,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
                         r.get(1)));
 
-        assertEquals(3, df.getColumns().size());
-        assertSame(altColumns, df.getColumns());
+        assertSame(i1, df.getColumns());
 
         List<DataRow> consumed = new ArrayList<>();
         df.forEach(consumed::add);
 
         assertEquals(0, consumed.size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMap_Index_Row_SizeMismatch() {
+
+        Index i1 = new Index("c", "d", "e");
+
+        new LazyDataFrame(columns, rows)
+                .map(i -> i1, r -> new ArrayDataRow(
+                        i1,
+                        r.get(0),
+                        r.get(1)))
+                // must throw when iterating due to inconsistent mapped row structure...
+                .forEach(r -> {
+                });
     }
 
     @Test

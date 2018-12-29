@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 
 public class HeadDataFrameTest {
 
-
     private Index columns;
     private List<DataRow> rows;
 
@@ -64,7 +63,7 @@ public class HeadDataFrameTest {
     public void testMap() {
 
         DataFrame df =  new HeadDataFrame(new LazyDataFrame(columns, rows), 3)
-                .map(r -> r.mapColumn(0, (String v) -> v + "_"));
+                .map(i -> columns, r -> r.mapColumn(0, (String v) -> v + "_"));
 
         assertEquals(1, df.getColumns().size());
         assertSame(columns, df.getColumns());
@@ -83,15 +82,14 @@ public class HeadDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure() {
 
-        Index altColumns = new Index("c");
+        Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 2)
-                .map(r -> new ArrayDataRow(
-                        altColumns,
+                .map(i -> i1, r -> new ArrayDataRow(
+                        i1,
                         r.get(0) != null ? r.get(0) + "_" : ""));
 
-        assertEquals(1, df.getColumns().size());
-        assertSame(altColumns, df.getColumns());
+        assertSame(i1, df.getColumns());
 
         List<DataRow> consumed = new ArrayList<>();
         df.forEach(consumed::add);
@@ -106,15 +104,14 @@ public class HeadDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure_EmptyDF() {
 
-        Index altColumns = new Index("c");
+        Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, Collections.emptyList()), 2)
-                .map(r -> new ArrayDataRow(
-                        altColumns,
+                .map(i -> i1, r -> new ArrayDataRow(
+                        i1,
                         r.get(0) != null ? r.get(0) + "_" : ""));
 
-        assertEquals(1, df.getColumns().size());
-        assertSame(altColumns, df.getColumns());
+        assertSame(i1, df.getColumns());
 
         List<DataRow> consumed = new ArrayList<>();
         df.forEach(consumed::add);

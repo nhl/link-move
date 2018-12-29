@@ -38,8 +38,9 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public DataFrame map(DataRowMapper m) {
-        return new LazyDataFrame(m.mapIndex(getColumns()), this, m);
+    public DataFrame map(IndexMapper indexMapper, DataRowMapper rowMapper) {
+        Index mappedIndex = indexMapper.map(getColumns());
+        return new LazyDataFrame(mappedIndex, this, rowMapper);
     }
 
     @Override

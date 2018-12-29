@@ -2,6 +2,7 @@ package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.print.InlinePrinter;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -14,6 +15,10 @@ public class LazyDataFrame implements DataFrame {
     private Iterable<DataRow> source;
     private Index columns;
     private DataRowMapper rowMapper;
+
+    public LazyDataFrame(Index columns) {
+        this(columns, Collections.emptyList(), DataRowMapper.identity());
+    }
 
     public LazyDataFrame(Index columns, Iterable<DataRow> source) {
         this(columns, source, DataRowMapper.identity());
@@ -34,18 +39,18 @@ public class LazyDataFrame implements DataFrame {
     public DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = columns.rename(oldToNewNames);
         DataRowMapper m = r -> r.reindex(newColumns);
-        return new LazyDataFrame(newColumns, source, rowMapper.andThen(m));
+        return new LazyDataFrame(newColumns, this, m);
     }
 
     @Override
-    public DataFrame map(DataRowMapper m) {
-        return new LazyDataFrame(m.mapIndex(columns), source, rowMapper.andThen(m));
+    public DataFrame map(IndexMapper indexMapper, DataRowMapper rowMapper) {
+        return new LazyDataFrame(indexMapper.map(columns), this, rowMapper);
     }
 
     @Override
     public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> typeConverter) {
         int ci = columns.position(columnName);
-        return map(r -> r.mapColumn(ci, typeConverter));
+        return map(i -> columns, r -> r.mapColumn(ci, typeConverter));
     }
 
     @Override

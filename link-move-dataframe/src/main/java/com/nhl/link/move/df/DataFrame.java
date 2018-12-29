@@ -18,7 +18,7 @@ public interface DataFrame extends Iterable<DataRow> {
         return new HeadDataFrame(this, len);
     }
 
-    DataFrame map(DataRowMapper m);
+    DataFrame map(IndexMapper indexMapper, DataRowMapper rowMapper);
 
     <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m);
 
