@@ -49,6 +49,11 @@ public class LazyDataFrame implements DataFrame {
     }
 
     @Override
+    public DataFrame zip(DataFrame df) {
+        throw new UnsupportedOperationException("TODO");
+    }
+
+    @Override
     public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> typeConverter) {
         int ci = columns.position(columnName);
         return map(columns, (i, r) -> r.mapColumn(ci, typeConverter));

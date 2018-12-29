@@ -233,4 +233,88 @@ public class LazyDataFrameTest {
         DataFrame df = new LazyDataFrame(columns, rows);
         assertEquals("LazyDataFrame [{a:one,b:1},{a:two,b:2},{a:three,b:3},...]", df.toString());
     }
+
+    @Test
+    public void testZip() {
+
+        Index i1 = new Index("a");
+        DataFrame df1 = new LazyDataFrame(i1, asList(
+                new ArrayDataRow(i1, 1),
+                new ArrayDataRow(i1, 2)));
+
+        Index i2 = new Index("b");
+        DataFrame df2 = new LazyDataFrame(i2, asList(
+                new ArrayDataRow(i2, 10),
+                new ArrayDataRow(i2, 20)));
+
+        DataFrame df_zipped = df1.zip(df2);
+
+        assertNotSame(df1, df_zipped);
+        assertNotSame(df2, df_zipped);
+        assertEquals(2, df_zipped.getColumns().size());
+
+        assertArrayEquals(new String[]{"a", "b"}, df_zipped.getColumns().getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df_zipped.forEach(consumed::add);
+
+        assertEquals(2, consumed.size());
+
+        assertEquals(1, consumed.get(0).get("a"));
+        assertEquals(10, consumed.get(0).get("b"));
+
+        assertEquals(2, consumed.get(1).get("a"));
+        assertEquals(20, consumed.get(1).get("b"));
+    }
+
+    @Test
+    public void testZip_Self() {
+
+        Index i1 = new Index("a");
+        DataFrame df1 = new LazyDataFrame(i1, asList(
+                new ArrayDataRow(i1, 1),
+                new ArrayDataRow(i1, 2)));
+
+        DataFrame df_zipped = df1.zip(df1);
+
+        assertNotSame(df1, df_zipped);
+        assertEquals(2, df_zipped.getColumns().size());
+
+        assertArrayEquals(new String[]{"a", "a_"}, df_zipped.getColumns().getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df_zipped.forEach(consumed::add);
+
+        assertEquals(2, consumed.size());
+
+        assertEquals(1, consumed.get(0).get("a"));
+        assertEquals(1, consumed.get(0).get("a_"));
+
+        assertEquals(2, consumed.get(1).get("a"));
+        assertEquals(2, consumed.get(1).get("a_"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testZip_LeftSizeMismatch() {
+
+        DataFrame df1 = new LazyDataFrame(columns, rows);
+        DataFrame df2 = new LazyDataFrame(columns, asList(
+                new ArrayDataRow(columns, "one", 1),
+                new ArrayDataRow(columns, "two", 2),
+                new ArrayDataRow(columns, "three", 3)));
+
+        df1.zip(df2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testZip_RightSizeMismatch() {
+
+        DataFrame df1 = new LazyDataFrame(columns, rows);
+        DataFrame df2 = new LazyDataFrame(columns, asList(
+                new ArrayDataRow(columns, "one", 1),
+                new ArrayDataRow(columns, "two", 2),
+                new ArrayDataRow(columns, "three", 3)));
+
+        df2.zip(df1);
+    }
 }

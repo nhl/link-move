@@ -50,6 +50,11 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
+    public DataFrame zip(DataFrame df) {
+        throw new UnsupportedOperationException("TODO");
+    }
+
+    @Override
     public Iterator<DataRow> iterator() {
 
         return new Iterator<DataRow>() {

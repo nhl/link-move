@@ -31,6 +31,8 @@ public interface DataFrame extends Iterable<DataRow> {
 
     DataFrame renameColumns(Map<String, String> oldToNewNames);
 
+    DataFrame zip(DataFrame df);
+
     @Override
     Iterator<DataRow> iterator();
 
