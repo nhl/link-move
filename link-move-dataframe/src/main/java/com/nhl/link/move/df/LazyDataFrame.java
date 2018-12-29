@@ -3,6 +3,8 @@ package com.nhl.link.move.df;
 import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.print.InlinePrinter;
+import com.nhl.link.move.df.zip.ZipDataRowMapper;
+import com.nhl.link.move.df.zip.ZipIndexMapper;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -50,7 +52,10 @@ public class LazyDataFrame implements DataFrame {
 
     @Override
     public DataFrame zip(DataFrame df) {
-        throw new UnsupportedOperationException("TODO");
+        IndexMapper indexMapper = new ZipIndexMapper(getColumns());
+        DataRowMapper rowMapper = new ZipDataRowMapper(this.iterator());
+
+        return df.map(indexMapper, rowMapper);
     }
 
     @Override

@@ -32,8 +32,15 @@ public class Index {
         return positions;
     }
 
-    public int position(String columnName) {
+    public boolean hasColumn(String columnName) {
+        if (columnIndex == null) {
+            this.columnIndex = computeColumnIndex();
+        }
 
+        return columnIndex.containsKey(columnName);
+    }
+
+    public int position(String columnName) {
         if (columnIndex == null) {
             this.columnIndex = computeColumnIndex();
         }
