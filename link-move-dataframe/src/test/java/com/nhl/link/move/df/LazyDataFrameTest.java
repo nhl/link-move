@@ -70,7 +70,7 @@ public class LazyDataFrameTest {
     @Test
     public void testMapColumn() {
 
-        DataFrame df = new LazyDataFrame(columns, rows).mapColumn("b", Object::toString);
+        DataFrame df = new LazyDataFrame(columns, rows).mapColumn("b", x -> x != null ? x.toString() : null);
 
         assertEquals(2, df.getColumns().size());
         assertSame(columns, df.getColumns());
@@ -95,7 +95,7 @@ public class LazyDataFrameTest {
         DataFrame df = new LazyDataFrame(columns, rows)
                 .map(r -> r
                         .mapColumn(0, (String v) -> v + "_")
-                        .mapColumn(1, (Integer i) -> i * 10));
+                        .mapColumn(1, (Integer i) -> i != null ? i * 10 : null));
 
         assertEquals(2, df.getColumns().size());
         assertSame(columns, df.getColumns());
