@@ -122,17 +122,16 @@ public class LazyDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure() {
 
-        Index altColumns = new Index("c", "d", "e");
+        Index i1 = new Index("c", "d", "e");
 
         DataFrame df = new LazyDataFrame(columns, rows)
                 .map(r -> new ArrayDataRow(
-                        altColumns,
+                        i1,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
                         r.get(1)));
 
-        assertEquals(3, df.getColumns().size());
-        assertSame(altColumns, df.getColumns());
+        assertSame(i1, df.getColumns());
 
         List<DataRow> consumed = new ArrayList<>();
         df.forEach(consumed::add);
@@ -155,6 +154,44 @@ public class LazyDataFrameTest {
         assertEquals("four", consumed.get(3).get("c"));
         assertEquals(40, consumed.get(3).get("d"));
         assertEquals(4, consumed.get(3).get("e"));
+    }
+
+    @Test
+    public void testMap_ChangeRowStructure_Chained() {
+
+        Index i1 = new Index("c", "d", "e");
+        Index i2 = new Index("f", "g");
+
+        DataFrame df = new LazyDataFrame(columns, rows)
+                .map(r -> new ArrayDataRow(
+                        i1,
+                        r.get(0),
+                        r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
+                        r.get(1)))
+                .map(r -> new ArrayDataRow(
+                        i2,
+                        r.get(0),
+                        r.get(1)));
+
+        assertSame(i2, df.getColumns());
+
+        List<DataRow> consumed = new ArrayList<>();
+        df.forEach(consumed::add);
+
+        assertEquals(4, consumed.size());
+        assertNotEquals(rows, consumed);
+
+        assertEquals("one", consumed.get(0).get("f"));
+        assertEquals(10, consumed.get(0).get("g"));
+
+        assertEquals("two", consumed.get(1).get("f"));
+        assertEquals(20, consumed.get(1).get("g"));
+
+        assertEquals("three", consumed.get(2).get("f"));
+        assertEquals(30, consumed.get(2).get("g"));
+
+        assertEquals("four", consumed.get(3).get("f"));
+        assertEquals(40, consumed.get(3).get("g"));
     }
 
     @Test
