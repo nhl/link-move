@@ -193,24 +193,11 @@ public class LazyDataFrameTest {
                 new ArrayDataRow(i2, 10),
                 new ArrayDataRow(i2, 20)));
 
-        DataFrame df_zipped = df1.zip(df2);
-
-        assertNotSame(df1, df_zipped);
-        assertNotSame(df2, df_zipped);
-        assertEquals(2, df_zipped.getColumns().size());
-
-        assertArrayEquals(new String[]{"a", "b"}, df_zipped.getColumns().getColumns());
-
-        List<DataRow> consumed = new ArrayList<>();
-        df_zipped.forEach(consumed::add);
-
-        assertEquals(2, consumed.size());
-
-        assertEquals(1, consumed.get(0).get("a"));
-        assertEquals(10, consumed.get(0).get("b"));
-
-        assertEquals(2, consumed.get(1).get("a"));
-        assertEquals(20, consumed.get(1).get("b"));
+        DataFrame df = df1.zip(df2);
+        new DFAsserts(df, "a", "b")
+                .assertLength(2)
+                .assertRow(0, 1, 10)
+                .assertRow(1, 2, 20);
     }
 
     @Test
@@ -221,23 +208,12 @@ public class LazyDataFrameTest {
                 new ArrayDataRow(i1, 1),
                 new ArrayDataRow(i1, 2)));
 
-        DataFrame df_zipped = df1.zip(df1);
+        DataFrame df = df1.zip(df1);
 
-        assertNotSame(df1, df_zipped);
-        assertEquals(2, df_zipped.getColumns().size());
-
-        assertArrayEquals(new String[]{"a", "a_"}, df_zipped.getColumns().getColumns());
-
-        List<DataRow> consumed = new ArrayList<>();
-        df_zipped.forEach(consumed::add);
-
-        assertEquals(2, consumed.size());
-
-        assertEquals(1, consumed.get(0).get("a"));
-        assertEquals(1, consumed.get(0).get("a_"));
-
-        assertEquals(2, consumed.get(1).get("a"));
-        assertEquals(2, consumed.get(1).get("a_"));
+        new DFAsserts(df, "a", "a_")
+                .assertLength(2)
+                .assertRow(0, 1, 1)
+                .assertRow(1, 2, 2);
     }
 
     @Test
@@ -252,14 +228,10 @@ public class LazyDataFrameTest {
                 new ArrayDataRow(i2, 10),
                 new ArrayDataRow(i2, 20)));
 
-
-        List<DataRow> consumed = new ArrayList<>();
-        df1.zip(df2).forEach(consumed::add);
-
-        assertEquals(1, consumed.size());
-
-        assertEquals(2, consumed.get(0).get("a"));
-        assertEquals(10, consumed.get(0).get("b"));
+        DataFrame df = df1.zip(df2);
+        new DFAsserts(df, "a", "b")
+                .assertLength(1)
+                .assertRow(0, 2, 10);
     }
 
     @Test
@@ -274,12 +246,9 @@ public class LazyDataFrameTest {
                 new ArrayDataRow(i2, 10),
                 new ArrayDataRow(i2, 20)));
 
-        List<DataRow> consumed = new ArrayList<>();
-        df2.zip(df1).forEach(consumed::add);
-
-        assertEquals(1, consumed.size());
-
-        assertEquals(2, consumed.get(0).get("a"));
-        assertEquals(10, consumed.get(0).get("b"));
+        DataFrame df = df2.zip(df1);
+        new DFAsserts(df, "b", "a")
+                .assertLength(1)
+                .assertRow(0, 10, 2);
     }
 }

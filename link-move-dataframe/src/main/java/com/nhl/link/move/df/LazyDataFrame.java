@@ -3,7 +3,6 @@ package com.nhl.link.move.df;
 import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.print.InlinePrinter;
-import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -53,12 +52,6 @@ public class LazyDataFrame implements DataFrame {
     public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
         int ci = columns.position(columnName);
         return map(columns, (i, r) -> r.mapColumn(ci, m));
-    }
-
-    @Override
-    public DataFrame zip(DataFrame df) {
-        Index zippedColumns = Zipper.zipIndex(getColumns(), df.getColumns());
-        return new ZipDataFrame(zippedColumns, this, df, Zipper::zipRows);
     }
 
     @Override

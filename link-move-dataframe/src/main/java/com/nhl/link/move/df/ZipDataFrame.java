@@ -57,12 +57,6 @@ public class ZipDataFrame implements DataFrame {
     }
 
     @Override
-    public DataFrame zip(DataFrame df) {
-        Index zippedColumns = Zipper.zipIndex(getColumns(), df.getColumns());
-        return new ZipDataFrame(zippedColumns, this, df, Zipper::zipRows);
-    }
-
-    @Override
     public Iterator<DataRow> iterator() {
         return new Iterator<DataRow>() {
 

@@ -94,4 +94,25 @@ public class HeadDataFrameTest {
 
         new DFAsserts(df, i1).assertLength(0);
     }
+
+    @Test
+    public void testZip_LeftIsShorter() {
+
+        Index i1 = new Index("a");
+        DataFrame df1 = new LazyDataFrame(i1, asList(
+                new ArrayDataRow(i1, 1),
+                new ArrayDataRow(i1, 2)));
+
+        Index i2 = new Index("b");
+        DataFrame df2 = new LazyDataFrame(i2, asList(
+                new ArrayDataRow(i2, 10),
+                new ArrayDataRow(i2, 20)));
+
+
+        DataFrame df = new HeadDataFrame(df1, 1).zip(df2);
+
+        new DFAsserts(df, "a", "b")
+                .assertLength(1)
+                .assertRow(0, 1, 10);
+    }
 }

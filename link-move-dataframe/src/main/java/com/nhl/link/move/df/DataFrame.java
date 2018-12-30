@@ -1,7 +1,9 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.map.DataRowCombiner;
 import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.map.ValueMapper;
+import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +27,7 @@ public interface DataFrame extends Iterable<DataRow> {
         return map(getColumns(), rowMapper);
     }
 
-    DataFrame map(Index mappedIndex, DataRowMapper rowMapper);
+    DataFrame map(Index mappedColumns, DataRowMapper rowMapper);
 
     <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m);
 
@@ -43,7 +45,13 @@ public interface DataFrame extends Iterable<DataRow> {
      * @param df another DataFrame.
      * @return a new DataFrame that is a combination of columns from this DataFrame and a DataFrame argument.
      */
-    DataFrame zip(DataFrame df);
+    default DataFrame zip(DataFrame df) {
+        return zip(Zipper.zipIndex(getColumns(), df.getColumns()), df, Zipper::zipRows);
+    }
+
+    default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {
+        return new ZipDataFrame(zippedColumns, this, df, c);
+    }
 
     @Override
     Iterator<DataRow> iterator();
