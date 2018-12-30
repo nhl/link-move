@@ -3,17 +3,8 @@ package com.nhl.link.move.df.zip;
 import com.nhl.link.move.df.ArrayDataRow;
 import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
-import com.nhl.link.move.df.map.DataRowMapper;
 
-import java.util.Iterator;
-
-public class ZipDataRowMapper implements DataRowMapper {
-
-    private Iterator<DataRow> rows;
-
-    public ZipDataRowMapper(Iterator<DataRow> rows) {
-        this.rows = rows;
-    }
+public class Zipper {
 
     public static Index zipIndex(Index leftIndex, Index rightIndex) {
 
@@ -39,17 +30,9 @@ public class ZipDataRowMapper implements DataRowMapper {
         return new Index(zippedColumns);
     }
 
-    @Override
-    public DataRow map(Index mappedIndex, DataRow row) {
 
-        if (!rows.hasNext()) {
-            throw new IllegalArgumentException("Right DataFrame is longer than the left");
-        }
+    public static DataRow zipRows(Index mappedIndex, DataRow lr, DataRow rr) {
 
-        return zip(mappedIndex, rows.next(), row);
-    }
-
-    private DataRow zip(Index mappedIndex, DataRow lr, DataRow rr) {
         int llen = lr.size();
         int rlen = rr.size();
 

@@ -294,33 +294,46 @@ public class LazyDataFrameTest {
         assertEquals(2, consumed.get(1).get("a_"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testZip_LeftIsShorter() {
 
-        DataFrame df1 = new LazyDataFrame(columns, rows);
-        DataFrame df2 = new LazyDataFrame(columns, asList(
-                new ArrayDataRow(columns, "one", 1),
-                new ArrayDataRow(columns, "two", 2),
-                new ArrayDataRow(columns, "three", 3)));
+        Index i1 = new Index("a");
+        DataFrame df1 = new LazyDataFrame(i1, asList(
+                new ArrayDataRow(i1, 2)));
 
-        df1.zip(df2)
-                // must throw when iterating due to mismatch in DataFrame lengths
-                .forEach(r -> {
-                });
+        Index i2 = new Index("b");
+        DataFrame df2 = new LazyDataFrame(i2, asList(
+                new ArrayDataRow(i2, 10),
+                new ArrayDataRow(i2, 20)));
+
+
+        List<DataRow> consumed = new ArrayList<>();
+        df1.zip(df2).forEach(consumed::add);
+
+        assertEquals(1, consumed.size());
+
+        assertEquals(2, consumed.get(0).get("a"));
+        assertEquals(10, consumed.get(0).get("b"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testZip_RightIsShorter() {
 
-        DataFrame df1 = new LazyDataFrame(columns, rows);
-        DataFrame df2 = new LazyDataFrame(columns, asList(
-                new ArrayDataRow(columns, "one", 1),
-                new ArrayDataRow(columns, "two", 2),
-                new ArrayDataRow(columns, "three", 3)));
+        Index i1 = new Index("a");
+        DataFrame df1 = new LazyDataFrame(i1, asList(
+                new ArrayDataRow(i1, 2)));
 
-        df2.zip(df1)
-                // must throw when iterating due to mismatch in DataFrame lengths
-                .forEach(r -> {
-                });
+        Index i2 = new Index("b");
+        DataFrame df2 = new LazyDataFrame(i2, asList(
+                new ArrayDataRow(i2, 10),
+                new ArrayDataRow(i2, 20)));
+
+        List<DataRow> consumed = new ArrayList<>();
+        df2.zip(df1).forEach(consumed::add);
+
+        assertEquals(1, consumed.size());
+
+        assertEquals(2, consumed.get(0).get("a"));
+        assertEquals(10, consumed.get(0).get("b"));
     }
 }

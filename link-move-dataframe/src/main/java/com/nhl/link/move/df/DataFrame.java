@@ -21,6 +21,10 @@ public interface DataFrame extends Iterable<DataRow> {
         return new HeadDataFrame(this, len);
     }
 
+    default DataFrame map(DataRowMapper rowMapper) {
+        return map(getColumns(), rowMapper);
+    }
+
     DataFrame map(Index mappedIndex, DataRowMapper rowMapper);
 
     <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m);
@@ -31,6 +35,14 @@ public interface DataFrame extends Iterable<DataRow> {
 
     DataFrame renameColumns(Map<String, String> oldToNewNames);
 
+    /**
+     * Returns a DataFrame that combines columns from this and another DataFrame. If the lengths of the DataFrames are
+     * not the same, the data from the longest DataFrame is truncated. If two DataFrames have have conflicting columns,
+     * an underscore suffix ("_") is added to the column names coming from the right-hand side DataFrame.
+     *
+     * @param df another DataFrame.
+     * @return a new DataFrame that is a combination of columns from this DataFrame and a DataFrame argument.
+     */
     DataFrame zip(DataFrame df);
 
     @Override
