@@ -34,7 +34,6 @@ public class HeadDataFrameTest {
 
         df.forEach(consumed::add);
 
-        assertEquals(3, consumed.size());
         assertEquals(rows.subList(0, 3), consumed);
     }
 
@@ -52,31 +51,23 @@ public class HeadDataFrameTest {
         DataFrame df3 = df.head(2);
         assertNotSame(df, df3);
 
-        List<DataRow> consumed = new ArrayList<>();
-        df3.forEach(consumed::add);
-
-        assertEquals(2, consumed.size());
-        assertEquals(rows.subList(0, 2), consumed);
+        new DFAsserts(df3, columns)
+                .assertLength(2)
+                .assertRow(0, "one")
+                .assertRow(1, "two");
     }
 
     @Test
     public void testMap() {
 
-        DataFrame df =  new HeadDataFrame(new LazyDataFrame(columns, rows), 3)
-                .map(columns, (i, r) -> r.mapColumn(0, (String v) -> v + "_"));
+        DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 3)
+                .map(columns, (i, r) -> r.mapColumn(0, v -> v + "_"));
 
-        assertEquals(1, df.getColumns().size());
-        assertSame(columns, df.getColumns());
-
-        List<DataRow> consumed = new ArrayList<>();
-        df.forEach(consumed::add);
-
-        assertEquals(3, consumed.size());
-        assertNotEquals(rows, consumed);
-
-        assertEquals("one_", consumed.get(0).get("a"));
-        assertEquals("two_", consumed.get(1).get("a"));
-        assertEquals("three_", consumed.get(2).get("a"));
+        new DFAsserts(df, columns)
+                .assertLength(3)
+                .assertRow(0, "one_")
+                .assertRow(1, "two_")
+                .assertRow(2, "three_");
     }
 
     @Test
@@ -85,18 +76,12 @@ public class HeadDataFrameTest {
         Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 2)
-                .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) != null ? r.get(0) + "_" : ""));
+                .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) + "_"));
 
-        assertSame(i1, df.getColumns());
-
-        List<DataRow> consumed = new ArrayList<>();
-        df.forEach(consumed::add);
-
-        assertEquals(2, consumed.size());
-        assertNotEquals(rows, consumed);
-
-        assertEquals("one_", consumed.get(0).get("c"));
-        assertEquals("two_", consumed.get(1).get("c"));
+        new DFAsserts(df, i1)
+                .assertLength(2)
+                .assertRow(0, "one_")
+                .assertRow(1, "two_");
     }
 
     @Test
@@ -105,13 +90,8 @@ public class HeadDataFrameTest {
         Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, Collections.emptyList()), 2)
-                .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) != null ? r.get(0) + "_" : ""));
+                .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) + "_"));
 
-        assertSame(i1, df.getColumns());
-
-        List<DataRow> consumed = new ArrayList<>();
-        df.forEach(consumed::add);
-
-        assertEquals(0, consumed.size());
+        new DFAsserts(df, i1).assertLength(0);
     }
 }

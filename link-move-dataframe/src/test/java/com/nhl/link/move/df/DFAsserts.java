@@ -29,7 +29,7 @@ public class DFAsserts {
         assertArrayEquals(expectedIndex, row.getIndex().getColumns());
 
         for (int i = 0; i < expectedIndex.length; i++) {
-            assertEquals("Unexpected value for '" + expectedIndex[i] + "' (" + i + ")", expectedValues[i], row.get(i));
+            assertEquals("Unexpected value for '" + expectedIndex[i] + " (" + i + ")'", expectedValues[i], row.get(i));
         }
     }
 
