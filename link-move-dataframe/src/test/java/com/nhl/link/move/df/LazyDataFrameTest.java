@@ -295,7 +295,7 @@ public class LazyDataFrameTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testZip_LeftSizeMismatch() {
+    public void testZip_LeftIsShorter() {
 
         DataFrame df1 = new LazyDataFrame(columns, rows);
         DataFrame df2 = new LazyDataFrame(columns, asList(
@@ -303,11 +303,14 @@ public class LazyDataFrameTest {
                 new ArrayDataRow(columns, "two", 2),
                 new ArrayDataRow(columns, "three", 3)));
 
-        df1.zip(df2);
+        df1.zip(df2)
+                // must throw when iterating due to mismatch in DataFrame lengths
+                .forEach(r -> {
+                });
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testZip_RightSizeMismatch() {
+    public void testZip_RightIsShorter() {
 
         DataFrame df1 = new LazyDataFrame(columns, rows);
         DataFrame df2 = new LazyDataFrame(columns, asList(
@@ -315,6 +318,9 @@ public class LazyDataFrameTest {
                 new ArrayDataRow(columns, "two", 2),
                 new ArrayDataRow(columns, "three", 3)));
 
-        df2.zip(df1);
+        df2.zip(df1)
+                // must throw when iterating due to mismatch in DataFrame lengths
+                .forEach(r -> {
+                });
     }
 }

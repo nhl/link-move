@@ -15,36 +15,56 @@ public class ZipDataRowMapper implements DataRowMapper {
         this.rows = rows;
     }
 
-    @Override
-    public DataRow map(DataRow row) {
+    public static Index zipIndex(Index leftIndex, Index rightIndex) {
 
-        if (!rows.hasNext()) {
-            throw new IllegalArgumentException("Right DataFrame is longer than the left");
-        }
-
-        return zip(rows.next(), row);
-    }
-
-    private DataRow zip(DataRow lr, DataRow rr) {
         int llen = leftIndex.size();
-        int rlen = index.size();
+        int rlen = rightIndex.size();
 
-        String[] newIndex = new String[llen + rlen];
+        String[] zippedColumns = new String[llen + rlen];
 
-        System.arraycopy(leftIndex.getColumns(), 0, newIndex, 0, llen);
+        System.arraycopy(leftIndex.getColumns(), 0, zippedColumns, 0, llen);
 
-        String[] rColumns = index.getColumns();
+        String[] rColumns = rightIndex.getColumns();
 
         // resolve dupes on the right
-        for(int i = 0; i < rlen; i++) {
+        for (int i = 0; i < rlen; i++) {
             String column = rColumns[i];
             while (leftIndex.hasColumn(column)) {
                 column = column + "_";
             }
 
-            newIndex[i + llen] = column;
+            zippedColumns[i + llen] = column;
         }
 
-        return new ArrayDataRow(newIndex);
+        return new Index(zippedColumns);
+    }
+
+    @Override
+    public DataRow map(Index mappedIndex, DataRow row) {
+
+        if (!rows.hasNext()) {
+            throw new IllegalArgumentException("Right DataFrame is longer than the left");
+        }
+
+        return zip(mappedIndex, rows.next(), row);
+    }
+
+    private DataRow zip(Index mappedIndex, DataRow lr, DataRow rr) {
+        int llen = lr.size();
+        int rlen = rr.size();
+
+        if (llen + rlen != mappedIndex.size()) {
+            throw new IllegalArgumentException("Index size of "
+                    + mappedIndex.size()
+                    + " must be a sum of left and right row sizes ("
+                    + llen + ", " + rlen + ")");
+        }
+
+        Object[] zippedValues = new Object[mappedIndex.size()];
+
+        lr.copyTo(zippedValues, 0);
+        rr.copyTo(zippedValues, llen);
+
+        return new ArrayDataRow(mappedIndex, zippedValues);
     }
 }

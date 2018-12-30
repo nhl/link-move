@@ -14,6 +14,8 @@ public interface DataRow {
 
     <V, VR> DataRow mapColumn(int position, ValueMapper<V, VR> m);
 
+    void copyTo(Object[] to, int toOffset);
+
     default int size() {
         return getIndex().size();
     }
