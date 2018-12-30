@@ -1,7 +1,6 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowMapper;
-import com.nhl.link.move.df.map.IndexMapper;
 import com.nhl.link.move.df.map.ValueMapper;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public interface DataFrame extends Iterable<DataRow> {
         return new HeadDataFrame(this, len);
     }
 
-    DataFrame map(IndexMapper indexMapper, DataRowMapper rowMapper);
+    DataFrame map(Index mappedIndex, DataRowMapper rowMapper);
 
     <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m);
 

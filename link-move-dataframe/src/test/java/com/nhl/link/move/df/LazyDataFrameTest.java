@@ -92,9 +92,9 @@ public class LazyDataFrameTest {
     public void testMap() {
 
         DataFrame df = new LazyDataFrame(columns, rows)
-                .map(i -> columns, r -> r
+                .map(columns, (i, r) -> r
                         .mapColumn(0, (String v) -> v + "_")
-                        .mapColumn(1, (Integer i) -> i != null ? i * 10 : null));
+                        .mapColumn(1, (Integer v) -> v != null ? v * 10 : null));
 
         assertEquals(2, df.getColumns().size());
         assertSame(columns, df.getColumns());
@@ -124,8 +124,8 @@ public class LazyDataFrameTest {
         Index i1 = new Index("c", "d", "e");
 
         DataFrame df = new LazyDataFrame(columns, rows)
-                .map(i -> i1, r -> new ArrayDataRow(
-                        i1,
+                .map(i1, (i, r) -> new ArrayDataRow(
+                        i,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
                         r.get(1)));
@@ -162,13 +162,13 @@ public class LazyDataFrameTest {
         Index i2 = new Index("f", "g");
 
         DataFrame df = new LazyDataFrame(columns, rows)
-                .map(i -> i1, r -> new ArrayDataRow(
-                        i1,
+                .map(i1, (i, r) -> new ArrayDataRow(
+                        i,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
                         r.get(1)))
-                .map(i -> i2, r -> new ArrayDataRow(
-                        i2,
+                .map(i2, (i, r) -> new ArrayDataRow(
+                        i,
                         r.get(0),
                         r.get(1)));
 
@@ -199,8 +199,8 @@ public class LazyDataFrameTest {
         Index i1 = new Index("c", "d", "e");
 
         DataFrame df = new LazyDataFrame(columns)
-                .map(i -> i1, r -> new ArrayDataRow(
-                        i1,
+                .map(i1, (i, r) -> new ArrayDataRow(
+                        i,
                         r.get(0),
                         r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
                         r.get(1)));
@@ -219,8 +219,8 @@ public class LazyDataFrameTest {
         Index i1 = new Index("c", "d", "e");
 
         new LazyDataFrame(columns, rows)
-                .map(i -> i1, r -> new ArrayDataRow(
-                        i1,
+                .map(i1, (i, r) -> new ArrayDataRow(
+                        i,
                         r.get(0),
                         r.get(1)))
                 // must throw when iterating due to inconsistent mapped row structure...

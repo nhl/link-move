@@ -38,7 +38,7 @@ public class ArrayDataRow implements DataRow {
 
     @Override
     public DataRow reindex(Index index) {
-        return new ArrayDataRow(index, values);
+        return this.index == index ? this : new ArrayDataRow(index, values);
     }
 
     @Override

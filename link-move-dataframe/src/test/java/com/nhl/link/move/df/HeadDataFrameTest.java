@@ -63,7 +63,7 @@ public class HeadDataFrameTest {
     public void testMap() {
 
         DataFrame df =  new HeadDataFrame(new LazyDataFrame(columns, rows), 3)
-                .map(i -> columns, r -> r.mapColumn(0, (String v) -> v + "_"));
+                .map(columns, (i, r) -> r.mapColumn(0, (String v) -> v + "_"));
 
         assertEquals(1, df.getColumns().size());
         assertSame(columns, df.getColumns());
@@ -85,9 +85,7 @@ public class HeadDataFrameTest {
         Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 2)
-                .map(i -> i1, r -> new ArrayDataRow(
-                        i1,
-                        r.get(0) != null ? r.get(0) + "_" : ""));
+                .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) != null ? r.get(0) + "_" : ""));
 
         assertSame(i1, df.getColumns());
 
@@ -107,9 +105,7 @@ public class HeadDataFrameTest {
         Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, Collections.emptyList()), 2)
-                .map(i -> i1, r -> new ArrayDataRow(
-                        i1,
-                        r.get(0) != null ? r.get(0) + "_" : ""));
+                .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) != null ? r.get(0) + "_" : ""));
 
         assertSame(i1, df.getColumns());
 

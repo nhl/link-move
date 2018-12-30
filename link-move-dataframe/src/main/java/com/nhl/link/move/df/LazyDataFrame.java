@@ -1,7 +1,6 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowMapper;
-import com.nhl.link.move.df.map.IndexMapper;
 import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.print.InlinePrinter;
 
@@ -41,19 +40,18 @@ public class LazyDataFrame implements DataFrame {
     @Override
     public DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = columns.rename(oldToNewNames);
-        DataRowMapper m = r -> r.reindex(newColumns);
-        return new LazyDataFrame(newColumns, this, m);
+        return new LazyDataFrame(newColumns, this, DataRowMapper.identity());
     }
 
     @Override
-    public DataFrame map(IndexMapper indexMapper, DataRowMapper rowMapper) {
-        return new LazyDataFrame(indexMapper.map(columns), this, rowMapper);
+    public DataFrame map(Index mappedIndex, DataRowMapper rowMapper) {
+        return new LazyDataFrame(mappedIndex, this, rowMapper);
     }
 
     @Override
     public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> typeConverter) {
         int ci = columns.position(columnName);
-        return map(i -> columns, r -> r.mapColumn(ci, typeConverter));
+        return map(columns, (i, r) -> r.mapColumn(ci, typeConverter));
     }
 
     @Override
@@ -69,7 +67,7 @@ public class LazyDataFrame implements DataFrame {
 
             @Override
             public DataRow next() {
-                return rowMapper.map(delegateIt.next());
+                return rowMapper.map(columns, delegateIt.next());
             }
         };
     }

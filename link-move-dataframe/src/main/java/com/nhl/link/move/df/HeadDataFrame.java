@@ -1,7 +1,6 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowMapper;
-import com.nhl.link.move.df.map.IndexMapper;
 import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.print.InlinePrinter;
 
@@ -41,8 +40,7 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public DataFrame map(IndexMapper indexMapper, DataRowMapper rowMapper) {
-        Index mappedIndex = indexMapper.map(getColumns());
+    public DataFrame map(Index mappedIndex, DataRowMapper rowMapper) {
         return new LazyDataFrame(mappedIndex, this, rowMapper);
     }
 
@@ -58,6 +56,7 @@ public class HeadDataFrame implements DataFrame {
 
             private int counter = 0;
             private Iterator<DataRow> delegateIt = HeadDataFrame.this.delegate.iterator();
+            private Index columns = HeadDataFrame.this.getColumns();
 
             @Override
             public boolean hasNext() {
@@ -71,7 +70,7 @@ public class HeadDataFrame implements DataFrame {
                 }
 
                 counter++;
-                return rowMapper.map(delegateIt.next());
+                return rowMapper.map(columns, delegateIt.next());
             }
         };
     }
