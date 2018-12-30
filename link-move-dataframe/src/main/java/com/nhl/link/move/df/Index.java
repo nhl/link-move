@@ -35,22 +35,25 @@ public class Index {
     public int position(String columnName) {
 
         if (columnIndex == null) {
-            Map<String, Integer> index = new HashMap<>();
-
-            for (int i = 0; i < columns.length; i++) {
-                Integer previous = index.put(columns[i], i);
-                if (previous != null) {
-                    throw new IllegalStateException("Duplicate column '" + columns[i] +
-                            "'. Found at " + previous + " and " + i);
-                }
-            }
-
-            this.columnIndex = index;
+            this.columnIndex = computeColumnIndex();
         }
 
         return columnIndex.computeIfAbsent(columnName, n -> {
             throw new IllegalArgumentException("Column '" + n + "' is not present in Columns");
         });
+    }
+
+    private Map<String, Integer> computeColumnIndex() {
+        Map<String, Integer> index = new HashMap<>();
+
+        for (int i = 0; i < columns.length; i++) {
+            Integer previous = index.put(columns[i], i);
+            if (previous != null) {
+                throw new IllegalStateException("Duplicate column '" + columns[i] +
+                        "'. Found at " + previous + " and " + i);
+            }
+        }
+        return index;
     }
 
     public Index rename(Map<String, String> oldToNewNames) {
