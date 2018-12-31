@@ -1,15 +1,11 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.df.DataFrame;
+import com.nhl.link.move.df.join.IndexedJoiner;
+import com.nhl.link.move.df.join.JoinSemantics;
 import com.nhl.link.move.mapper.Mapper;
-import com.nhl.link.move.runtime.task.SourceTargetPair;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @since 2.6
@@ -24,42 +20,31 @@ public class TargetMapper<T extends DataObject> {
         this.type = type;
     }
 
-    public List<SourceTargetPair<T>> map(
+    public DataFrame map(
             ObjectContext context,
-            Map<Object, Map<String, Object>> mappedSources,
-            List<T> matchedTargets) {
+            DataFrame sources,
+            DataFrame targets) {
 
-        // clone mappedSources as we are planning to truncate it in this method
-        Map<Object, Map<String, Object>> localMappedSources = new HashMap<>(mappedSources);
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>(
+                (c, r) -> c.get(r, CreateOrUpdateSegment.KEY_COLUMN),
+                (c, r) -> mapper.keyForTarget((DataObject) c.get(r, CreateOrUpdateSegment.TARGET_COLUMN)),
+                JoinSemantics.left);
 
-        List<SourceTargetPair<T>> result = new ArrayList<>();
-
-        for (T t : matchedTargets) {
-
-            Object key = mapper.keyForTarget(t);
-
-            Map<String, Object> src = localMappedSources.remove(key);
-
-            // a null can only mean some algorithm malfunction, as keys are all
-            // coming from a known set of sources
-            if (src == null) {
-                throw new LmRuntimeException("Invalid key: " + key);
-            }
-
-            // including phantom updates for now... will filter them out during the merge state
-            result.add(new SourceTargetPair<>(src, t, false));
-        }
-
-        // everything that's left are new objects
-        for (Map.Entry<Object, Map<String, Object>> e : localMappedSources.entrySet()) {
-            T t = create(context, type);
-            result.add(new SourceTargetPair<>(e.getValue(), t, true));
-        }
-
-        return result;
+        return sources
+                .join(targets, joiner)
+                .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, (c, r) -> isCreated(c.get(r, CreateOrUpdateSegment.TARGET_COLUMN)))
+                .mapColumn(CreateOrUpdateSegment.TARGET_COLUMN, (c, r) -> createIfMissing(c.get(r, CreateOrUpdateSegment.TARGET_COLUMN), context));
     }
 
-    protected T create(ObjectContext context, Class<T> type) {
-        return context.newObject(type);
+    private boolean isCreated(Object v) {
+        return v == null;
+    }
+
+    private T createIfMissing(Object v, ObjectContext context) {
+
+        // Note that "context.newObject" is impure function. Though we don't see its undesired side effects on
+        // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
+
+        return v != null ? (T) v : context.newObject(type);
     }
 }

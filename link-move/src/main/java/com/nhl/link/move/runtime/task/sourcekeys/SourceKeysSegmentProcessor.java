@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
+import com.nhl.link.move.runtime.task.createorupdate.LegacyRowConverter;
 
 import java.util.Set;
 
@@ -10,10 +10,10 @@ import java.util.Set;
  */
 public class SourceKeysSegmentProcessor {
 
-    private RowConverter rowConverter;
+    private LegacyRowConverter rowConverter;
     private SourceKeysCollector mapper;
 
-    public SourceKeysSegmentProcessor(RowConverter rowConverter, SourceKeysCollector mapper) {
+    public SourceKeysSegmentProcessor(LegacyRowConverter rowConverter, SourceKeysCollector mapper) {
         this.rowConverter = rowConverter;
         this.mapper = mapper;
     }

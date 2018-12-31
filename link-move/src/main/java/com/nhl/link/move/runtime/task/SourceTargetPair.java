@@ -6,6 +6,7 @@ import java.util.Map;
  * A pair of matched source row and target object.
  *
  * @since 2.6
+ * @deprecated since 2.7, as this can be represented by a {@link com.nhl.link.move.df.DataFrame}.
  */
 public class SourceTargetPair<T> {
 

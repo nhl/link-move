@@ -1,14 +1,14 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.RowAttribute;
+import com.nhl.link.move.df.DataFrame;
+import com.nhl.link.move.df.Index;
+import com.nhl.link.move.df.IndexPosition;
+import com.nhl.link.move.df.map.MapContext;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -26,29 +26,43 @@ public class RowConverter {
         this.converterFactory = converterFactory;
     }
 
-    public List<Map<String, Object>> convert(RowAttribute[] rowHeader, List<Object[]> rows) {
-
-        List<Map<String, Object>> converted = new ArrayList<>(rows.size());
-
-        for (Object[] r : rows) {
-            converted.add(convert(rowHeader, r));
-        }
-
-        return converted;
+    public DataFrame convert(RowAttribute[] rowHeader, DataFrame df) {
+        return df.map(
+                convertColumns(rowHeader, df.getColumns()),
+                (c, r) -> convert(rowHeader, c, r));
     }
 
-    private Map<String, Object> convert(RowAttribute[] rowHeader, Object[] source) {
+    private Index convertColumns(RowAttribute[] rowHeader, Index columns) {
 
-        Map<String, Object> converted = new HashMap<>();
+        IndexPosition[] positions = columns.getPositions();
+        String[] names = new String[positions.length];
 
-        for (int i = 0; i < rowHeader.length; i++) {
-            RowAttribute key = rowHeader[i];
+        for (int i = 0; i < positions.length; i++) {
 
-            // TODO: should we "compile" this info for the header upfront and apply it to every row?
-            Optional<TargetAttribute> attribute = targetEntity.getAttribute(key.getTargetPath());
-            String path = attribute.isPresent() ? attribute.get().getNormalizedPath() : key.getTargetPath();
-            Object value = attribute.isPresent() ? convertValue(attribute.get(), source[i]) : source[i];
-            converted.put(path, value);
+            String targetPath = rowHeader[i].getTargetPath();
+            Optional<TargetAttribute> attribute = targetEntity.getAttribute(targetPath);
+            names[i] = attribute.map(TargetAttribute::getNormalizedPath).orElse(targetPath);
+        }
+
+        return Index.withNames(names);
+    }
+
+    private Object[] convert(RowAttribute[] rowHeader, MapContext context, Object[] source) {
+
+        IndexPosition[] positions = context.getSourceIndex().getPositions();
+        int len = positions.length;
+        Object[] converted = context.copyToTarget(source);
+
+        for (int i = 0; i < len; i++) {
+
+            // TODO: should we "compile" this info for the header upfront and apply it to every row? In many cases
+            //  we won't even need to copy rows ...
+
+            String targetPath = rowHeader[i].getTargetPath();
+            Optional<TargetAttribute> attribute = targetEntity.getAttribute(targetPath);
+            if (attribute.isPresent()) {
+                converted[i] = convertValue(attribute.get(), context.get(source, i));
+            }
         }
 
         return converted;

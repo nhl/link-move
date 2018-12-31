@@ -1,9 +1,10 @@
 package com.nhl.link.move.mapper;
 
-import java.util.Map;
-
+import com.nhl.link.move.df.map.MapContext;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
+
+import java.util.Map;
 
 /**
  * A mapper that does transparent conversion between object key value and a
@@ -26,9 +27,15 @@ public class SafeMapKeyMapper implements Mapper {
 		return keyAdapter.toMapKey(delegate.keyForTarget(target));
 	}
 
+	@Deprecated
 	@Override
 	public Object keyForSource(Map<String, Object> source) {
 		return keyAdapter.toMapKey(delegate.keyForSource(source));
+	}
+
+	@Override
+	public Object keyForSource(MapContext context, Object[] source) {
+		return keyAdapter.toMapKey(delegate.keyForSource(context, source));
 	}
 
 	@Override

@@ -1,49 +1,49 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import com.nhl.link.move.df.DataFrame;
+import com.nhl.link.move.df.DataRow;
+import com.nhl.link.move.df.Index;
+import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.ObjectSelect;
 
-import com.nhl.link.move.mapper.Mapper;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @since 1.3
  */
 public class TargetMatcher<T> {
 
-	private Class<T> type;
-	private Mapper mapper;
+    private Class<T> type;
+    private Mapper mapper;
+    private Index index;
 
-	public TargetMatcher(Class<T> type, Mapper mapper) {
-		this.type = type;
-		this.mapper = mapper;
-	}
+    public TargetMatcher(Class<T> type, Mapper mapper) {
+        this.type = type;
+        this.mapper = mapper;
+        this.index = Index.withNames(CreateOrUpdateSegment.TARGET_COLUMN);
+    }
 
-	public List<T> match(ObjectContext context, Map<Object, Map<String, Object>> mappedSegment) {
+    public DataFrame match(ObjectContext context, DataFrame df) {
 
-		Collection<Object> keys = mappedSegment.keySet();
+        Map<Object, Expression> expressions = new LinkedHashMap<>();
 
-		List<Expression> expressions = new ArrayList<>(keys.size());
-		for (Object key : keys) {
+        df.consume((c, r) -> expressions.computeIfAbsent(c.get(r, CreateOrUpdateSegment.KEY_COLUMN),
+                key -> mapper.expressionForKey(key)));
 
-			Expression e = mapper.expressionForKey(key);
-			if (e != null) {
-				expressions.add(e);
-			}
-		}
+        // no keys (?)
+        if (expressions.isEmpty()) {
+            return toDataFrame(Collections.emptyList());
+        } else {
+            return toDataFrame(ObjectSelect.query(type).where(ExpressionFactory.or(expressions.values())).select(context));
+        }
+    }
 
-		// no keys (?)
-		if (expressions.isEmpty()) {
-			return Collections.emptyList();
-		} else {
-			return ObjectSelect.query(type).where(ExpressionFactory.or(expressions)).select(context);
-		}
-	}
+    private DataFrame toDataFrame(Iterable<T> data) {
+        return DataFrame.create(index, data, DataRow::row);
+    }
 }

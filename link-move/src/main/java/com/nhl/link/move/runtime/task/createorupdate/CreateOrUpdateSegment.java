@@ -1,29 +1,31 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.RowAttribute;
-import com.nhl.link.move.runtime.task.SourceTargetPair;
+import com.nhl.link.move.df.DataFrame;
 import org.apache.cayenne.ObjectContext;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @since 1.3
  */
 public class CreateOrUpdateSegment<T> {
 
+    public static final String KEY_COLUMN = "$lm_key";
+    public static final String TARGET_COLUMN = "$lm_target";
+    public static final String TARGET_CREATED_COLUMN = "$lm_target_created";
+    public static final String TARGET_CHANGED_COLUMN = "$lm_target_changed";
+
     private ObjectContext context;
     private RowAttribute[] sourceRowsHeader;
-    private List<Object[]> sourceRows;
+    private DataFrame sourceRows;
 
-    private List<Map<String, Object>> sources;
-    private Map<Object, Map<String, Object>> mappedSources;
-    private List<T> matchedTargets;
-    private List<SourceTargetPair<T>> mapped;
-    private List<SourceTargetPair<T>> merged;
+    private DataFrame sources;
+    private DataFrame mappedSources;
+    private DataFrame matchedTargets;
+    private DataFrame mapped;
+    private DataFrame merged;
 
-    public CreateOrUpdateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, List<Object[]> rows) {
-        this.sourceRows = rows;
+    public CreateOrUpdateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
+        this.sourceRows = sourceRows;
         this.context = context;
         this.sourceRowsHeader = sourceRowsHeader;
     }
@@ -32,7 +34,7 @@ public class CreateOrUpdateSegment<T> {
         return context;
     }
 
-    public List<Object[]> getSourceRows() {
+    public DataFrame getSourceRows() {
         return sourceRows;
     }
 
@@ -40,49 +42,49 @@ public class CreateOrUpdateSegment<T> {
         return sourceRowsHeader;
     }
 
-    public List<Map<String, Object>> getSources() {
+    public DataFrame getSources() {
         return sources;
     }
 
-    public void setSources(List<Map<String, Object>> translatedSegment) {
-        this.sources = translatedSegment;
+    public void setSources(DataFrame sources) {
+        this.sources = sources;
     }
 
-    public Map<Object, Map<String, Object>> getMappedSources() {
+    public DataFrame getMappedSources() {
         return mappedSources;
     }
 
-    public void setMappedSources(Map<Object, Map<String, Object>> mappedSegment) {
+    public void setMappedSources(DataFrame mappedSegment) {
         this.mappedSources = mappedSegment;
     }
 
-    public List<T> getMatchedTargets() {
+    public DataFrame getMatchedTargets() {
         return matchedTargets;
     }
 
-    public void setMatchedTargets(List<T> matchedTargets) {
+    public void setMatchedTargets(DataFrame matchedTargets) {
         this.matchedTargets = matchedTargets;
     }
 
     /**
      * @since 2.6
      */
-    public List<SourceTargetPair<T>> getMapped() {
+    public DataFrame getMapped() {
         return mapped;
     }
 
     /**
      * @since 2.6
      */
-    public void setMapped(List<SourceTargetPair<T>> mapped) {
+    public void setMapped(DataFrame mapped) {
         this.mapped = mapped;
     }
 
-    public List<SourceTargetPair<T>> getMerged() {
+    public DataFrame getMerged() {
         return merged;
     }
 
-    public void setMerged(List<SourceTargetPair<T>> merged) {
+    public void setMerged(DataFrame merged) {
         this.merged = merged;
     }
 

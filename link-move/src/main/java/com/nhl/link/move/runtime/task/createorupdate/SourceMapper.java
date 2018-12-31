@@ -1,9 +1,6 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.nhl.link.move.df.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
 
 /**
@@ -17,15 +14,7 @@ public class SourceMapper {
 		this.mapper = mapper;
 	}
 
-	public Map<Object, Map<String, Object>> map(List<Map<String, Object>> translatedSources) {
-		Map<Object, Map<String, Object>> mappedSources = new HashMap<>();
-
-		for (Map<String, Object> s : translatedSources) {
-			// TODO: report dupes?
-			mappedSources.put(mapper.keyForSource(s), s);
-		}
-
-		return mappedSources;
+	public DataFrame map(DataFrame df) {
+		return df.addColumn(CreateOrUpdateSegment.KEY_COLUMN, (c, r) -> mapper.keyForSource(c, r));
 	}
-
 }
