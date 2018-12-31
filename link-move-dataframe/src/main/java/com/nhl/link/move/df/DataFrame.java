@@ -13,6 +13,7 @@ import com.nhl.link.move.df.zip.Zipper;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Represents immutable 2D data.
@@ -21,6 +22,10 @@ public interface DataFrame extends Iterable<Object[]> {
 
     static DataFrame create(Index columns, Iterable<Object[]> source) {
         return new SimpleDataFrame(columns, source);
+    }
+
+    static <T> DataFrame create(Index columns, Iterable<T> source, Function<T, Object[]> toArrayMapper) {
+        return create(columns, new TransformingIterable<>(source, toArrayMapper));
     }
 
     Index getColumns();
