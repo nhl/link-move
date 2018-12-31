@@ -33,20 +33,17 @@ public class Zipper {
 
     public static DataRow zipRows(Index mappedIndex, DataRow lr, DataRow rr) {
 
-        int llen = lr.size();
-        int rlen = rr.size();
-
-        if (llen + rlen != mappedIndex.size()) {
-            throw new IllegalArgumentException("Index size of "
-                    + mappedIndex.size()
-                    + " must be a sum of left and right row sizes ("
-                    + llen + ", " + rlen + ")");
-        }
+        // rows can be null in case of outer joins
 
         Object[] zippedValues = new Object[mappedIndex.size()];
 
-        lr.copyTo(zippedValues, 0);
-        rr.copyTo(zippedValues, llen);
+        if (lr != null) {
+            lr.copyTo(zippedValues, 0);
+        }
+
+        if (rr != null) {
+            rr.copyTo(zippedValues, zippedValues.length - rr.size());
+        }
 
         return new ArrayDataRow(mappedIndex, zippedValues);
     }

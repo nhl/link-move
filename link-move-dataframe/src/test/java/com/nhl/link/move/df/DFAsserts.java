@@ -35,7 +35,7 @@ public class DFAsserts {
     }
 
     public DFAsserts assertLength(int expectedLength) {
-        assertEquals(expectedLength, rows.size());
+        assertEquals("Unexpected DataFrame length", expectedLength, rows.size());
         return this;
     }
 

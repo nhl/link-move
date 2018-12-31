@@ -1,6 +1,9 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.filter.DataRowJoinPredicate;
 import com.nhl.link.move.df.filter.DataRowPredicate;
+import com.nhl.link.move.df.join.JoinSemantics;
+import com.nhl.link.move.df.join.Joiner;
 import com.nhl.link.move.df.map.DataRowCombiner;
 import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.map.ValueMapper;
@@ -73,6 +76,15 @@ public interface DataFrame extends Iterable<DataRow> {
 
     default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {
         return new ZippingDataFrame(zippedColumns, this, df, c);
+    }
+
+    default DataFrame join(DataFrame df, DataRowJoinPredicate p) {
+        return join(df, new Joiner(p, JoinSemantics.inner));
+    }
+
+    default DataFrame join(DataFrame df, Joiner joiner) {
+        Index joinedIndex = Zipper.zipIndex(getColumns(), df.getColumns());
+        return joiner.join(joinedIndex, this, df);
     }
 
     @Override
