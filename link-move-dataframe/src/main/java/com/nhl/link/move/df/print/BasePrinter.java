@@ -36,7 +36,7 @@ public abstract class BasePrinter {
     }
 
     public StringBuilder print(StringBuilder out, DataRow dr) {
-        return newWorker(out).print(dr.getIndex(), new Iterator<DataRow>() {
+        return newWorker(out).print(dr.getColumns(), new Iterator<DataRow>() {
 
             int count;
 

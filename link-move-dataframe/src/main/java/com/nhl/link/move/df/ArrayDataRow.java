@@ -32,7 +32,7 @@ public class ArrayDataRow implements DataRow {
     }
 
     @Override
-    public Index getIndex() {
+    public Index getColumns() {
         return index;
     }
 

@@ -27,7 +27,7 @@ public class DFAsserts {
     public static void assertRow(DataRow row, String[] expectedIndex, Object... expectedValues) {
 
         assertEquals(expectedIndex.length, row.size());
-        assertArrayEquals(expectedIndex, row.getIndex().getColumns());
+        assertArrayEquals(expectedIndex, row.getColumns().getColumns());
 
         for (int i = 0; i < expectedIndex.length; i++) {
             assertEquals("Unexpected value for '" + expectedIndex[i] + " (" + i + ")'", expectedValues[i], row.get(i));

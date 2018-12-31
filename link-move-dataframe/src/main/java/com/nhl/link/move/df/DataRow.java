@@ -18,7 +18,7 @@ public interface DataRow {
 
     Object get(int position);
 
-    Index getIndex();
+    Index getColumns();
 
     DataRow reindex(Index columns);
 
@@ -33,6 +33,6 @@ public interface DataRow {
     }
 
     default int size() {
-        return getIndex().size();
+        return getColumns().size();
     }
 }
