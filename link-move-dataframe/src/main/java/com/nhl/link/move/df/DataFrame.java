@@ -83,8 +83,8 @@ public interface DataFrame extends Iterable<DataRow> {
     }
 
     default DataFrame join(DataFrame df, Joiner joiner) {
-        Index joinedIndex = Zipper.zipIndex(getColumns(), df.getColumns());
-        return joiner.join(joinedIndex, this, df);
+        Index joinedIndex = joiner.joinIndex(getColumns(), df.getColumns());
+        return joiner.joinRows(joinedIndex, this, df);
     }
 
     @Override

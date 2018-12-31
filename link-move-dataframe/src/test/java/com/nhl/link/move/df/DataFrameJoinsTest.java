@@ -53,6 +53,28 @@ public class DataFrameJoinsTest {
     }
 
     @Test
+    public void testJoin_IndexOverlap() {
+
+        Index i1 = new Index("a", "b");
+        DataFrame df1 = DataFrame.fromRows(i1, asList(
+                new ArrayDataRow(i1, 1, "x"),
+                new ArrayDataRow(i1, 2, "y")));
+
+        Index i2 = new Index("a", "b");
+        DataFrame df2 = DataFrame.fromRows(i2, asList(
+                new ArrayDataRow(i2, 2, "a"),
+                new ArrayDataRow(i2, 2, "b"),
+                new ArrayDataRow(i2, 3, "c")));
+
+        DataFrame df = df1.join(df2, (lr, rr) -> Objects.equals(lr.get(0), rr.get(0)));
+
+        new DFAsserts(df, "a", "b", "a_", "b_")
+                .assertLength(2)
+                .assertRow(0, 2, "y", 2, "a")
+                .assertRow(1, 2, "y", 2, "b");
+    }
+
+    @Test
     public void testLeftJoin() {
 
         Index i1 = new Index("a", "b");

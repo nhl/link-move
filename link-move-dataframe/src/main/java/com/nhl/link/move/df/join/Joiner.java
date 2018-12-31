@@ -23,7 +23,11 @@ public class Joiner {
         this.semantics = Objects.requireNonNull(semantics);
     }
 
-    public DataFrame join(Index joinedColumns, DataFrame lf, DataFrame rf) {
+    public Index joinIndex(Index li, Index ri) {
+        return Zipper.zipIndex(li, ri);
+    }
+
+    public DataFrame joinRows(Index joinedColumns, DataFrame lf, DataFrame rf) {
         switch (semantics) {
             case inner:
                 return innerJoin(joinedColumns, lf, rf);
