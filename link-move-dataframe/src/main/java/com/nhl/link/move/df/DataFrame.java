@@ -2,6 +2,7 @@ package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.filter.DataRowJoinPredicate;
 import com.nhl.link.move.df.filter.DataRowPredicate;
+import com.nhl.link.move.df.join.IndexedJoiner;
 import com.nhl.link.move.df.join.JoinSemantics;
 import com.nhl.link.move.df.join.Joiner;
 import com.nhl.link.move.df.map.DataRowCombiner;
@@ -83,6 +84,11 @@ public interface DataFrame extends Iterable<DataRow> {
     }
 
     default DataFrame join(DataFrame df, Joiner joiner) {
+        Index joinedIndex = joiner.joinIndex(getColumns(), df.getColumns());
+        return joiner.joinRows(joinedIndex, this, df);
+    }
+
+    default DataFrame join(DataFrame df, IndexedJoiner<?> joiner) {
         Index joinedIndex = joiner.joinIndex(getColumns(), df.getColumns());
         return joiner.joinRows(joinedIndex, this, df);
     }

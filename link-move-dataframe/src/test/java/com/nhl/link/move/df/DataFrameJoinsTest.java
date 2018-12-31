@@ -1,5 +1,6 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.join.IndexedJoiner;
 import com.nhl.link.move.df.join.JoinSemantics;
 import com.nhl.link.move.df.join.Joiner;
 import org.junit.Test;
@@ -11,7 +12,7 @@ import static java.util.Arrays.asList;
 public class DataFrameJoinsTest {
 
     @Test
-    public void testJoin() {
+    public void testJoin_Inner() {
 
         Index i1 = new Index("a", "b");
         DataFrame df1 = DataFrame.fromRows(i1, asList(
@@ -75,7 +76,7 @@ public class DataFrameJoinsTest {
     }
 
     @Test
-    public void testLeftJoin() {
+    public void testJoin_Left() {
 
         Index i1 = new Index("a", "b");
         DataFrame df1 = DataFrame.fromRows(i1, asList(
@@ -99,7 +100,7 @@ public class DataFrameJoinsTest {
     }
 
     @Test
-    public void testRightJoin() {
+    public void testJoin_Right() {
 
         Index i1 = new Index("a", "b");
         DataFrame df1 = DataFrame.fromRows(i1, asList(
@@ -123,7 +124,7 @@ public class DataFrameJoinsTest {
     }
 
     @Test
-    public void testFullJoin() {
+    public void testJoin_Full() {
 
         Index i1 = new Index("a", "b");
         DataFrame df1 = DataFrame.fromRows(i1, asList(
@@ -146,4 +147,124 @@ public class DataFrameJoinsTest {
                 .assertRow(2, 2, "y", 2, "b")
                 .assertRow(3, null, null, 3, "c");
     }
+
+    @Test
+    public void testJoin_InnerIndexed() {
+
+        Index i1 = new Index("a", "b");
+        DataFrame df1 = DataFrame.fromRows(i1, asList(
+                new ArrayDataRow(i1, 1, "x"),
+                new ArrayDataRow(i1, 2, "y")));
+
+        Index i2 = new Index("c", "d");
+        DataFrame df2 = DataFrame.fromRows(i2, asList(
+                new ArrayDataRow(i2, "a", 2),
+                new ArrayDataRow(i2, "b", 2),
+                new ArrayDataRow(i2, "c", 3)));
+
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r.get(0), r -> r.get(1), JoinSemantics.inner);
+        DataFrame df = df1.join(df2, joiner);
+
+        new DFAsserts(df, "a", "b", "c", "d")
+                .assertLength(2)
+                .assertRow(0, 2, "y", "a", 2)
+                .assertRow(1, 2, "y", "b", 2);
+    }
+
+    @Test
+    public void testJoin_Indexed_IndexOverlap() {
+
+        Index i1 = new Index("a", "b");
+        DataFrame df1 = DataFrame.fromRows(i1, asList(
+                new ArrayDataRow(i1, 1, "x"),
+                new ArrayDataRow(i1, 2, "y")));
+
+        Index i2 = new Index("a", "b");
+        DataFrame df2 = DataFrame.fromRows(i2, asList(
+                new ArrayDataRow(i2, 2, "a"),
+                new ArrayDataRow(i2, 2, "b"),
+                new ArrayDataRow(i2, 3, "c")));
+
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r.get(0), r -> r.get(0), JoinSemantics.inner);
+        DataFrame df = df1.join(df2, joiner);
+
+        new DFAsserts(df, "a", "b", "a_", "b_")
+                .assertLength(2)
+                .assertRow(0, 2, "y", 2, "a")
+                .assertRow(1, 2, "y", 2, "b");
+    }
+
+    @Test
+    public void testJoin_LeftIndexed() {
+
+        Index i1 = new Index("a", "b");
+        DataFrame df1 = DataFrame.fromRows(i1, asList(
+                new ArrayDataRow(i1, 1, "x"),
+                new ArrayDataRow(i1, 2, "y")));
+
+        Index i2 = new Index("c", "d");
+        DataFrame df2 = DataFrame.fromRows(i2, asList(
+                new ArrayDataRow(i2, 2, "a"),
+                new ArrayDataRow(i2, 2, "b"),
+                new ArrayDataRow(i2, 3, "c")));
+
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r.get(0), r -> r.get(0), JoinSemantics.left);
+        DataFrame df = df1.join(df2, joiner);
+
+        new DFAsserts(df, "a", "b", "c", "d")
+                .assertLength(3)
+                .assertRow(0, 1, "x", null, null)
+                .assertRow(1, 2, "y", 2, "a")
+                .assertRow(2, 2, "y", 2, "b");
+    }
+
+    @Test
+    public void testJoin_RightIndexed() {
+
+        Index i1 = new Index("a", "b");
+        DataFrame df1 = DataFrame.fromRows(i1, asList(
+                new ArrayDataRow(i1, 1, "x"),
+                new ArrayDataRow(i1, 2, "y")));
+
+        Index i2 = new Index("c", "d");
+        DataFrame df2 = DataFrame.fromRows(i2, asList(
+                new ArrayDataRow(i2, 2, "a"),
+                new ArrayDataRow(i2, 2, "b"),
+                new ArrayDataRow(i2, 3, "c")));
+
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r.get(0), r -> r.get(0), JoinSemantics.right);
+        DataFrame df = df2.join(df1, joiner);
+
+        new DFAsserts(df, "c", "d", "a", "b")
+                .assertLength(3)
+                .assertRow(0, null, null, 1, "x")
+                .assertRow(1, 2, "a", 2, "y")
+                .assertRow(2, 2, "b", 2, "y");
+    }
+
+    @Test
+    public void testJoin_FullIndexed() {
+
+        Index i1 = new Index("a", "b");
+        DataFrame df1 = DataFrame.fromRows(i1, asList(
+                new ArrayDataRow(i1, 1, "x"),
+                new ArrayDataRow(i1, 2, "y")));
+
+        Index i2 = new Index("c", "d");
+        DataFrame df2 = DataFrame.fromRows(i2, asList(
+                new ArrayDataRow(i2, 2, "a"),
+                new ArrayDataRow(i2, 2, "b"),
+                new ArrayDataRow(i2, 3, "c")));
+
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r.get(0), r -> r.get(0), JoinSemantics.full);
+        DataFrame df = df1.join(df2, joiner);
+
+        new DFAsserts(df, "a", "b", "c", "d")
+                .assertLength(4)
+                .assertRow(0, 1, "x", null, null)
+                .assertRow(1, 2, "y", 2, "a")
+                .assertRow(2, 2, "y", 2, "b")
+                .assertRow(3, null, null, 3, "c");
+    }
+
 }
