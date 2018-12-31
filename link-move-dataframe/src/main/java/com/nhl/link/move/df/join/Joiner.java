@@ -1,7 +1,6 @@
 package com.nhl.link.move.df.join;
 
 import com.nhl.link.move.df.DataFrame;
-import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
 import com.nhl.link.move.df.ZippingDataFrame;
 import com.nhl.link.move.df.filter.DataRowJoinPredicate;
@@ -47,13 +46,13 @@ public class Joiner {
 
     private DataFrame innerJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        List<DataRow> rRows = new ArrayList<>();
+        List<Object[]> lRows = new ArrayList<>();
+        List<Object[]> rRows = new ArrayList<>();
 
-        List<DataRow> allRRows = toList(rf);
+        List<Object[]> allRRows = toList(rf);
 
-        for (DataRow lr : lf) {
-            for (DataRow rr : allRRows) {
+        for (Object[] lr : lf) {
+            for (Object[] rr : allRRows) {
                 if (joinPredicate.test(lr, rr)) {
                     lRows.add(lr);
                     rRows.add(rr);
@@ -66,15 +65,15 @@ public class Joiner {
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        List<DataRow> rRows = new ArrayList<>();
+        List<Object[]> lRows = new ArrayList<>();
+        List<Object[]> rRows = new ArrayList<>();
 
-        List<DataRow> allRRows = toList(rf);
+        List<Object[]> allRRows = toList(rf);
 
-        for (DataRow lr : lf) {
+        for (Object[] lr : lf) {
 
             boolean hadMatches = false;
-            for (DataRow rr : allRRows) {
+            for (Object[] rr : allRRows) {
                 if (joinPredicate.test(lr, rr)) {
                     lRows.add(lr);
                     rRows.add(rr);
@@ -93,15 +92,15 @@ public class Joiner {
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        List<DataRow> rRows = new ArrayList<>();
+        List<Object[]> lRows = new ArrayList<>();
+        List<Object[]> rRows = new ArrayList<>();
 
-        List<DataRow> allLRows = toList(lf);
+        List<Object[]> allLRows = toList(lf);
 
-        for (DataRow rr : rf) {
+        for (Object[] rr : rf) {
 
             boolean hadMatches = false;
-            for (DataRow lr : allLRows) {
+            for (Object[] lr : allLRows) {
                 if (joinPredicate.test(lr, rr)) {
                     lRows.add(lr);
                     rRows.add(rr);
@@ -120,18 +119,17 @@ public class Joiner {
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        Set<DataRow> rRows = new LinkedHashSet<>();
+        List<Object[]> lRows = new ArrayList<>();
+        Set<Object[]> rRows = new LinkedHashSet<>();
 
-        List<DataRow> allRRows = toList(rf);
-        Set<DataRow> seenRights = new LinkedHashSet<>();
+        List<Object[]> allRRows = toList(rf);
+        Set<Object[]> seenRights = new LinkedHashSet<>();
 
-        for (DataRow lr : lf) {
+        for (Object[] lr : lf) {
 
             boolean hadMatches = false;
 
-
-            for (DataRow rr : allRRows) {
+            for (Object[] rr : allRRows) {
                 if (joinPredicate.test(lr, rr)) {
                     lRows.add(lr);
                     rRows.add(rr);
@@ -147,7 +145,7 @@ public class Joiner {
         }
 
         // add missing right rows
-        for (DataRow rr : allRRows) {
+        for (Object[] rr : allRRows) {
             if (!seenRights.contains(rr)) {
                 lRows.add(null);
                 rRows.add(rr);
@@ -157,17 +155,17 @@ public class Joiner {
         return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
-    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<DataRow> li, Iterable<DataRow> ri) {
+    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<Object[]> li, Iterable<Object[]> ri) {
         return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(joinedColumns.size()));
     }
 
     // "materialize" frame rows to avoid recalculation of each row on multiple iterations.
 
-    // TODO: should we just add a caching wrapper around the DataFrame and assume elsewhere that DF iterator
-    //  performance is decent?
+    // TODO: should we just add a caching / materialization wrapper around the DataFrame and assume elsewhere that DF
+    //  iterator performance is decent?
 
-    private List<DataRow> toList(DataFrame df) {
-        List<DataRow> materialized = new ArrayList<>();
+    private List<Object[]> toList(DataFrame df) {
+        List<Object[]> materialized = new ArrayList<>();
         df.forEach(materialized::add);
         return materialized;
     }

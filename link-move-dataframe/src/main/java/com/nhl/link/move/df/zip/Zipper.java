@@ -34,18 +34,18 @@ public class Zipper {
         return (lr, rr) -> Zipper.zipRows(zippedWidth, lr, rr);
     }
 
-    public static Object[] zipRows(int zippedWidth, DataRow lr, DataRow rr) {
+    public static Object[] zipRows(int zippedWidth, Object[] lr, Object[] rr) {
 
         // rows can be null in case of outer joins
 
         Object[] zippedValues = new Object[zippedWidth];
 
         if (lr != null) {
-            lr.copyTo(zippedValues, 0);
+            DataRow.copyTo(lr, zippedValues, 0);
         }
 
         if (rr != null) {
-            rr.copyTo(zippedValues, zippedValues.length - rr.size());
+            DataRow.copyTo(rr, zippedValues, zippedValues.length - rr.length);
         }
 
         return zippedValues;

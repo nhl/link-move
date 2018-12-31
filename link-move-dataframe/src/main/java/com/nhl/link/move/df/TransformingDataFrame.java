@@ -12,11 +12,11 @@ import java.util.Objects;
  */
 public class TransformingDataFrame implements DataFrame {
 
-    private Iterable<DataRow> source;
+    private Iterable<Object[]> source;
     private Index columns;
     private DataRowMapper rowMapper;
 
-    protected TransformingDataFrame(Index columns, Iterable<DataRow> source, DataRowMapper rowMapper) {
+    protected TransformingDataFrame(Index columns, Iterable<Object[]> source, DataRowMapper rowMapper) {
         this.source = Objects.requireNonNull(source);
         this.columns = Objects.requireNonNull(columns);
         this.rowMapper = Objects.requireNonNull(rowMapper);
@@ -28,10 +28,11 @@ public class TransformingDataFrame implements DataFrame {
     }
 
     @Override
-    public Iterator<DataRow> iterator() {
-        return new Iterator<DataRow>() {
+    public Iterator<Object[]> iterator() {
+        return new Iterator<Object[]>() {
 
-            private Iterator<DataRow> delegateIt = TransformingDataFrame.this.source.iterator();
+            private int width = TransformingDataFrame.this.columns.size();
+            private Iterator<Object[]> delegateIt = TransformingDataFrame.this.source.iterator();
 
             @Override
             public boolean hasNext() {
@@ -39,8 +40,18 @@ public class TransformingDataFrame implements DataFrame {
             }
 
             @Override
-            public DataRow next() {
-                return new ArrayDataRow(columns, rowMapper.map(delegateIt.next()));
+            public Object[] next() {
+
+                Object[] mapped = rowMapper.map(delegateIt.next());
+
+                if (width != mapped.length) {
+                    throw new IllegalStateException(String.format(
+                            "Index size of %s is not the same as values size of %s",
+                            width,
+                            mapped.length));
+                }
+
+                return mapped;
             }
         };
     }

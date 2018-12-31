@@ -26,13 +26,12 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public Iterator<DataRow> iterator() {
+    public Iterator<Object[]> iterator() {
 
-        return new Iterator<DataRow>() {
+        return new Iterator<Object[]>() {
 
             private int counter = 0;
-            private Iterator<DataRow> delegateIt = HeadDataFrame.this.delegate.iterator();
-            private Index columns = HeadDataFrame.this.getColumns();
+            private Iterator<Object[]> delegateIt = HeadDataFrame.this.delegate.iterator();
 
             @Override
             public boolean hasNext() {
@@ -40,7 +39,7 @@ public class HeadDataFrame implements DataFrame {
             }
 
             @Override
-            public DataRow next() {
+            public Object[] next() {
                 if (counter >= len) {
                     throw new NoSuchElementException("Past the end of the iterator");
                 }

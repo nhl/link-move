@@ -1,11 +1,13 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.map.DataRowMapper;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 public class TransformingDataFrameTest {
@@ -14,11 +16,11 @@ public class TransformingDataFrameTest {
     public void testIterator() {
 
         Index i = new Index("a", "b");
-        List<DataRow> rows = asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2));
+        List<Object[]> rows = asList(
+                DataRow.row("one", 1),
+                DataRow.row("two", 2));
 
-        TransformingDataFrame df = new TransformingDataFrame(i, rows, DataRow::copyValues);
+        TransformingDataFrame df = new TransformingDataFrame(i, rows, DataRowMapper.self());
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -32,9 +34,9 @@ public class TransformingDataFrameTest {
         Index columns = new Index("a", "b");
 
         DataFrame df = new TransformingDataFrame(columns, asList(
-                new ArrayDataRow(columns, "one", 1),
-                new ArrayDataRow(columns, "two", 2),
-                new ArrayDataRow(columns, "three", 3)), DataRow::copyValues).head(2);
+                DataRow.row("one", 1),
+                DataRow.row("two", 2),
+                DataRow.row("three", 3)), DataRowMapper.self()).head(2);
 
         new DFAsserts(df, columns)
                 .assertLength(2)
@@ -47,8 +49,8 @@ public class TransformingDataFrameTest {
         Index i = new Index("a", "b");
 
         DataFrame df = new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2)), DataRow::copyValues).renameColumn("b", "c");
+                DataRow.row("one", 1),
+                DataRow.row("two", 2)), DataRowMapper.self()).renameColumn("b", "c");
 
         new DFAsserts(df, "a", "c")
                 .assertLength(2)
@@ -62,8 +64,8 @@ public class TransformingDataFrameTest {
         Index i = new Index("a", "b");
 
         DataFrame df = new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2)), DataRow::copyValues).mapColumn("b", Object::toString);
+                DataRow.row("one", 1),
+                DataRow.row("two", 2)), DataRowMapper.self()).mapColumn("b", Object::toString);
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -77,9 +79,9 @@ public class TransformingDataFrameTest {
         Index i = new Index("a", "b");
 
         DataFrame df = new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2)), DataRow::copyValues)
-                .map(i, r -> r.mapColumn(0, (String v) -> v + "_"));
+                DataRow.row("one", 1),
+                DataRow.row("two", 2)), DataRowMapper.self())
+                .map(i, r -> DataRow.mapColumn(r, 0, (String v) -> v + "_"));
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -94,12 +96,12 @@ public class TransformingDataFrameTest {
         Index i1 = new Index("c", "d", "e");
 
         DataFrame df = new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2)), DataRow::copyValues)
-                .map(i1, r -> DataRow.values(
-                        r.get(0),
-                        ((int) r.get(1)) * 10,
-                        r.get(1)));
+                DataRow.row("one", 1),
+                DataRow.row("two", 2)), DataRowMapper.self())
+                .map(i1, r -> DataRow.row(
+                        r[0],
+                        ((int) r[1]) * 10,
+                        r[1]));
 
         new DFAsserts(df, i1)
                 .assertLength(2)
@@ -115,15 +117,15 @@ public class TransformingDataFrameTest {
         Index i2 = new Index("f", "g");
 
         DataFrame df = new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2)), DataRow::copyValues)
-                .map(i1, r -> DataRow.values(
-                        r.get(0),
-                        ((int) r.get(1)) * 10,
-                        r.get(1)))
-                .map(i2, r -> DataRow.values(
-                        r.get(0),
-                        r.get(1)));
+                DataRow.row("one", 1),
+                DataRow.row("two", 2)), DataRowMapper.self())
+                .map(i1, r -> DataRow.row(
+                        r[0],
+                        ((int) r[1]) * 10,
+                        r[1]))
+                .map(i2, r -> DataRow.row(
+                        r[0],
+                        r[1]));
 
         new DFAsserts(df, i2)
                 .assertLength(2)
@@ -137,29 +139,29 @@ public class TransformingDataFrameTest {
         Index i = new Index("a", "b");
         Index i1 = new Index("c", "d", "e");
 
-        DataFrame df = new TransformingDataFrame(i, Collections.emptyList(), DataRow::copyValues)
-                .map(i1, r -> DataRow.values(
-                        r.get(0),
-                        ((int) r.get(1)) * 10,
-                        r.get(1)));
+        DataFrame df = new TransformingDataFrame(i, Collections.emptyList(), DataRowMapper.self())
+                .map(i1, r -> DataRow.row(
+                        r[0],
+                        ((int) r[1]) * 10,
+                        r[1]));
 
         assertSame(i1, df.getColumns());
 
         new DFAsserts(df, i1).assertLength(0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void testMap_Index_Row_SizeMismatch() {
 
         Index i = new Index("a", "b");
         Index i1 = new Index("c", "d", "e");
 
         new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2)), DataRow::copyValues)
-                .map(i1, r -> DataRow.values(
-                        r.get(0),
-                        r.get(1)))
+                DataRow.row("one", 1),
+                DataRow.row("two", 2)), DataRowMapper.self())
+                .map(i1, r -> DataRow.row(
+                        r[0],
+                        r[1]))
                 // must throw when iterating due to inconsistent mapped row structure...
                 .forEach(r -> {
                 });
@@ -169,10 +171,10 @@ public class TransformingDataFrameTest {
     public void testToString() {
         Index i = new Index("a", "b");
         DataFrame df = new TransformingDataFrame(i, asList(
-                new ArrayDataRow(i, "one", 1),
-                new ArrayDataRow(i, "two", 2),
-                new ArrayDataRow(i, "three", 3),
-                new ArrayDataRow(i, "four", 4)), DataRow::copyValues);
+                DataRow.row("one", 1),
+                DataRow.row("two", 2),
+                DataRow.row("three", 3),
+                DataRow.row("four", 4)), DataRowMapper.self());
 
         assertEquals("LazyDataFrame [{a:one,b:1},{a:two,b:2},{a:three,b:3},...]", df.toString());
     }
@@ -182,13 +184,13 @@ public class TransformingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new TransformingDataFrame(i1, asList(
-                new ArrayDataRow(i1, 1),
-                new ArrayDataRow(i1, 2)), DataRow::copyValues);
+                DataRow.row(1),
+                DataRow.row(2)), DataRowMapper.self());
 
         Index i2 = new Index("b");
         DataFrame df2 = new TransformingDataFrame(i2, asList(
-                new ArrayDataRow(i2, 10),
-                new ArrayDataRow(i2, 20)), DataRow::copyValues);
+                DataRow.row(10),
+                DataRow.row(20)), DataRowMapper.self());
 
         DataFrame df = df1.zip(df2);
         new DFAsserts(df, "a", "b")
@@ -202,8 +204,8 @@ public class TransformingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new TransformingDataFrame(i1, asList(
-                new ArrayDataRow(i1, 1),
-                new ArrayDataRow(i1, 2)), DataRow::copyValues);
+                DataRow.row(1),
+                DataRow.row(2)), DataRowMapper.self());
 
         DataFrame df = df1.zip(df1);
 
@@ -217,13 +219,13 @@ public class TransformingDataFrameTest {
     public void testZip_LeftIsShorter() {
 
         Index i1 = new Index("a");
-        DataFrame df1 = new TransformingDataFrame(i1, asList(
-                new ArrayDataRow(i1, 2)), DataRow::copyValues);
+        DataFrame df1 = new TransformingDataFrame(i1, singletonList(
+                DataRow.row(2)), DataRowMapper.self());
 
         Index i2 = new Index("b");
         DataFrame df2 = new TransformingDataFrame(i2, asList(
-                new ArrayDataRow(i2, 10),
-                new ArrayDataRow(i2, 20)), DataRow::copyValues);
+                DataRow.row(10),
+                DataRow.row(20)), DataRowMapper.self());
 
         DataFrame df = df1.zip(df2);
         new DFAsserts(df, "a", "b")
@@ -235,13 +237,13 @@ public class TransformingDataFrameTest {
     public void testZip_RightIsShorter() {
 
         Index i1 = new Index("a");
-        DataFrame df1 = new TransformingDataFrame(i1, asList(
-                new ArrayDataRow(i1, 2)), DataRow::copyValues);
+        DataFrame df1 = new TransformingDataFrame(i1, singletonList(
+                DataRow.row(2)), DataRowMapper.self());
 
         Index i2 = new Index("b");
         DataFrame df2 = new TransformingDataFrame(i2, asList(
-                new ArrayDataRow(i2, 10),
-                new ArrayDataRow(i2, 20)), DataRow::copyValues);
+                DataRow.row(10),
+                DataRow.row(20)), DataRowMapper.self());
 
         DataFrame df = df2.zip(df1);
         new DFAsserts(df, "b", "a")
@@ -254,10 +256,10 @@ public class TransformingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new TransformingDataFrame(i1, asList(
-                new ArrayDataRow(i1, 10),
-                new ArrayDataRow(i1, 20)), DataRow::copyValues);
+                DataRow.row(10),
+                DataRow.row(20)), DataRowMapper.self());
 
-        DataFrame df = df1.filter(r -> ((int) r.get(0)) > 15);
+        DataFrame df = df1.filter(r -> ((int) r[0]) > 15);
         new DFAsserts(df, "a")
                 .assertLength(1)
                 .assertRow(0, 20);

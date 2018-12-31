@@ -1,6 +1,5 @@
 package com.nhl.link.move.df.print;
 
-import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
 
 import java.util.Iterator;
@@ -12,7 +11,7 @@ public class InlinePrinterWorker extends BasePrinterWorker {
     }
 
     @Override
-    StringBuilder print(Index columns, Iterator<DataRow> values) {
+    StringBuilder print(Index columns, Iterator<Object[]> values) {
 
         int width = columns.size();
         if (width == 0) {
@@ -28,7 +27,7 @@ public class InlinePrinterWorker extends BasePrinterWorker {
                 out.append(",");
             }
 
-            DataRow dr = values.next();
+            Object[] dr = values.next();
 
             out.append("{");
             for (int j = 0; j < width; j++) {
@@ -39,7 +38,7 @@ public class InlinePrinterWorker extends BasePrinterWorker {
 
                 appendTruncate(columns.getColumns()[j]);
                 out.append(":");
-                appendTruncate(String.valueOf(dr.get(j)));
+                appendTruncate(String.valueOf(dr[j]));
             }
 
             out.append("}");

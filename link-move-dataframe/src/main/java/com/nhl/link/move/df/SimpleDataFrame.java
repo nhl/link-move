@@ -7,14 +7,14 @@ import java.util.Iterator;
 
 public class SimpleDataFrame implements DataFrame {
 
-    private Iterable<DataRow> source;
+    private Iterable<Object[]> source;
     private Index columns;
 
     public SimpleDataFrame(Index columns) {
         this(columns, Collections.emptyList());
     }
 
-    protected SimpleDataFrame(Index columns, Iterable<DataRow> source) {
+    protected SimpleDataFrame(Index columns, Iterable<Object[]> source) {
         this.source = source;
         this.columns = columns;
     }
@@ -25,7 +25,7 @@ public class SimpleDataFrame implements DataFrame {
     }
 
     @Override
-    public Iterator<DataRow> iterator() {
+    public Iterator<Object[]> iterator() {
         return source.iterator();
     }
 

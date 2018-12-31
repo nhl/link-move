@@ -13,22 +13,22 @@ import static org.junit.Assert.*;
 public class HeadDataFrameTest {
 
     private Index columns;
-    private List<DataRow> rows;
+    private List<Object[]> rows;
 
     @Before
     public void initDataFrame() {
         this.columns = new Index("a");
         this.rows = asList(
-                new ArrayDataRow(columns, "one"),
-                new ArrayDataRow(columns, "two"),
-                new ArrayDataRow(columns, "three"),
-                new ArrayDataRow(columns, "four"));
+                DataRow.row("one"),
+                DataRow.row("two"),
+                DataRow.row("three"),
+                DataRow.row("four"));
     }
 
     @Test
     public void testConstructor() {
 
-        List<DataRow> consumed = new ArrayList<>();
+        List<Object[]> consumed = new ArrayList<>();
 
         HeadDataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 3);
 
@@ -61,7 +61,7 @@ public class HeadDataFrameTest {
     public void testMap() {
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 3)
-                .map(columns, r -> r.mapColumn(0, v -> v + "_"));
+                .map(columns, r -> DataRow.mapColumn(r, 0, v -> v + "_"));
 
         new DFAsserts(df, columns)
                 .assertLength(3)
@@ -76,7 +76,7 @@ public class HeadDataFrameTest {
         Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 2)
-                .map(i1, r -> DataRow.values(r.get(0) + "_"));
+                .map(i1, r -> DataRow.row(r[0] + "_"));
 
         new DFAsserts(df, i1)
                 .assertLength(2)
@@ -90,7 +90,7 @@ public class HeadDataFrameTest {
         Index i1 = new Index("c");
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, Collections.emptyList()), 2)
-                .map(i1, r -> DataRow.values(r.get(0) + "_"));
+                .map(i1, r -> DataRow.row(r[0] + "_"));
 
         new DFAsserts(df, i1).assertLength(0);
     }
@@ -99,14 +99,14 @@ public class HeadDataFrameTest {
     public void testZip_LeftIsShorter() {
 
         Index i1 = new Index("a");
-        DataFrame df1 = DataFrame.fromArrays(i1, asList(
-                DataRow.values(1),
-                DataRow.values(2)));
+        DataFrame df1 = DataFrame.create(i1, asList(
+                DataRow.row(1),
+                DataRow.row(2)));
 
         Index i2 = new Index("b");
-        DataFrame df2 = DataFrame.fromArrays(i2, asList(
-                DataRow.values(10),
-                DataRow.values(20)));
+        DataFrame df2 = DataFrame.create(i2, asList(
+                DataRow.row(10),
+                DataRow.row(20)));
 
 
         DataFrame df = new HeadDataFrame(df1, 1).zip(df2);

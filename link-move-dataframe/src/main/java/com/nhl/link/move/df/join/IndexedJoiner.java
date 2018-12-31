@@ -1,7 +1,6 @@
 package com.nhl.link.move.df.join;
 
 import com.nhl.link.move.df.DataFrame;
-import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
 import com.nhl.link.move.df.ZippingDataFrame;
 import com.nhl.link.move.df.map.DataRowToValueMapper;
@@ -55,17 +54,17 @@ public class IndexedJoiner<K> {
 
     private DataFrame innerJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        List<DataRow> rRows = new ArrayList<>();
+        List<Object[]> lRows = new ArrayList<>();
+        List<Object[]> rRows = new ArrayList<>();
 
-        Map<K, List<DataRow>> rightIndex = groupByKey(rightKeyMapper, rf);
+        Map<K, List<Object[]>> rightIndex = groupByKey(rightKeyMapper, rf);
 
-        for (DataRow lr : lf) {
+        for (Object[] lr : lf) {
 
             K lKey = leftKeyMapper.map(lr);
-            List<DataRow> rightMatches = rightIndex.get(lKey);
+            List<Object[]> rightMatches = rightIndex.get(lKey);
             if (rightMatches != null) {
-                for (DataRow rr : rightMatches) {
+                for (Object[] rr : rightMatches) {
                     lRows.add(lr);
                     rRows.add(rr);
                 }
@@ -77,18 +76,18 @@ public class IndexedJoiner<K> {
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        List<DataRow> rRows = new ArrayList<>();
+        List<Object[]> lRows = new ArrayList<>();
+        List<Object[]> rRows = new ArrayList<>();
 
-        Map<K, List<DataRow>> rightIndex = groupByKey(rightKeyMapper, rf);
+        Map<K, List<Object[]>> rightIndex = groupByKey(rightKeyMapper, rf);
 
-        for (DataRow lr : lf) {
+        for (Object[] lr : lf) {
 
             K lKey = leftKeyMapper.map(lr);
-            List<DataRow> rightMatches = rightIndex.get(lKey);
+            List<Object[]> rightMatches = rightIndex.get(lKey);
 
             if (rightMatches != null) {
-                for (DataRow rr : rightMatches) {
+                for (Object[] rr : rightMatches) {
                     lRows.add(lr);
                     rRows.add(rr);
                 }
@@ -103,18 +102,18 @@ public class IndexedJoiner<K> {
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        List<DataRow> rRows = new ArrayList<>();
+        List<Object[]> lRows = new ArrayList<>();
+        List<Object[]> rRows = new ArrayList<>();
 
-        Map<K, List<DataRow>> leftIndex = groupByKey(leftKeyMapper, lf);
+        Map<K, List<Object[]>> leftIndex = groupByKey(leftKeyMapper, lf);
 
-        for (DataRow rr : rf) {
+        for (Object[] rr : rf) {
 
             K rKey = rightKeyMapper.map(rr);
-            List<DataRow> leftMatches = leftIndex.get(rKey);
+            List<Object[]> leftMatches = leftIndex.get(rKey);
 
             if (leftMatches != null) {
-                for (DataRow lr : leftMatches) {
+                for (Object[] lr : leftMatches) {
                     lRows.add(lr);
                     rRows.add(rr);
                 }
@@ -129,19 +128,19 @@ public class IndexedJoiner<K> {
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
 
-        List<DataRow> lRows = new ArrayList<>();
-        Set<DataRow> rRows = new LinkedHashSet<>();
+        List<Object[]> lRows = new ArrayList<>();
+        Set<Object[]> rRows = new LinkedHashSet<>();
 
-        Map<K, List<DataRow>> rightIndex = groupByKey(rightKeyMapper, rf);
-        Set<DataRow> seenRights = new LinkedHashSet<>();
+        Map<K, List<Object[]>> rightIndex = groupByKey(rightKeyMapper, rf);
+        Set<Object[]> seenRights = new LinkedHashSet<>();
 
-        for (DataRow lr : lf) {
+        for (Object[] lr : lf) {
 
             K lKey = leftKeyMapper.map(lr);
-            List<DataRow> rightMatches = rightIndex.get(lKey);
+            List<Object[]> rightMatches = rightIndex.get(lKey);
 
             if (rightMatches != null) {
-                for (DataRow rr : rightMatches) {
+                for (Object[] rr : rightMatches) {
                     lRows.add(lr);
                     rRows.add(rr);
                     seenRights.add(rr);
@@ -153,8 +152,8 @@ public class IndexedJoiner<K> {
         }
 
         // add missing right rows
-        for (List<DataRow> rrl : rightIndex.values()) {
-            for (DataRow rr : rrl) {
+        for (List<Object[]> rrl : rightIndex.values()) {
+            for (Object[] rr : rrl) {
                 if (!seenRights.contains(rr)) {
                     lRows.add(null);
                     rRows.add(rr);
@@ -165,15 +164,15 @@ public class IndexedJoiner<K> {
         return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
-    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<DataRow> li, Iterable<DataRow> ri) {
+    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<Object[]> li, Iterable<Object[]> ri) {
         return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(joinedColumns.size()));
     }
 
-    private Map<K, List<DataRow>> groupByKey(DataRowToValueMapper<K> keyMapper, DataFrame df) {
+    private Map<K, List<Object[]>> groupByKey(DataRowToValueMapper<K> keyMapper, DataFrame df) {
 
-        Map<K, List<DataRow>> index = new HashMap<>();
+        Map<K, List<Object[]>> index = new HashMap<>();
 
-        for (DataRow r : df) {
+        for (Object[] r : df) {
             K key = keyMapper.map(r);
             index.computeIfAbsent(key, k -> new ArrayList<>()).add(r);
         }

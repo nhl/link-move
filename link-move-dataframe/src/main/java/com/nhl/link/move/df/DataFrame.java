@@ -17,15 +17,10 @@ import java.util.Map;
 /**
  * Represents immutable 2D data.
  */
-public interface DataFrame extends Iterable<DataRow> {
+public interface DataFrame extends Iterable<Object[]> {
 
-    static DataFrame fromRows(Index columns, Iterable<DataRow> source) {
+    static DataFrame create(Index columns, Iterable<Object[]> source) {
         return new SimpleDataFrame(columns, source);
-    }
-
-    static DataFrame fromArrays(Index columns, Iterable<Object[]> source) {
-        Iterable<DataRow> it = new TransformingIterable<>(source, a -> new ArrayDataRow(columns, a));
-        return new SimpleDataFrame(columns, it);
     }
 
     Index getColumns();
@@ -44,7 +39,7 @@ public interface DataFrame extends Iterable<DataRow> {
 
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
         int ci = getColumns().position(columnName);
-        return map(getColumns(), r -> r.mapColumn(ci, m));
+        return map(getColumns(), r -> DataRow.mapColumn(r, ci, m));
     }
 
     default DataFrame renameColumn(String oldName, String newName) {
@@ -53,7 +48,7 @@ public interface DataFrame extends Iterable<DataRow> {
 
     default DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = getColumns().rename(oldToNewNames);
-        return new TransformingDataFrame(newColumns, this, DataRowMapper.valuesMapper());
+        return new TransformingDataFrame(newColumns, this, DataRowMapper.copy());
     }
 
     default DataFrame filter(DataRowPredicate p) {
@@ -92,5 +87,5 @@ public interface DataFrame extends Iterable<DataRow> {
     }
 
     @Override
-    Iterator<DataRow> iterator();
+    Iterator<Object[]> iterator();
 }

@@ -12,13 +12,13 @@ public class ZippingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new SimpleDataFrame(i1, asList(
-                new ArrayDataRow(i1, 1),
-                new ArrayDataRow(i1, 2)));
+                DataRow.row(1),
+                DataRow.row(2)));
 
         Index i2 = new Index("b");
         DataFrame df2 = new SimpleDataFrame(i2, asList(
-                new ArrayDataRow(i2, 10),
-                new ArrayDataRow(i2, 20)));
+                DataRow.row(10),
+                DataRow.row(20)));
 
         DataFrame df = new ZippingDataFrame(new Index("a", "b"), df1, df2, Zipper.rowZipper(2));
 
@@ -32,13 +32,13 @@ public class ZippingDataFrameTest {
     public void testHead() {
         Index i1 = new Index("a");
         DataFrame df1 = new SimpleDataFrame(i1, asList(
-                new ArrayDataRow(i1, 1),
-                new ArrayDataRow(i1, 2)));
+                DataRow.row(1),
+                DataRow.row(2)));
 
         Index i2 = new Index("b");
         DataFrame df2 = new SimpleDataFrame(i2, asList(
-                new ArrayDataRow(i2, 10),
-                new ArrayDataRow(i2, 20)));
+                DataRow.row(10),
+                DataRow.row(20)));
 
         DataFrame df = new ZippingDataFrame(new Index("a", "b"), df1, df2, Zipper.rowZipper(2))
                 .head(1);
@@ -53,13 +53,13 @@ public class ZippingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new SimpleDataFrame(i1, asList(
-                new ArrayDataRow(i1, 1),
-                new ArrayDataRow(i1, 2)));
+                DataRow.row(1),
+                DataRow.row(2)));
 
         Index i2 = new Index("b");
         DataFrame df2 = new SimpleDataFrame(i2, asList(
-                new ArrayDataRow(i2, 10),
-                new ArrayDataRow(i2, 20)));
+                DataRow.row(10),
+                DataRow.row(20)));
 
         DataFrame df = new ZippingDataFrame(new Index("a", "b"), df1, df2, Zipper.rowZipper(2))
                 .renameColumn("b", "c");
@@ -75,18 +75,18 @@ public class ZippingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new SimpleDataFrame(i1, asList(
-                new ArrayDataRow(i1, "one"),
-                new ArrayDataRow(i1, "two")));
+                DataRow.row("one"),
+                DataRow.row("two")));
 
         Index i2 = new Index("b");
         DataFrame df2 = new SimpleDataFrame(i2, asList(
-                new ArrayDataRow(i2, 1),
-                new ArrayDataRow(i2, 2)));
+                DataRow.row(1),
+                DataRow.row(2)));
 
         Index zippedColumns = new Index("x", "y");
 
         DataFrame df = new ZippingDataFrame(zippedColumns, df1, df2, Zipper.rowZipper(2))
-                .map(r -> r.mapColumn(0, (String v) -> v + "_"));
+                .map(r -> DataRow.mapColumn(r, 0, v -> v + "_"));
 
         new DFAsserts(df, zippedColumns)
                 .assertLength(2)
@@ -99,20 +99,20 @@ public class ZippingDataFrameTest {
 
         Index i1 = new Index("a");
         DataFrame df1 = new SimpleDataFrame(i1, asList(
-                new ArrayDataRow(i1, "one"),
-                new ArrayDataRow(i1, "two")));
+                DataRow.row("one"),
+                DataRow.row("two")));
 
         Index i2 = new Index("b");
         DataFrame df2 = new SimpleDataFrame(i2, asList(
-                new ArrayDataRow(i2, 1),
-                new ArrayDataRow(i2, 2)));
+                DataRow.row(1),
+                DataRow.row(2)));
 
         Index mappedColumns = new Index("x", "y", "z");
         DataFrame df = new ZippingDataFrame(new Index("a", "b"), df1, df2, Zipper.rowZipper(2))
-                .map(mappedColumns, r -> DataRow.values(
-                        r.get(0),
-                        r.get(1) != null ? ((int) r.get(1)) * 10 : 0,
-                        r.get(1)));
+                .map(mappedColumns, r -> DataRow.row(
+                        r[0],
+                        ((int) r[1]) * 10,
+                        r[1]));
 
         new DFAsserts(df, mappedColumns)
                 .assertLength(2)

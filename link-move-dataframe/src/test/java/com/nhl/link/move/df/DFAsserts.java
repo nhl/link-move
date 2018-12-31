@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 public class DFAsserts {
 
     private String[] expectedColumns;
-    private List<DataRow> rows;
+    private List<Object[]> rows;
 
     public DFAsserts(DataFrame df, Index expectedColumns) {
         this(df, expectedColumns.getColumns());
@@ -24,13 +24,12 @@ public class DFAsserts {
         df.forEach(rows::add);
     }
 
-    public static void assertRow(DataRow row, String[] expectedIndex, Object... expectedValues) {
+    public static void assertRow(Object[] row, String[] expectedIndex, Object... expectedValues) {
 
-        assertEquals(expectedIndex.length, row.size());
-        assertArrayEquals(expectedIndex, row.getColumns().getColumns());
+        assertEquals(expectedIndex.length, row.length);
 
         for (int i = 0; i < expectedIndex.length; i++) {
-            assertEquals("Unexpected value for '" + expectedIndex[i] + " (" + i + ")'", expectedValues[i], row.get(i));
+            assertEquals("Unexpected value for '" + expectedIndex[i] + " (" + i + ")'", expectedValues[i], row[i]);
         }
     }
 

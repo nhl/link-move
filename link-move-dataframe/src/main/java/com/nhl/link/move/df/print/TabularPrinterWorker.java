@@ -1,6 +1,5 @@
 package com.nhl.link.move.df.print;
 
-import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ class TabularPrinterWorker extends BasePrinterWorker {
         super(out, maxDisplayRows, maxDisplayColumnWith);
     }
 
-    StringBuilder print(Index columns, Iterator<DataRow> values) {
+    StringBuilder print(Index columns, Iterator<Object[]> values) {
 
         int width = columns.size();
         if (width == 0) {
@@ -32,11 +31,11 @@ class TabularPrinterWorker extends BasePrinterWorker {
                 break;
             }
 
-            DataRow dr = values.next();
+            Object[] dr = values.next();
             String[] drValue = new String[width];
 
             for (int j = 0; j < width; j++) {
-                drValue[j] = String.valueOf(dr.get(j));
+                drValue[j] = String.valueOf(dr[j]);
                 columnWidth[j] = Math.max(columnWidth[j], drValue[j].length());
             }
 

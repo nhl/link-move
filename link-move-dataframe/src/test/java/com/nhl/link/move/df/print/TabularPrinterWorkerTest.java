@@ -1,6 +1,5 @@
 package com.nhl.link.move.df.print;
 
-import com.nhl.link.move.df.ArrayDataRow;
 import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
 import org.junit.Before;
@@ -14,16 +13,16 @@ import static org.junit.Assert.*;
 public class TabularPrinterWorkerTest {
 
     private Index columns;
-    private List<DataRow> rows;
+    private List<Object[]> rows;
 
     @Before
     public void initDataFrameParts() {
         this.columns = new Index("col1", "column2");
         this.rows = asList(
-                new ArrayDataRow(columns, "one", 1),
-                new ArrayDataRow(columns, "two", 2),
-                new ArrayDataRow(columns, "three", 3),
-                new ArrayDataRow(columns, "four", 4));
+                DataRow.row("one", 1),
+                DataRow.row("two", 2),
+                DataRow.row("three", 3),
+                DataRow.row("four", 4));
     }
 
     @Test

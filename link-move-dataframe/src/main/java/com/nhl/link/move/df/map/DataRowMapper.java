@@ -5,9 +5,14 @@ import com.nhl.link.move.df.DataRow;
 @FunctionalInterface
 public interface DataRowMapper {
 
-    static DataRowMapper valuesMapper() {
-        return DataRow::copyValues;
+    static DataRowMapper self() {
+        return r -> r;
     }
 
-    Object[] map(DataRow row);
+    static DataRowMapper copy() {
+        return DataRow::copy;
+    }
+
+
+    Object[] map(Object[] row);
 }

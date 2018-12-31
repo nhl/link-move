@@ -1,6 +1,5 @@
 package com.nhl.link.move.df.print;
 
-import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
 
 import java.util.Iterator;
@@ -35,5 +34,5 @@ public abstract class BasePrinterWorker {
         return string.substring(0, startOffset) + ".." + string.substring(endOffset);
     }
 
-    abstract StringBuilder print(Index columns, Iterator<DataRow> values);
+    abstract StringBuilder print(Index columns, Iterator<Object[]> values);
 }

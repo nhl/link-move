@@ -8,11 +8,11 @@ import java.util.NoSuchElementException;
 
 public class FilteredDataFrame implements DataFrame {
 
-    private Iterable<DataRow> source;
+    private Iterable<Object[]> source;
     private Index columns;
     private DataRowPredicate rowFilter;
 
-    public FilteredDataFrame(Index columns, Iterable<DataRow> source, DataRowPredicate rowFilter) {
+    public FilteredDataFrame(Index columns, Iterable<Object[]> source, DataRowPredicate rowFilter) {
         this.source = source;
         this.columns = columns;
         this.rowFilter = rowFilter;
@@ -24,11 +24,11 @@ public class FilteredDataFrame implements DataFrame {
     }
 
     @Override
-    public Iterator<DataRow> iterator() {
-        return new Iterator<DataRow>() {
+    public Iterator<Object[]> iterator() {
+        return new Iterator<Object[]>() {
 
-            private Iterator<DataRow> delegateIt = FilteredDataFrame.this.source.iterator();
-            private DataRow lastResolved;
+            private Iterator<Object[]> delegateIt = FilteredDataFrame.this.source.iterator();
+            private Object[] lastResolved;
 
             {
                 rewind();
@@ -37,7 +37,7 @@ public class FilteredDataFrame implements DataFrame {
             private void rewind() {
                 lastResolved = null;
                 while (delegateIt.hasNext()) {
-                    DataRow next = delegateIt.next();
+                    Object[] next = delegateIt.next();
                     if (rowFilter.test(next)) {
                         lastResolved = next;
                         break;
@@ -51,13 +51,13 @@ public class FilteredDataFrame implements DataFrame {
             }
 
             @Override
-            public DataRow next() {
+            public Object[] next() {
 
                 if (lastResolved == null) {
                     throw new NoSuchElementException("No next element");
                 }
 
-                DataRow next = lastResolved;
+                Object[] next = lastResolved;
                 rewind();
                 return next;
             }

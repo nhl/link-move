@@ -7,15 +7,15 @@ import java.util.Iterator;
 
 public class ZippingDataFrame implements DataFrame {
 
-    private Iterable<DataRow> leftSource;
-    private Iterable<DataRow> rightSource;
+    private Iterable<Object[]> leftSource;
+    private Iterable<Object[]> rightSource;
     private Index columns;
     private DataRowCombiner rowCombiner;
 
     public ZippingDataFrame(
             Index columns,
-            Iterable<DataRow> leftSource,
-            Iterable<DataRow> rightSource,
+            Iterable<Object[]> leftSource,
+            Iterable<Object[]> rightSource,
             DataRowCombiner rowCombiner) {
 
         this.leftSource = leftSource;
@@ -30,11 +30,12 @@ public class ZippingDataFrame implements DataFrame {
     }
 
     @Override
-    public Iterator<DataRow> iterator() {
-        return new Iterator<DataRow>() {
+    public Iterator<Object[]> iterator() {
+        return new Iterator<Object[]>() {
 
-            private Iterator<DataRow> leftIt = ZippingDataFrame.this.leftSource.iterator();
-            private Iterator<DataRow> rightIt = ZippingDataFrame.this.rightSource.iterator();
+            private int width = ZippingDataFrame.this.columns.size();
+            private Iterator<Object[]> leftIt = ZippingDataFrame.this.leftSource.iterator();
+            private Iterator<Object[]> rightIt = ZippingDataFrame.this.rightSource.iterator();
 
             @Override
             public boolean hasNext() {
@@ -43,9 +44,17 @@ public class ZippingDataFrame implements DataFrame {
             }
 
             @Override
-            public DataRow next() {
-                Object[] values = rowCombiner.combine(leftIt.next(), rightIt.next());
-                return new ArrayDataRow(columns, values);
+            public Object[] next() {
+                Object[] zipped = rowCombiner.combine(leftIt.next(), rightIt.next());
+
+                if (width != zipped.length) {
+                    throw new IllegalStateException(String.format(
+                            "Index size of %s is not the same as values size of %s",
+                            width,
+                            zipped.length));
+                }
+
+                return zipped;
             }
         };
     }

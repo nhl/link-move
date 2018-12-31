@@ -10,27 +10,31 @@ public interface DataRow {
      * @param values a varargs array of values
      * @return "values" vararg unchanged
      */
-    static Object[] values(Object... values) {
+    static Object[] row(Object... values) {
         return values;
     }
 
-    Object get(String columnName);
-
-    Object get(int position);
-
-    Index getColumns();
-
-    <V, VR> Object[] mapColumn(int position, ValueMapper<V, VR> m);
-
-    void copyTo(Object[] to, int toOffset);
-
-    default Object[] copyValues() {
-        Object[] values = new Object[size()];
-        copyTo(values, 0);
-        return values;
+    static Object[] copy(Object[] row) {
+        int len = row.length;
+        Object[] copy = new Object[len];
+        System.arraycopy(row, 0, copy, 0, len);
+        return copy;
     }
 
-    default int size() {
-        return getColumns().size();
+    static Object[] copyTo(Object[] row, Object[] to, int toOffset) {
+        System.arraycopy(row, 0, to, toOffset, row.length);
+        return to;
     }
+
+    static <V, VR> Object[] mapColumn(Object[] row, int position, ValueMapper<V, VR> m) {
+
+        int width = row.length;
+
+        Object[] newValues = new Object[width];
+        System.arraycopy(row, 0, newValues, 0, width);
+        newValues[position] = m.map((V) row[position]);
+
+        return newValues;
+    }
+
 }
