@@ -3,7 +3,7 @@ package com.nhl.link.move.df;
 import java.util.Iterator;
 import java.util.function.Function;
 
-public class TransformingIterable<S, T> implements Iterable<T> {
+class TransformingIterable<S, T> implements Iterable<T> {
 
     private Iterable<S> source;
     private Function<S, T> transformer;
