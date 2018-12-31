@@ -20,8 +20,6 @@ public interface DataRow {
 
     Index getColumns();
 
-    DataRow reindex(Index columns);
-
     <V, VR> Object[] mapColumn(int position, ValueMapper<V, VR> m);
 
     void copyTo(Object[] to, int toOffset);

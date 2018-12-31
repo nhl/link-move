@@ -37,11 +37,6 @@ public class ArrayDataRow implements DataRow {
     }
 
     @Override
-    public DataRow reindex(Index index) {
-        return this.index == index ? this : new ArrayDataRow(index, values);
-    }
-
-    @Override
     public void copyTo(Object[] to, int toOffset) {
         System.arraycopy(values, 0, to, toOffset, values.length);
     }
