@@ -44,7 +44,7 @@ public interface DataFrame extends Iterable<DataRow> {
 
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
         int ci = getColumns().position(columnName);
-        return map(getColumns(), (i, r) -> r.mapColumn(ci, m));
+        return map(getColumns(), r -> r.mapColumn(ci, m));
     }
 
     default DataFrame renameColumn(String oldName, String newName) {
@@ -53,7 +53,7 @@ public interface DataFrame extends Iterable<DataRow> {
 
     default DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = getColumns().rename(oldToNewNames);
-        return new TransformingDataFrame(newColumns, this, DataRowMapper.reindexMapper());
+        return new TransformingDataFrame(newColumns, this, DataRowMapper.valuesMapper());
     }
 
     default DataFrame filter(DataRowPredicate p) {
@@ -69,7 +69,8 @@ public interface DataFrame extends Iterable<DataRow> {
      * @return a new DataFrame that is a combination of columns from this DataFrame and a DataFrame argument.
      */
     default DataFrame zip(DataFrame df) {
-        return zip(Zipper.zipIndex(getColumns(), df.getColumns()), df, Zipper::zipRows);
+        Index zipIndex = Zipper.zipIndex(getColumns(), df.getColumns());
+        return zip(zipIndex, df, Zipper.rowZipper(zipIndex.size()));
     }
 
     default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {

@@ -1,14 +1,13 @@
 package com.nhl.link.move.df.map;
 
 import com.nhl.link.move.df.DataRow;
-import com.nhl.link.move.df.Index;
 
 @FunctionalInterface
 public interface DataRowMapper {
 
-    static DataRowMapper reindexMapper() {
-        return (i, r) -> r.reindex(i);
+    static DataRowMapper valuesMapper() {
+        return DataRow::copyValues;
     }
 
-    DataRow map(Index mappedIndex, DataRow row);
+    Object[] map(DataRow row);
 }

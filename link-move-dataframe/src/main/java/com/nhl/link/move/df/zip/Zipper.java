@@ -1,8 +1,8 @@
 package com.nhl.link.move.df.zip;
 
-import com.nhl.link.move.df.ArrayDataRow;
 import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
+import com.nhl.link.move.df.map.DataRowCombiner;
 
 public class Zipper {
 
@@ -30,12 +30,15 @@ public class Zipper {
         return new Index(zippedColumns);
     }
 
+    public static DataRowCombiner rowZipper(int zippedWidth) {
+        return (lr, rr) -> Zipper.zipRows(zippedWidth, lr, rr);
+    }
 
-    public static DataRow zipRows(Index mappedIndex, DataRow lr, DataRow rr) {
+    public static Object[] zipRows(int zippedWidth, DataRow lr, DataRow rr) {
 
         // rows can be null in case of outer joins
 
-        Object[] zippedValues = new Object[mappedIndex.size()];
+        Object[] zippedValues = new Object[zippedWidth];
 
         if (lr != null) {
             lr.copyTo(zippedValues, 0);
@@ -45,6 +48,6 @@ public class Zipper {
             rr.copyTo(zippedValues, zippedValues.length - rr.size());
         }
 
-        return new ArrayDataRow(mappedIndex, zippedValues);
+        return zippedValues;
     }
 }

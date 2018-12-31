@@ -2,7 +2,6 @@ package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowCombiner;
 import com.nhl.link.move.df.print.InlinePrinter;
-import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Iterator;
 
@@ -12,13 +11,6 @@ public class ZippingDataFrame implements DataFrame {
     private Iterable<DataRow> rightSource;
     private Index columns;
     private DataRowCombiner rowCombiner;
-
-    public ZippingDataFrame(
-            Index columns,
-            Iterable<DataRow> leftSource,
-            Iterable<DataRow> rightSource) {
-        this(columns, leftSource, rightSource, Zipper::zipRows);
-    }
 
     public ZippingDataFrame(
             Index columns,
@@ -52,7 +44,8 @@ public class ZippingDataFrame implements DataFrame {
 
             @Override
             public DataRow next() {
-                return rowCombiner.combine(columns, leftIt.next(), rightIt.next());
+                Object[] values = rowCombiner.combine(leftIt.next(), rightIt.next());
+                return new ArrayDataRow(columns, values);
             }
         };
     }

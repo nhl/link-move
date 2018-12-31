@@ -47,15 +47,15 @@ public class ArrayDataRow implements DataRow {
     }
 
     @Override
-    public <V, VR> DataRow mapColumn(int position, ValueMapper<V, VR> m) {
+    public <V, VR> Object[] mapColumn(int position, ValueMapper<V, VR> m) {
 
         int width = values.length;
 
         Object[] newValues = new Object[width];
         System.arraycopy(values, 0, newValues, 0, width);
-        newValues[position] = m.apply((V) values[position]);
+        newValues[position] = m.map((V) values[position]);
 
-        return new ArrayDataRow(index, newValues);
+        return newValues;
     }
 
     @Override

@@ -72,7 +72,7 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -98,7 +98,7 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -124,7 +124,7 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -162,9 +162,12 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
+    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<DataRow> li, Iterable<DataRow> ri) {
+        return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(joinedColumns.size()));
+    }
 
     private Map<K, List<DataRow>> groupByKey(DataRowToValueMapper<K> keyMapper, DataFrame df) {
 

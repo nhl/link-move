@@ -61,7 +61,7 @@ public class Joiner {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -88,7 +88,7 @@ public class Joiner {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -115,7 +115,7 @@ public class Joiner {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
     }
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -154,7 +154,11 @@ public class Joiner {
             }
         }
 
-        return new ZippingDataFrame(joinedColumns, lRows, rRows, Zipper::zipRows);
+        return toJoinDataFrame(joinedColumns, lRows, rRows);
+    }
+
+    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<DataRow> li, Iterable<DataRow> ri) {
+        return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(joinedColumns.size()));
     }
 
     // "materialize" frame rows to avoid recalculation of each row on multiple iterations.
