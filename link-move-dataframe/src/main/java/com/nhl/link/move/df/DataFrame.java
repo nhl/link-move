@@ -18,6 +18,15 @@ import java.util.function.Consumer;
  */
 public interface DataFrame extends Iterable<DataRow> {
 
+    static DataFrame fromRows(Index columns, Iterable<DataRow> source) {
+        return new SimpleDataFrame(columns, source);
+    }
+
+    static DataFrame fromArrays(Index columns, Iterable<Object[]> source) {
+        Iterable<DataRow> it = new TransformingIterable<>(source, a -> new ArrayDataRow(columns, a));
+        return new SimpleDataFrame(columns, it);
+    }
+
     Index getColumns();
 
     default DataFrame head(int len) {
@@ -28,7 +37,9 @@ public interface DataFrame extends Iterable<DataRow> {
         return map(getColumns(), rowMapper);
     }
 
-    DataFrame map(Index mappedColumns, DataRowMapper rowMapper);
+    default DataFrame map(Index mappedColumns, DataRowMapper rowMapper) {
+        return new TransformingDataFrame(mappedColumns, this, rowMapper);
+    }
 
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
         int ci = getColumns().position(columnName);
@@ -58,7 +69,7 @@ public interface DataFrame extends Iterable<DataRow> {
     }
 
     default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {
-        return new ZipDataFrame(zippedColumns, this, df, c);
+        return new ZippingDataFrame(zippedColumns, this, df, c);
     }
 
     @Override
@@ -78,14 +89,14 @@ public interface DataFrame extends Iterable<DataRow> {
             rows.add(dr);
 
             if (rows.size() % batchSize == 0) {
-                consumer.accept(new LazyDataFrame(columns, rows));
+                consumer.accept(new TransformingDataFrame(columns, rows));
                 rows = new ArrayList<>(batchSize);
             }
         }
 
         // consume leftovers
         if (!rows.isEmpty()) {
-            consumer.accept(new LazyDataFrame(columns, rows));
+            consumer.accept(new TransformingDataFrame(columns, rows));
         }
     }
 }

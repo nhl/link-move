@@ -11,21 +11,21 @@ import java.util.Map;
  * A DataFrame over an Iterable of unknown (possibly very long) length. Its per-row operations are not applied
  * immediately and are instead deferred until the caller iterates over the contents.
  */
-public class LazyDataFrame implements DataFrame {
+public class TransformingDataFrame implements DataFrame {
 
     private Iterable<DataRow> source;
     private Index columns;
     private DataRowMapper rowMapper;
 
-    public LazyDataFrame(Index columns) {
+    public TransformingDataFrame(Index columns) {
         this(columns, Collections.emptyList(), DataRowMapper.identity());
     }
 
-    public LazyDataFrame(Index columns, Iterable<DataRow> source) {
+    public TransformingDataFrame(Index columns, Iterable<DataRow> source) {
         this(columns, source, DataRowMapper.identity());
     }
 
-    protected LazyDataFrame(Index columns, Iterable<DataRow> source, DataRowMapper rowMapper) {
+    protected TransformingDataFrame(Index columns, Iterable<DataRow> source, DataRowMapper rowMapper) {
         this.source = source;
         this.columns = columns;
         this.rowMapper = rowMapper;
@@ -39,19 +39,14 @@ public class LazyDataFrame implements DataFrame {
     @Override
     public DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = columns.rename(oldToNewNames);
-        return new LazyDataFrame(newColumns, this, DataRowMapper.identity());
-    }
-
-    @Override
-    public DataFrame map(Index mappedIndex, DataRowMapper rowMapper) {
-        return new LazyDataFrame(mappedIndex, this, rowMapper);
+        return new TransformingDataFrame(newColumns, this, DataRowMapper.identity());
     }
 
     @Override
     public Iterator<DataRow> iterator() {
         return new Iterator<DataRow>() {
 
-            private Iterator<DataRow> delegateIt = LazyDataFrame.this.source.iterator();
+            private Iterator<DataRow> delegateIt = TransformingDataFrame.this.source.iterator();
 
             @Override
             public boolean hasNext() {

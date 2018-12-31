@@ -30,7 +30,7 @@ public class HeadDataFrameTest {
 
         List<DataRow> consumed = new ArrayList<>();
 
-        HeadDataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 3);
+        HeadDataFrame df = new HeadDataFrame(new TransformingDataFrame(columns, rows), 3);
 
         df.forEach(consumed::add);
 
@@ -40,7 +40,7 @@ public class HeadDataFrameTest {
     @Test
     public void testHead() {
 
-        HeadDataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 3);
+        HeadDataFrame df = new HeadDataFrame(new TransformingDataFrame(columns, rows), 3);
 
         DataFrame df1 = df.head(3);
         assertSame(df, df1);
@@ -60,7 +60,7 @@ public class HeadDataFrameTest {
     @Test
     public void testMap() {
 
-        DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 3)
+        DataFrame df = new HeadDataFrame(new TransformingDataFrame(columns, rows), 3)
                 .map(columns, (i, r) -> r.mapColumn(0, v -> v + "_"));
 
         new DFAsserts(df, columns)
@@ -75,7 +75,7 @@ public class HeadDataFrameTest {
 
         Index i1 = new Index("c");
 
-        DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, rows), 2)
+        DataFrame df = new HeadDataFrame(new TransformingDataFrame(columns, rows), 2)
                 .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) + "_"));
 
         new DFAsserts(df, i1)
@@ -89,7 +89,7 @@ public class HeadDataFrameTest {
 
         Index i1 = new Index("c");
 
-        DataFrame df = new HeadDataFrame(new LazyDataFrame(columns, Collections.emptyList()), 2)
+        DataFrame df = new HeadDataFrame(new TransformingDataFrame(columns, Collections.emptyList()), 2)
                 .map(i1, (i, r) -> new ArrayDataRow(i, r.get(0) + "_"));
 
         new DFAsserts(df, i1).assertLength(0);
@@ -99,12 +99,12 @@ public class HeadDataFrameTest {
     public void testZip_LeftIsShorter() {
 
         Index i1 = new Index("a");
-        DataFrame df1 = new LazyDataFrame(i1, asList(
+        DataFrame df1 = new TransformingDataFrame(i1, asList(
                 new ArrayDataRow(i1, 1),
                 new ArrayDataRow(i1, 2)));
 
         Index i2 = new Index("b");
-        DataFrame df2 = new LazyDataFrame(i2, asList(
+        DataFrame df2 = new TransformingDataFrame(i2, asList(
                 new ArrayDataRow(i2, 10),
                 new ArrayDataRow(i2, 20)));
 

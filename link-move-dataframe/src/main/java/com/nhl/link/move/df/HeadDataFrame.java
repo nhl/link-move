@@ -39,11 +39,6 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public DataFrame map(Index mappedIndex, DataRowMapper rowMapper) {
-        return new LazyDataFrame(mappedIndex, this, rowMapper);
-    }
-
-    @Override
     public Iterator<DataRow> iterator() {
 
         return new Iterator<DataRow>() {

@@ -1,6 +1,5 @@
 package com.nhl.link.move.df;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -10,10 +9,7 @@ import static org.junit.Assert.*;
 
 public class DataFrameTest {
 
-    private DataFrame df;
-
-    @Before
-    public void initDataFrame() {
+    private DataFrame createDataFrame() {
         Index columns = new Index("a");
         List<DataRow> rows = asList(
                 new ArrayDataRow(columns, "one"),
@@ -22,7 +18,35 @@ public class DataFrameTest {
                 new ArrayDataRow(columns, "four"));
 
 
-        this.df = new LazyDataFrame(columns, rows);
+        return new SimpleDataFrame(columns, rows);
+    }
+
+    @Test
+    public void testFromRows() {
+
+        Index i = new Index("a");
+        DataFrame df = DataFrame.fromRows(i, asList(
+                new ArrayDataRow(i, 1),
+                new ArrayDataRow(i, 2)));
+
+        new DFAsserts(df, i)
+                .assertLength(2)
+                .assertRow(0, 1)
+                .assertRow(1, 2);
+    }
+
+    @Test
+    public void testFromArrays() {
+
+        Index i = new Index("a");
+        DataFrame df = DataFrame.fromArrays(i, asList(
+                new Object[]{1},
+                new Object[]{2}));
+
+        new DFAsserts(df, i)
+                .assertLength(2)
+                .assertRow(0, 1)
+                .assertRow(1, 2);
     }
 
     @Test
@@ -31,7 +55,7 @@ public class DataFrameTest {
         int[] batchCounter = new int[1];
         int[] elementCounter = new int[1];
 
-        df.consumeAsBatches(f -> {
+        createDataFrame().consumeAsBatches(f -> {
             batchCounter[0] += 1;
             f.forEach(r -> elementCounter[0] += 1);
         }, 3);
@@ -46,7 +70,7 @@ public class DataFrameTest {
         int[] batchCounter = new int[1];
         int[] elementCounter = new int[1];
 
-        df.consumeAsBatches(f -> {
+        createDataFrame().consumeAsBatches(f -> {
             batchCounter[0] += 1;
             f.forEach(r -> elementCounter[0] += 1);
         }, 2);
@@ -61,7 +85,7 @@ public class DataFrameTest {
         int[] batchCounter = new int[1];
         int[] elementCounter = new int[1];
 
-        df.consumeAsBatches(f -> {
+        createDataFrame().consumeAsBatches(f -> {
             batchCounter[0] += 1;
             f.forEach(r -> elementCounter[0] += 1);
         }, 4);
@@ -76,7 +100,7 @@ public class DataFrameTest {
         int[] batchCounter = new int[1];
         int[] elementCounter = new int[1];
 
-        df.consumeAsBatches(f -> {
+        createDataFrame().consumeAsBatches(f -> {
             batchCounter[0] += 1;
             f.forEach(r -> elementCounter[0] += 1);
         }, 1000);

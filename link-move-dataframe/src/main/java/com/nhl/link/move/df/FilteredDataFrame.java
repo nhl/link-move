@@ -1,7 +1,7 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.filter.DataRowPredicate;
-import com.nhl.link.move.df.map.DataRowMapper;
+import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -22,11 +22,6 @@ public class FilteredDataFrame implements DataFrame {
     @Override
     public Index getColumns() {
         return columns;
-    }
-
-    @Override
-    public DataFrame map(Index mappedColumns, DataRowMapper rowMapper) {
-        return new LazyDataFrame(mappedColumns, this, rowMapper);
     }
 
     @Override
@@ -74,5 +69,10 @@ public class FilteredDataFrame implements DataFrame {
                 return next;
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        return InlinePrinter.getInstance().print(new StringBuilder("FilteredDataFrame ["), this).append("]").toString();
     }
 }

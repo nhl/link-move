@@ -1,27 +1,27 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowCombiner;
-import com.nhl.link.move.df.map.DataRowMapper;
+import com.nhl.link.move.df.print.InlinePrinter;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Iterator;
 import java.util.Map;
 
-public class ZipDataFrame implements DataFrame {
+public class ZippingDataFrame implements DataFrame {
 
     private Iterable<DataRow> leftSource;
     private Iterable<DataRow> rightSource;
     private Index columns;
     private DataRowCombiner rowCombiner;
 
-    public ZipDataFrame(
+    public ZippingDataFrame(
             Index columns,
             Iterable<DataRow> leftSource,
             Iterable<DataRow> rightSource) {
         this(columns, leftSource, rightSource, Zipper::zipRows);
     }
 
-    public ZipDataFrame(
+    public ZippingDataFrame(
             Index columns,
             Iterable<DataRow> leftSource,
             Iterable<DataRow> rightSource,
@@ -39,22 +39,17 @@ public class ZipDataFrame implements DataFrame {
     }
 
     @Override
-    public DataFrame map(Index mappedIndex, DataRowMapper rowMapper) {
-        return new LazyDataFrame(mappedIndex, this, rowMapper);
-    }
-
-    @Override
     public DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = columns.rename(oldToNewNames);
-        return new ZipDataFrame(newColumns, leftSource, rightSource, rowCombiner);
+        return new ZippingDataFrame(newColumns, leftSource, rightSource, rowCombiner);
     }
 
     @Override
     public Iterator<DataRow> iterator() {
         return new Iterator<DataRow>() {
 
-            private Iterator<DataRow> leftIt = ZipDataFrame.this.leftSource.iterator();
-            private Iterator<DataRow> rightIt = ZipDataFrame.this.rightSource.iterator();
+            private Iterator<DataRow> leftIt = ZippingDataFrame.this.leftSource.iterator();
+            private Iterator<DataRow> rightIt = ZippingDataFrame.this.rightSource.iterator();
 
             @Override
             public boolean hasNext() {
@@ -67,5 +62,10 @@ public class ZipDataFrame implements DataFrame {
                 return rowCombiner.combine(columns, leftIt.next(), rightIt.next());
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        return InlinePrinter.getInstance().print(new StringBuilder("ZipDataFrame ["), this).append("]").toString();
     }
 }
