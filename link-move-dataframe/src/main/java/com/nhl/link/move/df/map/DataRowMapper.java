@@ -6,7 +6,7 @@ import com.nhl.link.move.df.Index;
 @FunctionalInterface
 public interface DataRowMapper {
 
-    static DataRowMapper identity() {
+    static DataRowMapper reindexMapper() {
         return (i, r) -> r.reindex(i);
     }
 

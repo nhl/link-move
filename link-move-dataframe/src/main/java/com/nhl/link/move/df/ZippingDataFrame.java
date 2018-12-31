@@ -5,7 +5,6 @@ import com.nhl.link.move.df.print.InlinePrinter;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Iterator;
-import java.util.Map;
 
 public class ZippingDataFrame implements DataFrame {
 
@@ -36,12 +35,6 @@ public class ZippingDataFrame implements DataFrame {
     @Override
     public Index getColumns() {
         return columns;
-    }
-
-    @Override
-    public DataFrame renameColumns(Map<String, String> oldToNewNames) {
-        Index newColumns = columns.rename(oldToNewNames);
-        return new ZippingDataFrame(newColumns, leftSource, rightSource, rowCombiner);
     }
 
     @Override

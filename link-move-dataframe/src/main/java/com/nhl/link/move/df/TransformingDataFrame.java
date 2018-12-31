@@ -5,7 +5,6 @@ import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A DataFrame over an Iterable of unknown (possibly very long) length. Its per-row operations are not applied
@@ -18,11 +17,11 @@ public class TransformingDataFrame implements DataFrame {
     private DataRowMapper rowMapper;
 
     public TransformingDataFrame(Index columns) {
-        this(columns, Collections.emptyList(), DataRowMapper.identity());
+        this(columns, Collections.emptyList(), DataRowMapper.reindexMapper());
     }
 
     public TransformingDataFrame(Index columns, Iterable<DataRow> source) {
-        this(columns, source, DataRowMapper.identity());
+        this(columns, source, DataRowMapper.reindexMapper());
     }
 
     protected TransformingDataFrame(Index columns, Iterable<DataRow> source, DataRowMapper rowMapper) {
@@ -34,12 +33,6 @@ public class TransformingDataFrame implements DataFrame {
     @Override
     public Index getColumns() {
         return columns;
-    }
-
-    @Override
-    public DataFrame renameColumns(Map<String, String> oldToNewNames) {
-        Index newColumns = columns.rename(oldToNewNames);
-        return new TransformingDataFrame(newColumns, this, DataRowMapper.identity());
     }
 
     @Override

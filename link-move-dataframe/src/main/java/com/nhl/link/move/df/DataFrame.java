@@ -50,7 +50,10 @@ public interface DataFrame extends Iterable<DataRow> {
         return renameColumns(Collections.singletonMap(oldName, newName));
     }
 
-    DataFrame renameColumns(Map<String, String> oldToNewNames);
+    default DataFrame renameColumns(Map<String, String> oldToNewNames) {
+        Index newColumns = getColumns().rename(oldToNewNames);
+        return new TransformingDataFrame(newColumns, this, DataRowMapper.reindexMapper());
+    }
 
     default DataFrame filter(DataRowPredicate p) {
         return new FilteredDataFrame(getColumns(), this, p);

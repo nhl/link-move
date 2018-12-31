@@ -4,7 +4,6 @@ import com.nhl.link.move.df.filter.DataRowPredicate;
 import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class FilteredDataFrame implements DataFrame {
@@ -22,12 +21,6 @@ public class FilteredDataFrame implements DataFrame {
     @Override
     public Index getColumns() {
         return columns;
-    }
-
-    @Override
-    public DataFrame renameColumns(Map<String, String> oldToNewNames) {
-        Index newColumns = columns.rename(oldToNewNames);
-        return new FilteredDataFrame(newColumns, source, rowFilter);
     }
 
     @Override

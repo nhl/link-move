@@ -61,4 +61,18 @@ public class FilteredDataFrameTest {
                 .assertLength(1)
                 .assertRow(0, "two_");
     }
+
+    @Test
+    public void testRenameColumn() {
+        Index i = new Index("a", "b");
+
+        DataFrame df = new FilteredDataFrame(i, asList(
+                new ArrayDataRow(i, "one", 1),
+                new ArrayDataRow(i, "two", 2)), r -> true).renameColumn("b", "c");
+
+        new DFAsserts(df, "a", "c")
+                .assertLength(2)
+                .assertRow(0, "one", 1)
+                .assertRow(1, "two", 2);
+    }
 }

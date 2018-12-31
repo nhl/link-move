@@ -1,26 +1,18 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class HeadDataFrame implements DataFrame {
 
     private DataFrame delegate;
     private int len;
-    private DataRowMapper rowMapper;
 
     public HeadDataFrame(DataFrame delegate, int len) {
-        this(delegate, len, DataRowMapper.identity());
-    }
-
-    public HeadDataFrame(DataFrame delegate, int len, DataRowMapper rowMapper) {
         this.delegate = delegate;
         this.len = len;
-        this.rowMapper = rowMapper;
     }
 
     @Override
@@ -31,11 +23,6 @@ public class HeadDataFrame implements DataFrame {
     @Override
     public Index getColumns() {
         return delegate.getColumns();
-    }
-
-    @Override
-    public DataFrame renameColumns(Map<String, String> oldToNewNames) {
-        return new HeadDataFrame(delegate.renameColumns(oldToNewNames), len);
     }
 
     @Override
@@ -59,7 +46,7 @@ public class HeadDataFrame implements DataFrame {
                 }
 
                 counter++;
-                return rowMapper.map(columns, delegateIt.next());
+                return delegateIt.next();
             }
         };
     }
