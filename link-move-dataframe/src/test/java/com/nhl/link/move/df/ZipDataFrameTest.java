@@ -88,7 +88,7 @@ public class ZipDataFrameTest {
 
         DataFrame df = new ZipDataFrame(zippedColumns, df1, df2).map((i, r) -> r
                 .mapColumn(0, (String v) -> v + "_")
-                .mapColumn(1, (Integer v) -> v != null ? v * 10 : null));
+                .mapColumn(1, (Integer v) -> v * 10));
 
         new DFAsserts(df, zippedColumns)
                 .assertLength(2)

@@ -16,6 +16,7 @@ public class DFAsserts {
 
     public DFAsserts(DataFrame df, String... expectedIndex) {
 
+        assertNotNull("DataFrame is null", df);
         assertArrayEquals("DataFrame columns differ from expected", expectedIndex, df.getColumns().getColumns());
 
         this.expectedColumns = expectedIndex;

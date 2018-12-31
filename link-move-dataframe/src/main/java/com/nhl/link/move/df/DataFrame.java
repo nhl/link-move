@@ -1,5 +1,6 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.filter.DataRowPredicate;
 import com.nhl.link.move.df.map.DataRowCombiner;
 import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.map.ValueMapper;
@@ -29,13 +30,20 @@ public interface DataFrame extends Iterable<DataRow> {
 
     DataFrame map(Index mappedColumns, DataRowMapper rowMapper);
 
-    <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m);
+    default <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
+        int ci = getColumns().position(columnName);
+        return map(getColumns(), (i, r) -> r.mapColumn(ci, m));
+    }
 
     default DataFrame renameColumn(String oldName, String newName) {
         return renameColumns(Collections.singletonMap(oldName, newName));
     }
 
     DataFrame renameColumns(Map<String, String> oldToNewNames);
+
+    default DataFrame filter(DataRowPredicate p) {
+        return new FilteredDataFrame(getColumns(), this, p);
+    }
 
     /**
      * Returns a DataFrame that combines columns from this and another DataFrame. If the lengths of the DataFrames are

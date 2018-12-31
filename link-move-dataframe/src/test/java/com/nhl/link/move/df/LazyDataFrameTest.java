@@ -251,4 +251,18 @@ public class LazyDataFrameTest {
                 .assertLength(1)
                 .assertRow(0, 10, 2);
     }
+
+    @Test
+    public void testFilter() {
+
+        Index i1 = new Index("a");
+        DataFrame df1 = new LazyDataFrame(i1, asList(
+                new ArrayDataRow(i1, 10),
+                new ArrayDataRow(i1, 20)));
+
+        DataFrame df = df1.filter(r -> ((int) r.get(0)) > 15);
+        new DFAsserts(df, "a")
+                .assertLength(1)
+                .assertRow(0, 20);
+    }
 }

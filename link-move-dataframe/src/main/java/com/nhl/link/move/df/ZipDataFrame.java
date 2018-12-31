@@ -2,7 +2,6 @@ package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowCombiner;
 import com.nhl.link.move.df.map.DataRowMapper;
-import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Iterator;
@@ -42,12 +41,6 @@ public class ZipDataFrame implements DataFrame {
     @Override
     public DataFrame map(Index mappedIndex, DataRowMapper rowMapper) {
         return new LazyDataFrame(mappedIndex, this, rowMapper);
-    }
-
-    @Override
-    public <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
-        int ci = columns.position(columnName);
-        return map(columns, (i, r) -> r.mapColumn(ci, m));
     }
 
     @Override
