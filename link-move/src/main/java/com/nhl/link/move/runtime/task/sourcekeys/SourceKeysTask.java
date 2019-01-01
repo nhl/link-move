@@ -1,12 +1,8 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import com.nhl.link.move.CountingRowReader;
-import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.Row;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
@@ -16,6 +12,9 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
+
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * An {@link LmTask} that extracts all the keys from the source data store. The
@@ -64,13 +63,7 @@ public class SourceKeysTask extends BaseTask {
 	}
 
 	protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
-		return new BatchProcessor<Row>() {
-
-			@Override
-			public void process(List<Row> rows) {
-				processor.process(execution, new SourceKeysSegment(rows));
-			}
-		};
+		return rows -> processor.process(execution, new SourceKeysSegment(rows));
 	}
 
 	/**
