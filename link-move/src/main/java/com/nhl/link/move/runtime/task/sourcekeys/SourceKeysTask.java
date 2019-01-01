@@ -62,7 +62,7 @@ public class SourceKeysTask extends BaseTask {
 		}
 	}
 
-	protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
+	protected BatchProcessor<Row> createBatchProcessor(Execution execution) {
 		return rows -> processor.process(execution, new SourceKeysSegment(rows));
 	}
 

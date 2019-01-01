@@ -30,7 +30,7 @@ public class CsvRowReader implements RowReader {
 
 	@Override
 	public Iterator<Row> iterator() {
-		final Iterator<CSVRecord> drIt = parser.iterator();
+		Iterator<CSVRecord> drIt = parser.iterator();
 
 		// wind forward if needed
 		int i = 0;

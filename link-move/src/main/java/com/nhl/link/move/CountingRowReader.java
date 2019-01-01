@@ -23,7 +23,7 @@ public class CountingRowReader implements RowReader {
 	}
 
 	public Iterator<Row> iterator() {
-		final Iterator<Row> it = delegate.iterator();
+		Iterator<Row> it = delegate.iterator();
 
 		return new Iterator<Row>() {
 			@Override
