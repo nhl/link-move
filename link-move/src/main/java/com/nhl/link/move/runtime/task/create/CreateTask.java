@@ -15,7 +15,6 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,16 +65,9 @@ public class CreateTask<T extends DataObject> extends BaseTask {
         }
     }
 
-    protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
-        return new BatchProcessor<Row>() {
-
-            ObjectContext context = targetCayenneService.newContext();
-
-            @Override
-            public void process(List<Row> rows) {
-                processor.process(execution, new CreateSegment<T>(context, rows));
-            }
-        };
+    protected BatchProcessor<Row> createBatchProcessor(Execution execution) {
+        ObjectContext context = targetCayenneService.newContext();
+        return rows -> processor.process(execution, new CreateSegment<T>(context, rows));
     }
 
     /**
