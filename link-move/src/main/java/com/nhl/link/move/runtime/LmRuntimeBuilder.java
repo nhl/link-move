@@ -21,11 +21,10 @@ import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
-import com.nhl.link.move.runtime.jdbc.JdbcNormalizer;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
-import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.targetmodel.DefaultTargetEntityMap;
+import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -43,12 +42,10 @@ import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.di.DIBootstrap;
 import org.apache.cayenne.di.Injector;
 import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
-import org.apache.cayenne.map.DbAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,15 +68,6 @@ import java.util.function.Supplier;
  * A builder class that helps to assemble working LinkEtl stack.
  */
 public class LmRuntimeBuilder {
-
-    /**
-     * A DI property that defines the root directory to resolve locations of
-     * extractor config files.
-     *
-     * @since 1.4
-     * @deprecated since 2.4 unused
-     */
-    public static final String FILE_EXTRACTOR_MODEL_ROOT_DIR = "com.nhl.link.move.extrator.root.dir";
 
     public static final String START_TOKEN_VAR = "startToken";
     public static final String END_TOKEN_VAR = "endToken";
@@ -208,20 +196,6 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @since 1.7
-     * @deprecated since 2.4 in favor of {@link #valueConverter(Class, ValueConverter)}.
-     */
-    @Deprecated
-    public LmRuntimeBuilder withJdbcNormalizer(Class<?> javaType, JdbcNormalizer<?> normalizer) {
-        return valueConverter(javaType, (v, s) -> {
-            DbAttribute placeholder = new DbAttribute("_placeholder");
-            placeholder.setScale(s);
-            placeholder.setType(TypesMapping.getSqlTypeByJava(javaType));
-            return normalizer.normalize(v, placeholder);
-        });
-    }
-
-    /**
      * @since 2.4
      */
     public LmRuntimeBuilder extractorResolver(ResourceResolver loader) {
@@ -251,15 +225,6 @@ public class LmRuntimeBuilder {
         Objects.requireNonNull(baseUrl);
         this.extractorResolverFactory = () -> new URLResourceResolver(baseUrl);
         return this;
-    }
-
-    /**
-     * @since 1.4
-     * @deprecated since 2.4 in favor of {@link #extractorModelsRoot(File)} to avoid confusion between file and URL Strings.
-     */
-    @Deprecated
-    public LmRuntimeBuilder extractorModelsRoot(String rootDirPath) {
-        return extractorModelsRoot(new File(rootDirPath));
     }
 
     public LmRuntime build() throws IllegalStateException {

@@ -19,20 +19,6 @@ public class ClasspathResourceResolverTest {
 		loader = new ClasspathResourceResolver();
 	}
 
-	@Deprecated
-	@Test
-	public void testReader_Deprecated() throws IOException {
-
-		try (Reader r = loader.reader("com/nhl/link/move/resource/dummy")) {
-
-			assertNotNull(r);
-
-			char[] buffer = new char[100];
-			int read = r.read(buffer, 0, buffer.length);
-			assertEquals("<dummy/>", new String(buffer, 0, read));
-		}
-	}
-
 	@Test
 	public void testReader_WithExtension() throws IOException {
 
