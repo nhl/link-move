@@ -1,6 +1,7 @@
 ## Release 2.7
 
 * #160 Upgrade Jackson to 2.9.5
+* #162 Remove API deprecated <= v.2.4
 
 ## Release 2.6
 
