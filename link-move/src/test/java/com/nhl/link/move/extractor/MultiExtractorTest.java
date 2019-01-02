@@ -1,7 +1,7 @@
 package com.nhl.link.move.extractor;
 
 import com.nhl.link.move.CollectionRowReader;
-import com.nhl.link.move.Row;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import org.junit.Test;
 
@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class MultiExtractorTest {
 
@@ -67,7 +66,7 @@ public class MultiExtractorTest {
 
         int rows = 0;
         try (RowReader reader = extractor.getReader(Collections.emptyMap())) {
-            for (@SuppressWarnings("unused") Row row : reader) {
+            for (@SuppressWarnings("unused") Object[] row : reader) {
                 rows++;
             }
         }
@@ -78,11 +77,15 @@ public class MultiExtractorTest {
 
     protected Extractor makeExtractor(int rowsToReturn, int[] closeCounter) {
         return parameters -> {
-            Collection<Row> rows = new ArrayList<>(rowsToReturn);
+
+            RowAttribute[] header = new RowAttribute[0];
+
+            Collection<Object[]> rows = new ArrayList<>(rowsToReturn);
             for (int i = 0; i < rowsToReturn; i++) {
-                rows.add(mock(Row.class));
+                rows.add(new Object[0]);
             }
-            return new CollectionRowReader(rows) {
+
+            return new CollectionRowReader(header, rows) {
                 @Override
                 public void close() {
                     closeCounter[0]++;

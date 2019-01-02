@@ -3,7 +3,7 @@ package com.nhl.link.move.runtime.task.sourcekeys;
 import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.Row;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
@@ -52,9 +52,8 @@ public class SourceKeysTask extends BaseTask {
 
 			execution.setAttribute(RESULT_KEY, new HashSet<>());
 
-			BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-
 			try (RowReader data = getRowReader(execution, params)) {
+				BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
 				BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
 			}
 
@@ -62,8 +61,8 @@ public class SourceKeysTask extends BaseTask {
 		}
 	}
 
-	protected BatchProcessor<Row> createBatchProcessor(Execution execution) {
-		return rows -> processor.process(execution, new SourceKeysSegment(rows));
+	protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowsHeader) {
+		return rows -> processor.process(execution, new SourceKeysSegment(rowsHeader, rows));
 	}
 
 	/**

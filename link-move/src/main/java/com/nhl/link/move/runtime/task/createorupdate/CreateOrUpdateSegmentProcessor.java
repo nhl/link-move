@@ -58,7 +58,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
     }
 
     private void convertSrc(Execution exec, CreateOrUpdateSegment<T> segment) {
-        segment.setSources(rowConverter.convert(segment.getSourceRows()));
+        segment.setSources(rowConverter.convert(segment.getSourceRowsHeader(), segment.getSourceRows()));
         notifyListeners(AfterSourceRowsConverted.class, exec, segment);
     }
 

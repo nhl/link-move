@@ -1,27 +1,35 @@
 package com.nhl.link.move.runtime.jdbc;
 
-import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import org.apache.cayenne.DataRow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Objects;
 
 public class JdbcRowReader implements RowReader {
 
-    private DataRowIterator rows;
-    private RowAttribute[] rowHeader;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcRowReader.class);
 
-    public JdbcRowReader(RowAttribute[] rowHeader, DataRowIterator rows) {
+    private DataRowIterator rows;
+    private RowAttribute[] header;
+
+    public JdbcRowReader(RowAttribute[] header, DataRowIterator rows) {
         this.rows = Objects.requireNonNull(rows);
-        this.rowHeader = Objects.requireNonNull(rowHeader);
+        this.header = Objects.requireNonNull(header);
     }
 
     @Override
-    public Iterator<Row> iterator() {
+    public RowAttribute[] getHeader() {
+        return header;
+    }
 
-        return new Iterator<Row>() {
+    @Override
+    public Iterator<Object[]> iterator() {
+
+        return new Iterator<Object[]>() {
 
             @Override
             public boolean hasNext() {
@@ -29,9 +37,8 @@ public class JdbcRowReader implements RowReader {
             }
 
             @Override
-            public Row next() {
-                DataRow row = rows.next();
-                return new DataRowRow(rowHeader, row);
+            public Object[] next() {
+                return fromDataRow(rows.next());
             }
 
             @Override
@@ -39,6 +46,26 @@ public class JdbcRowReader implements RowReader {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    Object[] fromDataRow(DataRow dataRow) {
+
+        Object[] row = new Object[header.length];
+
+        for (int i = 0; i < header.length; i++) {
+
+            String name = header[i].getSourceName();
+            Object value = dataRow.get(name);
+
+            // nulls are valid, but missing keys are suspect, so add debugging for this condition
+            if (value == null && !dataRow.containsKey(name)) {
+                LOGGER.info("Key is missing in the source '" + name + "' ... ignoring");
+            }
+
+            row[i] = value;
+        }
+
+        return row;
     }
 
     @Override

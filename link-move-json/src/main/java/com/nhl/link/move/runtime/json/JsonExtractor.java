@@ -15,17 +15,17 @@ import java.util.Map;
 class JsonExtractor implements Extractor {
 
     private final StreamConnector connector;
-	private final JsonRowAttribute[] attributes;
+	private final JsonRowAttribute[] rowHeader;
 	private final JsonQuery query;
 
     private IJacksonService jacksonService;
 
     public JsonExtractor(IJacksonService jacksonService, StreamConnector connector,
-                         JsonRowAttribute[] attributes, JsonQuery query) {
+                         JsonRowAttribute[] rowHeader, JsonQuery query) {
 
         this.jacksonService = jacksonService;
 		this.connector = connector;
-		this.attributes = attributes;
+		this.rowHeader = rowHeader;
 		this.query = query;
 	}
 
@@ -37,7 +37,7 @@ class JsonExtractor implements Extractor {
                 source = jacksonService.parseJson(in);
             }
             List<JsonNodeWrapper> nodes = query.execute(source);
-			return new JsonRowReader(attributes, source, nodes);
+			return new JsonRowReader(rowHeader, source, nodes);
 		} catch (Exception e) {
 			throw new LmRuntimeException(e);
 		}
