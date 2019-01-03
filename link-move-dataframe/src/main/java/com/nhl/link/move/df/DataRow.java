@@ -26,6 +26,17 @@ public interface DataRow {
         return to;
     }
 
+    static <VR> Object[] addColumn(Object[] row, ValueMapper<Object[], VR> m) {
+
+        int oldWidth = row.length;
+
+        Object[] newValues = new Object[oldWidth + 1];
+        System.arraycopy(row, 0, newValues, 0, oldWidth);
+        newValues[oldWidth] = m.map(row);
+
+        return newValues;
+    }
+
     static <VR> Object[] mapColumn(Object[] row, int position, ValueMapper<Object[], VR> m) {
 
         int width = row.length;
