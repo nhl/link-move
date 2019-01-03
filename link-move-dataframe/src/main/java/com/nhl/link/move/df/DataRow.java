@@ -26,13 +26,13 @@ public interface DataRow {
         return to;
     }
 
-    static <V, VR> Object[] mapColumn(Object[] row, int position, ValueMapper<V, VR> m) {
+    static <VR> Object[] mapColumn(Object[] row, int position, ValueMapper<Object[], VR> m) {
 
         int width = row.length;
 
         Object[] newValues = new Object[width];
         System.arraycopy(row, 0, newValues, 0, width);
-        newValues[position] = m.map((V) row[position]);
+        newValues[position] = m.map(row);
 
         return newValues;
     }

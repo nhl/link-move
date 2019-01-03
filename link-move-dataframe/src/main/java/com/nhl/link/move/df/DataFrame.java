@@ -42,9 +42,13 @@ public interface DataFrame extends Iterable<Object[]> {
         return new TransformingDataFrame(mappedColumns, this, rowMapper);
     }
 
-    default <T> DataFrame mapColumn(String columnName, ValueMapper<Object, T> m) {
+    default <T> DataFrame mapColumn(String columnName, ValueMapper<Object[], T> m) {
         int ci = getColumns().position(columnName);
-        return map(getColumns(), r -> DataRow.mapColumn(r, ci, m));
+        return mapColumn(ci, m);
+    }
+
+    default <T> DataFrame mapColumn(int columnPosition, ValueMapper<Object[], T> m) {
+        return map(getColumns(), r -> DataRow.mapColumn(r, columnPosition, m));
     }
 
     default DataFrame renameColumn(String oldName, String newName) {
