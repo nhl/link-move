@@ -55,7 +55,7 @@ public class FilteredDataFrameTest {
         DataFrame df = new FilteredDataFrame(i, asList(
                 DataRow.row("one"),
                 DataRow.row("two")),
-                r -> r[0].equals("two")).map(i, r -> DataRow.mapColumn(r, 0, v -> v + "_"));
+                r -> r[0].equals("two")).map(i, r -> DataRow.mapColumn(r, 0, v -> v[0] + "_"));
 
         new DFAsserts(df, i)
                 .assertLength(1)

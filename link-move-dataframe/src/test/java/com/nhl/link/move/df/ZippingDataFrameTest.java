@@ -86,7 +86,7 @@ public class ZippingDataFrameTest {
         Index zippedColumns = new Index("x", "y");
 
         DataFrame df = new ZippingDataFrame(zippedColumns, df1, df2, Zipper.rowZipper(2))
-                .map(r -> DataRow.mapColumn(r, 0, v -> v + "_"));
+                .map(r -> DataRow.mapColumn(r, 0, v -> v[0] + "_"));
 
         new DFAsserts(df, zippedColumns)
                 .assertLength(2)
