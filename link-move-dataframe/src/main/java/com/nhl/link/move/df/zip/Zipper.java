@@ -20,7 +20,7 @@ public class Zipper {
         // resolve dupes on the right
         for (int i = 0; i < rlen; i++) {
             String column = rColumns[i];
-            while (leftIndex.hasColumn(column)) {
+            while (leftIndex.hasName(column)) {
                 column = column + "_";
             }
 

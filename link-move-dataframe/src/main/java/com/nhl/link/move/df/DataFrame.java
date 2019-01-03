@@ -52,7 +52,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> m) {
-        Index expandedIndex = getColumns().addColumns(columnName);
+        Index expandedIndex = getColumns().addNames(columnName);
         return map(expandedIndex, r -> DataRow.addColumn(r, m));
     }
 
