@@ -1,6 +1,5 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Re-maps a list of {@link Row} objects to a Map with keys in the target namespace.
+ * Re-maps a list of source rows to a Map with keys in the target namespace.
  *
  * @since 1.3
  */
@@ -27,25 +26,28 @@ public class RowConverter {
         this.converterFactory = converterFactory;
     }
 
-    public List<Map<String, Object>> convert(List<Row> rows) {
+    public List<Map<String, Object>> convert(RowAttribute[] rowHeader, List<Object[]> rows) {
 
         List<Map<String, Object>> converted = new ArrayList<>(rows.size());
 
-        for (Row r : rows) {
-            converted.add(convert(r));
+        for (Object[] r : rows) {
+            converted.add(convert(rowHeader, r));
         }
 
         return converted;
     }
 
-    private Map<String, Object> convert(Row source) {
+    private Map<String, Object> convert(RowAttribute[] rowHeader, Object[] source) {
 
         Map<String, Object> converted = new HashMap<>();
 
-        for (RowAttribute key : source.attributes()) {
+        for (int i = 0; i < rowHeader.length; i++) {
+            RowAttribute key = rowHeader[i];
+
+            // TODO: should we "compile" this info for the header upfront and apply it to every row?
             Optional<TargetAttribute> attribute = targetEntity.getAttribute(key.getTargetPath());
             String path = attribute.isPresent() ? attribute.get().getNormalizedPath() : key.getTargetPath();
-            Object value = attribute.isPresent() ? convertValue(attribute.get(), source.get(key)) : source.get(key);
+            Object value = attribute.isPresent() ? convertValue(attribute.get(), source[i]) : source[i];
             converted.put(path, value);
         }
 

@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.task.create;
 
-import com.nhl.link.move.Row;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.runtime.task.SourceTargetPair;
 import org.apache.cayenne.ObjectContext;
 
@@ -14,12 +14,14 @@ import java.util.Map;
 public class CreateSegment<T> {
 
     private ObjectContext context;
-    private List<Row> sourceRows;
+    private List<Object[]> sourceRows;
+    private RowAttribute[] sourceRowsHeader;
     private List<Map<String, Object>> sources;
     private List<SourceTargetPair<T>> mapped;
     private List<SourceTargetPair<T>> merged;
 
-    public CreateSegment(ObjectContext context, List<Row> rows) {
+    public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, List<Object[]> rows) {
+        this.sourceRowsHeader = sourceRowsHeader;
         this.sourceRows = rows;
         this.context = context;
     }
@@ -28,8 +30,12 @@ public class CreateSegment<T> {
         return context;
     }
 
-    public List<Row> getSourceRows() {
+    public List<Object[]> getSourceRows() {
         return sourceRows;
+    }
+
+    public RowAttribute[] getSourceRowsHeader() {
+        return sourceRowsHeader;
     }
 
     public List<Map<String, Object>> getSources() {

@@ -1,24 +1,30 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
+import com.nhl.link.move.RowAttribute;
+
 import java.util.List;
 import java.util.Map;
-
-import com.nhl.link.move.Row;
 
 /**
  * @since 1.3
  */
 public class SourceKeysSegment {
 
-	private List<Row> sourceRows;
+	private List<Object[]> sourceRows;
+	private RowAttribute[] sourceRowsHeader;
 	private List<Map<String, Object>> sources;
 
-	public SourceKeysSegment(List<Row> sourceRows) {
+	public SourceKeysSegment(RowAttribute[] sourceRowsHeader, List<Object[]> sourceRows) {
+		this.sourceRowsHeader = sourceRowsHeader;
 		this.sourceRows = sourceRows;
 	}
 
-	public List<Row> getSourceRows() {
+	public List<Object[]> getSourceRows() {
 		return sourceRows;
+	}
+
+	public RowAttribute[] getSourceRowsHeader() {
+		return sourceRowsHeader;
 	}
 
 	public List<Map<String, Object>> getSources() {

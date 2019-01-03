@@ -1,7 +1,6 @@
 package com.nhl.link.move.runtime.csv;
 
 import com.nhl.link.move.BaseRowAttribute;
-import com.nhl.link.move.Row;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.runtime.extractor.BaseExtractorFactoryTest;
@@ -11,9 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class CsvExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConnector, CsvExtractorFactory> {
@@ -37,12 +34,12 @@ public class CsvExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	}
 
 	private void doCheck(RowReader reader) {
-		Iterator<Row> rowIt = reader.iterator();
+		Iterator<Object[]> rowIt = reader.iterator();
 		for (int i = 1; i <= 2; i++) {
 			assertTrue(rowIt.hasNext());
-			Row row = rowIt.next();
+			Object[] row = rowIt.next();
 			for (int j = 1; j <= 3; j++) {
-				assertEquals("r" + i + "c" + j, row.get(row.attributes()[j - 1]));
+				assertEquals("r" + i + "c" + j, row[j - 1]);
 			}
 		}
 		assertFalse(rowIt.hasNext());

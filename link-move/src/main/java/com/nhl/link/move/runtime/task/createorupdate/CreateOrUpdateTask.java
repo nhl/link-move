@@ -2,7 +2,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.Row;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
@@ -15,7 +15,6 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,9 +57,8 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
         try (Execution execution = new Execution("CreateOrUpdateTask:" + extractorName, params);) {
 
-            BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-
             try (RowReader data = getRowReader(execution, params)) {
+                BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
                 BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
             }
 
@@ -68,16 +66,9 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         }
     }
 
-    protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
-        return new BatchProcessor<Row>() {
-
-            ObjectContext context = targetCayenneService.newContext();
-
-            @Override
-            public void process(List<Row> rows) {
-                processor.process(execution, new CreateOrUpdateSegment<T>(context, rows));
-            }
-        };
+    protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
+        ObjectContext context = targetCayenneService.newContext();
+        return rows -> processor.process(execution, new CreateOrUpdateSegment<T>(context, rowHeader, rows));
     }
 
     /**

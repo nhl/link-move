@@ -1,62 +1,44 @@
 package com.nhl.link.move.runtime.jdbc;
 
-import com.nhl.link.move.BaseRowAttribute;
-import com.nhl.link.move.Row;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import org.apache.cayenne.DataRow;
-import org.apache.cayenne.ResultIterator;
-import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Objects;
 
 public class JdbcRowReader implements RowReader {
 
-    private ResultIterator<DataRow> rows;
-    private RowAttribute[] attributes;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcRowReader.class);
 
-    public JdbcRowReader(RowAttribute[] attributes, ResultIterator<DataRow> rows) {
-        this.rows = rows;
-        this.attributes = attributes;
+    private DataRowIterator rows;
+    private RowAttribute[] header;
+
+    public JdbcRowReader(RowAttribute[] header, DataRowIterator rows) {
+        this.rows = Objects.requireNonNull(rows);
+        this.header = Objects.requireNonNull(header);
     }
 
     @Override
-    public Iterator<Row> iterator() {
-        Iterator<DataRow> drIt = rows.iterator();
+    public RowAttribute[] getHeader() {
+        return header;
+    }
 
-        return new Iterator<Row>() {
+    @Override
+    public Iterator<Object[]> iterator() {
 
-            // compiled dynamically unless explicitly set for RowReader...
-            private RowAttribute[] itAttributes;
-
-            {
-                itAttributes = attributes;
-            }
-
-            // if not set, compiles attributes dynamically from a DataRow and caches them in iterator
-            private RowAttribute[] attributes(DataRow row) {
-
-                if (itAttributes == null) {
-                    itAttributes = attributesFromDataRow(row);
-                }
-
-                return itAttributes;
-            }
+        return new Iterator<Object[]>() {
 
             @Override
             public boolean hasNext() {
-                return drIt.hasNext();
+                return rows.hasNext();
             }
 
             @Override
-            public Row next() {
-
-                DataRow row = drIt.next();
-                RowAttribute[] attributes = attributes(row);
-                return new DataRowRow(attributes, row);
+            public Object[] next() {
+                return fromDataRow(rows.next());
             }
 
             @Override
@@ -66,20 +48,24 @@ public class JdbcRowReader implements RowReader {
         };
     }
 
-    RowAttribute[] attributesFromDataRow(DataRow row) {
+    Object[] fromDataRow(DataRow dataRow) {
 
-        List<String> names = new ArrayList<>(row.keySet());
+        Object[] row = new Object[header.length];
 
-        // ensure predictable order on each run...
-        Collections.sort(names);
+        for (int i = 0; i < header.length; i++) {
 
-        RowAttribute[] attributes = new RowAttribute[row.size()];
-        for (int i = 0; i < attributes.length; i++) {
-            String name = names.get(i);
-            attributes[i] = new BaseRowAttribute(Object.class, name, ASTDbPath.DB_PREFIX + name, i);
+            String name = header[i].getSourceName();
+            Object value = dataRow.get(name);
+
+            // nulls are valid, but missing keys are suspect, so add debugging for this condition
+            if (value == null && !dataRow.containsKey(name)) {
+                LOGGER.info("Key is missing in the source '" + name + "' ... ignoring");
+            }
+
+            row[i] = value;
         }
 
-        return attributes;
+        return row;
     }
 
     @Override

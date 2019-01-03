@@ -20,19 +20,19 @@ import java.util.Map;
 public class CsvExtractor implements Extractor {
 
 	private StreamConnector connector;
-	private RowAttribute[] attributes;
+	private RowAttribute[] rowHeader;
 	private Charset charset;
 	private CSVFormat csvFormat;
 
 	private Integer readFrom;
 
-	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes, Charset charset) {
-		this(connector, attributes, charset, CSVFormat.DEFAULT);
+	public CsvExtractor(StreamConnector connector, RowAttribute[] rowHeader, Charset charset) {
+		this(connector, rowHeader, charset, CSVFormat.DEFAULT);
 	}
 
-	public CsvExtractor(StreamConnector connector, RowAttribute[] attributes, Charset charset, CSVFormat csvFormat) {
+	public CsvExtractor(StreamConnector connector, RowAttribute[] rowHeader, Charset charset, CSVFormat csvFormat) {
 		this.connector = connector;
-		this.attributes = attributes;
+		this.rowHeader = rowHeader;
 		this.charset = charset;
 		this.csvFormat = csvFormat;
 	}
@@ -45,7 +45,7 @@ public class CsvExtractor implements Extractor {
 		} catch (IOException e) {
 			throw new LmRuntimeException("Failed to read CSV from stream", e);
 		}
-		CsvRowReader rowReader = new CsvRowReader(attributes, parser);
+		CsvRowReader rowReader = new CsvRowReader(rowHeader, parser);
 		if (readFrom != null) {
 			rowReader.setReadFrom(readFrom);
 		}

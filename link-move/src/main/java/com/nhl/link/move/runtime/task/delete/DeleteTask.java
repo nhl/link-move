@@ -1,20 +1,18 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.ResultIterator;
-import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.query.ObjectSelect;
-
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
+import org.apache.cayenne.DataObject;
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.ResultIterator;
+import org.apache.cayenne.exp.Expression;
+import org.apache.cayenne.query.ObjectSelect;
+
+import java.util.Map;
 
 /**
  * A task that allows to delete target objects not present in the source.
@@ -70,15 +68,11 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 	}
 
 	protected BatchProcessor<T> createBatchProcessor(final Execution execution) {
-		return new BatchProcessor<T>() {
+		return segment -> {
 
-			@Override
-			public void process(List<T> segment) {
-
-				// executing in the select context..
-				ObjectContext context = segment.get(0).getObjectContext();
-				processor.process(execution, new DeleteSegment<>(context, segment));
-			}
+			// executing in the select context..
+			ObjectContext context = segment.get(0).getObjectContext();
+			processor.process(execution, new DeleteSegment<>(context, segment));
 		};
 	}
 

@@ -15,14 +15,14 @@ public class JdbcExtractor implements Extractor {
     private ObjectContext context;
     private String sqlTemplate;
     private CapsStrategy capsStrategy;
-    private RowAttribute[] attributes;
+    private RowAttribute[] rowHeader;
 
-    public JdbcExtractor(ObjectContext context, RowAttribute[] attributes, String sqlTemplate,
+    public JdbcExtractor(ObjectContext context, RowAttribute[] rowHeader, String sqlTemplate,
                          CapsStrategy capsStrategy) {
         this.context = context;
         this.sqlTemplate = sqlTemplate;
         this.capsStrategy = capsStrategy;
-        this.attributes = attributes;
+        this.rowHeader = rowHeader;
     }
 
     @Override
@@ -47,6 +47,8 @@ public class JdbcExtractor implements Extractor {
                 break;
         }
 
-        return new JdbcRowReader(attributes, context.iterator(select));
+        DataRowIterator it = new DataRowIterator(context.iterator(select));
+        RowAttribute[] rowHeader = this.rowHeader != null ? this.rowHeader : it.calculateHeader();
+        return new JdbcRowReader(rowHeader, it);
     }
 }
