@@ -11,13 +11,13 @@ public class DFAsserts {
     private List<Object[]> rows;
 
     public DFAsserts(DataFrame df, Index expectedColumns) {
-        this(df, expectedColumns.getColumns());
+        this(df, expectedColumns.getNames());
     }
 
     public DFAsserts(DataFrame df, String... expectedIndex) {
 
         assertNotNull("DataFrame is null", df);
-        assertArrayEquals("DataFrame columns differ from expected", expectedIndex, df.getColumns().getColumns());
+        assertArrayEquals("DataFrame columns differ from expected", expectedIndex, df.getColumns().getNames());
 
         this.expectedColumns = expectedIndex;
         this.rows = new ArrayList<>();

@@ -36,7 +36,7 @@ public class InlinePrinterWorker extends BasePrinterWorker {
                     out.append(",");
                 }
 
-                appendTruncate(columns.getColumns()[j]);
+                appendTruncate(columns.getNames()[j]);
                 out.append(":");
                 appendTruncate(String.valueOf(dr[j]));
             }

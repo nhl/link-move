@@ -23,7 +23,7 @@ class TabularPrinterWorker extends BasePrinterWorker {
         List<String[]> data = new ArrayList<>();
 
         for (int i = 0; i < width; i++) {
-            columnWidth[i] = columns.getColumns()[i].length();
+            columnWidth[i] = columns.getNames()[i].length();
         }
 
         for (int i = 0; i < maxDisplayRows; i++) {
@@ -52,7 +52,7 @@ class TabularPrinterWorker extends BasePrinterWorker {
             if (i > 0) {
                 append(" ");
             }
-            appendFixedWidth(columns.getColumns()[i], columnWidth[i]);
+            appendFixedWidth(columns.getNames()[i], columnWidth[i]);
         }
 
         // print header separator

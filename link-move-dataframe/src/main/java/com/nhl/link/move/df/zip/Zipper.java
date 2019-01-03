@@ -13,9 +13,9 @@ public class Zipper {
 
         String[] zippedColumns = new String[llen + rlen];
 
-        System.arraycopy(leftIndex.getColumns(), 0, zippedColumns, 0, llen);
+        System.arraycopy(leftIndex.getNames(), 0, zippedColumns, 0, llen);
 
-        String[] rColumns = rightIndex.getColumns();
+        String[] rColumns = rightIndex.getNames();
 
         // resolve dupes on the right
         for (int i = 0; i < rlen; i++) {

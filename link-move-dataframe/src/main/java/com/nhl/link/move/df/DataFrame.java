@@ -43,7 +43,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object[], T> m) {
-        int ci = getColumns().position(columnName);
+        int ci = getColumns().position(columnName).getPosition();
         return mapColumn(ci, m);
     }
 
