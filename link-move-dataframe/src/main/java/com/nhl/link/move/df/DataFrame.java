@@ -51,9 +51,14 @@ public interface DataFrame extends Iterable<Object[]> {
         return map(getColumns(), r -> DataRow.mapColumn(r, columnPosition, m));
     }
 
-    default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> m) {
-        Index expandedIndex = getColumns().addNames(columnName);
-        return map(expandedIndex, r -> DataRow.addColumn(r, m));
+    default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> columnValueProducer) {
+        return addColumns(new String[]{columnName}, columnValueProducer);
+    }
+
+    default <T> DataFrame addColumns(String[] columnNames, ValueMapper<Object[], T>... columnValueProducers) {
+        Index index = getColumns();
+        Index expandedIndex = index.addNames(columnNames);
+        return map(expandedIndex, r -> index.addValues(r, columnValueProducers));
     }
 
     default DataFrame renameColumn(String oldName, String newName) {
@@ -62,7 +67,20 @@ public interface DataFrame extends Iterable<Object[]> {
 
     default DataFrame renameColumns(Map<String, String> oldToNewNames) {
         Index newColumns = getColumns().rename(oldToNewNames);
-        return new TransformingDataFrame(newColumns, this, DataRowMapper.copy());
+        return new SimpleDataFrame(newColumns, this);
+    }
+
+    default DataFrame selectColumns(String... columnNames) {
+        Index sparse = Index.withPositions(getColumns().positions(columnNames));
+        return new SimpleDataFrame(sparse, this);
+    }
+
+    default DataFrame dropColumns(String... columnNames) {
+        Index index = getColumns();
+        Index newIndex = index.dropNames(columnNames);
+        return newIndex.size() == index.size()
+                ? this
+                : new SimpleDataFrame(newIndex, this);
     }
 
     default DataFrame filter(DataRowPredicate p) {
@@ -79,7 +97,7 @@ public interface DataFrame extends Iterable<Object[]> {
      */
     default DataFrame zip(DataFrame df) {
         Index zipIndex = Zipper.zipIndex(getColumns(), df.getColumns());
-        return zip(zipIndex, df, Zipper.rowZipper(zipIndex.size()));
+        return zip(zipIndex, df, Zipper.rowZipper(getColumns(), df.getColumns()));
     }
 
     default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {

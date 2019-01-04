@@ -34,5 +34,5 @@ public abstract class BasePrinterWorker {
         return string.substring(0, startOffset) + ".." + string.substring(endOffset);
     }
 
-    abstract StringBuilder print(Index columns, Iterator<Object[]> values);
+    abstract StringBuilder print(Index index, Iterator<Object[]> values);
 }

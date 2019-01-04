@@ -31,7 +31,6 @@ public class TransformingDataFrame implements DataFrame {
     public Iterator<Object[]> iterator() {
         return new Iterator<Object[]>() {
 
-            private int width = TransformingDataFrame.this.columns.size();
             private Iterator<Object[]> delegateIt = TransformingDataFrame.this.source.iterator();
 
             @Override
@@ -41,17 +40,7 @@ public class TransformingDataFrame implements DataFrame {
 
             @Override
             public Object[] next() {
-
-                Object[] mapped = rowMapper.map(delegateIt.next());
-
-                if (width != mapped.length) {
-                    throw new IllegalStateException(String.format(
-                            "Index size of %s is not the same as values size of %s",
-                            width,
-                            mapped.length));
-                }
-
-                return mapped;
+                return rowMapper.map(delegateIt.next());
             }
         };
     }

@@ -12,7 +12,7 @@ public class FilteredDataFrameTest {
     @Test
     public void testIterator() {
 
-        Index i = new Index("a");
+        Index i = Index.withNames("a");
         List<Object[]> rows = asList(
                 DataRow.row(1),
                 DataRow.row(4));
@@ -27,7 +27,7 @@ public class FilteredDataFrameTest {
     @Test
     public void testIterator_Empty() {
 
-        Index i = new Index("a");
+        Index i = Index.withNames("a");
         List<Object[]> rows = Collections.emptyList();
 
         FilteredDataFrame df = new FilteredDataFrame(i, rows, r -> ((int) r[0]) > 2);
@@ -38,7 +38,7 @@ public class FilteredDataFrameTest {
     @Test
     public void testIterator_NoMatch() {
 
-        Index i = new Index("a");
+        Index i = Index.withNames("a");
         List<Object[]> rows = asList(
                 DataRow.row( 1),
                 DataRow.row(4));
@@ -51,7 +51,7 @@ public class FilteredDataFrameTest {
     @Test
     public void testMap() {
 
-        Index i = new Index("a");
+        Index i = Index.withNames("a");
         DataFrame df = new FilteredDataFrame(i, asList(
                 DataRow.row("one"),
                 DataRow.row("two")),
@@ -64,7 +64,7 @@ public class FilteredDataFrameTest {
 
     @Test
     public void testRenameColumn() {
-        Index i = new Index("a", "b");
+        Index i = Index.withNames("a", "b");
 
         DataFrame df = new FilteredDataFrame(i, asList(
                 DataRow.row("one", 1),

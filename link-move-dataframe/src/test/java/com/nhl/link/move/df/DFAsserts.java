@@ -7,30 +7,25 @@ import static org.junit.Assert.*;
 
 public class DFAsserts {
 
-    private String[] expectedColumns;
+    private IndexPosition[] expectedColumns;
     private List<Object[]> rows;
 
     public DFAsserts(DataFrame df, Index expectedColumns) {
-        this(df, expectedColumns.getNames());
+        this(df, expectedColumns.getPositions());
     }
 
-    public DFAsserts(DataFrame df, String... expectedIndex) {
+    public DFAsserts(DataFrame df, String... expectedColumns) {
+        this(df, Index.continuousPositions(expectedColumns));
+    }
+
+    public DFAsserts(DataFrame df, IndexPosition... expectedColumns) {
 
         assertNotNull("DataFrame is null", df);
-        assertArrayEquals("DataFrame columns differ from expected", expectedIndex, df.getColumns().getNames());
+        assertArrayEquals("DataFrame columns differ from expected", expectedColumns, df.getColumns().getPositions());
 
-        this.expectedColumns = expectedIndex;
+        this.expectedColumns = expectedColumns;
         this.rows = new ArrayList<>();
         df.forEach(rows::add);
-    }
-
-    public static void assertRow(Object[] row, String[] expectedIndex, Object... expectedValues) {
-
-        assertEquals(expectedIndex.length, row.length);
-
-        for (int i = 0; i < expectedIndex.length; i++) {
-            assertEquals("Unexpected value for '" + expectedIndex[i] + " (" + i + ")'", expectedValues[i], row[i]);
-        }
     }
 
     public DFAsserts assertLength(int expectedLength) {
@@ -38,8 +33,19 @@ public class DFAsserts {
         return this;
     }
 
-    public DFAsserts assertRow(int i, Object... expectedValues) {
-        DFAsserts.assertRow(rows.get(i), expectedColumns, expectedValues);
+    public DFAsserts assertRow(int pos, Object... expectedValues) {
+
+        Object[] row = rows.get(pos);
+
+        // in a sparse DataFrame the rows may be longer then index..
+        assertTrue(expectedColumns.length <= row.length);
+
+        for (int i = 0; i < expectedColumns.length; i++) {
+            assertEquals("Unexpected value for '" + expectedColumns[i] + " (" + i + ")'",
+                    expectedValues[i],
+                    expectedColumns[i].read(row));
+        }
+
         return this;
     }
 }

@@ -15,7 +15,7 @@ public class TransformingDataFrameTest {
     @Test
     public void testIterator() {
 
-        Index i = new Index("a", "b");
+        Index i = Index.withNames("a", "b");
         List<Object[]> rows = asList(
                 DataRow.row("one", 1),
                 DataRow.row("two", 2));
@@ -31,7 +31,7 @@ public class TransformingDataFrameTest {
     @Test
     public void testHead() {
 
-        Index columns = new Index("a", "b");
+        Index columns = Index.withNames("a", "b");
 
         DataFrame df = new TransformingDataFrame(columns, asList(
                 DataRow.row("one", 1),
@@ -46,7 +46,7 @@ public class TransformingDataFrameTest {
 
     @Test
     public void testRenameColumn() {
-        Index i = new Index("a", "b");
+        Index i = Index.withNames("a", "b");
 
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
@@ -61,7 +61,7 @@ public class TransformingDataFrameTest {
     @Test
     public void testMapColumn() {
 
-        Index i = new Index("a", "b");
+        Index i = Index.withNames("a", "b");
 
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
@@ -76,7 +76,7 @@ public class TransformingDataFrameTest {
     @Test
     public void testMap() {
 
-        Index i = new Index("a", "b");
+        Index i = Index.withNames("a", "b");
 
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
@@ -92,8 +92,8 @@ public class TransformingDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure() {
 
-        Index i = new Index("a", "b");
-        Index i1 = new Index("c", "d", "e");
+        Index i = Index.withNames("a", "b");
+        Index i1 = Index.withNames("c", "d", "e");
 
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
@@ -112,9 +112,9 @@ public class TransformingDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure_Chained() {
 
-        Index i = new Index("a", "b");
-        Index i1 = new Index("c", "d", "e");
-        Index i2 = new Index("f", "g");
+        Index i = Index.withNames("a", "b");
+        Index i1 = Index.withNames("c", "d", "e");
+        Index i2 = Index.withNames("f", "g");
 
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
@@ -136,8 +136,8 @@ public class TransformingDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure_EmptyDF() {
 
-        Index i = new Index("a", "b");
-        Index i1 = new Index("c", "d", "e");
+        Index i = Index.withNames("a", "b");
+        Index i1 = Index.withNames("c", "d", "e");
 
         DataFrame df = new TransformingDataFrame(i, Collections.emptyList(), DataRowMapper.self())
                 .map(i1, r -> DataRow.row(
@@ -150,26 +150,9 @@ public class TransformingDataFrameTest {
         new DFAsserts(df, i1).assertLength(0);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testMap_Index_Row_SizeMismatch() {
-
-        Index i = new Index("a", "b");
-        Index i1 = new Index("c", "d", "e");
-
-        new TransformingDataFrame(i, asList(
-                DataRow.row("one", 1),
-                DataRow.row("two", 2)), DataRowMapper.self())
-                .map(i1, r -> DataRow.row(
-                        r[0],
-                        r[1]))
-                // must throw when iterating due to inconsistent mapped row structure...
-                .forEach(r -> {
-                });
-    }
-
     @Test
     public void testToString() {
-        Index i = new Index("a", "b");
+        Index i = Index.withNames("a", "b");
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
                 DataRow.row("two", 2),
@@ -182,12 +165,12 @@ public class TransformingDataFrameTest {
     @Test
     public void testZip() {
 
-        Index i1 = new Index("a");
+        Index i1 = Index.withNames("a");
         DataFrame df1 = new TransformingDataFrame(i1, asList(
                 DataRow.row(1),
                 DataRow.row(2)), DataRowMapper.self());
 
-        Index i2 = new Index("b");
+        Index i2 = Index.withNames("b");
         DataFrame df2 = new TransformingDataFrame(i2, asList(
                 DataRow.row(10),
                 DataRow.row(20)), DataRowMapper.self());
@@ -202,7 +185,7 @@ public class TransformingDataFrameTest {
     @Test
     public void testZip_Self() {
 
-        Index i1 = new Index("a");
+        Index i1 = Index.withNames("a");
         DataFrame df1 = new TransformingDataFrame(i1, asList(
                 DataRow.row(1),
                 DataRow.row(2)), DataRowMapper.self());
@@ -218,11 +201,11 @@ public class TransformingDataFrameTest {
     @Test
     public void testZip_LeftIsShorter() {
 
-        Index i1 = new Index("a");
+        Index i1 = Index.withNames("a");
         DataFrame df1 = new TransformingDataFrame(i1, singletonList(
                 DataRow.row(2)), DataRowMapper.self());
 
-        Index i2 = new Index("b");
+        Index i2 = Index.withNames("b");
         DataFrame df2 = new TransformingDataFrame(i2, asList(
                 DataRow.row(10),
                 DataRow.row(20)), DataRowMapper.self());
@@ -236,11 +219,11 @@ public class TransformingDataFrameTest {
     @Test
     public void testZip_RightIsShorter() {
 
-        Index i1 = new Index("a");
+        Index i1 = Index.withNames("a");
         DataFrame df1 = new TransformingDataFrame(i1, singletonList(
                 DataRow.row(2)), DataRowMapper.self());
 
-        Index i2 = new Index("b");
+        Index i2 = Index.withNames("b");
         DataFrame df2 = new TransformingDataFrame(i2, asList(
                 DataRow.row(10),
                 DataRow.row(20)), DataRowMapper.self());
@@ -254,7 +237,7 @@ public class TransformingDataFrameTest {
     @Test
     public void testFilter() {
 
-        Index i1 = new Index("a");
+        Index i1 = Index.withNames("a");
         DataFrame df1 = new TransformingDataFrame(i1, asList(
                 DataRow.row(10),
                 DataRow.row(20)), DataRowMapper.self());

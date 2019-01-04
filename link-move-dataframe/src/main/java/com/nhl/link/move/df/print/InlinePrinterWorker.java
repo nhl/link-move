@@ -1,6 +1,7 @@
 package com.nhl.link.move.df.print;
 
 import com.nhl.link.move.df.Index;
+import com.nhl.link.move.df.IndexPosition;
 
 import java.util.Iterator;
 
@@ -17,6 +18,8 @@ public class InlinePrinterWorker extends BasePrinterWorker {
         if (width == 0) {
             return out;
         }
+
+        IndexPosition[] positions = columns.getPositions();
 
         for (int i = 0; i < maxDisplayRows; i++) {
             if (!values.hasNext()) {
@@ -36,9 +39,9 @@ public class InlinePrinterWorker extends BasePrinterWorker {
                     out.append(",");
                 }
 
-                appendTruncate(columns.getNames()[j]);
+                appendTruncate(positions[j].getName());
                 out.append(":");
-                appendTruncate(String.valueOf(dr[j]));
+                appendTruncate(String.valueOf(positions[j].read(dr)));
             }
 
             out.append("}");

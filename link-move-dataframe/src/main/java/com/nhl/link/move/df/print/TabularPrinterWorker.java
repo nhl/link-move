@@ -1,6 +1,7 @@
 package com.nhl.link.move.df.print;
 
 import com.nhl.link.move.df.Index;
+import com.nhl.link.move.df.IndexPosition;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,18 +13,21 @@ class TabularPrinterWorker extends BasePrinterWorker {
         super(out, maxDisplayRows, maxDisplayColumnWith);
     }
 
-    StringBuilder print(Index columns, Iterator<Object[]> values) {
+    StringBuilder print(Index index, Iterator<Object[]> values) {
 
-        int width = columns.size();
+        int width = index.size();
         if (width == 0) {
             return out;
         }
+
+        IndexPosition[] positions = index.getPositions();
+
 
         int[] columnWidth = new int[width];
         List<String[]> data = new ArrayList<>();
 
         for (int i = 0; i < width; i++) {
-            columnWidth[i] = columns.getNames()[i].length();
+            columnWidth[i] = positions[i].getName().length();
         }
 
         for (int i = 0; i < maxDisplayRows; i++) {
@@ -35,7 +39,7 @@ class TabularPrinterWorker extends BasePrinterWorker {
             String[] drValue = new String[width];
 
             for (int j = 0; j < width; j++) {
-                drValue[j] = String.valueOf(dr[j]);
+                drValue[j] = String.valueOf(positions[j].read(dr));
                 columnWidth[j] = Math.max(columnWidth[j], drValue[j].length());
             }
 
@@ -52,7 +56,7 @@ class TabularPrinterWorker extends BasePrinterWorker {
             if (i > 0) {
                 append(" ");
             }
-            appendFixedWidth(columns.getNames()[i], columnWidth[i]);
+            appendFixedWidth(positions[i].getName(), columnWidth[i]);
         }
 
         // print header separator

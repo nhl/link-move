@@ -1,7 +1,7 @@
 package com.nhl.link.move.df.zip;
 
-import com.nhl.link.move.df.DataRow;
 import com.nhl.link.move.df.Index;
+import com.nhl.link.move.df.IndexPosition;
 import com.nhl.link.move.df.map.DataRowCombiner;
 
 public class Zipper {
@@ -11,41 +11,47 @@ public class Zipper {
         int llen = leftIndex.size();
         int rlen = rightIndex.size();
 
-        String[] zippedColumns = new String[llen + rlen];
+        IndexPosition[] lPositions = leftIndex.getPositions();
+        IndexPosition[] rPositions = rightIndex.getPositions();
 
-        System.arraycopy(leftIndex.getNames(), 0, zippedColumns, 0, llen);
+        // zipped index is continuous to match rowZipper algorithm below that rebuilds the arrays, so reset left and
+        // right positions, only preserve the names...
 
-        String[] rColumns = rightIndex.getNames();
+        IndexPosition[] zipped = new IndexPosition[llen + rlen];
+        for (int i = 0; i < llen; i++) {
+            zipped[i] = new IndexPosition(i, lPositions[i].getName());
+        }
 
         // resolve dupes on the right
         for (int i = 0; i < rlen; i++) {
-            String column = rColumns[i];
-            while (leftIndex.hasName(column)) {
-                column = column + "_";
+
+            String name = rPositions[i].getName();
+            while (leftIndex.hasName(name)) {
+                name = name + "_";
             }
 
-            zippedColumns[i + llen] = column;
+            zipped[i + llen] = new IndexPosition(i + llen, name);
         }
 
-        return new Index(zippedColumns);
+        return Index.withPositions(zipped);
     }
 
-    public static DataRowCombiner rowZipper(int zippedWidth) {
-        return (lr, rr) -> Zipper.zipRows(zippedWidth, lr, rr);
+    public static DataRowCombiner rowZipper(Index li, Index ri) {
+        return (lr, rr) -> Zipper.zipRows(li, ri, lr, rr);
     }
 
-    public static Object[] zipRows(int zippedWidth, Object[] lr, Object[] rr) {
+    public static Object[] zipRows(Index li, Index ri, Object[] lr, Object[] rr) {
 
-        // rows can be null in case of outer joins
+        Object[] zippedValues = new Object[li.size() + ri.size()];
 
-        Object[] zippedValues = new Object[zippedWidth];
+        // rows can be null in case of outer joins...
 
         if (lr != null) {
-            DataRow.copyTo(lr, zippedValues, 0);
+            li.copyTo(lr, zippedValues, 0);
         }
 
         if (rr != null) {
-            DataRow.copyTo(rr, zippedValues, zippedValues.length - rr.length);
+            ri.copyTo(rr, zippedValues, zippedValues.length - ri.size());
         }
 
         return zippedValues;

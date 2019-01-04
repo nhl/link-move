@@ -25,4 +25,23 @@ public class IndexPosition {
     public void write(Object[] row, Object val) {
         row[position] = val;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof IndexPosition)) {
+            return false;
+        }
+
+        IndexPosition ip = (IndexPosition) o;
+        return ip.position == this.position && ip.name.equals(this.name);
+    }
+
+    @Override
+    public String toString() {
+        return "IndexPosition [" + position + ":" + name + "]";
+    }
 }

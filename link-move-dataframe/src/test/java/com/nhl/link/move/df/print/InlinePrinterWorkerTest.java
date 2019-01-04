@@ -17,7 +17,7 @@ public class InlinePrinterWorkerTest {
 
     @Before
     public void initDataFrameParts() {
-        this.columns = new Index("col1", "column2");
+        this.columns = Index.withNames("col1", "column2");
         this.rows = asList(
                 DataRow.row("one", 1),
                 DataRow.row("two", 2),

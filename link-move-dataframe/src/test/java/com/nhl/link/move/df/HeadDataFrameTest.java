@@ -17,7 +17,7 @@ public class HeadDataFrameTest {
 
     @Before
     public void initDataFrame() {
-        this.columns = new Index("a");
+        this.columns = Index.withNames("a");
         this.rows = asList(
                 DataRow.row("one"),
                 DataRow.row("two"),
@@ -73,7 +73,7 @@ public class HeadDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure() {
 
-        Index i1 = new Index("c");
+        Index i1 = Index.withNames("c");
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 2)
                 .map(i1, r -> DataRow.row(r[0] + "_"));
@@ -87,7 +87,7 @@ public class HeadDataFrameTest {
     @Test
     public void testMap_ChangeRowStructure_EmptyDF() {
 
-        Index i1 = new Index("c");
+        Index i1 = Index.withNames("c");
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, Collections.emptyList()), 2)
                 .map(i1, r -> DataRow.row(r[0] + "_"));
@@ -98,12 +98,12 @@ public class HeadDataFrameTest {
     @Test
     public void testZip_LeftIsShorter() {
 
-        Index i1 = new Index("a");
+        Index i1 = Index.withNames("a");
         DataFrame df1 = DataFrame.create(i1, asList(
                 DataRow.row(1),
                 DataRow.row(2)));
 
-        Index i2 = new Index("b");
+        Index i2 = Index.withNames("b");
         DataFrame df2 = DataFrame.create(i2, asList(
                 DataRow.row(10),
                 DataRow.row(20)));

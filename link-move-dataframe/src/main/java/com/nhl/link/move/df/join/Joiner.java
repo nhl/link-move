@@ -60,7 +60,7 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lRows, rRows);
+        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
     }
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -87,7 +87,7 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lRows, rRows);
+        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
     }
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -114,7 +114,7 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lRows, rRows);
+        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
     }
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -152,11 +152,11 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lRows, rRows);
+        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
     }
 
-    private DataFrame toJoinDataFrame(Index joinedColumns, Iterable<Object[]> li, Iterable<Object[]> ri) {
-        return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(joinedColumns.size()));
+    private DataFrame toJoinDataFrame(Index joinedColumns, Index lin, Index rin, Iterable<Object[]> li, Iterable<Object[]> ri) {
+        return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(lin, rin));
     }
 
     // "materialize" frame rows to avoid recalculation of each row on multiple iterations.

@@ -1,25 +1,120 @@
 package com.nhl.link.move.df;
 
+import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.zip.Zipper;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-public class Index {
+/**
+ * An "index" of the DataFrame that provides access to column (and in the future potentially row) metadata.
+ */
+public abstract class Index {
 
-    private String[] names;
+    protected IndexPosition[] positions;
     private Map<String, IndexPosition> positionsIndex;
 
-    public Index(String... names) {
-        this.names = names;
+    protected Index(IndexPosition... positions) {
+        this.positions = positions;
     }
 
-    public String[] getNames() {
-        return names;
+    protected static IndexPosition[] continuousPositions(String... names) {
+        IndexPosition[] positions = new IndexPosition[names.length];
+        for (int i = 0; i < names.length; i++) {
+            positions[i] = new IndexPosition(i, names[i]);
+        }
+
+        return positions;
+    }
+
+    protected static boolean isContinuous(IndexPosition... positions) {
+
+        // true if starts with zero and increments by one
+
+        if (positions.length > 0 && positions[0].getPosition() > 0) {
+            return false;
+        }
+
+        for (int i = 1; i < positions.length; i++) {
+            if (positions[i].getPosition() != positions[i - 1].getPosition() + 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static Index withNames(String... names) {
+        return new ContinuousIndex(continuousPositions(names));
+    }
+
+    public static Index withPositions(IndexPosition... positions) {
+        return isContinuous(positions) ? new ContinuousIndex(positions) : new SparseIndex(positions);
+    }
+
+    public abstract Object[] copyTo(Object[] row, Object[] to, int toOffset);
+
+    public abstract Index rename(Map<String, String> oldToNewNames);
+
+    public Index addNames(String... extraNames) {
+        return Zipper.zipIndex(this, withNames(extraNames));
+    }
+
+    public <VR> Object[] addValues(Object[] row, ValueMapper<Object[], VR>... valueProducers) {
+
+        int oldWidth = size();
+        int expansionWidth = valueProducers.length;
+
+        Object[] expandedRow = copyTo(row, new Object[oldWidth + expansionWidth], 0);
+
+        for (int i = 0; i < expansionWidth; i++) {
+            expandedRow[oldWidth + i] = valueProducers[i].map(row);
+        }
+
+        return expandedRow;
+    }
+
+    public Index dropNames(String... names) {
+
+        if (names.length == 0) {
+            return this;
+        }
+
+        if (positionsIndex == null) {
+            this.positionsIndex = computePositions();
+        }
+
+        List<IndexPosition> toDrop = new ArrayList<>(names.length);
+        for (String n : names) {
+            IndexPosition ip = positionsIndex.get(n);
+            if (ip != null) {
+                toDrop.add(ip);
+            }
+        }
+
+        if (toDrop.isEmpty()) {
+            return this;
+        }
+
+        IndexPosition[] toKeep = new IndexPosition[size() - toDrop.size()];
+        for (int i = 0, j = 0; i < positions.length; i++) {
+
+            if (!toDrop.contains(positions[i])) {
+                toKeep[j++] = positions[i];
+            }
+        }
+
+        return Index.withPositions(toKeep);
+    }
+
+    public IndexPosition[] getPositions() {
+        return positions;
     }
 
     public int size() {
-        return names.length;
+        return positions.length;
     }
 
     public IndexPosition[] positions(String... names) {
@@ -59,30 +154,14 @@ public class Index {
 
         Map<String, IndexPosition> index = new LinkedHashMap<>();
 
-        for (int i = 0; i < names.length; i++) {
-            IndexPosition previous = index.put(names[i], new IndexPosition(i, names[i]));
+        for (int i = 0; i < positions.length; i++) {
+            IndexPosition previous = index.put(positions[i].getName(), positions[i]);
             if (previous != null) {
-                throw new IllegalStateException("Duplicate column '" + names[i] +
-                        "'. Found at " + previous + " and " + i);
+                throw new IllegalStateException("Duplicate position name '"
+                        + positions[i].getName()
+                        + "'. Found at " + previous + " and " + i);
             }
         }
         return index;
-    }
-
-    public Index rename(Map<String, String> oldToNewNames) {
-
-        int len = size();
-
-        String[] newNames = new String[len];
-        for (int i = 0; i < len; i++) {
-            String newName = oldToNewNames.get(names[i]);
-            newNames[i] = newName != null ? newName : names[i];
-        }
-
-        return new Index(newNames);
-    }
-
-    public Index addNames(String... extraNames) {
-        return Zipper.zipIndex(this, new Index(extraNames));
     }
 }
