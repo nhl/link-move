@@ -53,8 +53,9 @@ public interface DataFrame extends Iterable<Object[]> {
 
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object[], T> m) {
         Index index = getColumns();
+        Index compactIndex = index.compactIndex();
         IndexPosition pos = index.position(columnName);
-        return map(getColumns(), r -> index.mapColumn(r, pos, m));
+        return map(compactIndex, r -> index.mapColumn(r, pos, m));
     }
 
     default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> columnValueProducer) {

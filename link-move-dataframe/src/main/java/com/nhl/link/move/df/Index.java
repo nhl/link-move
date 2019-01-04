@@ -58,6 +58,8 @@ public abstract class Index {
 
     public abstract Index rename(Map<String, String> oldToNewNames);
 
+    public abstract Index compactIndex();
+
     public Index addNames(String... extraNames) {
         return Zipper.zipIndex(this, withNames(extraNames));
     }
@@ -80,14 +82,7 @@ public abstract class Index {
         return mapColumn(row, position(columnName), m);
     }
 
-    public <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m) {
-
-        // TODO: this is wrong... 'copyTo' produces a compact row, while 'position' may refer to sparse index..
-        Object[] newValues = compactCopy(row, new Object[size()], 0);
-        position.write(newValues, m.map(row));
-
-        return newValues;
-    }
+    public abstract <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m);
 
     public Index dropNames(String... names) {
 

@@ -118,4 +118,35 @@ public class DataFrameTest {
                 .assertRow(0, 1, "x")
                 .assertRow(1, 2, "y");
     }
+
+    @Test
+    public void testMapColumn() {
+        Index i1 = Index.withNames("a", "b");
+        DataFrame df = DataFrame.create(i1, asList(
+                DataRow.row(1, "x"),
+                DataRow.row(2, "y")))
+                .mapColumn("a", r -> ((int) r[0]) * 10);
+
+        new DFAsserts(df, "a", "b")
+                .assertLength(2)
+                .assertRow(0, 10, "x")
+                .assertRow(1, 20, "y");
+    }
+
+    @Test
+    public void testMapColumn_Sparse() {
+        Index i1 = Index.withNames("a", "b");
+        DataFrame df = DataFrame.create(i1, asList(
+                DataRow.row(1, "x"),
+                DataRow.row(2, "y")))
+                .selectColumns("b")
+                // TODO: dirty - we are using our knowledge of the internal array structure when referencing index [1].
+                //  Need a user-friendly and more transparent way to decode a row.
+                .mapColumn("b", r -> r[1] + "_");
+
+        new DFAsserts(df, "b")
+                .assertLength(2)
+                .assertRow(0, "x_")
+                .assertRow(1, "y_");
+    }
 }
