@@ -9,7 +9,7 @@ public class SparseIndex extends Index {
     }
 
     @Override
-    public Object[] copyTo(Object[] row, Object[] to, int toOffset) {
+    public Object[] compactCopy(Object[] row, Object[] to, int toOffset) {
 
         for (int i = 0; i < positions.length; i++) {
             to[toOffset + i] = positions[i].read(row);

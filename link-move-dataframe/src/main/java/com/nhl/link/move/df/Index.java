@@ -54,7 +54,7 @@ public abstract class Index {
         return isContinuous(positions) ? new ContinuousIndex(positions) : new SparseIndex(positions);
     }
 
-    public abstract Object[] copyTo(Object[] row, Object[] to, int toOffset);
+    public abstract Object[] compactCopy(Object[] row, Object[] to, int toOffset);
 
     public abstract Index rename(Map<String, String> oldToNewNames);
 
@@ -67,13 +67,26 @@ public abstract class Index {
         int oldWidth = size();
         int expansionWidth = valueProducers.length;
 
-        Object[] expandedRow = copyTo(row, new Object[oldWidth + expansionWidth], 0);
+        Object[] expandedRow = compactCopy(row, new Object[oldWidth + expansionWidth], 0);
 
         for (int i = 0; i < expansionWidth; i++) {
             expandedRow[oldWidth + i] = valueProducers[i].map(row);
         }
 
         return expandedRow;
+    }
+
+    public <VR> Object[] mapColumn(Object[] row, String columnName, ValueMapper<Object[], VR> m) {
+        return mapColumn(row, position(columnName), m);
+    }
+
+    public <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m) {
+
+        // TODO: this is wrong... 'copyTo' produces a compact row, while 'position' may refer to sparse index..
+        Object[] newValues = compactCopy(row, new Object[size()], 0);
+        position.write(newValues, m.map(row));
+
+        return newValues;
     }
 
     public Index dropNames(String... names) {

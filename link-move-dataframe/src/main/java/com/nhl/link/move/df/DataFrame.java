@@ -16,7 +16,16 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Represents immutable 2D data.
+ * An immutable 2D data container with support for a variety of data transformations, queries, joins, etc. Every such
+ * transformation returns a new DataFrame object and does not affect the original DataFrame.
+ * <p>DataFrame allows to iterate over its contents as Object[]. You need to know two things about these arrays:
+ * <ul>
+ * <li>While Java arrays are mutable by nature, it will violate the DataFrame contract if a user attempts to change them
+ * directly. Don't do that!</li>
+ * <li>The size and positions of data values in the array may not exactly match the size of the index. So use {@link Index}
+ * API to find the right values and the extents of the record.</li>
+ * </ul>
+ * </p>
  */
 public interface DataFrame extends Iterable<Object[]> {
 
@@ -43,12 +52,9 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object[], T> m) {
-        int ci = getColumns().position(columnName).getPosition();
-        return mapColumn(ci, m);
-    }
-
-    default <T> DataFrame mapColumn(int columnPosition, ValueMapper<Object[], T> m) {
-        return map(getColumns(), r -> DataRow.mapColumn(r, columnPosition, m));
+        Index index = getColumns();
+        IndexPosition pos = index.position(columnName);
+        return map(getColumns(), r -> index.mapColumn(r, pos, m));
     }
 
     default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> columnValueProducer) {

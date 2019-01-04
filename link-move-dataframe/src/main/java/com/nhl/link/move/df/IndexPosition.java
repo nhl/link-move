@@ -42,6 +42,6 @@ public class IndexPosition {
 
     @Override
     public String toString() {
-        return "IndexPosition [" + position + ":" + name + "]";
+        return "IndexPosition [" + position + "|" + name + "]";
     }
 }

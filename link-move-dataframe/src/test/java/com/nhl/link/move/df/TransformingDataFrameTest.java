@@ -81,7 +81,7 @@ public class TransformingDataFrameTest {
         DataFrame df = new TransformingDataFrame(i, asList(
                 DataRow.row("one", 1),
                 DataRow.row("two", 2)), DataRowMapper.self())
-                .map(i, r -> DataRow.mapColumn(r, 0, v -> v[0] + "_"));
+                .map(i, r -> i.mapColumn(r, "a", rx -> rx[0] + "_"));
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)

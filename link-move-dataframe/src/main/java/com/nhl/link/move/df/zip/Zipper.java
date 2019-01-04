@@ -47,11 +47,11 @@ public class Zipper {
         // rows can be null in case of outer joins...
 
         if (lr != null) {
-            li.copyTo(lr, zippedValues, 0);
+            li.compactCopy(lr, zippedValues, 0);
         }
 
         if (rr != null) {
-            ri.copyTo(rr, zippedValues, zippedValues.length - ri.size());
+            ri.compactCopy(rr, zippedValues, zippedValues.length - ri.size());
         }
 
         return zippedValues;
