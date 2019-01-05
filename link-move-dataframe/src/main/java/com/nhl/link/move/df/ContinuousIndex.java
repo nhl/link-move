@@ -1,7 +1,5 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.map.ValueMapper;
-
 import java.util.Map;
 
 public class ContinuousIndex extends Index {
@@ -19,13 +17,6 @@ public class ContinuousIndex extends Index {
     public Object[] compactCopy(Object[] row, Object[] to, int toOffset) {
         System.arraycopy(row, 0, to, toOffset, positions.length);
         return to;
-    }
-
-    @Override
-    public <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m) {
-        Object[] newValues = compactCopy(row, new Object[size()], 0);
-        position.write(newValues, m.map(row));
-        return newValues;
     }
 
     public Index rename(Map<String, String> oldToNewNames) {

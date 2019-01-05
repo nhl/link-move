@@ -1,7 +1,5 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.map.ValueMapper;
-
 import java.util.Map;
 
 public class SparseIndex extends Index {
@@ -27,18 +25,6 @@ public class SparseIndex extends Index {
         }
 
         return to;
-    }
-
-    @Override
-    public <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m) {
-
-        // since we are referencing a slot in the compact copy, we should use position's ordinal value instead of its
-        // index against the original row..
-
-        Object[] newValues = compactCopy(row, new Object[size()], 0);
-
-        newValues[position.ordinal()] = m.map(row);
-        return newValues;
     }
 
     public Index rename(Map<String, String> oldToNewNames) {

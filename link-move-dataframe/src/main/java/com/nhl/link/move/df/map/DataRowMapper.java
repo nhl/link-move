@@ -1,11 +1,9 @@
 package com.nhl.link.move.df.map;
 
+import com.nhl.link.move.df.TransformContext;
+
 @FunctionalInterface
 public interface DataRowMapper {
 
-    static DataRowMapper self() {
-        return r -> r;
-    }
-
-    Object[] map(Object[] row);
+    Object[] map(TransformContext c, Object[] row);
 }

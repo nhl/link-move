@@ -78,12 +78,6 @@ public abstract class Index {
         return expandedRow;
     }
 
-    public <VR> Object[] mapColumn(Object[] row, String columnName, ValueMapper<Object[], VR> m) {
-        return mapColumn(row, position(columnName), m);
-    }
-
-    public abstract <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m);
-
     public Index selectNames(String... names) {
 
         int len = names.length;

@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
+
 /**
  * An immutable 2D data container with support for a variety of data transformations, queries, joins, etc. Every such
  * transformation returns a new DataFrame object and does not affect the original DataFrame.
@@ -28,6 +30,10 @@ import java.util.function.Function;
  * </p>
  */
 public interface DataFrame extends Iterable<Object[]> {
+
+    static DataFrame create(Index columns, Object[]... sources) {
+        return create(columns, asList(sources));
+    }
 
     static DataFrame create(Index columns, Iterable<Object[]> source) {
         return new SimpleDataFrame(columns, source);
@@ -54,8 +60,8 @@ public interface DataFrame extends Iterable<Object[]> {
     default <T> DataFrame mapColumn(String columnName, ValueMapper<Object[], T> m) {
         Index index = getColumns();
         Index compactIndex = index.compactIndex();
-        IndexPosition pos = index.position(columnName);
-        return map(compactIndex, r -> index.mapColumn(r, pos, m));
+        int pos = index.position(columnName).ordinal();
+        return map(compactIndex, (c, r) -> c.mapColumn(r, pos, m));
     }
 
     default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> columnValueProducer) {
@@ -65,7 +71,7 @@ public interface DataFrame extends Iterable<Object[]> {
     default <T> DataFrame addColumns(String[] columnNames, ValueMapper<Object[], T>... columnValueProducers) {
         Index index = getColumns();
         Index expandedIndex = index.addNames(columnNames);
-        return map(expandedIndex, r -> index.addValues(r, columnValueProducers));
+        return map(expandedIndex, (c, r) -> index.addValues(r, columnValueProducers));
     }
 
     default DataFrame renameColumn(String oldName, String newName) {

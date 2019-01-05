@@ -10,7 +10,7 @@ public class SimpleDataFrame implements DataFrame {
     private Iterable<Object[]> source;
     private Index columns;
 
-    public SimpleDataFrame(Index columns) {
+    protected SimpleDataFrame(Index columns) {
         this(columns, Collections.emptyList());
     }
 

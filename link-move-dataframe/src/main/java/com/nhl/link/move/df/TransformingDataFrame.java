@@ -12,11 +12,11 @@ import java.util.Objects;
  */
 public class TransformingDataFrame implements DataFrame {
 
-    private Iterable<Object[]> source;
+    private DataFrame source;
     private Index columns;
     private DataRowMapper rowMapper;
 
-    protected TransformingDataFrame(Index columns, Iterable<Object[]> source, DataRowMapper rowMapper) {
+    protected TransformingDataFrame(Index columns, DataFrame source, DataRowMapper rowMapper) {
         this.source = Objects.requireNonNull(source);
         this.columns = Objects.requireNonNull(columns);
         this.rowMapper = Objects.requireNonNull(rowMapper);
@@ -31,7 +31,8 @@ public class TransformingDataFrame implements DataFrame {
     public Iterator<Object[]> iterator() {
         return new Iterator<Object[]>() {
 
-            private Iterator<Object[]> delegateIt = TransformingDataFrame.this.source.iterator();
+            private final Iterator<Object[]> delegateIt = TransformingDataFrame.this.source.iterator();
+            private final TransformContext context = new TransformContext(source.getColumns(), columns);
 
             @Override
             public boolean hasNext() {
@@ -40,7 +41,7 @@ public class TransformingDataFrame implements DataFrame {
 
             @Override
             public Object[] next() {
-                return rowMapper.map(delegateIt.next());
+                return rowMapper.map(context, delegateIt.next());
             }
         };
     }

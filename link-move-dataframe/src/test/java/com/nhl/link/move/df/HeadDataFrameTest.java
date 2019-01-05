@@ -61,7 +61,7 @@ public class HeadDataFrameTest {
     public void testMap() {
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 3)
-                .map(columns, r -> columns.mapColumn(r, "a", v -> v[0] + "_"));
+                .map(columns, (c, r) -> c.mapColumn(r, "a", v -> v[0] + "_"));
 
         new DFAsserts(df, columns)
                 .assertLength(3)
@@ -76,7 +76,7 @@ public class HeadDataFrameTest {
         Index i1 = Index.withNames("c");
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 2)
-                .map(i1, r -> DataRow.row(r[0] + "_"));
+                .map(i1, (c, r) -> c.target(r[0] + "_"));
 
         new DFAsserts(df, i1)
                 .assertLength(2)
@@ -90,7 +90,7 @@ public class HeadDataFrameTest {
         Index i1 = Index.withNames("c");
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, Collections.emptyList()), 2)
-                .map(i1, r -> DataRow.row(r[0] + "_"));
+                .map(i1, (c, r) -> c.target(r[0] + "_"));
 
         new DFAsserts(df, i1).assertLength(0);
     }
