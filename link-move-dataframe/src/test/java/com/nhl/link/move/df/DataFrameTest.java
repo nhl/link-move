@@ -26,7 +26,7 @@ public class DataFrameTest {
         DataFrame df = DataFrame.create(i1, asList(
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
-                .addColumn("c", r -> ((int) r[0]) * 10);
+                .addColumn("c", (c, r) -> ((int) c.read(r, 0)) * 10);
 
         new DFAsserts(df, "a", "b", "c")
                 .assertLength(2)
@@ -41,7 +41,7 @@ public class DataFrameTest {
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
                 .selectColumns("a")
-                .addColumn("c", r -> ((int) r[0]) * 10);
+                .addColumn("c", (c, r) -> ((int) c.read(r, 0)) * 10);
 
         new DFAsserts(df, "a", "c")
                 .assertLength(2)
@@ -139,7 +139,7 @@ public class DataFrameTest {
         DataFrame df = DataFrame.create(i1, asList(
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
-                .mapColumn("a", r -> ((int) r[0]) * 10);
+                .mapColumn("a", (c, r) -> ((int) c.read(r, 0)) * 10);
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -154,9 +154,7 @@ public class DataFrameTest {
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
                 .selectColumns("b")
-                // TODO: dirty - we are using our knowledge of the internal array structure when referencing index [1].
-                //  Need a user-friendly and more transparent way to decode a row.
-                .mapColumn("b", r -> r[1] + "_");
+                .mapColumn("b", (c, r) -> c.read(r, 0) + "_");
 
         new DFAsserts(df, "b")
                 .assertLength(2)

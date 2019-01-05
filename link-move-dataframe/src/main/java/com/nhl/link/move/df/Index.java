@@ -66,7 +66,7 @@ public abstract class Index {
         return Zipper.zipIndex(this, withNames(extraNames));
     }
 
-    public <VR> Object[] addValues(Object[] row, DataRowToValueMapper<VR>... valueProducers) {
+    public <VR> Object[] addValues(TransformContext context, Object[] row, DataRowToValueMapper<VR>... valueProducers) {
 
         int oldWidth = size();
         int expansionWidth = valueProducers.length;
@@ -74,7 +74,7 @@ public abstract class Index {
         Object[] expandedRow = compactCopy(row, new Object[oldWidth + expansionWidth], 0);
 
         for (int i = 0; i < expansionWidth; i++) {
-            expandedRow[oldWidth + i] = valueProducers[i].map(row);
+            expandedRow[oldWidth + i] = valueProducers[i].map(context, row);
         }
 
         return expandedRow;
@@ -91,7 +91,7 @@ public abstract class Index {
 
             String name = names[i];
 
-            while(!dedupeNames.add(name)) {
+            while (!dedupeNames.add(name)) {
                 name = name + "_";
             }
 

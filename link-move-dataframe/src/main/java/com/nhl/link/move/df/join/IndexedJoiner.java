@@ -3,7 +3,6 @@ package com.nhl.link.move.df.join;
 import com.nhl.link.move.df.DataFrame;
 import com.nhl.link.move.df.Index;
 import com.nhl.link.move.df.ZippingDataFrame;
-import com.nhl.link.move.df.map.DataRowToValueMapper;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.ArrayList;
@@ -19,13 +18,13 @@ import java.util.Set;
  */
 public class IndexedJoiner<K> {
 
-    private DataRowToValueMapper<K> leftKeyMapper;
-    private DataRowToValueMapper<K> rightKeyMapper;
+    private IndexedJoinKeyMapper<K> leftKeyMapper;
+    private IndexedJoinKeyMapper<K> rightKeyMapper;
     private JoinSemantics semantics;
 
     public IndexedJoiner(
-            DataRowToValueMapper<K> leftKeyMapper,
-            DataRowToValueMapper<K> rightKeyMapper,
+            IndexedJoinKeyMapper<K> leftKeyMapper,
+            IndexedJoinKeyMapper<K> rightKeyMapper,
             JoinSemantics semantics) {
 
         this.leftKeyMapper = leftKeyMapper;
@@ -57,11 +56,13 @@ public class IndexedJoiner<K> {
         List<Object[]> lRows = new ArrayList<>();
         List<Object[]> rRows = new ArrayList<>();
 
+        Index lColumns = lf.getColumns();
+
         Map<K, List<Object[]>> rightIndex = groupByKey(rightKeyMapper, rf);
 
         for (Object[] lr : lf) {
 
-            K lKey = leftKeyMapper.map(lr);
+            K lKey = leftKeyMapper.map(lColumns, lr);
             List<Object[]> rightMatches = rightIndex.get(lKey);
             if (rightMatches != null) {
                 for (Object[] rr : rightMatches) {
@@ -79,11 +80,13 @@ public class IndexedJoiner<K> {
         List<Object[]> lRows = new ArrayList<>();
         List<Object[]> rRows = new ArrayList<>();
 
+        Index lColumns = lf.getColumns();
+
         Map<K, List<Object[]>> rightIndex = groupByKey(rightKeyMapper, rf);
 
         for (Object[] lr : lf) {
 
-            K lKey = leftKeyMapper.map(lr);
+            K lKey = leftKeyMapper.map(lColumns, lr);
             List<Object[]> rightMatches = rightIndex.get(lKey);
 
             if (rightMatches != null) {
@@ -105,11 +108,13 @@ public class IndexedJoiner<K> {
         List<Object[]> lRows = new ArrayList<>();
         List<Object[]> rRows = new ArrayList<>();
 
+        Index rColumns = rf.getColumns();
+
         Map<K, List<Object[]>> leftIndex = groupByKey(leftKeyMapper, lf);
 
         for (Object[] rr : rf) {
 
-            K rKey = rightKeyMapper.map(rr);
+            K rKey = rightKeyMapper.map(rColumns, rr);
             List<Object[]> leftMatches = leftIndex.get(rKey);
 
             if (leftMatches != null) {
@@ -131,12 +136,14 @@ public class IndexedJoiner<K> {
         List<Object[]> lRows = new ArrayList<>();
         Set<Object[]> rRows = new LinkedHashSet<>();
 
+        Index lColumns = lf.getColumns();
+
         Map<K, List<Object[]>> rightIndex = groupByKey(rightKeyMapper, rf);
         Set<Object[]> seenRights = new LinkedHashSet<>();
 
         for (Object[] lr : lf) {
 
-            K lKey = leftKeyMapper.map(lr);
+            K lKey = leftKeyMapper.map(lColumns, lr);
             List<Object[]> rightMatches = rightIndex.get(lKey);
 
             if (rightMatches != null) {
@@ -168,12 +175,14 @@ public class IndexedJoiner<K> {
         return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(lin, rin));
     }
 
-    private Map<K, List<Object[]>> groupByKey(DataRowToValueMapper<K> keyMapper, DataFrame df) {
+    private Map<K, List<Object[]>> groupByKey(IndexedJoinKeyMapper<K> keyMapper, DataFrame df) {
+
+        Index columns = df.getColumns();
 
         Map<K, List<Object[]>> index = new HashMap<>();
 
         for (Object[] r : df) {
-            K key = keyMapper.map(r);
+            K key = keyMapper.map(columns, r);
             index.computeIfAbsent(key, k -> new ArrayList<>()).add(r);
         }
 

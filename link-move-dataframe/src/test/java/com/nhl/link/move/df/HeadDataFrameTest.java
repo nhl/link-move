@@ -61,7 +61,7 @@ public class HeadDataFrameTest {
     public void testMap() {
 
         DataFrame df = new HeadDataFrame(new SimpleDataFrame(columns, rows), 3)
-                .map(columns, (c, r) -> c.mapColumn(r, "a", v -> v[0] + "_"));
+                .map(columns, (c, r) -> c.mapColumn(r, "a", (cx, v) -> v[0] + "_"));
 
         new DFAsserts(df, columns)
                 .assertLength(3)

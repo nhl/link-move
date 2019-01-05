@@ -64,7 +64,7 @@ public class TransformingDataFrameTest {
         DataFrame df = new TransformingDataFrame(
                 i,
                 DataFrame.create(i, DataRow.row("one", 1), DataRow.row("two", 2)),
-                SELF_MAPPER).mapColumn("b", r -> r[1].toString());
+                SELF_MAPPER).mapColumn("b", (c, r) -> c.read(r, 1).toString());
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -81,7 +81,7 @@ public class TransformingDataFrameTest {
                 i,
                 DataFrame.create(i, DataRow.row("one", 1), DataRow.row("two", 2)),
                 SELF_MAPPER)
-                .map(i, (c, r) -> c.mapColumn(r, "a", rx -> rx[0] + "_"));
+                .map(i, (c, r) -> c.mapColumn(r, "a", (cx, rx) -> cx.read(rx, 0) + "_"));
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)

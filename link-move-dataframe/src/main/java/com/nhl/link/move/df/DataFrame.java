@@ -71,7 +71,7 @@ public interface DataFrame extends Iterable<Object[]> {
     default <T> DataFrame addColumns(String[] columnNames, DataRowToValueMapper<T>... columnValueProducers) {
         Index index = getColumns();
         Index expandedIndex = index.addNames(columnNames);
-        return map(expandedIndex, (c, r) -> index.addValues(r, columnValueProducers));
+        return map(expandedIndex, (c, r) -> index.addValues(c, r, columnValueProducers));
     }
 
     default DataFrame renameColumn(String oldName, String newName) {

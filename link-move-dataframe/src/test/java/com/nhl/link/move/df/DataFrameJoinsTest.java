@@ -162,7 +162,7 @@ public class DataFrameJoinsTest {
                 DataRow.row("b", 2),
                 DataRow.row("c", 3)));
 
-        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r[0], r -> r[1], JoinSemantics.inner);
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>((c, r) -> r[0], (c, r) -> r[1], JoinSemantics.inner);
         DataFrame df = df1.join(df2, joiner);
 
         new DFAsserts(df, "a", "b", "c", "d")
@@ -185,7 +185,7 @@ public class DataFrameJoinsTest {
                 DataRow.row(2, "b"),
                 DataRow.row(3, "c")));
 
-        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r[0], r -> r[0], JoinSemantics.inner);
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>((c, r) -> r[0], (c, r) -> r[0], JoinSemantics.inner);
         DataFrame df = df1.join(df2, joiner);
 
         new DFAsserts(df, "a", "b", "a_", "b_")
@@ -208,7 +208,7 @@ public class DataFrameJoinsTest {
                 DataRow.row(2, "b"),
                 DataRow.row(3, "c")));
 
-        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r[0], r -> r[0], JoinSemantics.left);
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>((c, r) -> r[0], (c, r) -> r[0], JoinSemantics.left);
         DataFrame df = df1.join(df2, joiner);
 
         new DFAsserts(df, "a", "b", "c", "d")
@@ -232,7 +232,7 @@ public class DataFrameJoinsTest {
                 DataRow.row(2, "b"),
                 DataRow.row(3, "c")));
 
-        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r[0], r -> r[0], JoinSemantics.right);
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>((c, r) -> r[0], (c, r) -> r[0], JoinSemantics.right);
         DataFrame df = df2.join(df1, joiner);
 
         new DFAsserts(df, "c", "d", "a", "b")
@@ -256,7 +256,7 @@ public class DataFrameJoinsTest {
                 DataRow.row(2, "b"),
                 DataRow.row(3, "c")));
 
-        IndexedJoiner<Object> joiner = new IndexedJoiner<>(r -> r[0], r -> r[0], JoinSemantics.full);
+        IndexedJoiner<Object> joiner = new IndexedJoiner<>((c, r) -> r[0], (c, r) -> r[0], JoinSemantics.full);
         DataFrame df = df1.join(df2, joiner);
 
         new DFAsserts(df, "a", "b", "c", "d")
