@@ -49,6 +49,6 @@ public class TransformingDataFrame implements DataFrame {
 
     @Override
     public String toString() {
-        return InlinePrinter.getInstance().print(new StringBuilder("LazyDataFrame ["), this).append("]").toString();
+        return InlinePrinter.getInstance().print(new StringBuilder("TransformingDataFrame ["), this).append("]").toString();
     }
 }
