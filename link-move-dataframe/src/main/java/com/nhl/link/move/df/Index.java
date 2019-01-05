@@ -63,6 +63,14 @@ public abstract class Index {
 
     public abstract Index compactIndex();
 
+    public Object read(Object[] row, String columnName) {
+        return position(columnName).read(row);
+    }
+
+    public Object read(Object[] row, int columnPos) {
+        return getPositions()[columnPos].read(row);
+    }
+
     public Index addNames(String... extraNames) {
         return Zipper.zipIndex(this, withNames(extraNames));
     }
