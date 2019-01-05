@@ -42,13 +42,7 @@ public class SimpleDataFrame implements DataFrame {
             return ((DataFrame) source).count();
         }
 
-        long count = 0;
-        Iterator<Object[]> it = source.iterator();
-        while (it.hasNext()) {
-            count++;
-        }
-
-        return count;
+        return DataFrame.super.count();
     }
 
     @Override

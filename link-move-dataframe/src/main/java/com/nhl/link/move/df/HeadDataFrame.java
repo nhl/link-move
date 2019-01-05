@@ -26,19 +26,6 @@ public class HeadDataFrame implements DataFrame {
     }
 
     @Override
-    public long count() {
-
-        // unlike other frames, using iterator in hope that it quits early ...
-        long count = 0;
-        Iterator<Object[]> it = source.iterator();
-        while (it.hasNext()) {
-            count++;
-        }
-
-        return count;
-    }
-
-    @Override
     public Iterator<Object[]> iterator() {
 
         return new Iterator<Object[]>() {

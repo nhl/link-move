@@ -51,7 +51,17 @@ public interface DataFrame extends Iterable<Object[]> {
 
     Index getColumns();
 
-    long count();
+    default long count() {
+
+        // not a very efficient implementation; implementors should provide faster versions when possible
+        long count = 0;
+        Iterator<Object[]> it = iterator();
+        while (it.hasNext()) {
+            count++;
+        }
+
+        return count;
+    }
 
     default DataFrame materialize() {
         return new MaterializedDataFrame(this);
@@ -114,7 +124,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default DataFrame filter(DataRowPredicate p) {
-        return new FilteredDataFrame(this, p);
+        return new FilteredDataFrame(this, p).materialize();
     }
 
     /**
