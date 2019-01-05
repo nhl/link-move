@@ -20,7 +20,7 @@ public class ZippingDataFrameTest {
                 DataRow.row(10),
                 DataRow.row(20)));
 
-        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper(i1, i2));
+        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper());
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -45,7 +45,7 @@ public class ZippingDataFrameTest {
                 Index.withNames("z1", "z2"),
                 df1,
                 df2,
-                Zipper.rowZipper(df1.getColumns(), df2.getColumns()));
+                Zipper.rowZipper());
 
         new DFAsserts(df, "z1", "z2")
                 .assertLength(2)
@@ -70,7 +70,7 @@ public class ZippingDataFrameTest {
                 Zipper.zipIndex(df1.getColumns(), df2.getColumns()),
                 df1,
                 df2,
-                Zipper.rowZipper(df1.getColumns(), df2.getColumns()));
+                Zipper.rowZipper());
 
         new DFAsserts(df, "b", "c")
                 .assertLength(2)
@@ -90,7 +90,7 @@ public class ZippingDataFrameTest {
                 DataRow.row(10),
                 DataRow.row(20)));
 
-        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper(i1, i2))
+        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper())
                 .head(1);
 
         new DFAsserts(df, "a", "b")
@@ -111,7 +111,7 @@ public class ZippingDataFrameTest {
                 DataRow.row(10),
                 DataRow.row(20)));
 
-        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper(i1, i2))
+        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper())
                 .renameColumn("b", "c");
 
         new DFAsserts(df, "a", "c")
@@ -135,7 +135,7 @@ public class ZippingDataFrameTest {
 
         Index zippedColumns = Index.withNames("x", "y");
 
-        DataFrame df = new ZippingDataFrame(zippedColumns, df1, df2, Zipper.rowZipper(i1, i2))
+        DataFrame df = new ZippingDataFrame(zippedColumns, df1, df2, Zipper.rowZipper())
                 .map((c, r) -> c.mapColumn(r, "x", (cx, rx) -> cx.read(rx, 0) + "_"));
 
         new DFAsserts(df, zippedColumns)
@@ -158,7 +158,7 @@ public class ZippingDataFrameTest {
                 DataRow.row(2)));
 
         Index mappedColumns = Index.withNames("x", "y", "z");
-        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper(i1, i2))
+        DataFrame df = new ZippingDataFrame(Index.withNames("a", "b"), df1, df2, Zipper.rowZipper())
                 .map(mappedColumns, (c, r) -> c.target(
                         r[0],
                         ((int) r[1]) * 10,

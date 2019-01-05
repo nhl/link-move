@@ -2,7 +2,6 @@ package com.nhl.link.move.df.join;
 
 import com.nhl.link.move.df.DataFrame;
 import com.nhl.link.move.df.Index;
-import com.nhl.link.move.df.ZippingDataFrame;
 import com.nhl.link.move.df.filter.DataRowJoinPredicate;
 import com.nhl.link.move.df.zip.Zipper;
 
@@ -15,7 +14,7 @@ import java.util.Set;
 /**
  * A DataFrame joiner based on rows comparing predicate. Should theoretically have O(N * M) performance.
  */
-public class Joiner {
+public class Joiner extends BaseJoiner {
 
     private DataRowJoinPredicate joinPredicate;
     private JoinSemantics semantics;
@@ -60,7 +59,9 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -87,7 +88,9 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -114,7 +117,9 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -152,11 +157,9 @@ public class Joiner {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
-    }
-
-    private DataFrame toJoinDataFrame(Index joinedColumns, Index lin, Index rin, Iterable<Object[]> li, Iterable<Object[]> ri) {
-        return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(lin, rin));
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     // "materialize" frame rows to avoid recalculation of each row on multiple iterations.

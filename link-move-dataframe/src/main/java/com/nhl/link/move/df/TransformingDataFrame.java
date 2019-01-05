@@ -1,6 +1,7 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowMapper;
+import com.nhl.link.move.df.map.MapContext;
 import com.nhl.link.move.df.print.InlinePrinter;
 
 import java.util.Iterator;
@@ -32,7 +33,7 @@ public class TransformingDataFrame implements DataFrame {
         return new Iterator<Object[]>() {
 
             private final Iterator<Object[]> delegateIt = TransformingDataFrame.this.source.iterator();
-            private final TransformContext context = new TransformContext(source.getColumns(), columns);
+            private final MapContext context = new MapContext(source.getColumns(), columns);
 
             @Override
             public boolean hasNext() {

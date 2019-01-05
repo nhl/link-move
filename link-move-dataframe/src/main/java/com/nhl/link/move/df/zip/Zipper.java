@@ -6,6 +6,8 @@ import com.nhl.link.move.df.map.DataRowCombiner;
 
 public class Zipper {
 
+    private static final DataRowCombiner ZIPPER = (c, lr, rr) -> c.copyToTarget(lr, rr, 0, c.getLeftIndex().size());
+
     public static Index zipIndex(Index leftIndex, Index rightIndex) {
 
         int llen = leftIndex.size();
@@ -37,24 +39,7 @@ public class Zipper {
         return Index.withPositions(zipped);
     }
 
-    public static DataRowCombiner rowZipper(Index li, Index ri) {
-        return (lr, rr) -> Zipper.zipRows(li, ri, lr, rr);
-    }
-
-    public static Object[] zipRows(Index li, Index ri, Object[] lr, Object[] rr) {
-
-        Object[] zippedValues = new Object[li.size() + ri.size()];
-
-        // rows can be null in case of outer joins...
-
-        if (lr != null) {
-            li.compactCopy(lr, zippedValues, 0);
-        }
-
-        if (rr != null) {
-            ri.compactCopy(rr, zippedValues, zippedValues.length - ri.size());
-        }
-
-        return zippedValues;
+    public static DataRowCombiner rowZipper() {
+        return ZIPPER;
     }
 }

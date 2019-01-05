@@ -110,7 +110,7 @@ public interface DataFrame extends Iterable<Object[]> {
      */
     default DataFrame zip(DataFrame df) {
         Index zipIndex = Zipper.zipIndex(getColumns(), df.getColumns());
-        return zip(zipIndex, df, Zipper.rowZipper(getColumns(), df.getColumns()));
+        return zip(zipIndex, df, Zipper.rowZipper());
     }
 
     default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {

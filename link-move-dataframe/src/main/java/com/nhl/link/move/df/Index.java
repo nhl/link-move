@@ -1,6 +1,7 @@
 package com.nhl.link.move.df;
 
 import com.nhl.link.move.df.map.DataRowToValueMapper;
+import com.nhl.link.move.df.map.MapContext;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public abstract class Index {
         return Zipper.zipIndex(this, withNames(extraNames));
     }
 
-    public <VR> Object[] addValues(TransformContext context, Object[] row, DataRowToValueMapper<VR>... valueProducers) {
+    public <VR> Object[] addValues(MapContext context, Object[] row, DataRowToValueMapper<VR>... valueProducers) {
 
         int oldWidth = size();
         int expansionWidth = valueProducers.length;

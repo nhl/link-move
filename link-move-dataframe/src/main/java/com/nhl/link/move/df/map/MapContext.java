@@ -1,13 +1,13 @@
-package com.nhl.link.move.df;
+package com.nhl.link.move.df.map;
 
-import com.nhl.link.move.df.map.DataRowToValueMapper;
+import com.nhl.link.move.df.Index;
 
-public class TransformContext {
+public class MapContext {
 
     private Index sourceIndex;
     private Index targetIndex;
 
-    public TransformContext(Index sourceIndex, Index targetIndex) {
+    public MapContext(Index sourceIndex, Index targetIndex) {
         this.sourceIndex = sourceIndex;
         this.targetIndex = targetIndex;
     }

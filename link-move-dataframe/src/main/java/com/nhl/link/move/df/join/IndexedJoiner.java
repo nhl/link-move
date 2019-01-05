@@ -2,7 +2,6 @@ package com.nhl.link.move.df.join;
 
 import com.nhl.link.move.df.DataFrame;
 import com.nhl.link.move.df.Index;
-import com.nhl.link.move.df.ZippingDataFrame;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.Set;
  * A DataFrame joiner based on a pair of functions that can calculate compareable keys for the left and right row.
  * Should theoretically have O(N + M) performance.
  */
-public class IndexedJoiner<K> {
+public class IndexedJoiner<K> extends BaseJoiner {
 
     private IndexedJoinKeyMapper<K> leftKeyMapper;
     private IndexedJoinKeyMapper<K> rightKeyMapper;
@@ -72,7 +71,9 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private DataFrame leftJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -100,7 +101,9 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private DataFrame rightJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -128,7 +131,9 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private DataFrame fullJoin(Index joinedColumns, DataFrame lf, DataFrame rf) {
@@ -168,11 +173,9 @@ public class IndexedJoiner<K> {
             }
         }
 
-        return toJoinDataFrame(joinedColumns, lf.getColumns(), rf.getColumns(), lRows, rRows);
-    }
-
-    private DataFrame toJoinDataFrame(Index joinedColumns, Index lin, Index rin, Iterable<Object[]> li, Iterable<Object[]> ri) {
-        return new ZippingDataFrame(joinedColumns, li, ri, Zipper.rowZipper(lin, rin));
+        return zipJoinSides(joinedColumns,
+                DataFrame.create(lf.getColumns(), lRows),
+                DataFrame.create(rf.getColumns(), rRows));
     }
 
     private Map<K, List<Object[]>> groupByKey(IndexedJoinKeyMapper<K> keyMapper, DataFrame df) {
