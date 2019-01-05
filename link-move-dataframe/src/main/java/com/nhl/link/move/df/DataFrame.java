@@ -78,7 +78,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default DataFrame selectColumns(String... columnNames) {
-        Index sparse = Index.withPositions(getColumns().positions(columnNames));
+        Index sparse = getColumns().selectNames(columnNames);
         return new SimpleDataFrame(sparse, this);
     }
 

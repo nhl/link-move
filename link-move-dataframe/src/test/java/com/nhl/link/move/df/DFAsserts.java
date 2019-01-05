@@ -37,9 +37,6 @@ public class DFAsserts {
 
         Object[] row = rows.get(pos);
 
-        // in a sparse DataFrame the rows may be longer then index..
-        assertTrue(expectedColumns.length <= row.length);
-
         for (int i = 0; i < expectedColumns.length; i++) {
             assertEquals("Unexpected value for '" + expectedColumns[i] + " (" + i + ")'",
                     expectedValues[i],

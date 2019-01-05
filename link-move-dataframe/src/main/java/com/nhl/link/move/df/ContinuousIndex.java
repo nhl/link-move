@@ -23,7 +23,6 @@ public class ContinuousIndex extends Index {
 
     @Override
     public <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m) {
-
         Object[] newValues = compactCopy(row, new Object[size()], 0);
         position.write(newValues, m.map(row));
         return newValues;
@@ -36,8 +35,8 @@ public class ContinuousIndex extends Index {
         IndexPosition[] newPositions = new IndexPosition[len];
         for (int i = 0; i < len; i++) {
             IndexPosition pos = positions[i];
-            String newName = oldToNewNames.get(pos.getName());
-            newPositions[i] = newName != null ? new IndexPosition(i, newName) : pos;
+            String newName = oldToNewNames.get(pos.name());
+            newPositions[i] = newName != null ? new IndexPosition(i, i, newName) : pos;
         }
 
         return new ContinuousIndex(newPositions);

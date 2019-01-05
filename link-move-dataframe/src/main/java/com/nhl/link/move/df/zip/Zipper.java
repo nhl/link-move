@@ -19,18 +19,19 @@ public class Zipper {
 
         IndexPosition[] zipped = new IndexPosition[llen + rlen];
         for (int i = 0; i < llen; i++) {
-            zipped[i] = new IndexPosition(i, lPositions[i].getName());
+            zipped[i] = new IndexPosition(i, i, lPositions[i].name());
         }
 
         // resolve dupes on the right
         for (int i = 0; i < rlen; i++) {
 
-            String name = rPositions[i].getName();
+            String name = rPositions[i].name();
             while (leftIndex.hasName(name)) {
                 name = name + "_";
             }
 
-            zipped[i + llen] = new IndexPosition(i + llen, name);
+            int ri = i + llen;
+            zipped[ri] = new IndexPosition(ri, ri, name);
         }
 
         return Index.withPositions(zipped);

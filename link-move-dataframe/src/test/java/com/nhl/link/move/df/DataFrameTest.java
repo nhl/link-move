@@ -57,7 +57,7 @@ public class DataFrameTest {
                 DataRow.row(2, "y")))
                 .selectColumns("b");
 
-        new DFAsserts(df, new IndexPosition(1, "b"))
+        new DFAsserts(df, new IndexPosition(0, 1, "b"))
                 .assertLength(2)
                 .assertRow(0, "x")
                 .assertRow(1, "y");
@@ -71,7 +71,7 @@ public class DataFrameTest {
                 DataRow.row(2, "y")))
                 .dropColumns("a");
 
-        new DFAsserts(df, new IndexPosition(1, "b"))
+        new DFAsserts(df, new IndexPosition(0, 1, "b"))
                 .assertLength(2)
                 .assertRow(0, "x")
                 .assertRow(1, "y");
@@ -85,7 +85,7 @@ public class DataFrameTest {
                 DataRow.row(2, "y")))
                 .dropColumns("b");
 
-        new DFAsserts(df, new IndexPosition(0, "a"))
+        new DFAsserts(df, new IndexPosition(0, 0, "a"))
                 .assertLength(2)
                 .assertRow(0, 1)
                 .assertRow(1, 2);
@@ -99,7 +99,7 @@ public class DataFrameTest {
                 DataRow.row(2, "y")))
                 .dropColumns();
 
-        new DFAsserts(df, new IndexPosition(0, "a"), new IndexPosition(1, "b"))
+        new DFAsserts(df, "a", "b")
                 .assertLength(2)
                 .assertRow(0, 1, "x")
                 .assertRow(1, 2, "y");
@@ -113,7 +113,7 @@ public class DataFrameTest {
                 DataRow.row(2, "y")))
                 .dropColumns("no_such_column");
 
-        new DFAsserts(df, new IndexPosition(0, "a"), new IndexPosition(1, "b"))
+        new DFAsserts(df, "a", "b")
                 .assertLength(2)
                 .assertRow(0, 1, "x")
                 .assertRow(1, 2, "y");

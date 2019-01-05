@@ -23,7 +23,7 @@ public abstract class Index {
     protected static IndexPosition[] continuousPositions(String... names) {
         IndexPosition[] positions = new IndexPosition[names.length];
         for (int i = 0; i < names.length; i++) {
-            positions[i] = new IndexPosition(i, names[i]);
+            positions[i] = new IndexPosition(i, i, names[i]);
         }
 
         return positions;
@@ -33,12 +33,12 @@ public abstract class Index {
 
         // true if starts with zero and increments by one
 
-        if (positions.length > 0 && positions[0].getPosition() > 0) {
+        if (positions.length > 0 && positions[0].rowIndex() > 0) {
             return false;
         }
 
         for (int i = 1; i < positions.length; i++) {
-            if (positions[i].getPosition() != positions[i - 1].getPosition() + 1) {
+            if (positions[i].rowIndex() != positions[i - 1].rowIndex() + 1) {
                 return false;
             }
         }
@@ -84,6 +84,19 @@ public abstract class Index {
 
     public abstract <VR> Object[] mapColumn(Object[] row, IndexPosition position, ValueMapper<Object[], VR> m);
 
+    public Index selectNames(String... names) {
+
+        int len = names.length;
+        IndexPosition[] positions = new IndexPosition[len];
+
+        for (int i = 0; i < len; i++) {
+            IndexPosition p = position(names[i]);
+            positions[i] = new IndexPosition(i, p.rowIndex(), p.name());
+        }
+
+        return Index.withPositions(positions);
+    }
+
     public Index dropNames(String... names) {
 
         if (names.length == 0) {
@@ -109,8 +122,11 @@ public abstract class Index {
         IndexPosition[] toKeep = new IndexPosition[size() - toDrop.size()];
         for (int i = 0, j = 0; i < positions.length; i++) {
 
-            if (!toDrop.contains(positions[i])) {
-                toKeep[j++] = positions[i];
+            IndexPosition p = positions[i];
+
+            if (!toDrop.contains(p)) {
+                toKeep[j] = new IndexPosition(j, p.rowIndex(), p.name());
+                j++;
             }
         }
 
@@ -123,18 +139,6 @@ public abstract class Index {
 
     public int size() {
         return positions.length;
-    }
-
-    public IndexPosition[] positions(String... names) {
-
-        int len = names.length;
-        IndexPosition[] positions = new IndexPosition[len];
-
-        for (int i = 0; i < len; i++) {
-            positions[i] = position(names[i]);
-        }
-
-        return positions;
     }
 
     public IndexPosition position(String name) {
@@ -163,10 +167,10 @@ public abstract class Index {
         Map<String, IndexPosition> index = new LinkedHashMap<>();
 
         for (int i = 0; i < positions.length; i++) {
-            IndexPosition previous = index.put(positions[i].getName(), positions[i]);
+            IndexPosition previous = index.put(positions[i].name(), positions[i]);
             if (previous != null) {
                 throw new IllegalStateException("Duplicate position name '"
-                        + positions[i].getName()
+                        + positions[i].name()
                         + "'. Found at " + previous + " and " + i);
             }
         }

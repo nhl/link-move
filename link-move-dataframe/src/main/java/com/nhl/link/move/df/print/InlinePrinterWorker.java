@@ -39,7 +39,7 @@ public class InlinePrinterWorker extends BasePrinterWorker {
                     out.append(",");
                 }
 
-                appendTruncate(positions[j].getName());
+                appendTruncate(positions[j].name());
                 out.append(":");
                 appendTruncate(String.valueOf(positions[j].read(dr)));
             }

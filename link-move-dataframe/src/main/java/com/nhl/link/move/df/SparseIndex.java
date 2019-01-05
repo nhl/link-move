@@ -10,21 +10,11 @@ public class SparseIndex extends Index {
         super(positions);
     }
 
-    private int ordinal(IndexPosition position) {
-        for (int i = 0; i < positions.length; i++) {
-            if (positions[i].equals(position)) {
-                return i;
-            }
-        }
-
-        throw new IllegalArgumentException("Position " + position + " does not belong to this Index");
-    }
-
     @Override
     public Index compactIndex() {
         String[] names = new String[positions.length];
         for (int i = 0; i < positions.length; i++) {
-            names[i] = positions[i].getName();
+            names[i] = positions[i].name();
         }
         return Index.withNames(names);
     }
@@ -47,10 +37,7 @@ public class SparseIndex extends Index {
 
         Object[] newValues = compactCopy(row, new Object[size()], 0);
 
-        // TODO: potentially slow, especially if calculated for every row... Cache ordinals?
-        int newIndex = ordinal(position);
-
-        newValues[newIndex] = m.map(row);
+        newValues[position.ordinal()] = m.map(row);
         return newValues;
     }
 
@@ -61,8 +48,8 @@ public class SparseIndex extends Index {
         IndexPosition[] newPositions = new IndexPosition[len];
         for (int i = 0; i < len; i++) {
             IndexPosition pos = positions[i];
-            String newName = oldToNewNames.get(pos.getName());
-            newPositions[i] = newName != null ? new IndexPosition(pos.getPosition(), newName) : pos;
+            String newName = oldToNewNames.get(pos.name());
+            newPositions[i] = newName != null ? new IndexPosition(i, pos.rowIndex(), newName) : pos;
         }
 
         return new SparseIndex(newPositions);

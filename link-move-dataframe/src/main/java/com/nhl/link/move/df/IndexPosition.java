@@ -2,28 +2,34 @@ package com.nhl.link.move.df;
 
 public class IndexPosition {
 
-    private int position;
+    private int ordinal;
+    private int rowIndex;
     private String name;
 
-    public IndexPosition(int position, String name) {
-        this.position = position;
+    public IndexPosition(int ordinal, int rowIndex, String name) {
+        this.ordinal = ordinal;
+        this.rowIndex = rowIndex;
         this.name = name;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public int getPosition() {
-        return position;
+    public int ordinal() {
+        return ordinal;
+    }
+
+    public int rowIndex() {
+        return rowIndex;
     }
 
     public Object read(Object[] row) {
-        return row[position];
+        return row[rowIndex];
     }
 
     public void write(Object[] row, Object val) {
-        row[position] = val;
+        row[rowIndex] = val;
     }
 
     @Override
@@ -37,11 +43,11 @@ public class IndexPosition {
         }
 
         IndexPosition ip = (IndexPosition) o;
-        return ip.position == this.position && ip.name.equals(this.name);
+        return ip.ordinal == this.ordinal && ip.rowIndex == this.rowIndex && ip.name.equals(this.name);
     }
 
     @Override
     public String toString() {
-        return "IndexPosition [" + position + "|" + name + "]";
+        return "IndexPosition [" + ordinal + "|" + rowIndex + "|" + name + "]";
     }
 }
