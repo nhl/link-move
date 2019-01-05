@@ -27,6 +27,11 @@ public class MaterializedDataFrame implements DataFrame {
         this.columns = source.getColumns().compactIndex();
     }
 
+    public MaterializedDataFrame(Index columns, List<Object[]> materialized) {
+        this.columns = columns.compactIndex();
+        this.materialized = materialized;
+    }
+
     @Override
     public DataFrame materialize() {
         return this;

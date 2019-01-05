@@ -13,6 +13,7 @@ import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -33,7 +34,11 @@ import static java.util.Arrays.asList;
 public interface DataFrame extends Iterable<Object[]> {
 
     static DataFrame create(Index columns, Object[]... sources) {
-        return create(columns, asList(sources));
+        return new MaterializedDataFrame(columns, asList(sources));
+    }
+
+    static DataFrame create(Index columns, List<Object[]> sources) {
+        return new MaterializedDataFrame(columns, sources);
     }
 
     static DataFrame create(Index columns, Iterable<Object[]> source) {
@@ -41,7 +46,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     static <T> DataFrame create(Index columns, Iterable<T> source, Function<T, Object[]> toArrayMapper) {
-        return create(columns, new TransformingIterable<>(source, toArrayMapper));
+        return new SimpleDataFrame(columns, new TransformingIterable<>(source, toArrayMapper));
     }
 
     Index getColumns();
