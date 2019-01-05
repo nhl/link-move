@@ -158,7 +158,7 @@ public class TransformingDataFrameTest {
                 DataRow.row("three", 3),
                 DataRow.row("four", 4)), SELF_MAPPER);
 
-        assertEquals("LazyDataFrame [{a:one,b:1},{a:two,b:2},{a:three,b:3},...]", df.toString());
+        assertEquals("TransformingDataFrame [{a:one,b:1},{a:two,b:2},{a:three,b:3},...]", df.toString());
     }
 
     @Test

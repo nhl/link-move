@@ -48,6 +48,10 @@ public interface DataFrame extends Iterable<Object[]> {
 
     long count();
 
+    default DataFrame materialize() {
+        return new MaterializedDataFrame(this);
+    }
+
     default DataFrame head(int len) {
         return new HeadDataFrame(this, len);
     }
@@ -62,7 +66,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default DataFrame map(Index mappedColumns, DataRowMapper rowMapper) {
-        return new TransformingDataFrame(mappedColumns, this, rowMapper);
+        return new TransformingDataFrame(mappedColumns, this, rowMapper).materialize();
     }
 
     default <T> DataFrame mapColumn(String columnName, DataRowToValueMapper<T> m) {
@@ -122,7 +126,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default DataFrame zip(Index zippedColumns, DataFrame df, DataRowCombiner c) {
-        return new ZippingDataFrame(zippedColumns, this, df, c);
+        return new ZippingDataFrame(zippedColumns, this, df, c).materialize();
     }
 
     default DataFrame join(DataFrame df, DataRowJoinPredicate p) {
