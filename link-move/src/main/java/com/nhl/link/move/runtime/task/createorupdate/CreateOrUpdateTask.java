@@ -83,15 +83,4 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         Extractor extractor = extractorService.getExtractor(extractorName);
         return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
     }
-
-    private Index toIndex(RowAttribute[] rowHeader) {
-        String[] columns = new String[rowHeader.length];
-
-        for (int i = 0; i < rowHeader.length; i++) {
-            columns[i] = rowHeader[i].getSourceName();
-        }
-
-        return Index.withNames(columns);
-    }
-
 }

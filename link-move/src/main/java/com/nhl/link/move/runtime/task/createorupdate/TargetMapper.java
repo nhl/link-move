@@ -42,7 +42,7 @@ public class TargetMapper<T extends DataObject> {
 
     private T createIfMissing(Object v, ObjectContext context) {
 
-        // Note that "context.newObject" is impure function. Though we don't see its undesired side effects on
+        // Note that "context.newObject" is an impure function. Though we don't see its undesired side effects on
         // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
 
         return v != null ? (T) v : context.newObject(type);

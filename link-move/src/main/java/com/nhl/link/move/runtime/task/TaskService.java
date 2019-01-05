@@ -14,7 +14,6 @@ import com.nhl.link.move.runtime.task.create.CreateTargetMapper;
 import com.nhl.link.move.runtime.task.create.CreateTargetMerger;
 import com.nhl.link.move.runtime.task.create.DefaultCreateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
-import com.nhl.link.move.runtime.task.createorupdate.LegacyRowConverter;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.task.createorupdate.TargetMerger;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
@@ -61,7 +60,7 @@ public class TaskService implements ITaskService {
         CreateTargetMerger<T> merger = new CreateTargetMerger<>(writerService.getWriterFactory(type));
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
-        LegacyRowConverter rowConverter = new LegacyRowConverter(targetEntity, valueConverterFactory);
+        RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
         return new DefaultCreateBuilder(
                 mapper,

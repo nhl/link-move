@@ -6,7 +6,7 @@ import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.runtime.task.StageListener;
-import com.nhl.link.move.runtime.task.createorupdate.LegacyRowConverter;
+import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import org.apache.cayenne.DataObject;
 
 import java.lang.annotation.Annotation;
@@ -19,14 +19,14 @@ import java.util.Map;
  */
 public class CreateSegmentProcessor<T extends DataObject> {
 
-    private LegacyRowConverter rowConverter;
+    private RowConverter rowConverter;
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
     private CreateTargetMapper<T> mapper;
     private CreateTargetMerger<T> merger;
 
 
     public CreateSegmentProcessor(
-            LegacyRowConverter rowConverter,
+            RowConverter rowConverter,
             CreateTargetMapper<T> mapper,
             CreateTargetMerger<T> merger,
             Map<Class<? extends Annotation>, List<StageListener>> listeners) {

@@ -11,7 +11,7 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
-import com.nhl.link.move.runtime.task.createorupdate.LegacyRowConverter;
+import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 
@@ -28,12 +28,12 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     private ListenersBuilder stageListenersBuilder;
     private IExtractorService extractorService;
     private ITargetCayenneService targetCayenneService;
-    private LegacyRowConverter rowConverter;
+    private RowConverter rowConverter;
 
     public DefaultCreateBuilder(
             CreateTargetMapper<T> mapper,
             CreateTargetMerger<T> merger,
-            LegacyRowConverter rowConverter,
+            RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager) {
