@@ -4,9 +4,11 @@ import com.nhl.link.move.df.map.ValueMapper;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * An "index" of the DataFrame that provides access to column (and in the future potentially row) metadata.
@@ -82,10 +84,18 @@ public abstract class Index {
 
         int len = names.length;
         IndexPosition[] positions = new IndexPosition[len];
-
+        Set<String> dedupeNames = new HashSet<>((int) (len / 0.75));
+        
         for (int i = 0; i < len; i++) {
             IndexPosition p = position(names[i]);
-            positions[i] = new IndexPosition(i, p.rowIndex(), p.name());
+
+            String name = names[i];
+
+            while(!dedupeNames.add(name)) {
+                name = name + "_";
+            }
+
+            positions[i] = new IndexPosition(i, p.rowIndex(), name);
         }
 
         return Index.withPositions(positions);

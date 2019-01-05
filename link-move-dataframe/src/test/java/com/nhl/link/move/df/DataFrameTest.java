@@ -64,6 +64,20 @@ public class DataFrameTest {
     }
 
     @Test
+    public void testSelectColumns_DuplicateColumn() {
+        Index i1 = Index.withNames("a", "b");
+        DataFrame df = DataFrame.create(i1, asList(
+                DataRow.row(1, "x"),
+                DataRow.row(2, "y")))
+                .selectColumns("b", "b", "b");
+
+        new DFAsserts(df, new IndexPosition(0, 1, "b"), new IndexPosition(1, 1, "b_"), new IndexPosition(2, 1, "b__"))
+                .assertLength(2)
+                .assertRow(0, "x", "x", "x")
+                .assertRow(1, "y", "y", "y");
+    }
+
+    @Test
     public void testDropColumns1() {
         Index i1 = Index.withNames("a", "b");
         DataFrame df = DataFrame.create(i1, asList(
