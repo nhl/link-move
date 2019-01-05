@@ -56,7 +56,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default DataFrame map(DataRowMapper rowMapper) {
-        return map(getColumns(), rowMapper);
+        return map(getColumns().compactIndex(), rowMapper);
     }
 
     default DataFrame map(Index mappedColumns, DataRowMapper rowMapper) {

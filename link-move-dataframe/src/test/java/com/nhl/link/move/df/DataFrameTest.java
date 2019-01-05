@@ -134,6 +134,35 @@ public class DataFrameTest {
     }
 
     @Test
+    public void testMap_SameIndex() {
+        Index i1 = Index.withNames("a", "b");
+        DataFrame df = DataFrame.create(i1, asList(
+                DataRow.row(1, "x"),
+                DataRow.row(2, "y")))
+                .map((c, r) -> c.mapColumn(r, "a", (cx, rx) -> ((int) cx.get(rx, "a")) * 10));
+
+        new DFAsserts(df, "a", "b")
+                .assertLength(2)
+                .assertRow(0, 10, "x")
+                .assertRow(1, 20, "y");
+    }
+
+    @Test
+    public void testMap_SameIndex_Sparse() {
+        Index i1 = Index.withNames("a", "b");
+        DataFrame df = DataFrame.create(i1, asList(
+                DataRow.row(1, "x"),
+                DataRow.row(2, "y")))
+                .dropColumns("a")
+                .map((c, r) -> c.mapColumn(r, "b", (cx, rx) -> cx.get(rx, "b") + "_"));
+
+        new DFAsserts(df, new IndexPosition(0, 0, "b"))
+                .assertLength(2)
+                .assertRow(0, "x_")
+                .assertRow(1, "y_");
+    }
+
+    @Test
     public void testMapColumn() {
         Index i1 = Index.withNames("a", "b");
         DataFrame df = DataFrame.create(i1, asList(
