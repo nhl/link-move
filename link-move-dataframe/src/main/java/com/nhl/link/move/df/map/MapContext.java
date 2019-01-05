@@ -12,6 +12,14 @@ public class MapContext {
         this.targetIndex = targetIndex;
     }
 
+    public Index getSourceIndex() {
+        return sourceIndex;
+    }
+
+    public Index getTargetIndex() {
+        return targetIndex;
+    }
+
     public Object read(Object[] sourceRow, String columnName) {
         return sourceIndex.position(columnName).read(sourceRow);
     }
