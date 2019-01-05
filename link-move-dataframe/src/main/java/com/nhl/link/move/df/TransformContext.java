@@ -1,6 +1,6 @@
 package com.nhl.link.move.df;
 
-import com.nhl.link.move.df.map.ValueMapper;
+import com.nhl.link.move.df.map.DataRowToValueMapper;
 
 public class TransformContext {
 
@@ -43,11 +43,11 @@ public class TransformContext {
         return copyToTarget(sourceRow, 0);
     }
 
-    public <T> Object[] mapColumn(Object[] sourceRow, String name, ValueMapper<Object[], T> m) {
+    public <T> Object[] mapColumn(Object[] sourceRow, String name, DataRowToValueMapper<T> m) {
         return mapColumn(sourceRow, sourceIndex.position(name).ordinal(), m);
     }
 
-    public <T> Object[] mapColumn(Object[] sourceRow, int sourcePos, ValueMapper<Object[], T> m) {
+    public <T> Object[] mapColumn(Object[] sourceRow, int sourcePos, DataRowToValueMapper<T> m) {
         Object[] target = copyToTarget(sourceRow);
 
         // since target is a compact version of the source, we can use "sourcePos" index directly on it

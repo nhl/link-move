@@ -7,7 +7,7 @@ import com.nhl.link.move.df.join.JoinSemantics;
 import com.nhl.link.move.df.join.Joiner;
 import com.nhl.link.move.df.map.DataRowCombiner;
 import com.nhl.link.move.df.map.DataRowMapper;
-import com.nhl.link.move.df.map.ValueMapper;
+import com.nhl.link.move.df.map.DataRowToValueMapper;
 import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.Collections;
@@ -57,18 +57,18 @@ public interface DataFrame extends Iterable<Object[]> {
         return new TransformingDataFrame(mappedColumns, this, rowMapper);
     }
 
-    default <T> DataFrame mapColumn(String columnName, ValueMapper<Object[], T> m) {
+    default <T> DataFrame mapColumn(String columnName, DataRowToValueMapper<T> m) {
         Index index = getColumns();
         Index compactIndex = index.compactIndex();
         int pos = index.position(columnName).ordinal();
         return map(compactIndex, (c, r) -> c.mapColumn(r, pos, m));
     }
 
-    default <T> DataFrame addColumn(String columnName, ValueMapper<Object[], T> columnValueProducer) {
+    default <T> DataFrame addColumn(String columnName, DataRowToValueMapper<T> columnValueProducer) {
         return addColumns(new String[]{columnName}, columnValueProducer);
     }
 
-    default <T> DataFrame addColumns(String[] columnNames, ValueMapper<Object[], T>... columnValueProducers) {
+    default <T> DataFrame addColumns(String[] columnNames, DataRowToValueMapper<T>... columnValueProducers) {
         Index index = getColumns();
         Index expandedIndex = index.addNames(columnNames);
         return map(expandedIndex, (c, r) -> index.addValues(r, columnValueProducers));
