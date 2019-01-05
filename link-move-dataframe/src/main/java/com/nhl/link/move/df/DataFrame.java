@@ -97,7 +97,7 @@ public interface DataFrame extends Iterable<Object[]> {
     }
 
     default DataFrame filter(DataRowPredicate p) {
-        return new FilteredDataFrame(getColumns(), this, p);
+        return new FilteredDataFrame(this, p);
     }
 
     /**

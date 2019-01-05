@@ -8,26 +8,26 @@ import java.util.NoSuchElementException;
 
 public class FilteredDataFrame implements DataFrame {
 
-    private Iterable<Object[]> source;
-    private Index columns;
+    private DataFrame source;
     private DataRowPredicate rowFilter;
 
-    public FilteredDataFrame(Index columns, Iterable<Object[]> source, DataRowPredicate rowFilter) {
+    public FilteredDataFrame(DataFrame source, DataRowPredicate rowFilter) {
         this.source = source;
-        this.columns = columns;
         this.rowFilter = rowFilter;
     }
 
     @Override
     public Index getColumns() {
-        return columns;
+        return source.getColumns();
     }
 
     @Override
     public Iterator<Object[]> iterator() {
         return new Iterator<Object[]>() {
 
-            private Iterator<Object[]> delegateIt = FilteredDataFrame.this.source.iterator();
+            private final Index columns = source.getColumns();
+            private final Iterator<Object[]> delegateIt = source.iterator();
+
             private Object[] lastResolved;
 
             {
@@ -38,7 +38,7 @@ public class FilteredDataFrame implements DataFrame {
                 lastResolved = null;
                 while (delegateIt.hasNext()) {
                     Object[] next = delegateIt.next();
-                    if (rowFilter.test(next)) {
+                    if (rowFilter.test(columns, next)) {
                         lastResolved = next;
                         break;
                     }

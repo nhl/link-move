@@ -240,7 +240,7 @@ public class TransformingDataFrameTest {
                 DataRow.row(10),
                 DataRow.row(20)), SELF_MAPPER);
 
-        DataFrame df = df1.filter(r -> ((int) r[0]) > 15);
+        DataFrame df = df1.filter((c, r) -> ((int) c.read(r, 0)) > 15);
         new DFAsserts(df, "a")
                 .assertLength(1)
                 .assertRow(0, 20);
