@@ -26,7 +26,7 @@ public class DataFrameTest {
         DataFrame df = DataFrame.create(i1, asList(
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
-                .addColumn("c", (c, r) -> ((int) c.read(r, 0)) * 10);
+                .addColumn("c", (c, r) -> ((int) c.get(r, 0)) * 10);
 
         new DFAsserts(df, "a", "b", "c")
                 .assertLength(2)
@@ -41,7 +41,7 @@ public class DataFrameTest {
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
                 .selectColumns("a")
-                .addColumn("c", (c, r) -> ((int) c.read(r, 0)) * 10);
+                .addColumn("c", (c, r) -> ((int) c.get(r, 0)) * 10);
 
         new DFAsserts(df, "a", "c")
                 .assertLength(2)
@@ -139,7 +139,7 @@ public class DataFrameTest {
         DataFrame df = DataFrame.create(i1, asList(
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
-                .mapColumn("a", (c, r) -> ((int) c.read(r, 0)) * 10);
+                .mapColumn("a", (c, r) -> ((int) c.get(r, 0)) * 10);
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -154,7 +154,7 @@ public class DataFrameTest {
                 DataRow.row(1, "x"),
                 DataRow.row(2, "y")))
                 .selectColumns("b")
-                .mapColumn("b", (c, r) -> c.read(r, 0) + "_");
+                .mapColumn("b", (c, r) -> c.get(r, 0) + "_");
 
         new DFAsserts(df, "b")
                 .assertLength(2)

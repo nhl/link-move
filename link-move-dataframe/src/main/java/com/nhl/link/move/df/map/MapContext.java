@@ -20,12 +20,12 @@ public class MapContext {
         return targetIndex;
     }
 
-    public Object read(Object[] sourceRow, String columnName) {
-        return sourceIndex.position(columnName).read(sourceRow);
+    public Object get(Object[] sourceRow, String columnName) {
+        return sourceIndex.position(columnName).get(sourceRow);
     }
 
-    public Object read(Object[] sourceRow, int columnPos) {
-        return sourceIndex.getPositions()[columnPos].read(sourceRow);
+    public Object get(Object[] sourceRow, int columnPos) {
+        return sourceIndex.getPositions()[columnPos].get(sourceRow);
     }
 
     public Object[] target(Object... values) {

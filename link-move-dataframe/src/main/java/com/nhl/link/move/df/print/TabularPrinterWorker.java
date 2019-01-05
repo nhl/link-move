@@ -39,7 +39,7 @@ class TabularPrinterWorker extends BasePrinterWorker {
             String[] drValue = new String[width];
 
             for (int j = 0; j < width; j++) {
-                drValue[j] = String.valueOf(positions[j].read(dr));
+                drValue[j] = String.valueOf(positions[j].get(dr));
                 columnWidth[j] = Math.max(columnWidth[j], drValue[j].length());
             }
 

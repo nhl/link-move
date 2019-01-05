@@ -40,7 +40,7 @@ public class DFAsserts {
         for (int i = 0; i < expectedColumns.length; i++) {
             assertEquals("Unexpected value for '" + expectedColumns[i] + " (" + i + ")'",
                     expectedValues[i],
-                    expectedColumns[i].read(row));
+                    expectedColumns[i].get(row));
         }
 
         return this;

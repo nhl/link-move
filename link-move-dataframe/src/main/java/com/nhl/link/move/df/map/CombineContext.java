@@ -26,20 +26,20 @@ public class CombineContext {
         return combinedIndex;
     }
 
-    public Object readLeft(Object[] leftRow, String columnName) {
-        return leftIndex.position(columnName).read(leftRow);
+    public Object getLeft(Object[] leftRow, String columnName) {
+        return leftIndex.position(columnName).get(leftRow);
     }
 
-    public Object readLeft(Object[] leftRow, int columnPos) {
-        return leftIndex.getPositions()[columnPos].read(leftRow);
+    public Object getLeft(Object[] leftRow, int columnPos) {
+        return leftIndex.getPositions()[columnPos].get(leftRow);
     }
 
-    public Object readRight(Object[] rightRow, String columnName) {
-        return rightIndex.position(columnName).read(rightRow);
+    public Object getRight(Object[] rightRow, String columnName) {
+        return rightIndex.position(columnName).get(rightRow);
     }
 
-    public Object readRight(Object[] rightRow, int columnPos) {
-        return rightIndex.getPositions()[columnPos].read(rightRow);
+    public Object getRight(Object[] rightRow, int columnPos) {
+        return rightIndex.getPositions()[columnPos].get(rightRow);
     }
 
     public Object[] target(Object... values) {

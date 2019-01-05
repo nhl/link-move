@@ -21,7 +21,7 @@ public class SparseIndex extends Index {
     public Object[] compactCopy(Object[] row, Object[] to, int toOffset) {
 
         for (int i = 0; i < positions.length; i++) {
-            to[toOffset + i] = positions[i].read(row);
+            to[toOffset + i] = positions[i].get(row);
         }
 
         return to;

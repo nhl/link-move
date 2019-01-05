@@ -64,7 +64,7 @@ public class TransformingDataFrameTest {
         DataFrame df = new TransformingDataFrame(
                 i,
                 DataFrame.create(i, DataRow.row("one", 1), DataRow.row("two", 2)),
-                SELF_MAPPER).mapColumn("b", (c, r) -> c.read(r, 1).toString());
+                SELF_MAPPER).mapColumn("b", (c, r) -> c.get(r, 1).toString());
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -81,7 +81,7 @@ public class TransformingDataFrameTest {
                 i,
                 DataFrame.create(i, DataRow.row("one", 1), DataRow.row("two", 2)),
                 SELF_MAPPER)
-                .map(i, (c, r) -> c.mapColumn(r, "a", (cx, rx) -> cx.read(rx, 0) + "_"));
+                .map(i, (c, r) -> c.mapColumn(r, "a", (cx, rx) -> cx.get(rx, 0) + "_"));
 
         new DFAsserts(df, "a", "b")
                 .assertLength(2)
@@ -240,7 +240,7 @@ public class TransformingDataFrameTest {
                 DataRow.row(10),
                 DataRow.row(20)), SELF_MAPPER);
 
-        DataFrame df = df1.filter((c, r) -> ((int) c.read(r, 0)) > 15);
+        DataFrame df = df1.filter((c, r) -> ((int) c.get(r, 0)) > 15);
         new DFAsserts(df, "a")
                 .assertLength(1)
                 .assertRow(0, 20);

@@ -24,11 +24,11 @@ public class IndexPosition {
         return rowIndex;
     }
 
-    public Object read(Object[] row) {
+    public Object get(Object[] row) {
         return row[rowIndex];
     }
 
-    public void write(Object[] row, Object val) {
+    public void set(Object[] row, Object val) {
         row[rowIndex] = val;
     }
 
