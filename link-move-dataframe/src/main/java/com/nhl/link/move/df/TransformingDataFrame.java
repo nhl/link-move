@@ -24,6 +24,11 @@ public class TransformingDataFrame implements DataFrame {
     }
 
     @Override
+    public long count() {
+        return source.count();
+    }
+
+    @Override
     public Index getColumns() {
         return columns;
     }

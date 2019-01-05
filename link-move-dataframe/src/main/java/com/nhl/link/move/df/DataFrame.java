@@ -46,6 +46,8 @@ public interface DataFrame extends Iterable<Object[]> {
 
     Index getColumns();
 
+    long count();
+
     default DataFrame head(int len) {
         return new HeadDataFrame(this, len);
     }

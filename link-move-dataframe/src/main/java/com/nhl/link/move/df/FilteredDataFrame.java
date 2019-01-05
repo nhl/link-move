@@ -17,6 +17,19 @@ public class FilteredDataFrame implements DataFrame {
     }
 
     @Override
+    public long count() {
+
+        // unfortunately have to do a full iteration to calculate count...
+        long count = 0;
+        Iterator<Object[]> it = source.iterator();
+        while (it.hasNext()) {
+            count++;
+        }
+
+        return count;
+    }
+
+    @Override
     public Index getColumns() {
         return source.getColumns();
     }

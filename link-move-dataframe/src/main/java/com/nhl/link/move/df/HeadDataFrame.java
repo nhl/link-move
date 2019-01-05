@@ -7,22 +7,35 @@ import java.util.NoSuchElementException;
 
 public class HeadDataFrame implements DataFrame {
 
-    private DataFrame delegate;
+    private DataFrame source;
     private int len;
 
-    public HeadDataFrame(DataFrame delegate, int len) {
-        this.delegate = delegate;
+    public HeadDataFrame(DataFrame source, int len) {
+        this.source = source;
         this.len = len;
     }
 
     @Override
     public DataFrame head(int len) {
-        return len >= this.len ? this : delegate.head(len);
+        return len >= this.len ? this : source.head(len);
     }
 
     @Override
     public Index getColumns() {
-        return delegate.getColumns();
+        return source.getColumns();
+    }
+
+    @Override
+    public long count() {
+
+        // unlike other frames, using iterator in hope that it quits early ...
+        long count = 0;
+        Iterator<Object[]> it = source.iterator();
+        while (it.hasNext()) {
+            count++;
+        }
+
+        return count;
     }
 
     @Override
@@ -31,7 +44,7 @@ public class HeadDataFrame implements DataFrame {
         return new Iterator<Object[]>() {
 
             private int counter = 0;
-            private Iterator<Object[]> delegateIt = HeadDataFrame.this.delegate.iterator();
+            private Iterator<Object[]> delegateIt = HeadDataFrame.this.source.iterator();
 
             @Override
             public boolean hasNext() {

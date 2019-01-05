@@ -31,6 +31,11 @@ public class ZippingDataFrame implements DataFrame {
     }
 
     @Override
+    public long count() {
+        return leftSource.count();
+    }
+
+    @Override
     public Iterator<Object[]> iterator() {
         return new Iterator<Object[]>() {
 
