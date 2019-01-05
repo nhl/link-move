@@ -28,6 +28,16 @@ public class MapContext {
         return sourceIndex.getPositions()[columnPos].get(sourceRow);
     }
 
+    public MapContext set(Object[] targetRow, String columnName, Object value) {
+        targetIndex.position(columnName).set(targetRow, value);
+        return this;
+    }
+
+    public MapContext set(Object[] targetRow, int columnPos, Object value) {
+        targetIndex.getPositions()[columnPos].set(targetRow, value);
+        return this;
+    }
+
     public Object[] target(Object... values) {
 
         if (values.length == targetIndex.size()) {
