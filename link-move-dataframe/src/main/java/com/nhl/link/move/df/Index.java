@@ -6,15 +6,17 @@ import com.nhl.link.move.df.zip.Zipper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
  * An "index" of the DataFrame that provides access to column (and in the future potentially row) metadata.
  */
-public abstract class Index {
+public abstract class Index implements Iterable<IndexPosition> {
 
     protected IndexPosition[] positions;
     private Map<String, IndexPosition> positionsIndex;
@@ -55,6 +57,29 @@ public abstract class Index {
 
     public static Index withPositions(IndexPosition... positions) {
         return isContinuous(positions) ? new ContinuousIndex(positions) : new SparseIndex(positions);
+    }
+
+    @Override
+    public Iterator<IndexPosition> iterator() {
+        return new Iterator<IndexPosition>() {
+
+            private int counter = 0;
+            private final int len = size();
+
+            @Override
+            public boolean hasNext() {
+                return counter < len;
+            }
+
+            @Override
+            public IndexPosition next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException("Past the end of the iterator");
+                }
+
+                return positions[counter++];
+            }
+        };
     }
 
     public abstract Object[] compactCopy(Object[] row, Object[] to, int toOffset);
