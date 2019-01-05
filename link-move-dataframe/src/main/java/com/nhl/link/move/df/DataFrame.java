@@ -6,6 +6,7 @@ import com.nhl.link.move.df.join.IndexedJoiner;
 import com.nhl.link.move.df.join.JoinSemantics;
 import com.nhl.link.move.df.join.Joiner;
 import com.nhl.link.move.df.map.DataRowCombiner;
+import com.nhl.link.move.df.map.DataRowConsumer;
 import com.nhl.link.move.df.map.DataRowMapper;
 import com.nhl.link.move.df.map.DataRowToValueMapper;
 import com.nhl.link.move.df.zip.Zipper;
@@ -47,6 +48,11 @@ public interface DataFrame extends Iterable<Object[]> {
 
     default DataFrame head(int len) {
         return new HeadDataFrame(this, len);
+    }
+
+    default void consume(DataRowConsumer consumer) {
+        Index columns = getColumns();
+        forEach(r -> consumer.consume(columns, r));
     }
 
     default DataFrame map(DataRowMapper rowMapper) {
