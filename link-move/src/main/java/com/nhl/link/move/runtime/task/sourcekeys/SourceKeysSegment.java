@@ -1,25 +1,24 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.RowAttribute;
-
-import java.util.List;
-import java.util.Map;
+import com.nhl.link.move.df.DataFrame;
 
 /**
  * @since 1.3
  */
 public class SourceKeysSegment {
 
-	private List<Object[]> sourceRows;
 	private RowAttribute[] sourceRowsHeader;
-	private List<Map<String, Object>> sources;
 
-	public SourceKeysSegment(RowAttribute[] sourceRowsHeader, List<Object[]> sourceRows) {
+	private DataFrame sourceRows;
+	private DataFrame sources;
+
+	public SourceKeysSegment(RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
 		this.sourceRowsHeader = sourceRowsHeader;
 		this.sourceRows = sourceRows;
 	}
 
-	public List<Object[]> getSourceRows() {
+	public DataFrame getSourceRows() {
 		return sourceRows;
 	}
 
@@ -27,12 +26,11 @@ public class SourceKeysSegment {
 		return sourceRowsHeader;
 	}
 
-	public List<Map<String, Object>> getSources() {
+	public DataFrame getSources() {
 		return sources;
 	}
 
-	public void setSources(List<Map<String, Object>> sources) {
+	public void setSources(DataFrame sources) {
 		this.sources = sources;
 	}
-
 }

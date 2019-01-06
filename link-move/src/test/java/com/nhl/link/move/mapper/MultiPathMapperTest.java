@@ -1,23 +1,19 @@
 package com.nhl.link.move.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import com.nhl.link.move.df.Index;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.mapper.Mapper;
-import com.nhl.link.move.mapper.MultiPathMapper;
-import com.nhl.link.move.mapper.PathMapper;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MultiPathMapperTest {
 
@@ -53,7 +49,7 @@ public class MultiPathMapperTest {
 		source.put("b", 5);
 		source.put("c", 6);
 
-		Object key = mapper.keyForSource(source);
+		Object key = mapper.keyForSource(Index.withNames("a", "b", "c"), new Object[]{"a1", 5, 6});
 		assertTrue(key instanceof Map);
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })

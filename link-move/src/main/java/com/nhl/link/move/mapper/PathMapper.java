@@ -1,12 +1,10 @@
 package com.nhl.link.move.mapper;
 
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.df.map.MapContext;
+import com.nhl.link.move.df.Index;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
-
-import java.util.Map;
 
 public class PathMapper implements Mapper {
 
@@ -45,33 +43,18 @@ public class PathMapper implements Mapper {
         return getOrCreateKeyValueExpression().paramsArray(key);
     }
 
-    @Deprecated
     @Override
-    public Object keyForSource(Map<String, Object> source) {
+    public Object keyForSource(Index index, Object[] source) {
 
         // if source does not contain a key, we must fail, otherwise multiple
         // rows will be incorrectly matched against NULL key
 
-        Object key = source.get(dbPath);
-        if (key == null && !source.containsKey(dbPath)) {
+        try {
+            return index.get(source, dbPath);
+        }
+        catch (IllegalArgumentException e) {
             throw new LmRuntimeException("Source does not contain key path: " + dbPath);
         }
-
-        return key;
-    }
-
-    @Override
-    public Object keyForSource(MapContext context, Object[] source) {
-
-        // if source does not contain a key, we must fail, otherwise multiple
-        // rows will be incorrectly matched against NULL key
-
-        Object key = context.get(source, dbPath);
-        if (key == null) {
-            throw new LmRuntimeException("Source does not contain key path: " + dbPath);
-        }
-
-        return key;
     }
 
     @Override
