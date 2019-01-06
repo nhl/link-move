@@ -16,64 +16,64 @@ import java.util.Map;
 
 /**
  * A task that allows to delete target objects not present in the source.
- * 
+ *
  * @since 1.3
  */
 public class DeleteTask<T extends DataObject> extends BaseTask {
 
-	String extractorName;
-	int batchSize;
-	Class<T> type;
-	Expression targetFilter;
+    String extractorName;
+    int batchSize;
+    Class<T> type;
+    Expression targetFilter;
 
-	private DeleteSegmentProcessor<T> processor;
-	private ITargetCayenneService targetCayenneService;
+    private DeleteSegmentProcessor<T> processor;
+    private ITargetCayenneService targetCayenneService;
 
-	public DeleteTask(String extractorName, int batchSize, Class<T> type, Expression targetFilter,
-			ITargetCayenneService targetCayenneService, ITokenManager tokenManager, DeleteSegmentProcessor<T> processor) {
+    public DeleteTask(
+            String extractorName,
+            int batchSize,
+            Class<T> type,
+            Expression targetFilter,
+            ITargetCayenneService targetCayenneService,
+            ITokenManager tokenManager,
+            DeleteSegmentProcessor<T> processor) {
 
-		super(tokenManager);
+        super(tokenManager);
 
-		this.extractorName = extractorName;
-		this.batchSize = batchSize;
-		this.type = type;
-		this.targetFilter = targetFilter;
-		this.targetCayenneService = targetCayenneService;
-		this.processor = processor;
-	}
+        this.extractorName = extractorName;
+        this.batchSize = batchSize;
+        this.type = type;
+        this.targetFilter = targetFilter;
+        this.targetCayenneService = targetCayenneService;
+        this.processor = processor;
+    }
 
-	@Override
-	public Execution run(Map<String, ?> params) {
+    @Override
+    public Execution run(Map<String, ?> params) {
 
-		try (Execution execution = new Execution("DeleteTask:" + extractorName, params);) {
+        try (Execution execution = new Execution("DeleteTask:" + extractorName, params);) {
 
-			BatchProcessor<T> batchProcessor = createBatchProcessor(execution);
-			ResultIterator<T> data = createTargetSelect();
+            BatchProcessor<T> batchProcessor = createBatchProcessor(execution);
 
-			try {
-				BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
-			} finally {
-				// TODO: ResultIterator should be made Closeable in Cayenne,
-				// then we can use try-with-resources.
-				data.close();
-			}
+            try (ResultIterator<T> data = createTargetSelect()) {
+                BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
+            }
 
-			return execution;
-		}
-	}
+            return execution;
+        }
+    }
 
-	protected ResultIterator<T> createTargetSelect() {
-		ObjectSelect<T> query = ObjectSelect.query(type).where(targetFilter);
-		return targetCayenneService.newContext().iterator(query);
-	}
+    protected ResultIterator<T> createTargetSelect() {
+        ObjectSelect<T> query = ObjectSelect.query(type).where(targetFilter);
+        return targetCayenneService.newContext().iterator(query);
+    }
 
-	protected BatchProcessor<T> createBatchProcessor(final Execution execution) {
-		return segment -> {
+    protected BatchProcessor<T> createBatchProcessor(Execution execution) {
+        return segment -> {
 
-			// executing in the select context..
-			ObjectContext context = segment.get(0).getObjectContext();
-			processor.process(execution, new DeleteSegment<>(context, segment));
-		};
-	}
-
+            // executing in the select context..
+            ObjectContext context = segment.get(0).getObjectContext();
+            processor.process(execution, new DeleteSegment<>(context, segment));
+        };
+    }
 }
