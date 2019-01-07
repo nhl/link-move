@@ -19,6 +19,6 @@ public class DeleteStatsListener {
 
 	@AfterMissingTargetsFiltered
 	public void targetCreated(Execution e, DeleteSegment<?> segment) {
-		e.getStats().incrementDeleted(segment.getMissingTargets().size());
+		e.getStats().incrementDeleted(segment.getMissingTargets().count());
 	}
 }

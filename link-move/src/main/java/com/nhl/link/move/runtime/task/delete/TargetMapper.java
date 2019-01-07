@@ -1,33 +1,26 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.cayenne.DataObject;
-
+import com.nhl.yadf.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
+import org.apache.cayenne.DataObject;
 
 /**
  * @since 1.3
  */
 public class TargetMapper<T extends DataObject> {
 
-	private Mapper mapper;
+    private Mapper mapper;
 
-	public TargetMapper(Mapper mapper) {
-		this.mapper = mapper;
-	}
+    public TargetMapper(Mapper mapper) {
+        this.mapper = mapper;
+    }
 
-	public Map<Object, T> map(List<T> targets) {
+    public DataFrame map(DataFrame df) {
 
-		Map<Object, T> mapped = new HashMap<>();
+        // TODO: report dupes?
 
-		for (T t : targets) {
-			// TODO: report dupes?
-			mapped.put(mapper.keyForTarget(t), t);
-		}
-
-		return mapped;
-	}
+        return df.addColumn(
+                DeleteSegment.KEY_COLUMN,
+                (c, r) -> mapper.keyForTarget((T) c.get(r, DeleteSegment.TARGET_COLUMN)));
+    }
 }

@@ -1,7 +1,6 @@
 package com.nhl.link.move.mapper;
 
-import java.util.Map;
-
+import com.nhl.yadf.Index;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
@@ -16,5 +15,5 @@ public interface Mapper {
 
 	Expression expressionForKey(Object key);
 
-	Object keyForSource(Map<String, Object> source);
+	Object keyForSource(Index index, Object[] source);
 }

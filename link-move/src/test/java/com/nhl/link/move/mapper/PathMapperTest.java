@@ -1,69 +1,51 @@
 package com.nhl.link.move.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.yadf.Index;
 import org.apache.cayenne.DataObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.mapper.PathMapper;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PathMapperTest {
 
-	private PathMapper mapper;
+    private PathMapper mapper;
 
-	@Before
-	public void before() {
-		mapper = new PathMapper("abc");
-	}
+    @Before
+    public void before() {
+        mapper = new PathMapper("abc");
+    }
 
-	@Test
-	public void testKeyForSource() {
+    @Test
+    public void testKeyForSource() {
+        assertEquals("ABC", mapper.keyForSource(Index.withNames("a", "abc"), new Object[]{"A", "ABC"}));
+    }
 
-		Map<String, Object> src = new HashMap<String, Object>();
-		src.put("a", "A");
-		src.put("abc", "ABC");
+    @Test
+    public void testKeyForSource_NullKey() {
+        assertEquals(null, mapper.keyForSource(Index.withNames("a", "abc"), new Object[]{"A", null}));
+    }
 
-		assertEquals("ABC", mapper.keyForSource(src));
-	}
+    @Test(expected = LmRuntimeException.class)
+    public void testKeyForSource_MissingKey() {
+        mapper.keyForSource(Index.withNames("a"), new Object[]{"A"});
+    }
 
-	@Test
-	public void testKeyForSource_NullKey() {
+    @Test
+    public void testKeyForTarget() {
 
-		Map<String, Object> src = new HashMap<String, Object>();
-		src.put("a", "A");
-		src.put("abc", null);
+        DataObject t = mock(DataObject.class);
+        when(t.readProperty("abc")).thenReturn(44);
+        when(t.readNestedProperty("abc")).thenReturn(44);
 
-		assertEquals(null, mapper.keyForSource(src));
-	}
+        assertEquals(44, mapper.keyForTarget(t));
+    }
 
-	@Test(expected = LmRuntimeException.class)
-	public void testKeyForSource_MissingKey() {
-
-		Map<String, Object> src = new HashMap<String, Object>();
-		src.put("a", "A");
-
-		mapper.keyForSource(src);
-	}
-
-	@Test
-	public void testKeyForTarget() {
-
-		DataObject t = mock(DataObject.class);
-		when(t.readProperty("abc")).thenReturn(44);
-		when(t.readNestedProperty("abc")).thenReturn(44);
-
-		assertEquals(44, mapper.keyForTarget(t));
-	}
-
-	@Test
-	public void testExpressionForKey() {
-		assertEquals("abc = \"a\"", mapper.expressionForKey("a").toString());
-	}
+    @Test
+    public void testExpressionForKey() {
+        assertEquals("abc = \"a\"", mapper.expressionForKey("a").toString());
+    }
 }

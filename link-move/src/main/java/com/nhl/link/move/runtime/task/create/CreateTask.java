@@ -6,6 +6,8 @@ import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
+import com.nhl.yadf.DataFrame;
+import com.nhl.yadf.Index;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -64,9 +66,10 @@ public class CreateTask<T extends DataObject> extends BaseTask {
         }
     }
 
-    protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowsHeader) {
+    protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
-        return rows -> processor.process(execution, new CreateSegment<T>(context, rowsHeader, rows));
+        Index columns = toIndex(rowHeader);
+        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.create(columns, rows)));
     }
 
     /**

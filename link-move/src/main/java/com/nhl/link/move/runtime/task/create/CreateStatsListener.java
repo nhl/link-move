@@ -18,6 +18,6 @@ public class CreateStatsListener {
     @AfterTargetsMapped
     public void targetCreated(Execution e, CreateSegment<?> segment) {
         ExecutionStats stats = e.getStats();
-        stats.incrementCreated(segment.getMapped().size());
+        stats.incrementCreated(segment.getMapped().count());
     }
 }

@@ -1,8 +1,11 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.yadf.DataFrame;
+import com.nhl.yadf.Index;
+import com.nhl.yadf.IndexPosition;
+import com.nhl.yadf.map.MapContext;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
-import com.nhl.link.move.runtime.task.SourceTargetPair;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.Cayenne;
@@ -13,14 +16,11 @@ import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.query.ObjectSelect;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * @since 2.6
@@ -35,68 +35,65 @@ public class TargetMerger<T extends DataObject> {
         this.targetEntity = targetEntity;
     }
 
-    public List<SourceTargetPair<T>> merge(ObjectContext context, List<SourceTargetPair<T>> mapped) {
+    public DataFrame merge(ObjectContext context, DataFrame df) {
 
-        List<SourceTargetPair<T>> mappedWithResolvedFks = resolveFks(context, mapped);
+        Index sourceSubIndex = df
+                .getColumns()
+                .dropNames(CreateOrUpdateSegment.TARGET_COLUMN, CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
-        // merged list may be shorter as we are excluding phantom updates...
-        List<SourceTargetPair<T>> merged = new ArrayList<>(mapped.size());
-
-        for (SourceTargetPair<T> t : mappedWithResolvedFks) {
-            if (merge(t)) {
-                merged.add(t);
-            }
-        }
-
-        return merged;
-    }
-
-    protected List<SourceTargetPair<T>> resolveFks(ObjectContext context, List<SourceTargetPair<T>> withUnresolvedFks) {
-        Map<TargetAttribute, Set<Object>> fks = collectFks(withUnresolvedFks.stream().map(SourceTargetPair::getSource));
+        Map<TargetAttribute, Set<Object>> fks = collectFks(df, sourceSubIndex);
         Map<TargetAttribute, Map<Object, Object>> related = fetchRelated(context, fks);
-        return resolveFks(withUnresolvedFks, related);
+
+        Index changeTrackingIndex = df.getColumns().addNames(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
+
+        return df
+                .map((c, r) -> resolveFks(c, r, related))
+                .map(changeTrackingIndex, (c, r) -> merge(c, r, sourceSubIndex))
+                .filter((c, r) -> (boolean) c.get(r, CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
+                .dropColumns(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
     }
 
     /**
      * @return true if the target has changed as a result of the merge.
      */
-    private boolean merge(SourceTargetPair<T> pair) {
+    private Object[] merge(MapContext context, Object[] row, Index sourceSubIndex) {
 
-        boolean changed = pair.isCreated();
+        boolean changed = (boolean) context.get(row, CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+        T target = (T) context.get(row, CreateOrUpdateSegment.TARGET_COLUMN);
 
-        if (pair.getSource().isEmpty()) {
-            return changed;
-        }
+        Object[] targetRow = context.copyToTarget(row);
 
-        T target = pair.getTarget();
+        for (IndexPosition ip : sourceSubIndex) {
+            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(ip.name());
 
-        for (Map.Entry<String, Object> e : pair.getSource().entrySet()) {
-            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
-
-            if (writer.willWrite(target, e.getValue())) {
+            Object val = ip.get(row);
+            if (writer.willWrite(target, val)) {
                 changed = true;
-                writer.write(target, e.getValue());
+                writer.write(target, val);
             }
         }
 
-        return changed;
+        context.set(targetRow, CreateOrUpdateSegment.TARGET_CHANGED_COLUMN, changed);
+        return targetRow;
     }
 
-    private Map<TargetAttribute, Set<Object>> collectFks(Stream<Map<String, Object>> sources) {
+    private Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index sourceSubIndex) {
 
-        // using ForeignKey as a map key will work reliably only if sources already have normalized paths
+        // using TargetAttribute as a map key will work reliably only if sources already have normalized paths
         Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
 
-        sources.forEach(s ->
-                s.forEach((k, v) -> {
+        df.consume((c, row) -> {
+            for (IndexPosition ip : sourceSubIndex.getPositions()) {
+                Object val = ip.get(row);
 
-                    if(v != null) {
-                        targetEntity
-                                .getAttribute(k)
-                                .filter(a -> a.getForeignKey().isPresent())
-                                .ifPresent(a -> fks.computeIfAbsent(a, ak -> new HashSet<>()).add(v));
-                    }
-                }));
+                if (val != null) {
+                    targetEntity
+                            .getAttribute(ip.name())
+                            .filter(a -> a.getForeignKey().isPresent())
+                            .ifPresent(a -> fks.computeIfAbsent(a, ak -> new HashSet<>()).add(val));
+                }
+            }
+        });
 
         return fks;
     }
@@ -136,37 +133,26 @@ public class TargetMerger<T extends DataObject> {
         return related;
     }
 
-    private List<SourceTargetPair<T>> resolveFks(
-            List<SourceTargetPair<T>> unresolved,
+    private Object[] resolveFks(
+            MapContext context,
+            Object[] row,
             Map<TargetAttribute, Map<Object, Object>> related) {
 
         if (related.isEmpty()) {
-            return unresolved;
+            return row;
         }
 
-        List<SourceTargetPair<T>> resolved = new ArrayList<>(unresolved.size());
+        Object[] target = context.copyToTarget(row);
+        related.forEach((attribute, fks) -> {
 
-        for (SourceTargetPair<T> pair : unresolved) {
-            Map<String, Object> originalSrc = pair.getSource();
-            Map<String, Object> resolvedSrc = new HashMap<>(pair.getSource());
+            String path = attribute.getNormalizedPath();
+            Object fk = context.get(row, path);
 
-            related.forEach((attribute, resolvedByFk) -> {
+            // TODO: do we care if an FK is invalid (i.e. "get" returns null) ? For now quietly setting the
+            //  relationship to null.
+            context.set(target, path, fk != null ? fks.get(fk) : null);
+        });
 
-                String path = attribute.getNormalizedPath();
-
-                Object fk = originalSrc.get(path);
-                if (fk != null) {
-                    Object fkObject = resolvedByFk.get(fk);
-
-                    // TODO: do we care if an FK is invalid (i.e. 'fkObject' is null) ? The old impl just quietly set the
-                    // relationship to null. Doing the same here...
-                    resolvedSrc.put(path, fkObject);
-                }
-            });
-
-            resolved.add(new SourceTargetPair<>(resolvedSrc, pair.getTarget(), pair.isCreated()));
-        }
-
-        return resolved;
+        return target;
     }
 }

@@ -1,11 +1,8 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.RowAttribute;
-import com.nhl.link.move.runtime.task.SourceTargetPair;
+import com.nhl.yadf.DataFrame;
 import org.apache.cayenne.ObjectContext;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @param <T>
@@ -13,16 +10,20 @@ import java.util.Map;
  */
 public class CreateSegment<T> {
 
-    private ObjectContext context;
-    private List<Object[]> sourceRows;
-    private RowAttribute[] sourceRowsHeader;
-    private List<Map<String, Object>> sources;
-    private List<SourceTargetPair<T>> mapped;
-    private List<SourceTargetPair<T>> merged;
+    public static final String TARGET_COLUMN = "$lm_target";
+    public static final String TARGET_CREATED_COLUMN = "$lm_target_created";
 
-    public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, List<Object[]> rows) {
+    private ObjectContext context;
+    private RowAttribute[] sourceRowsHeader;
+    private DataFrame sourceRows;
+
+    private DataFrame sources;
+    private DataFrame mapped;
+    private DataFrame merged;
+
+    public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
         this.sourceRowsHeader = sourceRowsHeader;
-        this.sourceRows = rows;
+        this.sourceRows = sourceRows;
         this.context = context;
     }
 
@@ -30,35 +31,35 @@ public class CreateSegment<T> {
         return context;
     }
 
-    public List<Object[]> getSourceRows() {
-        return sourceRows;
-    }
-
     public RowAttribute[] getSourceRowsHeader() {
         return sourceRowsHeader;
     }
 
-    public List<Map<String, Object>> getSources() {
+    public DataFrame getSourceRows() {
+        return sourceRows;
+    }
+
+    public DataFrame getSources() {
         return sources;
     }
 
-    public void setSources(List<Map<String, Object>> translatedSegment) {
+    public void setSources(DataFrame translatedSegment) {
         this.sources = translatedSegment;
     }
 
-    public List<SourceTargetPair<T>> getMerged() {
+    public DataFrame getMerged() {
         return merged;
     }
 
-    public void setMerged(List<SourceTargetPair<T>> merged) {
+    public void setMerged(DataFrame merged) {
         this.merged = merged;
     }
 
-    public List<SourceTargetPair<T>> getMapped() {
+    public DataFrame getMapped() {
         return mapped;
     }
 
-    public void setMapped(List<SourceTargetPair<T>> mapped) {
+    public void setMapped(DataFrame mapped) {
         this.mapped = mapped;
     }
 }

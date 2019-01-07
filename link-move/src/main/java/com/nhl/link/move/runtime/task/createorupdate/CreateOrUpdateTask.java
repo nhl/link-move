@@ -6,6 +6,8 @@ import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
+import com.nhl.yadf.DataFrame;
+import com.nhl.yadf.Index;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -58,7 +60,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         try (Execution execution = new Execution("CreateOrUpdateTask:" + extractorName, params);) {
 
             try (RowReader data = getRowReader(execution, params)) {
-                BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
+                BatchProcessor batchProcessor = createBatchProcessor(execution, data.getHeader());
                 BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
             }
 
@@ -66,9 +68,11 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         }
     }
 
-    protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
+    protected BatchProcessor createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
-        return rows -> processor.process(execution, new CreateOrUpdateSegment<T>(context, rowHeader, rows));
+        Index columns = toIndex(rowHeader);
+        return rows -> processor.process(execution,
+                new CreateOrUpdateSegment<T>(context, rowHeader, DataFrame.create(columns, rows)));
     }
 
     /**
@@ -79,5 +83,4 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         Extractor extractor = extractorService.getExtractor(extractorName);
         return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
     }
-
 }

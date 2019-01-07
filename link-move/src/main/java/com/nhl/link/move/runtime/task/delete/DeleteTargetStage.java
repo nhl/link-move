@@ -1,15 +1,19 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import java.util.List;
-
+import com.nhl.yadf.DataFrame;
 import org.apache.cayenne.ObjectContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @since 1.3
  */
 public class DeleteTargetStage<T> {
 
-	public void delete(ObjectContext context, List<T> missingTargets) {
-		context.deleteObjects(missingTargets);
+	public void delete(ObjectContext context, DataFrame df) {
+		List<T> toDelete = new ArrayList<>((int) df.count());
+		df.consume((c, r) -> toDelete.add((T) c.get(r, DeleteSegment.TARGET_COLUMN)));
+		context.deleteObjects(toDelete);
 	}
 }

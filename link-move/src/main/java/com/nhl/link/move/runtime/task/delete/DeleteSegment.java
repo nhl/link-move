@@ -1,21 +1,23 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.nhl.yadf.DataFrame;
 import org.apache.cayenne.ObjectContext;
+
+import java.util.Set;
 
 public class DeleteSegment<T> {
 
+	public static final String TARGET_COLUMN = "$lm_target";
+	public static final String KEY_COLUMN = "$lm_key";
+
 	private ObjectContext context;
-	private List<T> targets;
+	private DataFrame targets;
 
 	private Set<Object> sourceKeys;
-	private Map<Object, T> mappedTargets;
-	private List<T> missingTargets;
+	private DataFrame mappedTargets;
+	private DataFrame missingTargets;
 
-	public DeleteSegment(ObjectContext context, List<T> targets) {
+	public DeleteSegment(ObjectContext context, DataFrame targets) {
 		this.targets = targets;
 		this.context = context;
 	}
@@ -24,7 +26,7 @@ public class DeleteSegment<T> {
 		return context;
 	}
 
-	public List<T> getTargets() {
+	public DataFrame getTargets() {
 		return targets;
 	}
 
@@ -42,19 +44,19 @@ public class DeleteSegment<T> {
 		this.sourceKeys = sourceKeys;
 	}
 
-	public Map<Object, T> getMappedTargets() {
+	public DataFrame getMappedTargets() {
 		return mappedTargets;
 	}
 
-	public void setMappedTargets(Map<Object, T> mappedTargets) {
+	public void setMappedTargets(DataFrame mappedTargets) {
 		this.mappedTargets = mappedTargets;
 	}
 
-	public List<T> getMissingTargets() {
+	public DataFrame getMissingTargets() {
 		return missingTargets;
 	}
 
-	public void setMissingTargets(List<T> deleted) {
-		this.missingTargets = deleted;
+	public void setMissingTargets(DataFrame missingTargets) {
+		this.missingTargets = missingTargets;
 	}
 }

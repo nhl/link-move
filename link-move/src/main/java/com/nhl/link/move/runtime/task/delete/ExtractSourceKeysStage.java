@@ -43,7 +43,7 @@ public class ExtractSourceKeysStage {
 
 		Set<Object> keys = (Set<Object>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
 		if (keys == null) {
-			throw new LmRuntimeException("Unxpected state of keys subtask. No attribute for key: "
+			throw new LmRuntimeException("Unexpected state of keys subtask. No attribute for key: "
 					+ SourceKeysTask.RESULT_KEY);
 		}
 

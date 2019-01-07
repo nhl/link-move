@@ -16,6 +16,11 @@
 
 		<!-- required runtime dependencies -->
 		<dependency>
+			<groupId>com.nhl.yadf</groupId>
+			<artifactId>yadf</artifactId>
+			<version>${yadf-version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.cayenne</groupId>
 			<artifactId>cayenne-server</artifactId>
 			<scope>compile</scope>
