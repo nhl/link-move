@@ -3,6 +3,7 @@
 * #160 Upgrade Jackson to 2.9.5
 * #162 Remove API deprecated <= v.2.4
 * #163 Replace source Row object with just Object[] 
+* #164 Switch segments data structures to DataFrame 
 
 ## Release 2.6
 
