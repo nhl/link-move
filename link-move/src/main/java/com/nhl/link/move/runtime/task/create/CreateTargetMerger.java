@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.task.create;
 
-import com.nhl.link.move.df.DataFrame;
-import com.nhl.link.move.df.Index;
-import com.nhl.link.move.df.IndexPosition;
+import com.nhl.yadf.DataFrame;
+import com.nhl.yadf.Index;
+import com.nhl.yadf.IndexPosition;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;

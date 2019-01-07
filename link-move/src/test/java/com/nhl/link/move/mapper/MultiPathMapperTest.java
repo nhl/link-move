@@ -1,6 +1,6 @@
 package com.nhl.link.move.mapper;
 
-import com.nhl.link.move.df.Index;
+import com.nhl.yadf.Index;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;

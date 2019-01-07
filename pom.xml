@@ -8,7 +8,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>link-move-dataframe</module>
 		<module>link-move</module>
 		<module>link-move-json</module>
 		<module>link-move-csv</module>
@@ -51,6 +50,7 @@
 		<cayenne-version>4.0</cayenne-version>
 		<jackson-version>2.9.5</jackson-version>
 		<apache-commons-csv-version>1.3</apache-commons-csv-version>
+		<yadf-version>1.0-SNAPSHOT</yadf-version>
 	</properties>
 
 	<scm>
@@ -72,6 +72,31 @@
 			<url>http://maven.objectstyle.org/nexus/content/repositories/linkrest-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>linkmove-snapshots</id>
+			<url>http://maven.objectstyle.org/nexus/content/repositories/linkrest-snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+		<!-- Main artifact repo -->
+		<repository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>

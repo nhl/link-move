@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.df.DataFrame;
-import com.nhl.link.move.df.join.IndexedJoiner;
-import com.nhl.link.move.df.join.JoinSemantics;
+import com.nhl.yadf.DataFrame;
+import com.nhl.yadf.join.IndexedJoiner;
+import com.nhl.yadf.join.JoinSemantics;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;

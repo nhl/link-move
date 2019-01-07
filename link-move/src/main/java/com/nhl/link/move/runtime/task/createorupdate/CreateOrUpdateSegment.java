@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.RowAttribute;
-import com.nhl.link.move.df.DataFrame;
+import com.nhl.yadf.DataFrame;
 import org.apache.cayenne.ObjectContext;
 
 /**
