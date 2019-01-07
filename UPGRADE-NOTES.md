@@ -1,3 +1,15 @@
+## Upgrading to 2.7
+
+### Segment data structures changed to DataFrame [#164](https://github.com/nhl/link-move/issues/164)
+
+All the operation segment data structures have changed from Lists and Maps to
+[YADF DataFrames](https://github.com/nhl/yadf). This unifies the data structures
+and makes them easier to process and debug, but will require adapting custom
+listeners to the new API. Watch for listener compilation errors, and adjust
+them as needed. Note that the names of the standard DataFrame columns
+are declared as String constants in the corresponding segments. E.g.
+`CreateOrUpdateSegment.KEY_COLUMN`, etc.
+
 ## Upgrading to 2.6
 
 ### @AfterTargetsMapped listener won't see the state of new objects [#XXX](https://github.com/nhl/link-move/issues/XXX)
