@@ -16,9 +16,9 @@
 
 		<!-- required runtime dependencies -->
 		<dependency>
-			<groupId>com.nhl.yadf</groupId>
-			<artifactId>yadf</artifactId>
-			<version>${yadf-version}</version>
+			<groupId>com.nhl.dflib</groupId>
+			<artifactId>dflib</artifactId>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cayenne</groupId>

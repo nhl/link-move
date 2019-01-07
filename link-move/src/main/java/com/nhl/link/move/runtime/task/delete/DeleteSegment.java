@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.yadf.DataFrame;
+import com.nhl.dflib.DataFrame;
 import org.apache.cayenne.ObjectContext;
 
 import java.util.Set;

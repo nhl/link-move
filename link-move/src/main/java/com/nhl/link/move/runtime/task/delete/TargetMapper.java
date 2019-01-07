@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.yadf.DataFrame;
+import com.nhl.dflib.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.DataObject;
 

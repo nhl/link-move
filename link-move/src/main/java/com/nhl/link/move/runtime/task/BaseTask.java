@@ -4,7 +4,7 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.SyncToken;
-import com.nhl.yadf.Index;
+import com.nhl.dflib.Index;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
