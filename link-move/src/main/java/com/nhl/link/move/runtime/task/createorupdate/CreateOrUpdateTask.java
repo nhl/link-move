@@ -72,7 +72,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         ObjectContext context = targetCayenneService.newContext();
         Index columns = toIndex(rowHeader);
         return rows -> processor.process(execution,
-                new CreateOrUpdateSegment<T>(context, rowHeader, DataFrame.create(columns, rows)));
+                new CreateOrUpdateSegment<T>(context, rowHeader, DataFrame.fromRowsList(columns, rows)));
     }
 
     /**

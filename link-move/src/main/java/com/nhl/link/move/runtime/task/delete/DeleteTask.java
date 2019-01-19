@@ -1,11 +1,10 @@
 package com.nhl.link.move.runtime.task.delete;
 
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.DataRow;
-import com.nhl.dflib.Index;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -81,7 +80,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             ObjectContext context = rows.get(0).getObjectContext();
 
             // TODO: Guess we need something like a Series object next to the DataFrame to handle single column data
-            DataFrame df = DataFrame.create(columns, rows, t -> DataRow.row(t));
+            DataFrame df = DataFrame.fromObjects(columns, rows, DataFrame::row);
             processor.process(execution, new DeleteSegment<T>(context, df));
         };
     }

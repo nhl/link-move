@@ -15,6 +15,6 @@ public class SourceMapper {
 	}
 
 	public DataFrame map(DataFrame df) {
-		return df.addColumn(CreateOrUpdateSegment.KEY_COLUMN, (c, r) -> mapper.keyForSource(c.getSourceIndex(), r));
+		return df.addColumn(CreateOrUpdateSegment.KEY_COLUMN, (c, r) -> mapper.keyForSource(c, r));
 	}
 }

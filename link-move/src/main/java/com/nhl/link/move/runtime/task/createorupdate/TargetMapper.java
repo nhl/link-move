@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.join.IndexedJoiner;
-import com.nhl.dflib.join.JoinSemantics;
+import com.nhl.dflib.join.JoinType;
+import com.nhl.dflib.map.KeyMapper;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -25,13 +25,11 @@ public class TargetMapper<T extends DataObject> {
             DataFrame sources,
             DataFrame targets) {
 
-        IndexedJoiner<Object> joiner = new IndexedJoiner<>(
-                (c, r) -> c.get(r, CreateOrUpdateSegment.KEY_COLUMN),
-                (c, r) -> mapper.keyForTarget((DataObject) c.get(r, CreateOrUpdateSegment.TARGET_COLUMN)),
-                JoinSemantics.left);
+        KeyMapper lkm = (c, r) -> c.get(r, CreateOrUpdateSegment.KEY_COLUMN);
+        KeyMapper rkm = (c, r) -> mapper.keyForTarget((DataObject) c.get(r, CreateOrUpdateSegment.TARGET_COLUMN));
 
         return sources
-                .join(targets, joiner)
+                .join(targets, lkm, rkm, JoinType.left)
                 .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, (c, r) -> isCreated(c.get(r, CreateOrUpdateSegment.TARGET_COLUMN)))
                 .mapColumn(CreateOrUpdateSegment.TARGET_COLUMN, (c, r) -> createIfMissing(c.get(r, CreateOrUpdateSegment.TARGET_COLUMN), context));
     }

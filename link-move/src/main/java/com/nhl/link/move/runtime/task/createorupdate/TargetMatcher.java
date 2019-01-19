@@ -1,7 +1,6 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.DataRow;
 import com.nhl.dflib.Index;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
@@ -44,6 +43,6 @@ public class TargetMatcher<T> {
     }
 
     private DataFrame toDataFrame(Iterable<T> data) {
-        return DataFrame.create(index, data, DataRow::row);
+        return DataFrame.fromObjects(index, data, DataFrame::row);
     }
 }
