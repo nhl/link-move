@@ -2,7 +2,8 @@ package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
-import com.nhl.dflib.map.MapContext;
+import com.nhl.dflib.row.RowBuilder;
+import com.nhl.dflib.row.RowProxy;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
@@ -20,16 +21,14 @@ public class CreateTargetMapper<T extends DataObject> {
 
     public DataFrame map(ObjectContext cayenneContext, DataFrame sources) {
         Index newColumns = sources.getColumns().addNames(CreateSegment.TARGET_COLUMN, CreateSegment.TARGET_CREATED_COLUMN);
-        return sources.map(newColumns, (c, r) -> mapRow(c, r, cayenneContext));
+        return sources.map(newColumns, (from, to) -> mapRow(from, to, cayenneContext));
     }
 
-    protected Object[] mapRow(MapContext context, Object[] source, ObjectContext cayenneContext) {
-        Object[] target = context.copyToTarget(source);
+    protected void mapRow(RowProxy from, RowBuilder to, ObjectContext cayenneContext) {
+        from.copy(to);
 
-        context.set(target, CreateSegment.TARGET_COLUMN, create(cayenneContext));
-        context.set(target, CreateSegment.TARGET_CREATED_COLUMN, true);
-
-        return target;
+        to.set(CreateSegment.TARGET_COLUMN, create(cayenneContext));
+        to.set(CreateSegment.TARGET_CREATED_COLUMN, true);
     }
 
     protected T create(ObjectContext context) {

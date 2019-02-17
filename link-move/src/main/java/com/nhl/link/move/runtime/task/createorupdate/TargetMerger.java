@@ -3,7 +3,8 @@ package com.nhl.link.move.runtime.task.createorupdate;
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
 import com.nhl.dflib.IndexPosition;
-import com.nhl.dflib.map.MapContext;
+import com.nhl.dflib.row.RowBuilder;
+import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.writer.TargetPropertyWriter;
@@ -47,34 +48,31 @@ public class TargetMerger<T extends DataObject> {
         Index changeTrackingIndex = df.getColumns().addNames(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
 
         return df
-                .map((c, r) -> resolveFks(c, r, related))
-                .map(changeTrackingIndex, (c, r) -> merge(c, r, sourceSubIndex))
-                .filter((c, r) -> (boolean) c.get(r, CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
+                .map((f, t) -> resolveFks(f, t, related))
+                .map(changeTrackingIndex, (f, t) -> merge(f, t, sourceSubIndex))
+                .filter(r -> (boolean) r.get(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
                 .dropColumns(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
     }
 
-    /**
-     * @return true if the target has changed as a result of the merge.
-     */
-    private Object[] merge(MapContext context, Object[] row, Index sourceSubIndex) {
 
-        boolean changed = (boolean) context.get(row, CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
-        T target = (T) context.get(row, CreateOrUpdateSegment.TARGET_COLUMN);
+    private void merge(RowProxy from, RowBuilder to, Index sourceSubIndex) {
 
-        Object[] targetRow = context.copyToTarget(row);
+        boolean changed = (boolean) from.get(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+        T target = (T) from.get(CreateOrUpdateSegment.TARGET_COLUMN);
+
+        from.copy(to);
 
         for (IndexPosition ip : sourceSubIndex) {
             TargetPropertyWriter writer = writerFactory.getOrCreateWriter(ip.name());
 
-            Object val = ip.get(row);
+            Object val = from.get(ip.ordinal());
             if (writer.willWrite(target, val)) {
                 changed = true;
                 writer.write(target, val);
             }
         }
 
-        context.set(targetRow, CreateOrUpdateSegment.TARGET_CHANGED_COLUMN, changed);
-        return targetRow;
+        to.set(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN, changed);
     }
 
     private Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index sourceSubIndex) {
@@ -82,9 +80,9 @@ public class TargetMerger<T extends DataObject> {
         // using TargetAttribute as a map key will work reliably only if sources already have normalized paths
         Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
 
-        df.consume((c, row) -> {
+        df.forEach(r -> {
             for (IndexPosition ip : sourceSubIndex.getPositions()) {
-                Object val = ip.get(row);
+                Object val = r.get(ip.ordinal());
 
                 if (val != null) {
                     targetEntity
@@ -133,26 +131,21 @@ public class TargetMerger<T extends DataObject> {
         return related;
     }
 
-    private Object[] resolveFks(
-            MapContext context,
-            Object[] row,
+    private void resolveFks(
+            RowProxy from,
+            RowBuilder to,
             Map<TargetAttribute, Map<Object, Object>> related) {
 
-        if (related.isEmpty()) {
-            return row;
-        }
+        from.copy(to);
 
-        Object[] target = context.copyToTarget(row);
         related.forEach((attribute, fks) -> {
 
             String path = attribute.getNormalizedPath();
-            Object fk = context.get(row, path);
+            Object fk = from.get(path);
 
             // TODO: do we care if an FK is invalid (i.e. "get" returns null) ? For now quietly setting the
             //  relationship to null.
-            context.set(target, path, fk != null ? fks.get(fk) : null);
+            to.set(path, fk != null ? fks.get(fk) : null);
         });
-
-        return target;
     }
 }

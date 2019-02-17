@@ -1,13 +1,14 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
+import com.nhl.dflib.IndexPosition;
+import com.nhl.dflib.row.RowBuilder;
+import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
-import com.nhl.dflib.IndexPosition;
-import com.nhl.dflib.map.MapContext;
 
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class RowConverter {
     public DataFrame convert(RowAttribute[] rowHeader, DataFrame df) {
         return df.map(
                 convertColumns(rowHeader, df.getColumns()),
-                (c, r) -> convert(rowHeader, c, r));
+                (f, t) -> convert(rowHeader, f, t));
     }
 
     private Index convertColumns(RowAttribute[] rowHeader, Index columns) {
@@ -47,11 +48,11 @@ public class RowConverter {
         return Index.withNames(names);
     }
 
-    private Object[] convert(RowAttribute[] rowHeader, MapContext context, Object[] source) {
+    private void convert(RowAttribute[] rowHeader, RowProxy from, RowBuilder to) {
 
-        IndexPosition[] positions = context.getSourceIndex().getPositions();
+        IndexPosition[] positions = from.getIndex().getPositions();
         int len = positions.length;
-        Object[] converted = context.copyToTarget(source);
+        from.copy(to);
 
         for (int i = 0; i < len; i++) {
 
@@ -61,11 +62,9 @@ public class RowConverter {
             String targetPath = rowHeader[i].getTargetPath();
             Optional<TargetAttribute> attribute = targetEntity.getAttribute(targetPath);
             if (attribute.isPresent()) {
-                converted[i] = convertValue(attribute.get(), context.get(source, i));
+                to.set(i, convertValue(attribute.get(), from.get(i)));
             }
         }
-
-        return converted;
     }
 
     private Object convertValue(TargetAttribute attribute, Object value) {

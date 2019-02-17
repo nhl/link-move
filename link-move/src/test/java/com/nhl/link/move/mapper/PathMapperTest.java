@@ -1,5 +1,6 @@
 package com.nhl.link.move.mapper;
 
+import com.nhl.dflib.row.ArrayRowProxy;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.dflib.Index;
 import org.apache.cayenne.DataObject;
@@ -21,17 +22,17 @@ public class PathMapperTest {
 
     @Test
     public void testKeyForSource() {
-        assertEquals("ABC", mapper.keyForSource(Index.withNames("a", "abc"), new Object[]{"A", "ABC"}));
+        assertEquals("ABC", mapper.keyForSource(new ArrayRowProxy(Index.withNames("a", "abc")).reset("A", "ABC")));
     }
 
     @Test
     public void testKeyForSource_NullKey() {
-        assertEquals(null, mapper.keyForSource(Index.withNames("a", "abc"), new Object[]{"A", null}));
+        assertEquals(null, mapper.keyForSource(new ArrayRowProxy(Index.withNames("a", "abc")).reset("A", null)));
     }
 
     @Test(expected = LmRuntimeException.class)
     public void testKeyForSource_MissingKey() {
-        mapper.keyForSource(Index.withNames("a"), new Object[]{"A"});
+        mapper.keyForSource(new ArrayRowProxy(Index.withNames("a")).reset("A"));
     }
 
     @Test

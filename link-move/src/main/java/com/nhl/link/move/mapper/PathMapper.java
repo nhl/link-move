@@ -1,7 +1,7 @@
 package com.nhl.link.move.mapper;
 
+import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.dflib.Index;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
@@ -44,13 +44,13 @@ public class PathMapper implements Mapper {
     }
 
     @Override
-    public Object keyForSource(Index index, Object[] source) {
+    public Object keyForSource(RowProxy source) {
 
         // if source does not contain a key, we must fail, otherwise multiple
         // rows will be incorrectly matched against NULL key
 
         try {
-            return index.get(source, dbPath);
+            return source.get(dbPath);
         }
         catch (IllegalArgumentException e) {
             throw new LmRuntimeException("Source does not contain key path: " + dbPath);

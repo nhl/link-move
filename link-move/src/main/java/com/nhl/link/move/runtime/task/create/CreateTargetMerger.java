@@ -3,6 +3,7 @@ package com.nhl.link.move.runtime.task.create;
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
 import com.nhl.dflib.IndexPosition;
+import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
@@ -25,18 +26,18 @@ public class CreateTargetMerger<T extends DataObject> {
                 .getColumns()
                 .dropNames(CreateSegment.TARGET_COLUMN, CreateSegment.TARGET_CREATED_COLUMN);
 
-        df.consume((c, r) -> merge(c, r, sourceSubIndex));
+        df.forEach(r -> merge(r, sourceSubIndex));
         return df;
     }
 
-    private void merge(Index columns, Object[] row, Index sourceSubIndex) {
+    private void merge(RowProxy r, Index sourceSubIndex) {
 
-        T target = (T) columns.get(row, CreateOrUpdateSegment.TARGET_COLUMN);
+        T target = (T) r.get(CreateOrUpdateSegment.TARGET_COLUMN);
 
         for (IndexPosition ip : sourceSubIndex) {
             TargetPropertyWriter writer = writerFactory.getOrCreateWriter(ip.name());
 
-            Object val = ip.get(row);
+            Object val = r.get(ip.ordinal());
             if (writer.willWrite(target, val)) {
                 writer.write(target, val);
             }

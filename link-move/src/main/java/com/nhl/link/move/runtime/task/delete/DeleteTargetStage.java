@@ -12,8 +12,8 @@ import java.util.List;
 public class DeleteTargetStage<T> {
 
 	public void delete(ObjectContext context, DataFrame df) {
-		List<T> toDelete = new ArrayList<>((int) df.height());
-		df.consume((c, r) -> toDelete.add((T) c.get(r, DeleteSegment.TARGET_COLUMN)));
+		List<T> toDelete = new ArrayList<>(df.height());
+		df.forEach(r -> toDelete.add((T) r.get(DeleteSegment.TARGET_COLUMN)));
 		context.deleteObjects(toDelete);
 	}
 }

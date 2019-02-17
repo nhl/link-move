@@ -2,7 +2,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.join.JoinType;
-import com.nhl.dflib.map.KeyMapper;
+import com.nhl.dflib.map.Hasher;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -25,13 +25,13 @@ public class TargetMapper<T extends DataObject> {
             DataFrame sources,
             DataFrame targets) {
 
-        KeyMapper lkm = (c, r) -> c.get(r, CreateOrUpdateSegment.KEY_COLUMN);
-        KeyMapper rkm = (c, r) -> mapper.keyForTarget((DataObject) c.get(r, CreateOrUpdateSegment.TARGET_COLUMN));
+        Hasher lkm = r -> r.get(CreateOrUpdateSegment.KEY_COLUMN);
+        Hasher rkm = r -> mapper.keyForTarget((DataObject) r.get(CreateOrUpdateSegment.TARGET_COLUMN));
 
         return sources
                 .join(targets, lkm, rkm, JoinType.left)
-                .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, (c, r) -> isCreated(c.get(r, CreateOrUpdateSegment.TARGET_COLUMN)))
-                .mapColumn(CreateOrUpdateSegment.TARGET_COLUMN, (c, r) -> createIfMissing(c.get(r, CreateOrUpdateSegment.TARGET_COLUMN), context));
+                .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, r -> isCreated(r.get(CreateOrUpdateSegment.TARGET_COLUMN)))
+                .mapColumn(CreateOrUpdateSegment.TARGET_COLUMN, r -> createIfMissing(r.get(CreateOrUpdateSegment.TARGET_COLUMN), context));
     }
 
     private boolean isCreated(Object v) {

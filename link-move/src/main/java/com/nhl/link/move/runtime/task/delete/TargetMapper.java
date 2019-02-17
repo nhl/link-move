@@ -21,6 +21,6 @@ public class TargetMapper<T extends DataObject> {
 
         return df.addColumn(
                 DeleteSegment.KEY_COLUMN,
-                (c, r) -> mapper.keyForTarget((T) c.get(r, DeleteSegment.TARGET_COLUMN)));
+                r -> mapper.keyForTarget((T) r.get(DeleteSegment.TARGET_COLUMN)));
     }
 }

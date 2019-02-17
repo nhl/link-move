@@ -31,7 +31,7 @@ public class TargetMatcher<T> {
 
         Map<Object, Expression> expressions = new LinkedHashMap<>();
 
-        df.consume((c, r) -> expressions.computeIfAbsent(c.get(r, CreateOrUpdateSegment.KEY_COLUMN),
+        df.forEach(r -> expressions.computeIfAbsent(r.get(CreateOrUpdateSegment.KEY_COLUMN),
                 key -> mapper.expressionForKey(key)));
 
         // no keys (?)
