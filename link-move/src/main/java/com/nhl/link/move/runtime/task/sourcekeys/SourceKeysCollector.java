@@ -1,10 +1,9 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.nhl.dflib.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
+
+import java.util.Set;
 
 /**
  * @since 1.3
@@ -16,11 +15,9 @@ public class SourceKeysCollector {
 		this.mapper = mapper;
 	}
 
-	public void collectSourceKeys(Set<Object> keys, List<Map<String, Object>> sources) {
+	public void collectSourceKeys(Set<Object> keys, DataFrame sources) {
 
-		for (Map<String, Object> s : sources) {
-			// TODO: report dupes?
-			keys.add(mapper.keyForSource(s));
-		}
+		// TODO: report dupes?
+		sources.forEach(r -> keys.add(mapper.keyForSource(r)));
 	}
 }

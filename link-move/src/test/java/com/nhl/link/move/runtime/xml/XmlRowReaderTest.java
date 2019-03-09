@@ -1,22 +1,18 @@
 package com.nhl.link.move.runtime.xml;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
-import java.io.StringReader;
-import java.util.Iterator;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import com.nhl.link.move.BaseRowAttribute;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.nhl.link.move.Row;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.io.StringReader;
+import java.util.Iterator;
+
+import static org.junit.Assert.*;
 
 public class XmlRowReaderTest {
 
@@ -50,16 +46,15 @@ public class XmlRowReaderTest {
 	}
 
 	@Test
-	public void testIterator() throws Exception {
-		Iterator<Row> rowIterator = xmlRowReader.iterator();
+	public void testIterator() {
+		Iterator<Object[]> rowIterator = xmlRowReader.iterator();
 		int i = 0;
 
 		while (rowIterator.hasNext()) {
 			i++;
-			Row row = rowIterator.next();
-			assertArrayEquals(attributes, row.attributes());
-			assertEquals("v" + i + "1", (String) row.get(attributes[0]));
-			assertEquals("v" + i + "2", (String) row.get(attributes[1]));
+			Object[] row = rowIterator.next();
+			assertEquals("v" + i + "1", row[0]);
+			assertEquals("v" + i + "2", row[1]);
 		}
 
 		assertEquals(3, i);

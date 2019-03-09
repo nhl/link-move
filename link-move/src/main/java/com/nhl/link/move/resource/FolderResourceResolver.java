@@ -47,11 +47,6 @@ public class FolderResourceResolver implements ResourceResolver {
 
     protected File getFile(String name) {
 
-        if (!name.endsWith(".xml")) {
-            complainOfExtension(name);
-            name += ".xml";
-        }
-
         File file = new File(baseDir, name);
 
         if (!file.exists()) {
@@ -63,14 +58,5 @@ public class FolderResourceResolver implements ResourceResolver {
         }
 
         return file;
-    }
-
-    /**
-     * @param name
-     * @deprecated since 2.4
-     */
-    @Deprecated
-    private void complainOfExtension(String name) {
-        LOGGER.warn("*** Implicit extension name is deprecated. Use '{}.xml' instead of '{}'", name, name);
     }
 }

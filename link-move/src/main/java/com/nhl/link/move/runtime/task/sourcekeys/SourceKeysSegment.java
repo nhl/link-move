@@ -1,32 +1,36 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
-import java.util.List;
-import java.util.Map;
-
-import com.nhl.link.move.Row;
+import com.nhl.link.move.RowAttribute;
+import com.nhl.dflib.DataFrame;
 
 /**
  * @since 1.3
  */
 public class SourceKeysSegment {
 
-	private List<Row> sourceRows;
-	private List<Map<String, Object>> sources;
+	private RowAttribute[] sourceRowsHeader;
 
-	public SourceKeysSegment(List<Row> sourceRows) {
+	private DataFrame sourceRows;
+	private DataFrame sources;
+
+	public SourceKeysSegment(RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
+		this.sourceRowsHeader = sourceRowsHeader;
 		this.sourceRows = sourceRows;
 	}
 
-	public List<Row> getSourceRows() {
+	public DataFrame getSourceRows() {
 		return sourceRows;
 	}
 
-	public List<Map<String, Object>> getSources() {
+	public RowAttribute[] getSourceRowsHeader() {
+		return sourceRowsHeader;
+	}
+
+	public DataFrame getSources() {
 		return sources;
 	}
 
-	public void setSources(List<Map<String, Object>> sources) {
+	public void setSources(DataFrame sources) {
 		this.sources = sources;
 	}
-
 }

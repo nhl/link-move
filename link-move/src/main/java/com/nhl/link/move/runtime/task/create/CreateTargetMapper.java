@@ -1,13 +1,11 @@
 package com.nhl.link.move.runtime.task.create;
 
-import com.nhl.link.move.runtime.task.SourceTargetPair;
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
+import com.nhl.dflib.row.RowBuilder;
+import com.nhl.dflib.row.RowProxy;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @param <T>
@@ -21,19 +19,23 @@ public class CreateTargetMapper<T extends DataObject> {
         this.type = type;
     }
 
-    public List<SourceTargetPair<T>> map(ObjectContext context, Collection<Map<String, Object>> sources) {
-
-        List<SourceTargetPair<T>> result = new ArrayList<>(sources.size());
-
-        for (Map<String, Object> s : sources) {
-            T t = create(context, type, s);
-            result.add(new SourceTargetPair<>(s, t, true));
-        }
-
-        return result;
+    public DataFrame map(ObjectContext cayenneContext, DataFrame sources) {
+        Index newColumns = sources.getColumns().addNames(CreateSegment.TARGET_COLUMN, CreateSegment.TARGET_CREATED_COLUMN);
+        return sources.map(newColumns, (from, to) -> mapRow(from, to, cayenneContext));
     }
 
-    protected T create(ObjectContext context, Class<T> type, Map<String, Object> source) {
+    protected void mapRow(RowProxy from, RowBuilder to, ObjectContext cayenneContext) {
+        from.copy(to);
+
+        to.set(CreateSegment.TARGET_COLUMN, create(cayenneContext));
+        to.set(CreateSegment.TARGET_CREATED_COLUMN, true);
+    }
+
+    protected T create(ObjectContext context) {
+
+        // Note that "context.newObject" is an impure function. Though we don't see its undesired side effects on
+        // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
+
         return context.newObject(type);
     }
 }

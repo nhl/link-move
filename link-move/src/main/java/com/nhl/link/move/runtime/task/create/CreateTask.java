@@ -2,10 +2,12 @@ package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.Row;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -15,7 +17,6 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,9 +57,8 @@ public class CreateTask<T extends DataObject> extends BaseTask {
 
         try (Execution execution = new Execution("CreateTask:" + extractorName, params)) {
 
-            BatchProcessor<Row> batchProcessor = createBatchProcessor(execution);
-
             try (RowReader data = getRowReader(execution, params)) {
+                BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
                 BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
             }
 
@@ -66,16 +66,10 @@ public class CreateTask<T extends DataObject> extends BaseTask {
         }
     }
 
-    protected BatchProcessor<Row> createBatchProcessor(final Execution execution) {
-        return new BatchProcessor<Row>() {
-
-            ObjectContext context = targetCayenneService.newContext();
-
-            @Override
-            public void process(List<Row> rows) {
-                processor.process(execution, new CreateSegment<T>(context, rows));
-            }
-        };
+    protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
+        ObjectContext context = targetCayenneService.newContext();
+        Index columns = toIndex(rowHeader);
+        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.fromRowsList(columns, rows)));
     }
 
     /**

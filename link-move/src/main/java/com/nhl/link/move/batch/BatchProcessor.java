@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface BatchProcessor<S> {
 
-	void process(List<S> segment);
+	void process(List<S> rows);
 }

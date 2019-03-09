@@ -1,12 +1,13 @@
 package com.nhl.link.move.runtime.task.create;
 
-import com.nhl.link.move.runtime.task.SourceTargetPair;
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
+import com.nhl.dflib.IndexPosition;
+import com.nhl.dflib.row.RowProxy;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.DataObject;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @since 2.6
@@ -19,25 +20,27 @@ public class CreateTargetMerger<T extends DataObject> {
         this.writerFactory = writerFactory;
     }
 
-    public List<SourceTargetPair<T>> merge(List<SourceTargetPair<T>> mapped) {
-        mapped.forEach(this::merge);
-        return mapped;
+    public DataFrame merge(DataFrame df) {
+
+        Index sourceSubIndex = df
+                .getColumns()
+                .dropNames(CreateSegment.TARGET_COLUMN, CreateSegment.TARGET_CREATED_COLUMN);
+
+        df.forEach(r -> merge(r, sourceSubIndex));
+        return df;
     }
 
-    /**
-     * @return true if the target has changed as a result of the merge.
-     */
-    private void merge(SourceTargetPair<T> pair) {
+    private void merge(RowProxy r, Index sourceSubIndex) {
 
-        T target = pair.getTarget();
+        T target = (T) r.get(CreateOrUpdateSegment.TARGET_COLUMN);
 
-        for (Map.Entry<String, Object> e : pair.getSource().entrySet()) {
-            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(e.getKey());
+        for (IndexPosition ip : sourceSubIndex) {
+            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(ip.name());
 
-            if (writer.willWrite(target, e.getValue())) {
-                writer.write(target, e.getValue());
+            Object val = r.get(ip.ordinal());
+            if (writer.willWrite(target, val)) {
+                writer.write(target, val);
             }
         }
-
     }
 }

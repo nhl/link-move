@@ -1,13 +1,11 @@
 package com.nhl.link.move.mapper;
 
-import java.util.Map;
-
+import com.nhl.dflib.row.RowProxy;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
 /**
- * A mapper that does transparent conversion between object key value and a
- * map-friendly key.
+ * A mapper that does transparent conversion between object key value and a map-friendly key.
  * 
  * @since 1.1
  */
@@ -27,7 +25,7 @@ public class SafeMapKeyMapper implements Mapper {
 	}
 
 	@Override
-	public Object keyForSource(Map<String, Object> source) {
+	public Object keyForSource(RowProxy source) {
 		return keyAdapter.toMapKey(delegate.keyForSource(source));
 	}
 

@@ -9,9 +9,11 @@ import java.util.Iterator;
  */
 public class CollectionRowReader implements RowReader {
 
-	private Collection<Row> rows;
+	private RowAttribute[] rowHeader;
+	private Collection<Object[]> rows;
 
-	public CollectionRowReader(Collection<Row> rows) {
+	public CollectionRowReader(RowAttribute[] rowHeader, Collection<Object[]> rows) {
+		this.rowHeader = rowHeader;
 		this.rows = rows;
 	}
 
@@ -21,7 +23,12 @@ public class CollectionRowReader implements RowReader {
 	}
 
 	@Override
-	public Iterator<Row> iterator() {
+	public RowAttribute[] getHeader() {
+		return rowHeader;
+	}
+
+	@Override
+	public Iterator<Object[]> iterator() {
 		return rows.iterator();
 	}
 

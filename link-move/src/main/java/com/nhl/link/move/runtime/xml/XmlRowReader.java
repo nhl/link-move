@@ -1,50 +1,75 @@
 package com.nhl.link.move.runtime.xml;
 
-import com.nhl.link.move.Row;
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.util.Iterator;
 
 /**
  * @since 1.4
  */
 public class XmlRowReader implements RowReader {
-	private final XmlRowAttribute[] attributes;
-	private final NodeList nodes;
 
-	public XmlRowReader(XmlRowAttribute[] attributes, NodeList nodes) {
-		this.attributes = attributes;
-		this.nodes = nodes;
-	}
+    private final XmlRowAttribute[] header;
+    private final NodeList nodes;
 
-	@Override
-	public void close() {
-		// no need to close anything
-	}
+    public XmlRowReader(XmlRowAttribute[] header, NodeList nodes) {
+        this.header = header;
+        this.nodes = nodes;
+    }
 
-	@Override
-	public Iterator<Row> iterator() {
-		return new Iterator<Row>() {
-			private int i = 0;
+    @Override
+    public RowAttribute[] getHeader() {
+        return header;
+    }
 
-			@Override
-			public boolean hasNext() {
-				return i < nodes.getLength();
-			}
+    @Override
+    public void close() {
+        // no need to close anything
+    }
 
-			@Override
-			public Row next() {
-				Node node = nodes.item(i++);
-				return new XmlNodeRow(attributes, node);
-			}
+    @Override
+    public Iterator<Object[]> iterator() {
+        return new Iterator<Object[]>() {
+            private int i = 0;
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		};
-	}
+            @Override
+            public boolean hasNext() {
+                return i < nodes.getLength();
+            }
+
+            @Override
+            public Object[] next() {
+                return fromNode(nodes.item(i++));
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    private Object[] fromNode(Node node) {
+
+        Object[] row = new Object[header.length];
+
+        for (int i = 0; i < header.length; i++) {
+            row[i] = valueFromNode(header[i], node);
+        }
+
+        return row;
+    }
+
+    private Object valueFromNode(XmlRowAttribute attribute, Node node) {
+        try {
+            return attribute.getSourceExpression().evaluate(node);
+        } catch (XPathExpressionException e) {
+            throw new LmRuntimeException("Failed to evaluate xPath expression: " + attribute.getSourceName(), e);
+        }
+    }
 }

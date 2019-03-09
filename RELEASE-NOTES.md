@@ -1,9 +1,18 @@
+## Release 2.7
+
+* #160 Upgrade Jackson to 2.9.5
+* #162 Remove API deprecated <= v.2.4
+* #163 Replace source Row object with just Object[] 
+* #164 Switch segments data structures to DataFrame 
+* #165 Upgrade Jackson to 2.9.8
+
 ## Release 2.6
 
 * #137 CreateTask for data migrations
 * #145 Batch-fault and/or cache target to-one relationships (performance)
 * #146 Cayenne 4.0.RC1 is out... upgrading
 * #149 Both new and updated targets must be merged during the "merge" stage
+* #155 Upgrade to Cayenne 4.0 final
 
 ## Release 2.5
 
