@@ -102,7 +102,9 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.nhl.dflib</groupId>
-				<artifactId>dflib</artifactId>
+				<artifactId>dflib-bom</artifactId>
+				<type>pom</type>
+				<scope>import</scope>
 				<version>${dflib-version}</version>
 			</dependency>
 			<dependency>
