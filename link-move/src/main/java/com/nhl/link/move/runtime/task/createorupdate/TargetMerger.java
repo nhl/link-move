@@ -2,7 +2,6 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
-import com.nhl.dflib.IndexPosition;
 import com.nhl.dflib.row.RowBuilder;
 import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
@@ -39,16 +38,16 @@ public class TargetMerger<T extends DataObject> {
     public DataFrame merge(ObjectContext context, DataFrame df) {
 
         Index sourceSubIndex = df
-                .getColumns()
-                .dropNames(CreateOrUpdateSegment.TARGET_COLUMN, CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+                .getColumnsIndex()
+                .dropLabels(CreateOrUpdateSegment.TARGET_COLUMN, CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
         Map<TargetAttribute, Set<Object>> fks = collectFks(df, sourceSubIndex);
         Map<TargetAttribute, Map<Object, Object>> related = fetchRelated(context, fks);
 
-        Index changeTrackingIndex = df.getColumns().addNames(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
+        Index changeTrackingIndex = df.getColumnsIndex().addLabels(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
 
         return df
-                .map((f, t) -> resolveFks(f, t, related))
+                .map(df.getColumnsIndex(), (f, t) -> resolveFks(f, t, related))
                 .map(changeTrackingIndex, (f, t) -> merge(f, t, sourceSubIndex))
                 .filter(r -> (boolean) r.get(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
                 .dropColumns(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
@@ -62,10 +61,10 @@ public class TargetMerger<T extends DataObject> {
 
         from.copy(to);
 
-        for (IndexPosition ip : sourceSubIndex) {
-            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(ip.name());
+        for (String label : sourceSubIndex) {
+            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(label);
 
-            Object val = from.get(ip.ordinal());
+            Object val = from.get(sourceSubIndex.position(label));
             if (writer.willWrite(target, val)) {
                 changed = true;
                 writer.write(target, val);
@@ -81,12 +80,12 @@ public class TargetMerger<T extends DataObject> {
         Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
 
         df.forEach(r -> {
-            for (IndexPosition ip : sourceSubIndex.getPositions()) {
-                Object val = r.get(ip.ordinal());
+            for (String label : sourceSubIndex) {
+                Object val = r.get(sourceSubIndex.position(label));
 
                 if (val != null) {
                     targetEntity
-                            .getAttribute(ip.name())
+                            .getAttribute(label)
                             .filter(a -> a.getForeignKey().isPresent())
                             .ifPresent(a -> fks.computeIfAbsent(a, ak -> new HashSet<>()).add(val));
                 }

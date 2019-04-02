@@ -2,7 +2,6 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
-import com.nhl.dflib.IndexPosition;
 import com.nhl.dflib.row.RowBuilder;
 import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.RowAttribute;
@@ -29,32 +28,31 @@ public class RowConverter {
 
     public DataFrame convert(RowAttribute[] rowHeader, DataFrame df) {
         return df.map(
-                convertColumns(rowHeader, df.getColumns()),
+                convertColumns(rowHeader, df.getColumnsIndex()),
                 (f, t) -> convert(rowHeader, f, t));
     }
 
     private Index convertColumns(RowAttribute[] rowHeader, Index columns) {
 
-        IndexPosition[] positions = columns.getPositions();
-        String[] names = new String[positions.length];
+        int w = columns.size();
+        String[] names = new String[w];
 
-        for (int i = 0; i < positions.length; i++) {
+        for (int i = 0; i < w; i++) {
 
             String targetPath = rowHeader[i].getTargetPath();
             Optional<TargetAttribute> attribute = targetEntity.getAttribute(targetPath);
             names[i] = attribute.map(TargetAttribute::getNormalizedPath).orElse(targetPath);
         }
 
-        return Index.withNames(names);
+        return Index.forLabels(names);
     }
 
     private void convert(RowAttribute[] rowHeader, RowProxy from, RowBuilder to) {
 
-        IndexPosition[] positions = from.getIndex().getPositions();
-        int len = positions.length;
+        int w = from.getIndex().size();
         from.copy(to);
 
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < w; i++) {
 
             // TODO: should we "compile" this info for the header upfront and apply it to every row? In many cases
             //  we won't even need to copy rows ...

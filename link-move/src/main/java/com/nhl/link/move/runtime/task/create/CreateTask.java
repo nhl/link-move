@@ -69,7 +69,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
         Index columns = toIndex(rowHeader);
-        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.fromListOfRows(columns, rows)));
+        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.forListOfRows(columns, rows)));
     }
 
     /**

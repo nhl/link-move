@@ -24,7 +24,7 @@ public class TargetMatcher<T> {
     public TargetMatcher(Class<T> type, Mapper mapper) {
         this.type = type;
         this.mapper = mapper;
-        this.index = Index.withNames(CreateOrUpdateSegment.TARGET_COLUMN);
+        this.index = Index.forLabels(CreateOrUpdateSegment.TARGET_COLUMN);
     }
 
     public DataFrame match(ObjectContext context, DataFrame df) {
@@ -43,6 +43,6 @@ public class TargetMatcher<T> {
     }
 
     private DataFrame toDataFrame(Iterable<T> data) {
-        return DataFrame.fromObjects(index, data, DataFrame::row);
+        return DataFrame.forObjects(index, data, DataFrame::row);
     }
 }

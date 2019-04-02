@@ -72,7 +72,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 
     protected BatchProcessor<T> createBatchProcessor(Execution execution) {
 
-        Index columns = Index.withNames(DeleteSegment.TARGET_COLUMN);
+        Index columns = Index.forLabels(DeleteSegment.TARGET_COLUMN);
 
         return rows -> {
 
@@ -80,7 +80,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             ObjectContext context = rows.get(0).getObjectContext();
 
             // TODO: Guess we need something like a Series object next to the DataFrame to handle single column data
-            DataFrame df = DataFrame.fromObjects(columns, rows, DataFrame::row);
+            DataFrame df = DataFrame.forObjects(columns, rows, DataFrame::row);
             processor.process(execution, new DeleteSegment<T>(context, df));
         };
     }
