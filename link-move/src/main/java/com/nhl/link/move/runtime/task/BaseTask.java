@@ -30,7 +30,7 @@ public abstract class BaseTask implements LmTask {
             columns[i] = rowHeader[i].getSourceName();
         }
 
-        return Index.withNames(columns);
+        return Index.forLabels(columns);
     }
 
     @Override

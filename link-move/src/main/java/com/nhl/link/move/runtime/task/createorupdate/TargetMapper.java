@@ -31,7 +31,7 @@ public class TargetMapper<T extends DataObject> {
         return sources
                 .join(targets, lkm, rkm, JoinType.left)
                 .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, r -> isCreated(r.get(CreateOrUpdateSegment.TARGET_COLUMN)))
-                .mapColumn(CreateOrUpdateSegment.TARGET_COLUMN, r -> createIfMissing(r.get(CreateOrUpdateSegment.TARGET_COLUMN), context));
+                .convertColumn(CreateOrUpdateSegment.TARGET_COLUMN, r -> createIfMissing(r, context));
     }
 
     private boolean isCreated(Object v) {

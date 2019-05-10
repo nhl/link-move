@@ -20,7 +20,7 @@ public class CreateTargetMapper<T extends DataObject> {
     }
 
     public DataFrame map(ObjectContext cayenneContext, DataFrame sources) {
-        Index newColumns = sources.getColumns().addNames(CreateSegment.TARGET_COLUMN, CreateSegment.TARGET_CREATED_COLUMN);
+        Index newColumns = sources.getColumnsIndex().addLabels(CreateSegment.TARGET_COLUMN, CreateSegment.TARGET_CREATED_COLUMN);
         return sources.map(newColumns, (from, to) -> mapRow(from, to, cayenneContext));
     }
 
