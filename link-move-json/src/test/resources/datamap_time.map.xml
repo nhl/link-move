@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap http://cayenne.apache.org/schema/9/modelMap.xsd"
+	 project-version="9">
+	<property name="defaultPackage" value="com.nhl.link.move.model.cayenne"/>
+	<property name="defaultSchema" value="itest"/>
+	<db-entity name="test_time" schema="itest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="localDate" type="DATE"/>
+		<db-attribute name="localDateTime" type="TIMESTAMP"/>
+		<db-attribute name="localTime" type="TIME"/>
+	</db-entity>
+	<obj-entity name="TestTime" className="com.nhl.link.move.model.cayenne.TestTime" dbEntityName="test_time">
+		<obj-attribute name="localDate" type="java.time.LocalDate" db-attribute-path="localDate"/>
+		<obj-attribute name="localDateTime" type="java.time.LocalDateTime" db-attribute-path="localDateTime"/>
+		<obj-attribute name="localTime" type="java.time.LocalTime" db-attribute-path="localTime"/>
+	</obj-entity>
+</data-map>

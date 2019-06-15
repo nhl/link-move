@@ -13,6 +13,10 @@
     <name>Library: link-move-json</name>
     <description>JSON extractor for link-move framework.</description>
 
+    <properties>
+        <bootique.version>0.25</bootique.version>
+    </properties>
+
     <dependencies>
         <!-- required runtime dependencies -->
         <dependency>
@@ -32,9 +36,28 @@
 			<scope>compile</scope>
 		</dependency>
 
-        <!-- unit test deps -->
-		
-		
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>io.bootique.cayenne</groupId>
+            <artifactId>bootique-cayenne-test</artifactId>
+            <version>${bootique.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.bootique.jdbc</groupId>
+            <artifactId>bootique-jdbc-tomcat</artifactId>
+            <version>${bootique.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.bootique.linkmove</groupId>
+            <artifactId>bootique-linkmove</artifactId>
+            <version>${bootique.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

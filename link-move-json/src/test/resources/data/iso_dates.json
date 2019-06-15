@@ -1,0 +1,22 @@
+{
+  "Data":[
+    {
+      "id": "1",
+      "localDate": "2018-01-01",
+      "localTime": "00:00:00",
+      "localDateTime":"2018-01-01T00:00:00"
+    },
+    {
+      "id": "2",
+      "localDate": "0002-02-02",
+      "localTime": "10:15:30",
+      "localDateTime":"0002-02-02T10:15:30"
+    },
+    {
+      "id": "3",
+      "localDate": "1969-03-03",
+      "localTime": "12:34:56",
+      "localDateTime":"1969-03-03T12:34:56"
+    }
+  ]
+}

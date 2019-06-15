@@ -45,4 +45,11 @@ public class LocalTimeConverterTest {
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
         assertEquals(localTime, CONVERTER.convert(timestamp));
     }
+
+    @Test
+    public void testConvert_string() {
+        LocalTime localTime = LocalTime.of(10, 15, 30);
+        String time = "10:15:30";
+        assertEquals(localTime, CONVERTER.convert(time));
+    }
 }

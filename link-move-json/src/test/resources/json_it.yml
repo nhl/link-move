@@ -1,0 +1,28 @@
+jdbc:
+ ds:
+  url: jdbc:derby:target/derbysrc;create=true;
+  username: sa
+  initialSize: 1
+  maxActive: 20
+  minIdle: 1
+  maxIdle: 4
+  validationQuery: "select 1;"
+  testWhileIdle: true
+  removeAbandoned: true
+  abandonWhenPercentageFull: 80
+  removeAbandonedTimeout: 300
+  jdbcInterceptors: ResetAbandonedTimer
+  rollbackOnReturn: true
+  defaultAutoCommit: false
+
+cayenne:
+  datasource: ds
+  configs:
+    - cayenne-project.xml
+
+linkmove:
+  connectorFactories:
+      - type: jdbc
+      - type: uri
+        connectors:
+         data: "classpath:data/iso_dates.json"

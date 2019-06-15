@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+        xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
+    <type>json</type>
+    <connectorId>data</connectorId>
+    <extractor>
+        <attributes>
+            <attribute>
+                <type>java.lang.Integer</type>
+                <source>id</source>
+                <target>db:id</target>
+            </attribute>
+            <attribute>
+                <type>java.lang.String</type>
+                <source>localDate</source>
+                <target>db:localDate</target>
+            </attribute>
+            <attribute>
+                <type>java.lang.String</type>
+                <source>localTime</source>
+                <target>db:localTime</target>
+            </attribute>
+            <attribute>
+                <type>java.lang.String</type>
+                <source>localDateTime</source>
+                <target>db:localDateTime</target>
+            </attribute>
+        </attributes>
+        <properties>
+            <extractor.json.path>$.Data[*]</extractor.json.path>
+        </properties>
+    </extractor>
+</config>
