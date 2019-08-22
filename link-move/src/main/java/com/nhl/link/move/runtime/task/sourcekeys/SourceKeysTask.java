@@ -65,7 +65,7 @@ public class SourceKeysTask extends BaseTask {
 
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         Index columns = toIndex(rowHeader);
-        return rows -> processor.process(execution, new SourceKeysSegment(rowHeader, DataFrame.forRows(columns, rows)));
+        return rows -> processor.process(execution, new SourceKeysSegment(rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
     }
 
     /**

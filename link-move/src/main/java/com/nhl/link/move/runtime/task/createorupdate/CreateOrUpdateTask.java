@@ -68,11 +68,11 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         }
     }
 
-    protected BatchProcessor createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
+    protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
         Index columns = toIndex(rowHeader);
         return rows -> processor.process(execution,
-                new CreateOrUpdateSegment<T>(context, rowHeader, DataFrame.forRows(columns, rows)));
+                new CreateOrUpdateSegment<>(context, rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
     }
 
     /**

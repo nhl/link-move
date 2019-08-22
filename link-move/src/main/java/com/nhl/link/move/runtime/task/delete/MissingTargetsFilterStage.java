@@ -13,6 +13,6 @@ public class MissingTargetsFilterStage<T> {
             DataFrame mappedTargets,
             Set<Object> sourceKeys) {
 
-        return mappedTargets.filter(r -> !sourceKeys.contains(r.get(DeleteSegment.KEY_COLUMN)));
+        return mappedTargets.filterRows(r -> !sourceKeys.contains(r.get(DeleteSegment.KEY_COLUMN)));
     }
 }

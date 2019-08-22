@@ -48,8 +48,9 @@ public class TargetMerger<T extends DataObject> {
 
         return df
                 .map(df.getColumnsIndex(), (f, t) -> resolveFks(f, t, related))
+                // TODO: rebuild "$lm_target" column individually instead of rebuilding the entire DataFrame
                 .map(changeTrackingIndex, (f, t) -> merge(f, t, sourceSubIndex))
-                .filter(r -> (boolean) r.get(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
+                .filterRows(r -> (boolean) r.get(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
                 .dropColumns(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
     }
 

@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.task.delete;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
+import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
@@ -78,10 +79,10 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 
             // executing in the select context..
             ObjectContext context = rows.get(0).getObjectContext();
-
-            // TODO: Guess we need something like a Series object next to the DataFrame to handle single column data
-            DataFrame df = DataFrame.forObjects(columns, rows, DataFrame::row);
-            processor.process(execution, new DeleteSegment<T>(context, df));
+            DataFrame df = DataFrame.newFrame(columns)
+                    // TODO: when we can upgrade to 0.7, switch to Series.forData(rows)
+                    .columns(Series.forData(rows.toArray()));
+            processor.process(execution, new DeleteSegment<>(context, df));
         };
     }
 }
