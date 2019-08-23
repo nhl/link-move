@@ -6,6 +6,7 @@
 * #164 Switch segments data structures to DataFrame 
 * #165 Upgrade Jackson to 2.9.8
 * #167 Update Jackson to 2.10.0.pr1
+* #168 Cayenne 4.1 binary compatibility
 
 ## Release 2.6
 

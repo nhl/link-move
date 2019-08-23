@@ -84,12 +84,11 @@ public class DefaultTargetEntity implements TargetEntity {
 
     private boolean hasAttributeOrRelationship(String path) {
         if (path.startsWith(ASTDbPath.DB_PREFIX)) {
-            path = path.substring(ASTDbPath.DB_PREFIX.length());
-            return entity.getDbEntity().getAttributeMap().containsKey(path)
-                    || entity.getDbEntity().getRelationshipMap().containsKey(path);
+            String dbPath = path.substring(ASTDbPath.DB_PREFIX.length());
+            DbEntity dbEntity = entity.getDbEntity();
+            return dbEntity.getAttribute(dbPath) != null || dbEntity.getRelationship(dbPath) != null;
         } else {
-            return entity.getAttributeMap().containsKey(path)
-                    || entity.getRelationshipMap().containsKey(path);
+            return entity.getAttribute(path) != null || entity.getRelationship(path) != null;
         }
     }
 
