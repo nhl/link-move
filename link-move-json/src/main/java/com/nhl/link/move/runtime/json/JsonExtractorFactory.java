@@ -10,49 +10,54 @@ import com.nhl.link.move.runtime.json.query.QueryCompiler;
 
 public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> {
 
-	private static final String JSON_EXTRACTOR_TYPE = "json";
     public static final String JSON_QUERY_PROPERTY = "extractor.json.path";
+    private static final String JSON_EXTRACTOR_TYPE = "json";
 
     private IJacksonService jacksonService;
-	private QueryCompiler compiler;
+    private QueryCompiler compiler;
 
-	public JsonExtractorFactory() {
+    public JsonExtractorFactory() {
         jacksonService = new JacksonService();
-		compiler = new QueryCompiler();
-	}
+        compiler = new QueryCompiler();
+    }
 
-	@Override
-	public String getExtractorType() {
-		return JSON_EXTRACTOR_TYPE;
-	}
+    @Override
+    public String getExtractorType() {
+        return JSON_EXTRACTOR_TYPE;
+    }
 
-	@Override
-	public Class<StreamConnector> getConnectorType() {
-		return StreamConnector.class;
-	}
+    @Override
+    public Class<StreamConnector> getConnectorType() {
+        return StreamConnector.class;
+    }
 
-	@Override
-	public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
-        return new JsonExtractor(jacksonService, connector, mapToJsonAttributes(model.getAttributes()),
-				getRootQuery(model));
-	}
+    @Override
+    public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
+        return new JsonExtractor(
+                jacksonService,
+                connector,
+                mapToJsonAttributes(model.getAttributes()),
+                getRootQuery(model));
+    }
 
-	private JsonQuery getRootQuery(ExtractorModel model) {
-		String query = model.getProperties().get(JSON_QUERY_PROPERTY);
-		if (query == null) {
-			throw new IllegalArgumentException(String.format(
+    private JsonQuery getRootQuery(ExtractorModel model) {
+        String query = model.getProperties().get(JSON_QUERY_PROPERTY);
+
+        // TODO: should we just use "$" for root instead of throwing?
+        if (query == null) {
+            throw new IllegalArgumentException(String.format(
                     "Missing required property for key '%s'", JSON_QUERY_PROPERTY));
-		}
-		return compiler.compile(query);
-	}
+        }
+        return compiler.compile(query);
+    }
 
-	private JsonRowAttribute[] mapToJsonAttributes(RowAttribute[] attributes) {
-		int len = attributes.length;
-		JsonRowAttribute[] jsonAttributes = new JsonRowAttribute[len];
+    private JsonRowAttribute[] mapToJsonAttributes(RowAttribute[] attributes) {
+        int len = attributes.length;
+        JsonRowAttribute[] jsonAttributes = new JsonRowAttribute[len];
 
-		for (int i = 0; i < len; i++) {
-			jsonAttributes[i] = new JsonRowAttribute(attributes[i], compiler);
-		}
-		return jsonAttributes;
-	}
+        for (int i = 0; i < len; i++) {
+            jsonAttributes[i] = new JsonRowAttribute(attributes[i], compiler);
+        }
+        return jsonAttributes;
+    }
 }
