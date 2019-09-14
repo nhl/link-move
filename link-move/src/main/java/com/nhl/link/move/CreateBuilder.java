@@ -54,7 +54,12 @@ public interface CreateBuilder<T> {
     /**
      * Adds a listener of transformation stages of batch segments. It should have methods annotated with
      * {@link AfterSourceRowsConverted}, {@link AfterTargetsMapped}, {@link AfterTargetsMerged},
-     * {@link AfterTargetsCommitted}, etc.
+     * {@link AfterTargetsCommitted}, etc. Annotated method signature should be as follows:
+     *
+     * <pre>
+     * @AfterXyz
+     * public void method(Execution e, CreateOrUpdateSegment<T> s) {}
+     * </pre>
      *
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
