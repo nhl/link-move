@@ -1,6 +1,7 @@
 ## Release 2.8
 
 * #170 "Connector.shutdown" default noop implementation 
+* #171 Can't match by binary DbAttribute
 
 ## Release 2.7
 

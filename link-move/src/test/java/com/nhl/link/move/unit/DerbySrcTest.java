@@ -1,16 +1,17 @@
 package com.nhl.link.move.unit;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.datasource.DataSourceBuilder;
 import org.apache.cayenne.datasource.PoolingDataSource;
+import org.apache.cayenne.query.SQLExec;
 import org.apache.cayenne.query.SQLSelect;
 import org.apache.cayenne.query.SQLTemplate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 public abstract class DerbySrcTest {
 
@@ -51,9 +52,8 @@ public abstract class DerbySrcTest {
 		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl5"));
 	}
 
-	protected void srcRunSql(String sql) {
-		ObjectContext context = srcStack.newContext();
-		context.performGenericQuery(new SQLTemplate(Object.class, sql));
+	protected void srcRunSql(String sql, Object... params) {
+		SQLExec.query(sql).paramsArray(params).execute(srcStack.newContext());
 	}
 
 	protected int srcScalar(String sql) {

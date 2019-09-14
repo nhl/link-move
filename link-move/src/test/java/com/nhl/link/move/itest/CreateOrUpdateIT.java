@@ -5,18 +5,19 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
+import com.nhl.link.move.unit.cayenne.t.Etl11t;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import com.nhl.link.move.unit.cayenne.t.Etl5t;
 import com.nhl.link.move.unit.cayenne.t.Etl9t;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class CreateOrUpdateIT extends LmIntegrationTest {
 
 	@Test
-	public void test_ByAttribute() {
+	public void test_MatchByAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME).task();
@@ -51,7 +52,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ByDbAttribute() {
+	public void test_MatchByDbAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy("db:name").task();
@@ -86,7 +87,28 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ByAttributes() {
+	public void test_MatchByDbAttribute_Binary() {
+
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl11t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl11_to_etl11t.xml").matchBy("db:bin").task();
+
+		srcRunSql("INSERT INTO utest.etl11 (ID, BIN) VALUES (1, #bind($a))", new byte[] {4, 5, 6});
+		srcRunSql("INSERT INTO utest.etl11 (ID, BIN) VALUES (2, #bind($a))", new byte[] {1, 3, 8});
+
+		Execution e1 = task.run();
+		assertExec(2, 2, 0, 0, e1);
+		assertEquals(2, targetScalar("SELECT count(1) from utest.etl11t"));
+
+		srcRunSql("INSERT INTO utest.etl11 (ID, BIN) VALUES (3, #bind($a))", new byte[] {7, 11, 2});
+		srcRunSql("UPDATE utest.etl11 SET BIN = #bind($a) WHERE ID = 2", new byte[] {13, 14, 15});
+
+		Execution e2 = task.run();
+		assertExec(3, 2, 0, 0, e2);
+		assertEquals(4, targetScalar("SELECT count(1) from utest.etl11t"));
+	}
+
+	@Test
+	public void test_MatchByAttributes() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME, Etl1t.AGE).task();
@@ -116,7 +138,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ById() {
+	public void test_MatchById() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid.xml").matchById().task();
@@ -151,7 +173,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ById_Default() {
+	public void test_MatchById_Default() {
 
 		// not specifying "matchById" explicitly ... this should be the default
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
@@ -187,7 +209,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test(expected = LmRuntimeException.class)
-	public void test_ById_Autoincrement() {
+	public void test_MatchById_Autoincrement() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_byid.xml").matchById().task();
@@ -232,7 +254,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ByAttribute_SyncFk() {
+	public void test_MatchByAttribute_SyncFk() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").matchBy(Etl3t.NAME).task();
@@ -259,7 +281,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ByAttribute_SyncFk_Nulls() {
+	public void test_MatchByAttribute_SyncFk_Nulls() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").matchBy(Etl3t.NAME).task();
@@ -296,7 +318,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ByAttribute_SyncNulls() {
+	public void test_MatchByAttribute_SyncNulls() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME).task();
@@ -311,7 +333,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ById_RelationshipOnPK() {
+	public void test_MatchById_RelationshipOnPK() {
 
 		// remove PK generator so that commit would fail if ID is absent
 		targetRunSql("DROP SEQUENCE utest.pk_etl9t RESTRICT");

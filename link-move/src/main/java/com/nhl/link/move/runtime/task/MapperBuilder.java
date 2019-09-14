@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.task;
 
+import com.nhl.link.move.ClassNameResolver;
 import com.nhl.link.move.mapper.KeyAdapter;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.mapper.MultiPathMapper;
@@ -8,6 +9,7 @@ import com.nhl.link.move.mapper.SafeMapKeyMapper;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
+import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.exp.parser.ASTDbPath;
@@ -110,6 +112,10 @@ public class MapperBuilder {
                 type = ((ObjAttribute) attributeOrRelationship).getJavaClass();
             } else if (attributeOrRelationship instanceof ObjRelationship) {
                 type = ((ObjRelationship) attributeOrRelationship).getTargetEntity().getJavaClass();
+            } else if (attributeOrRelationship instanceof DbAttribute) {
+                DbAttribute dbAttribute = (DbAttribute) attributeOrRelationship;
+                String typeName = TypesMapping.getJavaBySqlType(dbAttribute.getType());
+                type = ClassNameResolver.typeForName(typeName);
             } else {
                 type = null;
             }
