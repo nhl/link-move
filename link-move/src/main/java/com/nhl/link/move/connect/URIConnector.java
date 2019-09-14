@@ -19,9 +19,4 @@ public class URIConnector implements StreamConnector {
 	public InputStream getInputStream() throws IOException {
 		return uri.toURL().openStream();
 	}
-
-	@Override
-	public void shutdown() {
-
-	}
 }

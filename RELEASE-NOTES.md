@@ -1,3 +1,7 @@
+## Release 2.8
+
+* #170 "Connector.shutdown" default noop implementation 
+
 ## Release 2.7
 
 * #160 Upgrade Jackson to 2.9.5
