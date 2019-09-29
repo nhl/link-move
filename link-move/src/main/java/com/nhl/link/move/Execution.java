@@ -39,6 +39,13 @@ public class Execution implements AutoCloseable {
     }
 
     /**
+     * @since 2.8
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * Creates task execution report as a map of labels vs. values.
      */
     public Map<String, Object> createReport() {
