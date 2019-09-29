@@ -52,7 +52,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
-    public Execution run(Map<String, ?> params) {
+    protected Execution doRun(Map<String, ?> params) {
 
         try (Execution execution = new Execution("DeleteTask:" + extractorName, params);) {
 

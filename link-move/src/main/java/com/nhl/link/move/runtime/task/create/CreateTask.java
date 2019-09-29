@@ -49,7 +49,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
-    public Execution run(Map<String, ?> params) {
+    protected Execution doRun(Map<String, ?> params) {
 
         if (params == null) {
             throw new NullPointerException("Null params");
