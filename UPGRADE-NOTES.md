@@ -1,3 +1,12 @@
+## Upgrading to 2.8
+
+### `LmTask` structure has changed [#172](https://github.com/nhl/link-move/issues/172)
+
+For ease of creation of custom LmTasks, all but one `LmTask` methods got default implementations in the interface, delegating to that
+one method. If you had custom jobs overriding `BaseTask.run(Map)`, you will see a compilation error. You now should override `doRun` 
+instead. If you are implementing `LmTask` directly without subclassing `BaseTask`, you will not see any errors, but still review
+your code and consider overriding `LmTask.run(SyncToken, Map<String, ?>)`, leaving the other "run" methods unchanged.
+
 ## Upgrading to 2.7
 
 ### Segment data structures changed to DataFrame [#164](https://github.com/nhl/link-move/issues/164)
