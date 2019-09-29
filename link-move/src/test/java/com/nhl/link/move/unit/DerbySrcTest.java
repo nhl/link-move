@@ -10,23 +10,20 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 public abstract class DerbySrcTest {
 
 	protected static CayenneDerbyStack srcStack;
 	protected static PoolingDataSource srcDataSource;
 
 	@BeforeClass
-	public static void startSrc() throws IOException, SQLException {
+	public static void startSrc() {
 		srcStack = new CayenneDerbyStack("derbysrc", "cayenne-linketl-tests-sources.xml");
 		srcDataSource = DataSourceBuilder.url("jdbc:derby:" + srcStack.getDerbyPath() + ";create=true")
 				.driver("org.apache.derby.jdbc.EmbeddedDriver").userName("sa").pool(1, 10).build();
 	}
 
 	@AfterClass
-	public static void shutdownSrc() throws IOException, SQLException {
+	public static void shutdownSrc() {
 
 		srcStack.shutdown();
 
