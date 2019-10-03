@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
+import com.nhl.dflib.Series;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.exp.Expression;
@@ -10,6 +11,7 @@ import org.apache.cayenne.query.ObjectSelect;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +44,10 @@ public class TargetMatcher<T> {
         }
     }
 
-    private DataFrame toDataFrame(Iterable<T> data) {
-        return DataFrame.forObjects(index, data, DataFrame::row);
+    private DataFrame toDataFrame(List<T> data) {
+
+        return DataFrame.newFrame(index)
+                // TODO: when we can upgrade to 0.7, switch to Series.forData(data)
+                .columns(Series.forData(data.toArray()));
     }
 }

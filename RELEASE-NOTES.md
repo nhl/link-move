@@ -1,3 +1,9 @@
+## Release 2.8
+
+* #170 "Connector.shutdown" default noop implementation 
+* #171 Can't match by binary DbAttribute
+* #172 Reorganize LmTask for easier custom implementation 
+
 ## Release 2.7
 
 * #160 Upgrade Jackson to 2.9.5
@@ -5,6 +11,8 @@
 * #163 Replace source Row object with just Object[] 
 * #164 Switch segments data structures to DataFrame 
 * #165 Upgrade Jackson to 2.9.8
+* #167 Update Jackson to 2.10.0.pr1
+* #168 Cayenne 4.1 binary compatibility
 
 ## Release 2.6
 

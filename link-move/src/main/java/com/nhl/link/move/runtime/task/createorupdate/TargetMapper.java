@@ -1,8 +1,7 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.join.JoinType;
-import com.nhl.dflib.map.Hasher;
+import com.nhl.dflib.Hasher;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
@@ -29,7 +28,7 @@ public class TargetMapper<T extends DataObject> {
         Hasher rkm = r -> mapper.keyForTarget((DataObject) r.get(CreateOrUpdateSegment.TARGET_COLUMN));
 
         return sources
-                .join(targets, lkm, rkm, JoinType.left)
+                .leftJoin().on(lkm, rkm).with(targets)
                 .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, r -> isCreated(r.get(CreateOrUpdateSegment.TARGET_COLUMN)))
                 .convertColumn(CreateOrUpdateSegment.TARGET_COLUMN, r -> createIfMissing(r, context));
     }

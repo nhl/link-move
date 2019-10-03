@@ -4,7 +4,7 @@
 
 	<groupId>com.nhl.link.move</groupId>
 	<artifactId>link-move-parent</artifactId>
-	<version>2.7-SNAPSHOT</version>
+	<version>2.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -48,9 +48,9 @@
 		<!-- Custom properties (mostly framework versions) -->
 		<slf4j-version>1.7.25</slf4j-version>
 		<cayenne-version>4.1.B2</cayenne-version>
-		<jackson-version>2.9.8</jackson-version>
+		<jackson-version>2.10.0.pr1</jackson-version>
 		<apache-commons-csv-version>1.3</apache-commons-csv-version>
-		<dflib-version>1.0-SNAPSHOT</dflib-version>
+		<dflib-version>0.6</dflib-version>
 	</properties>
 
 	<scm>
@@ -200,35 +200,35 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
+					<version>3.8.1</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.9.1</version>
+					<version>3.1.1</version>
 					<configuration>
 		                <!-- Java 8 is too strict about Javadoc omissions -->
-						<additionalparam>-Xdoclint:none</additionalparam>
+						<doclint>none</doclint>
 	                </configuration>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.1</version>
+					<version>3.0.0-M1</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>3.1.0</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5</version>
+					<version>2.5.3</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.apache.maven.scm</groupId>
@@ -242,13 +242,13 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.18.1</version>
+					<version>3.0.0-M3</version>
 				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.18.1</version>
+					<version>3.0.0-M3</version>
 					<executions>
 						<execution>
 							<id>integration-test</id>

@@ -21,7 +21,7 @@ public class DataRowIteratorTest {
 
         ResultIterator<DataRow> rows = mock(ResultIterator.class);
         when(rows.hasNextRow()).thenReturn(true, false);
-        when(rows.nextRow()).thenReturn(row, null);
+        when(rows.nextRow()).thenReturn(row, (DataRow) null);
 
         DataRowIterator it = new DataRowIterator(rows);
 
@@ -44,7 +44,7 @@ public class DataRowIteratorTest {
 
         ResultIterator<DataRow> rows = mock(ResultIterator.class);
         when(rows.hasNextRow()).thenReturn(false, false);
-        when(rows.nextRow()).thenReturn(null, null);
+        when(rows.nextRow()).thenReturn(null, (DataRow) null);
 
         DataRowIterator it = new DataRowIterator(rows);
 

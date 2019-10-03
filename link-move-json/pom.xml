@@ -5,8 +5,8 @@
     <parent>
         <artifactId>link-move-parent</artifactId>
         <groupId>com.nhl.link.move</groupId>
-        <version>2.7-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+        <version>2.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>link-move-json</artifactId>
@@ -21,20 +21,20 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- unit test deps -->
-		
-		
+
+
     </dependencies>
 
 </project>

@@ -35,6 +35,7 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
         targetContext.performGenericQuery(new SQLTemplate(Etl1t.class, "DELETE from utest.etl2t"));
         targetContext.performGenericQuery(new SQLTemplate(Etl1t.class, "DELETE from utest.etl4t"));
         targetContext.performGenericQuery(new SQLTemplate(Etl1t.class, "DELETE from utest.etl5t"));
+        targetContext.performGenericQuery(new SQLTemplate(Etl1t.class, "DELETE from utest.etl11t"));
     }
 
     protected void targetRunSql(String sql) {

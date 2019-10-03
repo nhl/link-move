@@ -1,5 +1,6 @@
 package com.nhl.link.move;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -14,7 +15,9 @@ public interface LmTask {
 	 * 
 	 * @since 1.1
 	 */
-	Execution run();
+	default Execution run() {
+		return run(Collections.emptyMap());
+	}
 
 	/**
 	 * Executes the task with a map of parameters returning {@link Execution}
@@ -24,7 +27,9 @@ public interface LmTask {
 	 * 
 	 * @since 1.3
 	 */
-	Execution run(Map<String, ?> params);
+	default Execution run(Map<String, ?> params) {
+		return run(null, params);
+	}
 
 	/**
 	 * Executes the task with a map of parameters returning {@link Execution}
@@ -32,7 +37,9 @@ public interface LmTask {
 	 * all task implementations are synchronous, so this method returns only on
 	 * task completion.
 	 */
-	Execution run(SyncToken token);
+	default Execution run(SyncToken token) {
+		return run(token, Collections.emptyMap());
+	}
 
 	/**
 	 * Executes the task with a map of parameters returning {@link Execution}

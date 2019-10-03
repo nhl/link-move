@@ -49,7 +49,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
-    public Execution run(Map<String, ?> params) {
+    protected Execution doRun(Map<String, ?> params) {
 
         if (params == null) {
             throw new NullPointerException("Null params");
@@ -69,7 +69,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
         Index columns = toIndex(rowHeader);
-        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.forRows(columns, rows)));
+        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
     }
 
     /**

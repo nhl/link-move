@@ -1,16 +1,16 @@
 package com.nhl.link.move.runtime.task;
 
+import com.nhl.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.SyncToken;
-import com.nhl.dflib.Index;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @since 1.3
@@ -34,34 +34,40 @@ public abstract class BaseTask implements LmTask {
     }
 
     @Override
-    public abstract Execution run(Map<String, ?> params);
-
-	@Override
-	public Execution run() {
-		return run(Collections.emptyMap());
-	}
-
-	@Override
-	public Execution run(SyncToken token) {
-		return run(token, Collections.emptyMap());
-	}
+    // tagged as final to help upgrading to 2.8 ... users must override "doRun" instead
+    public final Execution run(Map<String, ?> params) {
+        return LmTask.super.run(params);
+    }
 
     @Override
     public Execution run(SyncToken token, Map<String, ?> params) {
+
+        Map<String, ?> runParams = token != null ? mergeParams(token, params) : params;
+        Execution exec = doRun(runParams);
+
+        if (token != null) {
+            // if we ever start using delayed executions, token should be saved inside the execution...
+            tokenManager.saveToken(token);
+        }
+
+        return exec;
+    }
+
+    /**
+     * @since 2.8
+     */
+    protected abstract Execution doRun(Map<String, ?> params);
+
+    protected Map<String, Object> mergeParams(SyncToken token, Map<String, ?> params) {
+        Objects.requireNonNull(token);
 
         Map<String, Object> combinedParams = new HashMap<>();
 
         SyncToken startToken = tokenManager.previousToken(token);
         combinedParams.put(LmRuntimeBuilder.START_TOKEN_VAR, startToken.getValue());
         combinedParams.put(LmRuntimeBuilder.END_TOKEN_VAR, token.getValue());
-        
+
         combinedParams.putAll(params);
-
-        Execution exec = run(combinedParams);
-
-        // if we ever start using delayed executions, token should be saved inside the execution...
-        tokenManager.saveToken(token);
-
-        return exec;
+        return combinedParams;
     }
 }
