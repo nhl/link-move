@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-map xmlns="http://cayenne.apache.org/schema/10/modelMap"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://cayenne.apache.org/schema/10/modelMap http://cayenne.apache.org/schema/10/modelMap.xsd"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/10/modelMap https://cayenne.apache.org/schema/10/modelMap.xsd"
 	 project-version="10">
 	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.t"/>
 	<property name="defaultSchema" value="utest"/>
@@ -139,4 +139,17 @@
 	<obj-relationship name="e5" source="Etl3t" target="Etl5t" deleteRule="Nullify" db-relationship-path="e5"/>
 	<obj-relationship name="e2s" source="Etl5t" target="Etl3t" deleteRule="Deny" db-relationship-path="e2s"/>
 	<obj-relationship name="e10" source="Etl9t" target="Etl10t" deleteRule="Nullify" db-relationship-path="e10"/>
+	<cgen xmlns="http://cayenne.apache.org/schema/10/cgen">
+		<destDir>.</destDir>
+		<mode>entity</mode>
+		<template>templates/v4_1/subclass.vm</template>
+		<superTemplate>templates/v4_1/superclass.vm</superTemplate>
+		<outputPattern>*.java</outputPattern>
+		<makePairs>true</makePairs>
+		<usePkgPath>true</usePkgPath>
+		<overwrite>false</overwrite>
+		<createPropertyNames>false</createPropertyNames>
+		<createPKProperties>false</createPKProperties>
+		<client>false</client>
+	</cgen>
 </data-map>
