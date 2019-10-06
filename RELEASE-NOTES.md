@@ -5,6 +5,7 @@
 * #171 Can't match by binary DbAttribute
 * #172 Reorganize LmTask for easier custom implementation 
 * #173 Pass parameters down from extractor to StreamConnector
+* #174 Upgrade to Cayenne 4.0.1
 
 ## Release 2.7
 
