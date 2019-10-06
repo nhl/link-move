@@ -62,7 +62,7 @@ public class Execution implements AutoCloseable {
             report.put("Parameter[" + p.getKey() + "]", p.getValue());
         }
 
-        DateFormat format = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
+        DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
         if (stats.isStopped()) {
             report.put("Status", "finished");
