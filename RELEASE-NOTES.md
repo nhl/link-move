@@ -3,6 +3,7 @@
 * #170 "Connector.shutdown" default noop implementation 
 * #171 Can't match by binary DbAttribute
 * #172 Reorganize LmTask for easier custom implementation 
+* #173 Pass parameters down from extractor to StreamConnector
 
 ## Release 2.7
 

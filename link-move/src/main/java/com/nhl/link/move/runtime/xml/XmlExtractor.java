@@ -31,7 +31,7 @@ public class XmlExtractor implements Extractor {
 	@Override
 	public RowReader getReader(Map<String, ?> parameters) {
 		try {
-			InputSource inputSource = new InputSource(connector.getInputStream());
+			InputSource inputSource = new InputSource(connector.getInputStream(parameters));
 			NodeList nodes = (NodeList) expression.evaluate(inputSource, XPathConstants.NODESET);
 			return new XmlRowReader(rowHeader, nodes);
 		} catch (IOException | XPathExpressionException e) {

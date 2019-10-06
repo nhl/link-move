@@ -41,7 +41,7 @@ public class CsvExtractor implements Extractor {
 	public RowReader getReader(Map<String, ?> parameters) {
 		CSVParser parser;
 		try {
-			parser = csvFormat.parse(new InputStreamReader(connector.getInputStream(), charset));
+			parser = csvFormat.parse(new InputStreamReader(connector.getInputStream(parameters), charset));
 		} catch (IOException e) {
 			throw new LmRuntimeException("Failed to read CSV from stream", e);
 		}

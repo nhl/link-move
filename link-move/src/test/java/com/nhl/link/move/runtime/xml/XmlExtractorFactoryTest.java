@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.when;
 
 public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConnector, XmlExtractorFactory> {
@@ -28,7 +29,7 @@ public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	public void setUpExtractorFactory() {
 		super.setUpExtractorFactory();
 		try {
-			when(getConnectorMock().getInputStream())
+			when(getConnectorMock().getInputStream(anyMap()))
 					.thenReturn(new ByteArrayInputStream(XML.getBytes()));
 		} catch (IOException e) {
 			fail("Unexpected IO exception");
