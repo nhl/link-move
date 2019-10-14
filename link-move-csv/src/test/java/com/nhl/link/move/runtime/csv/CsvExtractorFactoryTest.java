@@ -58,7 +58,7 @@ public class CsvExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	public void testSetDelimiter() throws IOException {
 		when(getConnectorMock().getInputStream(anyMap()))
 				.thenReturn(new ByteArrayInputStream("r1c1;r1c2;r1c3\nr2c1;r2c2;r2c3".getBytes()));
-		getModel().getProperties().put(CsvExtractorFactory.DELIMITER_PROPERTY, ";");
+		getModel().addProperty(CsvExtractorFactory.DELIMITER_PROPERTY, ";");
 		RowReader reader = getExtractorFactory().createExtractor(getConnectorMock(), getModel()).getReader(null);
 		doCheck(reader);
 	}
@@ -67,7 +67,7 @@ public class CsvExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	public void testSetReadFrom() throws IOException {
 		when(getConnectorMock().getInputStream(anyMap()))
 				.thenReturn(new ByteArrayInputStream("k1,k2,k3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3".getBytes()));
-		getModel().getProperties().put(CsvExtractorFactory.READ_FROM_PROPERTY, "2");
+		getModel().addProperty(CsvExtractorFactory.READ_FROM_PROPERTY, "2");
 		RowReader reader = getExtractorFactory().createExtractor(getConnectorMock(), getModel()).getReader(null);
 		doCheck(reader);
 	}

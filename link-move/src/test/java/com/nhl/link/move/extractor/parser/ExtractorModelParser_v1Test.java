@@ -61,7 +61,7 @@ public class ExtractorModelParser_v1Test extends BaseParserTest {
 		assertNull(model.getAttributes()[2].getTargetPath());
 
 		assertEquals(2, model.getProperties().size());
-		assertEquals("AB", model.getProperties().get("a.b"));
-		assertEquals("XY", model.getProperties().get("x.y"));
+		assertEquals("AB", model.getSingletonProperty("a.b"));
+		assertEquals("XY", model.getSingletonProperty("x.y"));
 	}
 }

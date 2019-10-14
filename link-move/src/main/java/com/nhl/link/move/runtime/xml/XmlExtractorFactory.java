@@ -2,6 +2,8 @@ package com.nhl.link.move.runtime.xml;
 
 import static java.lang.String.format;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -15,6 +17,11 @@ import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * @since 1.4
  */
@@ -22,6 +29,7 @@ public class XmlExtractorFactory implements IExtractorFactory<StreamConnector> {
 
 	private static final String XML_EXTRACTOR_TYPE = "xml";
 	public static final String XPATH_EXPRESSION_PROPERTY = "extractor.xml.xpathexpression";
+	public static final String XPATH_NS_BINDING_PROPERTY = "extractor.xml.nsbinding";
 
 	private final XPathFactory xPathFactory;
 
@@ -42,29 +50,65 @@ public class XmlExtractorFactory implements IExtractorFactory<StreamConnector> {
 	@Override
 	public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
 		try {
-			XPathExpression expression = getXPathExpression(model);
-			return new XmlExtractor(connector, mapToXmlAttributes(model.getAttributes()), expression);
+			NamespaceContext namespaceContext = getNamespaceContext(model);
+			XPathExpression expression = getXPathExpression(model, namespaceContext);
+			return new XmlExtractor(connector, mapToXmlAttributes(model.getAttributes(), namespaceContext), expression);
 		} catch (XPathExpressionException e) {
 			throw new LmRuntimeException(e);
 		}
 	}
 
-	private XPathExpression getXPathExpression(ExtractorModel model) throws XPathExpressionException {
-		String expressionString = model.getProperties().get(XPATH_EXPRESSION_PROPERTY);
+	private XPathExpression getXPathExpression(ExtractorModel model, NamespaceContext namespaceContext) throws XPathExpressionException {
+		String expressionString = model.getSingletonProperty(XPATH_EXPRESSION_PROPERTY);
 		if (expressionString == null) {
 			throw new IllegalArgumentException(format("Missing required property for key '%s'",
 					XPATH_EXPRESSION_PROPERTY));
 		}
 		XPath xPath = xPathFactory.newXPath();
+		if (namespaceContext != null) {
+			xPath.setNamespaceContext(namespaceContext);
+		}
 		return xPath.compile(expressionString);
 	}
 
-	private XmlRowAttribute[] mapToXmlAttributes(RowAttribute[] attributes) {
+	private NamespaceContext getNamespaceContext(ExtractorModel model) {
+		Map<String, String> prefixToNamespaceMap =
+				model.getProperties().getOrDefault(XPATH_NS_BINDING_PROPERTY, Collections.emptyList())
+					 .stream()
+					 .map(s -> {
+					 	String[] parts = s.split("=");
+					 	if (parts.length != 2) {
+					 		throw new LmRuntimeException("Invalid namespace binding: " + s);
+					 	}
+					 	return parts;
+					 })
+					 .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
+
+		return new NamespaceContext() {
+			@Override
+			public String getNamespaceURI(String prefix) {
+				return prefixToNamespaceMap.getOrDefault(prefix, XMLConstants.NULL_NS_URI);
+			}
+
+			@Override
+			public String getPrefix(String namespaceURI) {
+				// not used in XPath processing
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public Iterator getPrefixes(String namespaceURI) {
+				return prefixToNamespaceMap.keySet().iterator();
+			}
+		};
+	}
+
+	private XmlRowAttribute[] mapToXmlAttributes(RowAttribute[] attributes, NamespaceContext namespaceContext) {
 		int len = attributes.length;
 		XmlRowAttribute[] xmlAttributes = new XmlRowAttribute[len];
 
 		for (int i = 0; i < len; i++) {
-			xmlAttributes[i] = new XmlRowAttribute(attributes[i], xPathFactory);
+			xmlAttributes[i] = new XmlRowAttribute(attributes[i], xPathFactory, namespaceContext);
 		}
 		return xmlAttributes;
 	}
