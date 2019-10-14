@@ -26,45 +26,22 @@ public class JsonQueryTest {
     private static JsonNodeFactory nodeFactory;
     private QueryCompiler compiler;
     private JsonNode document;
-    
-    private enum Readers {
-        Bob("Bob", 18, "God save the Queen!"),
-        Rob("Rob", 60, null),
-        John("John", 3, "Goo goo ga ga");
-        
-        private JsonNode node;
-        
-        Readers(String name, Integer age, String motto) {
-            
-            ObjectNode reader = nodeFactory.objectNode();
-            reader.set("name", nodeFactory.textNode(name));
-            reader.set("age", nodeFactory.numberNode(age));
-            if (motto != null) {
-                reader.set("motto", nodeFactory.textNode(motto));
-            }
-            this.node = reader;
-        }
-        
-        public JsonNode toJson() {
-            return node;
-        }
-    }
 
     @Before
     public void setUp() throws IOException {
 
         nodeFactory = JsonNodeFactory.instance;
         compiler = new QueryCompiler();
-        
+
         StringBuilder jsonSb = new StringBuilder();
         {
             Scanner scanner = new Scanner(JsonQueryTest.class.getResourceAsStream("document.json"));
             while (scanner.hasNextLine()) {
-            	jsonSb.append(scanner.nextLine());
+                jsonSb.append(scanner.nextLine());
             }
-            scanner.close();        	
+            scanner.close();
         }
-        
+
         document = new JacksonService().parseJson(jsonSb.toString());
     }
 
@@ -154,14 +131,14 @@ public class JsonQueryTest {
         assertTrue(nodes.contains(Readers.Rob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
     }
-    
+
     @Test
     public void testQueries_CompilerBehaviourImmutable() {
 
-      JsonQuery query;
-      List<JsonNode> nodes;
+        JsonQuery query;
+        List<JsonNode> nodes;
 
-      {
+        {
             query = compiler.compile("$.store.book[*].readers[*]"); // readers[*] means all items of the book array.
             nodes = collectJsonNodes(query.execute(document));
 
@@ -170,16 +147,16 @@ public class JsonQueryTest {
             assertTrue(nodes.contains(Readers.Bob.toJson()));
             assertTrue(nodes.contains(Readers.Rob.toJson()));
             assertTrue(nodes.contains(Readers.John.toJson()));
-      }
+        }
 
-      {
+        {
             query = compiler.compile("$.store.book[*]");
             nodes = collectJsonNodes(query.execute(document));
 
             assertEquals(4, nodes.size());
-      }
+        }
 
-      {
+        {
             query = compiler.compile("$.store.book[*].readers[*]");
             nodes = collectJsonNodes(query.execute(document));
 
@@ -188,14 +165,14 @@ public class JsonQueryTest {
             assertTrue(nodes.contains(Readers.Bob.toJson()));
             assertTrue(nodes.contains(Readers.Rob.toJson()));
             assertTrue(nodes.contains(Readers.John.toJson()));
-      }
+        }
       
-      {
-          query = compiler.compile("$.store.book[*]");
-          nodes = collectJsonNodes(query.execute(document));
+        {
+            query = compiler.compile("$.store.book[*]");
+            nodes = collectJsonNodes(query.execute(document));
 
-          assertEquals(4, nodes.size());
-      }
+            assertEquals(4, nodes.size());
+        }
     }
 
     @Test
@@ -499,6 +476,29 @@ public class JsonQueryTest {
             nodes.add(wrapper.getNode());
         }
         return nodes;
+    }
+
+    private enum Readers {
+        Bob("Bob", 18, "God save the Queen!"),
+        Rob("Rob", 60, null),
+        John("John", 3, "Goo goo ga ga");
+
+        private JsonNode node;
+
+        Readers(String name, Integer age, String motto) {
+
+            ObjectNode reader = nodeFactory.objectNode();
+            reader.set("name", nodeFactory.textNode(name));
+            reader.set("age", nodeFactory.numberNode(age));
+            if (motto != null) {
+                reader.set("motto", nodeFactory.textNode(motto));
+            }
+            this.node = reader;
+        }
+
+        public JsonNode toJson() {
+            return node;
+        }
     }
 
 }
