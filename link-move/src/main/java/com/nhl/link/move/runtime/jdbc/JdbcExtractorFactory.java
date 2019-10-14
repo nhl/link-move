@@ -29,7 +29,7 @@ public class JdbcExtractorFactory implements IExtractorFactory<JdbcConnector> {
 	@Override
 	public Extractor createExtractor(JdbcConnector connector, ExtractorModel model) {
 
-		String sqlTemplate = model.getSingletonProperty(SQL_TEMPLATE_PROPERTY);
+		String sqlTemplate = model.getPropertyValue(SQL_TEMPLATE_PROPERTY);
 		if (sqlTemplate == null) {
 			throw new IllegalArgumentException("Missing required property for key '" + SQL_TEMPLATE_PROPERTY + "'");
 		}
@@ -39,7 +39,7 @@ public class JdbcExtractorFactory implements IExtractorFactory<JdbcConnector> {
 
 		CapsStrategy capsStrategy = CapsStrategy.DEFAULT;
 
-		String capsStrategyString = model.getSingletonProperty(SQL_TEMPLATE_CAPS_PROPERTY);
+		String capsStrategyString = model.getPropertyValue(SQL_TEMPLATE_CAPS_PROPERTY);
 		if (capsStrategyString != null) {
 			capsStrategyString = capsStrategyString.trim().toUpperCase();
 			capsStrategy = CapsStrategy.valueOf(capsStrategyString);

@@ -70,9 +70,8 @@ public class ExtractorModelParserTest {
 		assertEquals("a2", model.getAttributes()[2].getSourceName());
 		assertNull(model.getAttributes()[2].getTargetPath());
 
-		assertEquals(2, model.getProperties().size());
-		assertEquals("AB", model.getSingletonProperty("a.b"));
-		assertEquals("XY", model.getSingletonProperty("x.y"));
+		assertEquals("AB", model.getPropertyValue("a.b"));
+		assertEquals("XY", model.getPropertyValue("x.y"));
 	}
 
 	@Test
@@ -112,18 +111,16 @@ public class ExtractorModelParserTest {
 		assertEquals("a2", m1.getAttributes()[2].getSourceName());
 		assertNull(m1.getAttributes()[2].getTargetPath());
 
-		assertEquals(2, m1.getProperties().size());
-		assertEquals("AB1", m1.getSingletonProperty("a.b"));
-		assertEquals("XY1", m1.getSingletonProperty("x.y"));
+		assertEquals("AB1", m1.getPropertyValue("a.b"));
+		assertEquals("XY1", m1.getPropertyValue("x.y"));
 
 		ExtractorModel m2 = container.getExtractor("e2");
 		assertEquals("atype2", m2.getType());
 		assertTrue(m2.getConnectorIds().contains("aconnector2"));
 		assertNull(m2.getAttributes());
 
-		assertEquals(2, m2.getProperties().size());
-		assertEquals("AB2", m2.getSingletonProperty("a.b"));
-		assertEquals("XY2", m2.getSingletonProperty("x.y"));
+		assertEquals("AB2", m2.getPropertyValue("a.b"));
+		assertEquals("XY2", m2.getPropertyValue("x.y"));
 
 		ExtractorModel m3 = container.getExtractor(ExtractorModel.DEFAULT_NAME);
 		assertNotNull(m3);

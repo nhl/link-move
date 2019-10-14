@@ -54,12 +54,12 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
     public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
         try {
 
-            String charsetName = model.getSingletonProperty(CHARSET_PROPERTY);
+            String charsetName = model.getPropertyValue(CHARSET_PROPERTY);
 
             Charset charset = charsetName != null ? Charset.forName(charsetName) : defaultCharset;
 
             CSVFormat csvFormat = CSVFormat.RFC4180;
-            String delimiter = model.getSingletonProperty(DELIMITER_PROPERTY);
+            String delimiter = model.getPropertyValue(DELIMITER_PROPERTY);
             if (delimiter != null) {
                 if (delimiter.length() != 1) {
                     throw new LmRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
@@ -69,7 +69,7 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
 
             CsvExtractor extractor = new CsvExtractor(connector, model.getAttributes(), charset, csvFormat);
 
-            String readFrom = model.getSingletonProperty(READ_FROM_PROPERTY);
+            String readFrom = model.getPropertyValue(READ_FROM_PROPERTY);
             if (readFrom != null) {
                 Integer n = Integer.valueOf(readFrom);
                 extractor.setReadFrom(n);

@@ -41,7 +41,7 @@ public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> 
     }
 
     private JsonQuery getRootQuery(ExtractorModel model) {
-        String query = model.getSingletonProperty(JSON_QUERY_PROPERTY);
+        String query = model.getPropertyValue(JSON_QUERY_PROPERTY);
 
         // TODO: should we just use "$" for root instead of throwing?
         if (query == null) {

@@ -43,14 +43,20 @@ public class ContainerAwareExtractorModel implements ExtractorModel {
 		return delegate.getConnectorIds().isEmpty() ? parent.getConnectorIds() : delegate.getConnectorIds();
 	}
 
+	@Deprecated
 	@Override
-	public Map<String, Collection<String>> getProperties() {
+	public Map<String, String> getProperties() {
 		return delegate.getProperties();
 	}
 
 	@Override
-	public String getSingletonProperty(String propertyName) {
-		return delegate.getSingletonProperty(propertyName);
+	public String getPropertyValue(String propertyName) {
+		return delegate.getPropertyValue(propertyName);
+	}
+
+	@Override
+	public Collection<String> getPropertyValues(String propertyName) {
+		return delegate.getPropertyValues(propertyName);
 	}
 
 	@Override

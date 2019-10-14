@@ -3,7 +3,6 @@ package com.nhl.link.move.runtime.csv;
 import com.nhl.link.move.BaseRowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactoryTest;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -44,6 +43,16 @@ public class CsvExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 			}
 		}
 		assertFalse(rowIt.hasNext());
+	}
+
+	@Test
+	public void testGetConnectorType() {
+		assertEquals(getConnectorType(), getExtractorFactory().getConnectorType());
+	}
+
+	@Test
+	public void testCreateExtractor() throws Exception {
+		extractorFactory.createExtractor(connectorMock, getModel());
 	}
 
 	@Test
