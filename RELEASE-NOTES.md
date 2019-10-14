@@ -6,6 +6,7 @@
 * #172 Reorganize LmTask for easier custom implementation 
 * #173 Pass parameters down from extractor to StreamConnector
 * #174 Upgrade to Cayenne 4.0.1
+* #175 Upgrade Cayenne to 4.0.2
 
 ## Release 2.7
 
