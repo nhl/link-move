@@ -1,5 +1,6 @@
 ## Release 2.8
 
+* #150 Support for XML namespaces in XPath-based extractor 
 * #159 Execution.java toString is reporting incorrect start time
 * #170 "Connector.shutdown" default noop implementation 
 * #171 Can't match by binary DbAttribute
