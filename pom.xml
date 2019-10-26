@@ -47,7 +47,7 @@
 
 		<!-- Custom properties (mostly framework versions) -->
 		<slf4j-version>1.7.25</slf4j-version>
-		<cayenne-version>4.1.RC1</cayenne-version>
+		<cayenne-version>4.1.RC2</cayenne-version>
 		<jackson-version>2.10.0.pr1</jackson-version>
 		<apache-commons-csv-version>1.3</apache-commons-csv-version>
 		<dflib-version>0.6</dflib-version>
@@ -98,7 +98,7 @@
 		</repository>
 		<repository>
 			<id>cayenne-temp</id>
-			<url>https://repository.apache.org/content/repositories/orgapachecayenne-1032/</url>
+			<url>https://repository.apache.org/content/repositories/orgapachecayenne-1035/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
