@@ -8,29 +8,44 @@ import java.util.Map;
 
 /**
  * A model of a single {@link Extractor}.
- * 
+ *
  * @since 1.4
  */
 public interface ExtractorModel {
-	
-	String DEFAULT_NAME = "default_extractor";
 
-	String getName();
+    String DEFAULT_NAME = "default_extractor";
 
-	String getType();
+    String getName();
 
-	/**
-	 * @return Collection of connector IDs
-	 * @since 2.2
+    String getType();
+
+    /**
+     * @return Collection of connector IDs
+     * @since 2.2
      */
-	Collection<String> getConnectorIds();
+    Collection<String> getConnectorIds();
 
-	Map<String, String> getProperties();
+    /**
+     * @deprecated since 2.9 as we switched to multi-value properties. Use {@link #getPropertyValue(String)} or
+     * {@link #getPropertyValues(String)} instead.
+     */
+    @Deprecated
+    Map<String, String> getProperties();
 
-	RowAttribute[] getAttributes();
-	
-	/**
-	 * Returns load timestamp for this model.
-	 */
-	long getLoadedOn();
+    /**
+     * @since 2.9
+     */
+    Collection<String> getPropertyValues(String propertyName);
+
+    /**
+     * @since 2.9
+     */
+    String getPropertyValue(String propertyName);
+
+    RowAttribute[] getAttributes();
+
+    /**
+     * Returns load timestamp for this model.
+     */
+    long getLoadedOn();
 }

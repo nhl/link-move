@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +73,7 @@ public class JsonExtractorTest {
                         "}";
 
         connector = mock(StreamConnector.class);
-        when(connector.getInputStream()).thenReturn(
+        when(connector.getInputStream(anyMap())).thenReturn(
                 new ByteArrayInputStream(source.getBytes("UTF-8")));
     }
 

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -25,85 +26,23 @@ public class JsonQueryTest {
     private static JsonNodeFactory nodeFactory;
     private QueryCompiler compiler;
     private JsonNode document;
-    
-    private enum Readers {
-        Bob("Bob", 18, "God save the Queen!"),
-        Rob("Rob", 60, null),
-        John("John", 3, "Goo goo ga ga");
-        
-        private JsonNode node;
-        
-        Readers(String name, Integer age, String motto) {
-            
-            ObjectNode reader = nodeFactory.objectNode();
-            reader.set("name", nodeFactory.textNode(name));
-            reader.set("age", nodeFactory.numberNode(age));
-            if (motto != null) {
-                reader.set("motto", nodeFactory.textNode(motto));
-            }
-            this.node = reader;
-        }
-        
-        public JsonNode toJson() {
-            return node;
-        }
-    }
 
     @Before
     public void setUp() throws IOException {
 
         nodeFactory = JsonNodeFactory.instance;
         compiler = new QueryCompiler();
-        document = new JacksonService().parseJson(
-                "{ \"store\": {\n" +
-                "    \"book\": [\n" +
-                "      { \"category\": \"reference\",\n" +
-                "        \"author\": \"Nigel Rees\",\n" +
-                "        \"title\": \"Sayings of the Century\",\n" +
-                "        \"price\": 8.95,\n" +
-                "        \"readers\": [\n" +
-                "          {\"name\": \"Bob\", \"age\": 18, \"motto\": \"God save the Queen!\"},\n" +
-                "          {\"name\": \"Rob\", \"age\": 60}\n" +
-                "        ]\n" +
-                "      },\n" +
-                "      { \"category\": \"fiction\",\n" +
-                "        \"author\": \"Evelyn Waugh\",\n" +
-                "        \"title\": \"Sword of Honour\",\n" +
-                "        \"price\": 12.99,\n" +
-                "        \"readers\": [\n" +
-                "          {\"name\": \"John\", \"age\": 3, \"motto\": \"Goo goo ga ga\"}\n" +
-                "        ]\n" +
-                "      },\n" +
-                "      { \"category\": \"fiction\",\n" +
-                "        \"author\": \"Herman Melville\",\n" +
-                "        \"title\": \"Moby Dick\",\n" +
-                "        \"isbn\": \"0-553-21311-3\",\n" +
-                "        \"price\": 8.99\n" +
-                "      },\n" +
-                "      { \"category\": \"fiction\",\n" +
-                "        \"author\": \"J. R. R. Tolkien\",\n" +
-                "        \"title\": \"The Lord of the Rings\",\n" +
-                "        \"isbn\": \"0-395-19395-8\",\n" +
-                "        \"price\": 22.99\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"bicycle\": {\n" +
-                "      \"color\": \"red\",\n" +
-                "      \"price\": 19.95\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"allReaders\": [\n" +
-                "    {\"name\": \"Bob\", \"age\": 18},\n" +
-                "    {\"name\": \"Rob\", \"age\": 60},\n" +
-                "    {\"name\": \"John\", \"age\": 3}\n" +
-                "  ],\n" +
-                "  \"indices\": [\n" +
-                "    0, 1, 2\n" +
-                "  ],\n" +
-                "  \"properties\": [\n" +
-                "    \"readers\"\n" +
-                "  ]\n" +
-                "}\n");
+
+        StringBuilder jsonSb = new StringBuilder();
+        {
+            Scanner scanner = new Scanner(JsonQueryTest.class.getResourceAsStream("document.json"));
+            while (scanner.hasNextLine()) {
+                jsonSb.append(scanner.nextLine());
+            }
+            scanner.close();
+        }
+
+        document = new JacksonService().parseJson(jsonSb.toString());
     }
 
     @Test
@@ -191,6 +130,49 @@ public class JsonQueryTest {
         assertTrue(nodes.contains(Readers.Bob.toJson()));
         assertTrue(nodes.contains(Readers.Rob.toJson()));
         assertTrue(nodes.contains(Readers.John.toJson()));
+    }
+
+    @Test
+    public void testQueries_CompilerBehaviourImmutable() {
+
+        JsonQuery query;
+        List<JsonNode> nodes;
+
+        {
+            query = compiler.compile("$.store.book[*].readers[*]"); // readers[*] means all items of the book array.
+            nodes = collectJsonNodes(query.execute(document));
+
+            assertEquals(3, nodes.size());
+
+            assertTrue(nodes.contains(Readers.Bob.toJson()));
+            assertTrue(nodes.contains(Readers.Rob.toJson()));
+            assertTrue(nodes.contains(Readers.John.toJson()));
+        }
+
+        {
+            query = compiler.compile("$.store.book[*]");
+            nodes = collectJsonNodes(query.execute(document));
+
+            assertEquals(4, nodes.size());
+        }
+
+        {
+            query = compiler.compile("$.store.book[*].readers[*]");
+            nodes = collectJsonNodes(query.execute(document));
+
+            assertEquals(3, nodes.size());
+
+            assertTrue(nodes.contains(Readers.Bob.toJson()));
+            assertTrue(nodes.contains(Readers.Rob.toJson()));
+            assertTrue(nodes.contains(Readers.John.toJson()));
+        }
+      
+        {
+            query = compiler.compile("$.store.book[*]");
+            nodes = collectJsonNodes(query.execute(document));
+
+            assertEquals(4, nodes.size());
+        }
     }
 
     @Test
@@ -494,6 +476,29 @@ public class JsonQueryTest {
             nodes.add(wrapper.getNode());
         }
         return nodes;
+    }
+
+    private enum Readers {
+        Bob("Bob", 18, "God save the Queen!"),
+        Rob("Rob", 60, null),
+        John("John", 3, "Goo goo ga ga");
+
+        private JsonNode node;
+
+        Readers(String name, Integer age, String motto) {
+
+            ObjectNode reader = nodeFactory.objectNode();
+            reader.set("name", nodeFactory.textNode(name));
+            reader.set("age", nodeFactory.numberNode(age));
+            if (motto != null) {
+                reader.set("motto", nodeFactory.textNode(motto));
+            }
+            this.node = reader;
+        }
+
+        public JsonNode toJson() {
+            return node;
+        }
     }
 
 }

@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class XmlExtractorTest {
 	public void setUpXmlExtractor() throws IOException {
 		inputStreamMock = mock(InputStream.class);
 		streamConnectorMock = mock(StreamConnector.class);
-		when(streamConnectorMock.getInputStream()).thenReturn(inputStreamMock);
+		when(streamConnectorMock.getInputStream(anyMap())).thenReturn(inputStreamMock);
 		xPathExpressionMock = mock(XPathExpression.class);
 		xmlExtractor = new XmlExtractor(streamConnectorMock, new XmlRowAttribute[0], xPathExpressionMock);
 	}

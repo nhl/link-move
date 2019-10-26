@@ -196,7 +196,7 @@ public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
             Node c = nodes.item(i);
             if (Node.ELEMENT_NODE == c.getNodeType()) {
                 Element e = (Element) c;
-                extractor.getProperties().put(e.getTagName(), e.getTextContent());
+                extractor.addProperty(e.getTagName(), e.getTextContent());
             }
         }
     }

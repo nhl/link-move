@@ -1,14 +1,14 @@
 package com.nhl.link.move.runtime.xml;
 
 import com.nhl.link.move.connect.StreamConnector;
-import com.nhl.link.move.runtime.extractor.BaseExtractorFactoryTest;
 
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.when;
 
 public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConnector, XmlExtractorFactory> {
@@ -28,7 +28,7 @@ public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	public void setUpExtractorFactory() {
 		super.setUpExtractorFactory();
 		try {
-			when(getConnectorMock().getInputStream())
+			when(getConnectorMock().getInputStream(anyMap()))
 					.thenReturn(new ByteArrayInputStream(XML.getBytes()));
 		} catch (IOException e) {
 			fail("Unexpected IO exception");
@@ -38,12 +38,22 @@ public class XmlExtractorFactoryTest extends BaseExtractorFactoryTest<StreamConn
 	@Override
 	public void setUpExtractorModel() {
 		super.setUpExtractorModel();
-		getModel().getProperties().put(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY, "/test");
+		getModel().addProperty(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY, "/test");
+	}
+
+	@Test
+	public void testGetConnectorType() {
+		assertEquals(getConnectorType(), getExtractorFactory().getConnectorType());
+	}
+
+	@Test
+	public void testCreateExtractor() {
+		extractorFactory.createExtractor(connectorMock, getModel());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateExtractorWithEmptyXPathExpression() {
-		getModel().getProperties().remove(XmlExtractorFactory.XPATH_EXPRESSION_PROPERTY);
+		getModel().clearProperties();
 		getExtractorFactory().createExtractor(getConnectorMock(), getModel());
 	}
 }

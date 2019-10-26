@@ -36,7 +36,7 @@ class JsonExtractor implements Extractor {
     public RowReader getReader(Map<String, ?> parameters) {
         try {
             JsonNode source;
-            try (InputStream in = connector.getInputStream()) {
+            try (InputStream in = connector.getInputStream(parameters)) {
                 source = jacksonService.parseJson(in);
             }
             List<JsonNodeWrapper> nodes = query.execute(source);
