@@ -1,3 +1,7 @@
+## Release 2.10
+
+* #178 Unreliable FK detection resulting in "Object is not a DataObject" exception
+
 ## Release 2.9
 
 * #150 Support for XML namespaces in XPath-based extractor 

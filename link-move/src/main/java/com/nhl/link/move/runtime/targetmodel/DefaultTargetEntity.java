@@ -94,7 +94,15 @@ public class DefaultTargetEntity implements TargetEntity {
 
     protected TargetAttribute createAttribute(DbAttribute attribute) {
 
-        Optional<ForeignKey> fk = findAnyJoin(attribute).map(this::createFk).orElse(Optional.empty());
+        // there can be more than one join for an attribute, only some being straight FKs
+        // TODO: still kinda undeterministic.
+
+        Optional<ForeignKey> fk = findAllRelationships(attribute)
+                .stream()
+                .map(this::createFk)
+                .filter(Optional::isPresent)
+                .findFirst()
+                .orElse(Optional.empty());
 
         return new TargetAttribute(
                 this,
@@ -123,26 +131,23 @@ public class DefaultTargetEntity implements TargetEntity {
                 ASTDbPath.DB_PREFIX + firstJoin.getSourceName(),
                 firstJoin.getSource().getScale(),
                 javaType(firstJoin.getSource()),
-                createFk(firstJoin));
+                createFk(relationship));
     }
 
-    private Optional<ForeignKey> createFk(DbJoin join) {
+    private Optional<ForeignKey> createFk(DbRelationship relationship) {
 
-        // for now only relationships to a single master PK and those that have explicit ObjEntity mapping should
-        // be treated as FK
+        // What we decide to be a FK or not must roughly match the algorithm in
+        // TargetPropertyWriterService.createWriterFactory(..), or we won't be able to match the data columns with
+        // object properties
 
-        DbRelationship relationship = join.getRelationship();
-
-        // TODO: 1..1 relationships?
-        if (!relationship.isToPK() || relationship.isToMany()) {
-            return Optional.empty();
-        }
+        // TODO: there's no full correspondence, as TargetPropertyWriterService checks for object properties
 
         DbEntity targetDbEntity = relationship.getTargetEntity();
-        if (targetDbEntity.getPrimaryKeys().size() > 1) {
-            throw new LmRuntimeException("Unsupported FK: DbEntity "
-                    + targetDbEntity.getName()
-                    + " has multiple PK columns.");
+
+        if (relationship.isSourceIndependentFromTargetChange()
+                || relationship.getJoins().size() > 1
+                || targetDbEntity.getPrimaryKeys().size() > 1) {
+            return Optional.empty();
         }
 
         Collection<ObjEntity> targetEntities = targetDbEntity.getDataMap().getMappedEntities(targetDbEntity);
@@ -153,7 +158,7 @@ public class DefaultTargetEntity implements TargetEntity {
             case 1:
                 return Optional.of(new ForeignKey(entityMap,
                         targetEntities.iterator().next(),
-                        ASTDbPath.DB_PREFIX + join.getTargetName()));
+                        ASTDbPath.DB_PREFIX + relationship.getJoins().get(0).getTargetName()));
             default:
                 throw new LmRuntimeException("Unsupported FK: DbEntity "
                         + targetDbEntity.getName()
@@ -168,17 +173,20 @@ public class DefaultTargetEntity implements TargetEntity {
                 : TypesMapping.getJavaBySqlType(attribute.getType());
     }
 
-    private Optional<DbJoin> findAnyJoin(DbAttribute attribute) {
+    private Collection<DbRelationship> findAllRelationships(DbAttribute attribute) {
+
+        Collection<DbRelationship> candidates = new ArrayList<>(2);
         String attributeName = attribute.getName();
 
         for (DbRelationship relationship : attribute.getEntity().getRelationships()) {
             for (DbJoin join : relationship.getJoins()) {
                 if (attributeName.equals(join.getSourceName())) {
-                    return Optional.of(join);
+                    candidates.add(relationship);
+                    break;
                 }
             }
         }
 
-        return Optional.empty();
+        return candidates;
     }
 }
