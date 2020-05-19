@@ -31,35 +31,34 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public <T> TargetPropertyWriterFactory<T> getWriterFactory(Class<T> type) {
-
-        if (targetCayenneService.entityResolver().getObjEntity(type) == null) {
-            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
-        }
-
         return (TargetPropertyWriterFactory<T>) writerFactories.computeIfAbsent(type, this::createWriterFactory);
     }
 
     private <T> TargetPropertyWriterFactory<T> createWriterFactory(Class<T> type) {
-
+        
         ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
-        final TargetPropertyWriterFactory<T> writerFactory = new TargetPropertyWriterFactory<>(type, entity);
+        if (entity == null) {
+            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+        }
+
+        TargetPropertyWriterFactory<T> writerFactory = new TargetPropertyWriterFactory<>(type, entity);
         ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
 
-        // TODO: instead of providing mappings for all possible obj: and db:
-        // invariants, should we normalize the source map instead?
+        // precompile all possible obj: and db: invariants
+        // TODO: should we normalize the source map instead of doing this?
 
         descriptor.visitProperties(new PropertyVisitor() {
 
             @Override
             public boolean visitAttribute(AttributeProperty property) {
-                writerFactory.getOrCreateWriter(property);
+                writerFactory.initWriter(property);
                 return true;
             }
 
             @Override
             public boolean visitToOne(ToOneProperty property) {
                 if (!property.getRelationship().isSourceIndependentFromTargetChange()) {
-                    writerFactory.getOrCreateWriter(property);
+                    writerFactory.initWriter(property);
                 }
                 return true;
             }
@@ -72,7 +71,7 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
         });
 
         for (DbAttribute pk : entity.getDbEntity().getPrimaryKeys()) {
-            writerFactory.getOrCreatePkWriter(pk);
+            writerFactory.initPkWriter(pk);
         }
 
         return writerFactory;

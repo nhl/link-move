@@ -42,33 +42,33 @@ public class TargetPropertyWriterFactory<T> {
         return "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     }
 
-    public TargetPropertyWriter getOrCreatePkWriter(DbAttribute pkAttribute) {
+    protected void initPkWriter(DbAttribute pkAttribute) {
 
         if (!entity.getDbEntity().equals(pkAttribute.getEntity())) {
             throw new LmRuntimeException("Attribute belongs to different entity: " + pkAttribute.getName());
         }
 
-        return getOrCreateWriter(
+        getOrCreateWriter(
                 pkAttribute.getName(),
                 ASTDbPath.DB_PREFIX + pkAttribute.getName(),
                 () -> new TargetPkPropertyWriter(pkAttribute)
         );
     }
 
-    public TargetPropertyWriter getOrCreateWriter(AttributeProperty property) {
+    protected void initWriter(AttributeProperty property) {
 
         if (!entity.equals(property.getAttribute().getEntity())) {
             throw new LmRuntimeException("Property belongs to a different entity: " + property.getName());
         }
 
-        return getOrCreateWriter(
+        getOrCreateWriter(
                 property.getName(),
                 ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributeName(),
                 () -> new TargetAttributePropertyWriter(property)
         );
     }
 
-    public TargetPropertyWriter getOrCreateWriter(ToOneProperty property) {
+    protected void initWriter(ToOneProperty property) {
 
         if (!entity.equals(property.getRelationship().getSourceEntity())) {
             throw new LmRuntimeException("Property belongs to a different entity: " + property.getName());
@@ -77,8 +77,8 @@ public class TargetPropertyWriterFactory<T> {
         List<DbRelationship> dbRelationships = property.getRelationship().getDbRelationships();
         if (dbRelationships.size() > 1) {
             // TODO: support for flattened to-one relationships
-            LOGGER.info("TODO: not mapping db: path for a flattened relationship: " + property.getName());
-            return NULL_WRITER;
+            LOGGER.info("TODO: not mapping db: path for a flattened relationship: {}", property.getName());
+            return;
         }
 
         DbRelationship dbRelationship = dbRelationships.get(0);
@@ -86,11 +86,11 @@ public class TargetPropertyWriterFactory<T> {
 
         if (joins.size() > 1) {
             // TODO: support for multi-key to-one relationships
-            LOGGER.info("TODO: not mapping db: path for a multi-key relationship: " + property.getName());
-            return NULL_WRITER;
+            LOGGER.info("TODO: not mapping db: path for a multi-key relationship: {}", property.getName());
+            return;
         }
 
-        return getOrCreateWriter(
+        getOrCreateWriter(
                 property.getName(),
                 ASTDbPath.DB_PREFIX + joins.get(0).getSourceName(),
                 () -> new TargetToOnePropertyWriter(property)
