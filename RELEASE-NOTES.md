@@ -1,3 +1,7 @@
+## Release 2.11
+
+* #179 Upgrade to DFLib 0.8 
+
 ## Release 2.10
 
 * #178 Unreliable FK detection resulting in "Object is not a DataObject" exception

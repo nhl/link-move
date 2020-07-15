@@ -45,9 +45,6 @@ public class TargetMatcher<T> {
     }
 
     private DataFrame toDataFrame(List<T> data) {
-
-        return DataFrame.newFrame(index)
-                // TODO: when we can upgrade to 0.7, switch to Series.forData(data)
-                .columns(Series.forData(data.toArray()));
+        return DataFrame.newFrame(index).columns(Series.forData(data));
     }
 }
