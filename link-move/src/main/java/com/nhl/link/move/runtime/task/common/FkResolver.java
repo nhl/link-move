@@ -26,24 +26,10 @@ public class FkResolver {
         this.targetEntity = targetEntity;
     }
 
-    public Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index sourceSubIndex) {
-
+    public Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index valueColumns) {
         // using TargetAttribute as a map key will work reliably only if sources already have normalized paths
         Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
-
-        df.forEach(r -> {
-            for (String label : sourceSubIndex) {
-                Object val = r.get(sourceSubIndex.position(label));
-
-                if (val != null) {
-                    targetEntity
-                            .getAttribute(label)
-                            .filter(a -> a.getForeignKey().isPresent())
-                            .ifPresent(a -> fks.computeIfAbsent(a, ak -> new HashSet<>()).add(val));
-                }
-            }
-        });
-
+        df.forEach(r -> collectFks(r, valueColumns, fks));
         return fks;
     }
 
@@ -57,28 +43,7 @@ public class FkResolver {
 
         // map of *path* to map of *pk* to *object*...
         Map<TargetAttribute, Map<Object, Object>> related = new HashMap<>();
-
-        fkMap.forEach((a, fks) -> {
-
-            if (!fks.isEmpty()) {
-
-                TargetAttribute relatedPk = a.getForeignKey().get().getTarget();
-                String relatedPath = relatedPk.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length());
-                String relatedEntityName = relatedPk.getEntity().getName();
-
-                Map<Object, Object> relatedFetched = new HashMap<>((int) (fks.size() / 0.75));
-                ObjectSelect
-                        .query(Object.class)
-                        .entityName(relatedEntityName)
-                        .where(ExpressionFactory.inDbExp(relatedPath, fks))
-                        .select(context)
-                        // map by fk value (which is a PK of the matched object of course)
-                        .forEach(r -> relatedFetched.put(Cayenne.pkForObject((Persistent) r), r));
-
-                related.put(a, relatedFetched);
-            }
-        });
-
+        fkMap.forEach((a, fks) -> fetchRelated(a, fks, context, related));
         return related;
     }
 
@@ -98,5 +63,43 @@ public class FkResolver {
             //  relationship to null.
             to.set(path, fk != null ? fks.get(fk) : null);
         });
+    }
+
+    private void collectFks(RowProxy row, Index valueColumns, Map<TargetAttribute, Set<Object>> fks) {
+        for (String label : valueColumns) {
+            Object val = row.get(valueColumns.position(label));
+
+            if (val != null) {
+                targetEntity
+                        .getAttribute(label)
+                        .filter(a -> a.getForeignKey().isPresent())
+                        .ifPresent(a -> fks.computeIfAbsent(a, ak -> new HashSet<>()).add(val));
+            }
+        }
+    }
+
+    private void fetchRelated(
+            TargetAttribute a,
+            Set<Object> fks,
+            ObjectContext context,
+            Map<TargetAttribute, Map<Object, Object>> related) {
+
+        if (!fks.isEmpty()) {
+
+            TargetAttribute relatedPk = a.getForeignKey().get().getTarget();
+            String relatedPath = relatedPk.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length());
+            String relatedEntityName = relatedPk.getEntity().getName();
+
+            Map<Object, Object> relatedFetched = new HashMap<>((int) (fks.size() / 0.75));
+            ObjectSelect
+                    .query(Object.class)
+                    .entityName(relatedEntityName)
+                    .where(ExpressionFactory.inDbExp(relatedPath, fks))
+                    .select(context)
+                    // map by fk value (which is a PK of the matched object of course)
+                    .forEach(r -> relatedFetched.put(Cayenne.pkForObject((Persistent) r), r));
+
+            related.put(a, relatedFetched);
+        }
     }
 }
