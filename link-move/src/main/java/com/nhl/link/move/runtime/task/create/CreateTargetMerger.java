@@ -6,6 +6,7 @@ import com.nhl.dflib.Series;
 import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.task.common.FkResolver;
+import com.nhl.link.move.runtime.task.common.TargetMerger;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
@@ -18,25 +19,14 @@ import java.util.Set;
 /**
  * @since 2.6
  */
-public class CreateTargetMerger<T extends DataObject> {
-
-    private FkResolver fkResolver;
-    private TargetPropertyWriterFactory<T> writerFactory;
+public class CreateTargetMerger<T extends DataObject> extends TargetMerger<T> {
 
     public CreateTargetMerger(TargetPropertyWriterFactory<T> writerFactory, FkResolver fkResolver) {
-        this.writerFactory = writerFactory;
-        this.fkResolver = fkResolver;
+        super(writerFactory, fkResolver);
     }
 
-    public DataFrame merge(ObjectContext context, DataFrame df) {
-
-        Map<TargetAttribute, Set<Object>> fks = fkResolver.collectFks(df, dataColumns(df));
-        Map<TargetAttribute, Map<Object, Object>> related = fkResolver.fetchRelated(context, fks);
-
-        return merge(fkResolver.resolveFks(df, related));
-    }
-
-    private DataFrame merge(DataFrame df) {
+    @Override
+    protected DataFrame merge(DataFrame df) {
 
         Series<T> targets = df.getColumn(CreateSegment.TARGET_COLUMN);
         int len = targets.size();
@@ -56,9 +46,5 @@ public class CreateTargetMerger<T extends DataObject> {
         }
 
         return df;
-    }
-
-    private Index dataColumns(DataFrame df) {
-        return df.getColumnsIndex().dropLabels(s -> s.startsWith("$lm_"));
     }
 }
