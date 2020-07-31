@@ -28,7 +28,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
         implements CreateOrUpdateBuilder<T> {
 
     private Class<T> type;
-    private TargetMerger<T> merger;
+    private CreateOrUpdateTargetMerger<T> merger;
     private IExtractorService extractorService;
     private ITargetCayenneService targetCayenneService;
     private ITokenManager tokenManager;
@@ -40,7 +40,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
 
     public DefaultCreateOrUpdateBuilder(
             Class<T> type,
-            TargetMerger<T> merger,
+            CreateOrUpdateTargetMerger<T> merger,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,

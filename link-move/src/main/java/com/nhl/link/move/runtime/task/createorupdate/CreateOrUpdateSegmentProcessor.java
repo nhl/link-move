@@ -26,7 +26,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
     private SourceMapper sourceMapper;
     private TargetMatcher<T> matcher;
     private TargetMapper<T> mapper;
-    private TargetMerger<T> merger;
+    private CreateOrUpdateTargetMerger<T> merger;
 
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
@@ -35,7 +35,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
             SourceMapper sourceMapper,
             TargetMatcher<T> matcher,
             TargetMapper<T> mapper,
-            TargetMerger<T> merger,
+            CreateOrUpdateTargetMerger<T> merger,
             Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
 
         this.rowConverter = rowConverter;

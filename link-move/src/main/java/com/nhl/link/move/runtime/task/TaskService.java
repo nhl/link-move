@@ -10,12 +10,13 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
+import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.create.CreateTargetMapper;
 import com.nhl.link.move.runtime.task.create.CreateTargetMerger;
 import com.nhl.link.move.runtime.task.create.DefaultCreateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import com.nhl.link.move.runtime.task.createorupdate.TargetMerger;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateTargetMerger;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -56,10 +57,13 @@ public class TaskService implements ITaskService {
     @Override
     public <T extends DataObject> CreateBuilder<T> create(Class<T> type) {
 
-        CreateTargetMapper<T> mapper = new CreateTargetMapper<>(type);
-        CreateTargetMerger<T> merger = new CreateTargetMerger<>(writerService.getWriterFactory(type));
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
+        CreateTargetMapper<T> mapper = new CreateTargetMapper<>(type);
+        CreateTargetMerger<T> merger = new CreateTargetMerger<>(
+                writerService.getWriterFactory(type),
+                new FkResolver(targetEntity));
+
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
         return new DefaultCreateBuilder(
@@ -78,7 +82,9 @@ public class TaskService implements ITaskService {
         TargetEntity targetEntity = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
-        TargetMerger<T> merger = new TargetMerger<>(targetEntity, writerService.getWriterFactory(type));
+        CreateOrUpdateTargetMerger<T> merger = new CreateOrUpdateTargetMerger<>(
+                writerService.getWriterFactory(type),
+                new FkResolver(targetEntity));
 
         return new DefaultCreateOrUpdateBuilder<>(
                 type,

@@ -6,6 +6,7 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.LmTaskTester;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -68,5 +69,32 @@ public class CreateIT extends LmIntegrationTest {
                 .shouldUpdate(0)
                 .shouldDelete(0)
                 .test(e4);
+    }
+
+    @Test
+    public void test_SyncFk() {
+
+        LmTask task = etl.service(ITaskService.class).create(Etl3t.class)
+                .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").task();
+
+        srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
+        srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
+        srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (17, '5Name1')");
+        srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, '5Name2')");
+        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (58, 17, '3Name1', '3PHONE1')");
+        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name2', '3PHONE2')");
+
+        targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
+        targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
+        targetRunSql("INSERT INTO utest.etl5t (ID, NAME) VALUES (17, '5Name1')");
+        targetRunSql("INSERT INTO utest.etl5t (ID, NAME) VALUES (11, '5Name2')");
+
+        Execution e1 = task.run();
+        assertExec(2, 2, 0, 0, e1);
+        assertEquals(2, targetScalar("SELECT count(1) from utest.etl3t"));
+        assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
+                + "WHERE E2_ID = 58 AND E5_ID = 17 AND NAME = '3Name1' AND phone_number = '3PHONE1'"));
+        assertEquals(1, targetScalar("SELECT count(1) from utest.etl3t "
+                + "WHERE E2_ID = 34 AND E5_ID = 17 AND NAME = '3Name2' AND phone_number = '3PHONE2'"));
     }
 }

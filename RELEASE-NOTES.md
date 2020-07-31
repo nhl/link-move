@@ -1,3 +1,7 @@
+## Release 2.12
+
+* #181 CreateTask can't sync fks
+
 ## Release 2.11
 
 * #179 Upgrade to DFLib 0.8 

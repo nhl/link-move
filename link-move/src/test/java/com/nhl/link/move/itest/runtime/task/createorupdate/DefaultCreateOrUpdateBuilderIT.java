@@ -6,7 +6,7 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import com.nhl.link.move.runtime.task.createorupdate.TargetMerger;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateTargetMerger;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.DerbySrcTargetTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
@@ -31,7 +31,7 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 
         DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
-                mock(TargetMerger.class),
+                mock(CreateOrUpdateTargetMerger.class),
                 mock(RowConverter.class),
                 cayenneService,
                 mock(IExtractorService.class),
@@ -45,7 +45,7 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
     public void testTask_ExtractorPresent() {
         DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
-                mock(TargetMerger.class),
+                mock(CreateOrUpdateTargetMerger.class),
                 mock(RowConverter.class),
                 cayenneService,
                 mock(IExtractorService.class),

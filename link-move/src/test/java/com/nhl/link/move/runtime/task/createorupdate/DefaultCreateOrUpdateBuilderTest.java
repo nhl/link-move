@@ -54,7 +54,7 @@ public class DefaultCreateOrUpdateBuilderTest {
 
         this.builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
-                mock(TargetMerger.class),
+                mock(CreateOrUpdateTargetMerger.class),
                 mock(RowConverter.class),
                 cayenneService,
                 null,

@@ -1,4 +1,4 @@
-package com.nhl.link.move.runtime.task.createorupdate;
+package com.nhl.link.move.runtime.task.common;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
@@ -6,76 +6,27 @@ import com.nhl.dflib.row.RowBuilder;
 import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
-import com.nhl.link.move.writer.TargetPropertyWriter;
-import com.nhl.link.move.writer.TargetPropertyWriterFactory;
 import org.apache.cayenne.Cayenne;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.query.ObjectSelect;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * @since 2.6
+ * @since 2.12
  */
-public class TargetMerger<T extends DataObject> {
+public class FkResolver {
 
     private TargetEntity targetEntity;
-    private TargetPropertyWriterFactory<T> writerFactory;
 
-    public TargetMerger(TargetEntity targetEntity, TargetPropertyWriterFactory<T> writerFactory) {
-        this.writerFactory = writerFactory;
+    public FkResolver(TargetEntity targetEntity) {
         this.targetEntity = targetEntity;
     }
 
-    public DataFrame merge(ObjectContext context, DataFrame df) {
-
-        Index sourceSubIndex = df
-                .getColumnsIndex()
-                .dropLabels(CreateOrUpdateSegment.TARGET_COLUMN, CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
-
-        Map<TargetAttribute, Set<Object>> fks = collectFks(df, sourceSubIndex);
-        Map<TargetAttribute, Map<Object, Object>> related = fetchRelated(context, fks);
-
-        Index changeTrackingIndex = df.getColumnsIndex().addLabels(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
-
-        return df
-                .map(df.getColumnsIndex(), (f, t) -> resolveFks(f, t, related))
-                // TODO: rebuild "$lm_target" column individually instead of rebuilding the entire DataFrame
-                .map(changeTrackingIndex, (f, t) -> merge(f, t, sourceSubIndex))
-                .filterRows(r -> (boolean) r.get(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN))
-                .dropColumns(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN);
-    }
-
-
-    private void merge(RowProxy from, RowBuilder to, Index sourceSubIndex) {
-
-        boolean changed = (boolean) from.get(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
-        T target = (T) from.get(CreateOrUpdateSegment.TARGET_COLUMN);
-
-        from.copy(to);
-
-        for (String label : sourceSubIndex) {
-            TargetPropertyWriter writer = writerFactory.getOrCreateWriter(label);
-
-            Object val = from.get(sourceSubIndex.position(label));
-            if (writer.willWrite(target, val)) {
-                changed = true;
-                writer.write(target, val);
-            }
-        }
-
-        to.set(CreateOrUpdateSegment.TARGET_CHANGED_COLUMN, changed);
-    }
-
-    private Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index sourceSubIndex) {
+    public Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index sourceSubIndex) {
 
         // using TargetAttribute as a map key will work reliably only if sources already have normalized paths
         Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
@@ -96,7 +47,7 @@ public class TargetMerger<T extends DataObject> {
         return fks;
     }
 
-    private Map<TargetAttribute, Map<Object, Object>> fetchRelated(
+    public Map<TargetAttribute, Map<Object, Object>> fetchRelated(
             ObjectContext context,
             Map<TargetAttribute, Set<Object>> fkMap) {
 
@@ -131,7 +82,7 @@ public class TargetMerger<T extends DataObject> {
         return related;
     }
 
-    private void resolveFks(
+    public void resolveFks(
             RowProxy from,
             RowBuilder to,
             Map<TargetAttribute, Map<Object, Object>> related) {
