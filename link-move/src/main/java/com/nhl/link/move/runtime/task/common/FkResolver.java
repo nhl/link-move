@@ -2,8 +2,11 @@ package com.nhl.link.move.runtime.task.common;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
+import com.nhl.dflib.Series;
+import com.nhl.dflib.accumulator.ObjectAccumulator;
 import com.nhl.dflib.row.RowBuilder;
 import com.nhl.dflib.row.RowProxy;
+import com.nhl.dflib.series.ObjectSeries;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.Cayenne;
@@ -47,22 +50,25 @@ public class FkResolver {
         return related;
     }
 
-    public void resolveFks(
-            RowProxy from,
-            RowBuilder to,
+    public DataFrame resolveFks(
+            DataFrame df,
             Map<TargetAttribute, Map<Object, Object>> related) {
 
-        from.copy(to);
+        for (Map.Entry<TargetAttribute, Map<Object, Object>> e : related.entrySet()) {
 
-        related.forEach((attribute, fks) -> {
+            String path = e.getKey().getNormalizedPath();
+            Series<?> fkColumn = df.getColumn(path);
+            Map<Object, Object> fks = e.getValue();
 
-            String path = attribute.getNormalizedPath();
-            Object fk = from.get(path);
+            ObjectAccumulator seriesBuilder = new ObjectAccumulator(df.height());
 
             // TODO: do we care if an FK is invalid (i.e. "get" returns null) ? For now quietly setting the
             //  relationship to null.
-            to.set(path, fk != null ? fks.get(fk) : null);
-        });
+            fkColumn.map(fk -> fk != null ? fks.get(fk) : null).forEach(seriesBuilder::add);
+            df = df.dropColumns(path).addColumn(path, seriesBuilder.toSeries());
+        }
+
+        return df;
     }
 
     private void collectFks(RowProxy row, Index valueColumns, Map<TargetAttribute, Set<Object>> fks) {
