@@ -2,12 +2,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.*;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -15,6 +10,7 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
+import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Property;
@@ -35,12 +31,14 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
     private RowConverter rowConverter;
     private MapperBuilder mapperBuilder;
     private Mapper mapper;
+    private FkResolver fkResolver;
     private ListenersBuilder stageListenersBuilder;
     private ExtractorName extractorName;
 
     public DefaultCreateOrUpdateBuilder(
             Class<T> type,
             CreateOrUpdateTargetMerger<T> merger,
+            FkResolver fkResolver,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
@@ -49,6 +47,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
 
         this.type = type;
         this.merger = merger;
+        this.fkResolver = fkResolver;
         this.targetCayenneService = targetCayenneService;
         this.extractorService = extractorService;
         this.tokenManager = tokenManager;
@@ -149,6 +148,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
                 targetMatcher,
                 targetMapper,
                 merger,
+                fkResolver,
                 stageListenersBuilder.getListeners());
     }
 }

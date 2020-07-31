@@ -19,6 +19,7 @@ public class CreateSegment<T> {
 
     private DataFrame sources;
     private DataFrame mapped;
+    private DataFrame fksResolved;
     private DataFrame merged;
 
     public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
@@ -61,5 +62,19 @@ public class CreateSegment<T> {
 
     public void setMapped(DataFrame mapped) {
         this.mapped = mapped;
+    }
+
+    /**
+     * @since 2.12
+     */
+    public DataFrame getFksResolved() {
+        return fksResolved;
+    }
+
+    /**
+     * @since 2.12
+     */
+    public void setFksResolved(DataFrame fksResolved) {
+        this.fksResolved = fksResolved;
     }
 }

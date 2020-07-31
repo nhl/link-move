@@ -11,6 +11,7 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
+import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
@@ -23,6 +24,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
 
     private CreateTargetMapper<T> mapper;
     private CreateTargetMerger<T> merger;
+    private FkResolver fkResolver;
     private ITokenManager tokenManager;
     private ExtractorName extractorName;
     private ListenersBuilder stageListenersBuilder;
@@ -33,6 +35,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     public DefaultCreateBuilder(
             CreateTargetMapper<T> mapper,
             CreateTargetMerger<T> merger,
+            FkResolver fkResolver,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
@@ -40,6 +43,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
 
         this.mapper = mapper;
         this.merger = merger;
+        this.fkResolver = fkResolver;
         this.tokenManager = tokenManager;
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
@@ -92,6 +96,11 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     }
 
     private CreateSegmentProcessor<T> createProcessor() {
-        return new CreateSegmentProcessor<>(rowConverter, mapper, merger, stageListenersBuilder.getListeners());
+        return new CreateSegmentProcessor<>(
+                rowConverter,
+                mapper,
+                merger,
+                fkResolver,
+                stageListenersBuilder.getListeners());
     }
 }

@@ -19,6 +19,8 @@ import org.apache.cayenne.query.ObjectSelect;
 import java.util.*;
 
 /**
+ * Handler of resolve-fk processor stage.
+ *
  * @since 2.12
  */
 public class FkResolver {
@@ -29,14 +31,21 @@ public class FkResolver {
         this.targetEntity = targetEntity;
     }
 
-    public Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index valueColumns) {
+    public DataFrame resolveFks(ObjectContext context, DataFrame df) {
+        Map<TargetAttribute, Set<Object>> fks = collectFks(df, ProcessorUtil.dataColumns(df));
+        Map<TargetAttribute, Map<Object, Object>> related = fetchRelated(context, fks);
+
+        return resolveFks(df, related);
+    }
+
+    protected Map<TargetAttribute, Set<Object>> collectFks(DataFrame df, Index valueColumns) {
         // using TargetAttribute as a map key will work reliably only if sources already have normalized paths
         Map<TargetAttribute, Set<Object>> fks = new HashMap<>();
         df.forEach(r -> collectFks(r, valueColumns, fks));
         return fks;
     }
 
-    public Map<TargetAttribute, Map<Object, Object>> fetchRelated(
+    protected Map<TargetAttribute, Map<Object, Object>> fetchRelated(
             ObjectContext context,
             Map<TargetAttribute, Set<Object>> fkMap) {
 
@@ -50,7 +59,7 @@ public class FkResolver {
         return related;
     }
 
-    public DataFrame resolveFks(
+    protected DataFrame resolveFks(
             DataFrame df,
             Map<TargetAttribute, Map<Object, Object>> related) {
 
@@ -71,7 +80,7 @@ public class FkResolver {
         return df;
     }
 
-    private void collectFks(RowProxy row, Index valueColumns, Map<TargetAttribute, Set<Object>> fks) {
+    protected void collectFks(RowProxy row, Index valueColumns, Map<TargetAttribute, Set<Object>> fks) {
         for (String label : valueColumns) {
             Object val = row.get(valueColumns.position(label));
 
@@ -84,7 +93,7 @@ public class FkResolver {
         }
     }
 
-    private void fetchRelated(
+    protected void fetchRelated(
             TargetAttribute a,
             Set<Object> fks,
             ObjectContext context,

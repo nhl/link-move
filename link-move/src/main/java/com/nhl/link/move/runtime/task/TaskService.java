@@ -60,15 +60,14 @@ public class TaskService implements ITaskService {
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
         CreateTargetMapper<T> mapper = new CreateTargetMapper<>(type);
-        CreateTargetMerger<T> merger = new CreateTargetMerger<>(
-                writerService.getWriterFactory(type),
-                new FkResolver(targetEntity));
-
+        CreateTargetMerger<T> merger = new CreateTargetMerger<>(writerService.getWriterFactory(type));
+        FkResolver fkResolver = new FkResolver(targetEntity);
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
         return new DefaultCreateBuilder(
                 mapper,
                 merger,
+                fkResolver,
                 rowConverter,
                 targetCayenneService,
                 extractorService,
@@ -82,13 +81,13 @@ public class TaskService implements ITaskService {
         TargetEntity targetEntity = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
-        CreateOrUpdateTargetMerger<T> merger = new CreateOrUpdateTargetMerger<>(
-                writerService.getWriterFactory(type),
-                new FkResolver(targetEntity));
+        CreateOrUpdateTargetMerger<T> merger = new CreateOrUpdateTargetMerger<>(writerService.getWriterFactory(type));
+        FkResolver fkResolver = new FkResolver(targetEntity);
 
         return new DefaultCreateOrUpdateBuilder<>(
                 type,
                 merger,
+                fkResolver,
                 rowConverter,
                 targetCayenneService,
                 extractorService,

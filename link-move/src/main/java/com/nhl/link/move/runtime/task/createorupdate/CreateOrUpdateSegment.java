@@ -23,6 +23,7 @@ public class CreateOrUpdateSegment<T> {
     private DataFrame matchedTargets;
     private DataFrame mapped;
     private DataFrame merged;
+    private DataFrame fksResolved;
 
     public CreateOrUpdateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
         this.sourceRows = sourceRows;
@@ -88,4 +89,17 @@ public class CreateOrUpdateSegment<T> {
         this.merged = merged;
     }
 
+    /**
+     * @since 2.12
+     */
+    public DataFrame getFksResolved() {
+        return fksResolved;
+    }
+
+    /**
+     * @since 2.12
+     */
+    public void setFksResolved(DataFrame fksResolved) {
+        this.fksResolved = fksResolved;
+    }
 }

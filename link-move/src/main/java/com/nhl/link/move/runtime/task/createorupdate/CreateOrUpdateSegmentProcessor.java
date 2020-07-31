@@ -1,13 +1,9 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.*;
 import com.nhl.link.move.runtime.task.StageListener;
+import com.nhl.link.move.runtime.task.common.FkResolver;
 import org.apache.cayenne.DataObject;
 
 import java.lang.annotation.Annotation;
@@ -27,6 +23,8 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
     private CreateOrUpdateTargetMatcher<T> matcher;
     private CreateOrUpdateTargetMapper<T> mapper;
     private CreateOrUpdateTargetMerger<T> merger;
+    private FkResolver fkResolver;
+
 
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
@@ -36,6 +34,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
             CreateOrUpdateTargetMatcher<T> matcher,
             CreateOrUpdateTargetMapper<T> mapper,
             CreateOrUpdateTargetMerger<T> merger,
+            FkResolver fkResolver,
             Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
 
         this.rowConverter = rowConverter;
@@ -43,6 +42,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
         this.matcher = matcher;
         this.mapper = mapper;
         this.merger = merger;
+        this.fkResolver = fkResolver;
         this.listeners = stageListeners;
     }
 
@@ -53,6 +53,7 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
         mapSrc(exec, segment);
         matchTarget(exec, segment);
         mapToTarget(exec, segment);
+        resolveFks(exec, segment);
         mergeToTarget(exec, segment);
         commitTarget(exec, segment);
     }
@@ -77,8 +78,13 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
         notifyListeners(AfterTargetsMapped.class, exec, segment);
     }
 
+    private void resolveFks(Execution exec, CreateOrUpdateSegment<T> segment) {
+        segment.setFksResolved(fkResolver.resolveFks(segment.getContext(), segment.getMapped()));
+        notifyListeners(AfterFksResolved.class, exec, segment);
+    }
+
     private void mergeToTarget(Execution exec, CreateOrUpdateSegment<T> segment) {
-        segment.setMerged(merger.merge(segment.getContext(), segment.getMapped()));
+        segment.setMerged(merger.merge(segment.getFksResolved()));
         notifyListeners(AfterTargetsMerged.class, exec, segment);
     }
 

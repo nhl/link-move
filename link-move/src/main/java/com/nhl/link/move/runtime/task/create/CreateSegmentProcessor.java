@@ -1,11 +1,9 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.*;
 import com.nhl.link.move.runtime.task.StageListener;
+import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import org.apache.cayenne.DataObject;
 
@@ -23,23 +21,26 @@ public class CreateSegmentProcessor<T extends DataObject> {
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
     private CreateTargetMapper<T> mapper;
     private CreateTargetMerger<T> merger;
-
+    private FkResolver fkResolver;
 
     public CreateSegmentProcessor(
             RowConverter rowConverter,
             CreateTargetMapper<T> mapper,
             CreateTargetMerger<T> merger,
+            FkResolver fkResolver,
             Map<Class<? extends Annotation>, List<StageListener>> listeners) {
 
         this.rowConverter = rowConverter;
         this.listeners = listeners;
         this.mapper = mapper;
         this.merger = merger;
+        this.fkResolver = fkResolver;
     }
 
     public void process(Execution exec, CreateSegment<T> segment) {
         convertSrc(exec, segment);
         mapToTarget(exec, segment);
+        resolveFks(exec, segment);
         mergeToTarget(exec, segment);
         commitTarget(exec, segment);
     }
@@ -54,8 +55,13 @@ public class CreateSegmentProcessor<T extends DataObject> {
         notifyListeners(AfterTargetsMapped.class, exec, segment);
     }
 
+    private void resolveFks(Execution exec, CreateSegment<T> segment) {
+        segment.setFksResolved(fkResolver.resolveFks(segment.getContext(), segment.getMapped()));
+        notifyListeners(AfterFksResolved.class, exec, segment);
+    }
+
     private void mergeToTarget(Execution exec, CreateSegment<T> segment) {
-        segment.setMerged(merger.merge(segment.getContext(), segment.getMapped()));
+        segment.setMerged(merger.merge(segment.getFksResolved()));
         notifyListeners(AfterTargetsMerged.class, exec, segment);
     }
 

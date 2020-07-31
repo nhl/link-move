@@ -1,6 +1,7 @@
 ## Release 2.12
 
 * #181 CreateTask can't sync fks
+* #182 Extract FK resolving into a separate stage for create and create-or-update tasks
 
 ## Release 2.11
 

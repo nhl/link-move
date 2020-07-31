@@ -10,6 +10,7 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.StageListener;
+import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.delete.DeleteSegment;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
@@ -55,6 +56,7 @@ public class DefaultCreateOrUpdateBuilderTest {
         this.builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,
                 mock(CreateOrUpdateTargetMerger.class),
+                mock(FkResolver.class),
                 mock(RowConverter.class),
                 cayenneService,
                 null,
