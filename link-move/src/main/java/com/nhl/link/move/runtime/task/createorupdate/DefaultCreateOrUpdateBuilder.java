@@ -140,8 +140,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
         SourceMapper sourceMapper = new SourceMapper(mapper);
-        TargetMatcher<T> targetMatcher = new TargetMatcher<>(type, mapper);
-        TargetMapper<T> targetMapper = new TargetMapper<>(type, mapper);
+        CreateOrUpdateTargetMatcher<T> targetMatcher = new CreateOrUpdateTargetMatcher<>(type, mapper);
+        CreateOrUpdateTargetMapper<T> targetMapper = new CreateOrUpdateTargetMapper<>(type, mapper);
 
         return new CreateOrUpdateSegmentProcessor<>(
                 rowConverter,

@@ -9,12 +9,12 @@ import org.apache.cayenne.ObjectContext;
 /**
  * @since 2.6
  */
-public class TargetMapper<T extends DataObject> {
+public class CreateOrUpdateTargetMapper<T extends DataObject> {
 
     private Class<T> type;
     private Mapper mapper;
 
-    public TargetMapper(Class<T> type, Mapper mapper) {
+    public CreateOrUpdateTargetMapper(Class<T> type, Mapper mapper) {
         this.mapper = mapper;
         this.type = type;
     }

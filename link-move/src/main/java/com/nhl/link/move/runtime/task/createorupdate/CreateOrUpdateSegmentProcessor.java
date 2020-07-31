@@ -24,8 +24,8 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
     private RowConverter rowConverter;
     private SourceMapper sourceMapper;
-    private TargetMatcher<T> matcher;
-    private TargetMapper<T> mapper;
+    private CreateOrUpdateTargetMatcher<T> matcher;
+    private CreateOrUpdateTargetMapper<T> mapper;
     private CreateOrUpdateTargetMerger<T> merger;
 
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
@@ -33,8 +33,8 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
     public CreateOrUpdateSegmentProcessor(
             RowConverter rowConverter,
             SourceMapper sourceMapper,
-            TargetMatcher<T> matcher,
-            TargetMapper<T> mapper,
+            CreateOrUpdateTargetMatcher<T> matcher,
+            CreateOrUpdateTargetMapper<T> mapper,
             CreateOrUpdateTargetMerger<T> merger,
             Map<Class<? extends Annotation>, List<StageListener>> stageListeners) {
 

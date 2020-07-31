@@ -17,13 +17,13 @@ import java.util.Map;
 /**
  * @since 1.3
  */
-public class TargetMatcher<T> {
+public class CreateOrUpdateTargetMatcher<T> {
 
     private Class<T> type;
     private Mapper mapper;
     private Index index;
 
-    public TargetMatcher(Class<T> type, Mapper mapper) {
+    public CreateOrUpdateTargetMatcher(Class<T> type, Mapper mapper) {
         this.type = type;
         this.mapper = mapper;
         this.index = Index.forLabels(CreateOrUpdateSegment.TARGET_COLUMN);
