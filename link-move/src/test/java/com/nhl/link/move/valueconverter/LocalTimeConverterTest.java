@@ -6,7 +6,9 @@ import org.junit.Test;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,9 +20,11 @@ public class LocalTimeConverterTest {
 
     private static final LocalTimeConverter CONVERTER = new LocalTimeConverter();
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_utilDate() {
-        CONVERTER.convert(Date.from(Instant.now()));
+        Date datetime = new Date();
+        LocalTime localTime = LocalDateTime.ofInstant(datetime.toInstant(), ZoneId.systemDefault()).toLocalTime();
+        assertEquals(localTime, CONVERTER.convert(datetime));
     }
 
     @Test(expected = LmRuntimeException.class)

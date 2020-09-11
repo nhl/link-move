@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * @since 2.2
@@ -27,9 +28,12 @@ public class LocalTimeConverter extends SingleTypeConverter<LocalTime> {
                 // java.sql.Time does not set millis when creating a LocalTime
                 return time.toLocalTime().plusNanos(instant.getNano());
 
-            case "java.util.Date":
             case "java.sql.Date":
                 throw new LmRuntimeException("Will not perform lossy conversion from LocalTime: " + value);
+
+            case "java.util.Date":
+                Date datetime = (Date) value;
+                return new Timestamp(datetime.getTime()).toLocalDateTime().toLocalTime();
 
             case "java.sql.Timestamp":
                 Timestamp timestamp = (Timestamp) value;

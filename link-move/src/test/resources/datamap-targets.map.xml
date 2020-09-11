@@ -41,7 +41,7 @@
 		<db-attribute name="c_time" type="TIME"/>
 		<db-attribute name="c_timestamp" type="TIMESTAMP"/>
 		<db-attribute name="c_varchar" type="VARCHAR" length="100"/>
-		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 	</db-entity>
 	<db-entity name="etl5t" schema="utest">
 		<db-attribute name="date" type="DATE"/>
@@ -97,6 +97,11 @@
 		<obj-attribute name="cTime" type="java.util.Date" db-attribute-path="c_time"/>
 		<obj-attribute name="cTimestamp" type="java.util.Date" db-attribute-path="c_timestamp"/>
 		<obj-attribute name="cVarchar" type="java.lang.String" db-attribute-path="c_varchar"/>
+	</obj-entity>
+	<obj-entity name="Etl4t_jt" className="com.nhl.link.move.unit.cayenne.t.Etl4t_jt" dbEntityName="etl4t">
+		<obj-attribute name="cDate" type="java.time.LocalDate" db-attribute-path="c_date"/>
+		<obj-attribute name="cTime" type="java.time.LocalTime" db-attribute-path="c_time"/>
+		<obj-attribute name="cTimestamp" type="java.time.LocalDateTime" db-attribute-path="c_timestamp"/>
 	</obj-entity>
 	<obj-entity name="Etl5t" className="com.nhl.link.move.unit.cayenne.t.Etl5t" dbEntityName="etl5t">
 		<obj-attribute name="date" type="java.util.Date" db-attribute-path="date"/>

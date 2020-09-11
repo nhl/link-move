@@ -4,10 +4,7 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
-import com.nhl.link.move.unit.cayenne.t.Etl3t;
-import com.nhl.link.move.unit.cayenne.t.Etl4t;
-import com.nhl.link.move.unit.cayenne.t.Etl6t;
-import com.nhl.link.move.unit.cayenne.t.Etl8t;
+import com.nhl.link.move.unit.cayenne.t.*;
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.query.SQLSelect;
 import org.junit.Test;
@@ -141,6 +138,21 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 		createOrUpdateEtl8(1, c1, c2, c3);
 
 		task.run();
+	}
+
+	@Test
+	public void test_ImplicitJavaTimeConversion() {
+
+		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t_jt.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_jt_implicit.xml")
+				.task();
+
+		srcRunSql("INSERT INTO utest.etl4 (ID, C_DATE, C_TIME, C_TIMESTAMP) VALUES (1, '2020-01-02', '08:01:03', '2020-03-04 09:01:04')");
+
+		Execution e1 = task.run();
+		assertExec(1, 1, 0, 0, e1);
+
+		assertEquals(1, targetScalar("SELECT count(1) from utest.etl4t WHERE ID = 1 AND C_DATE = '2020-01-02' AND C_TIME = '08:01:03' AND C_TIMESTAMP = '2020-03-04 09:01:04'"));
 	}
 
 	private void createOrUpdateEtl8(int id, BigDecimal c1, BigDecimal c2, BigDecimal c3) {

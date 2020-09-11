@@ -1,3 +1,7 @@
+## Release 2.13
+
+* #183 "Will not perform lossy conversion from LocalTime" exception when lm'ing time
+
 ## Release 2.12
 
 * #181 CreateTask can't sync fks
