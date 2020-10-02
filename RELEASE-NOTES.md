@@ -1,3 +1,7 @@
+## Release 2.14
+
+* #185 Target entities with flattened attributes
+
 ## Release 2.13
 
 * #183 "Will not perform lossy conversion from LocalTime" exception when lm'ing time

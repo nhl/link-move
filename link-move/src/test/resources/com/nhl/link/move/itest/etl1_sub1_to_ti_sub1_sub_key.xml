@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>s_key</source>
+				<target>subKey</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>s_subp1</source>
+				<target>subp1</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT s_key, s_subp1 FROM utest.etl_sub1
+			]]>
+			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
+		</properties>
+	</extractor>
+</config>

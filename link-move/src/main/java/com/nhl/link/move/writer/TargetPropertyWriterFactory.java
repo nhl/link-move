@@ -29,9 +29,9 @@ public class TargetPropertyWriterFactory<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetPropertyWriterFactory.class);
 
-    private Class<T> type;
-    private ObjEntity entity;
-    private Map<String, TargetPropertyWriter> writers = new ConcurrentHashMap<>();
+    private final Class<T> type;
+    private final ObjEntity entity;
+    private final Map<String, TargetPropertyWriter> writers = new ConcurrentHashMap<>();
 
     public TargetPropertyWriterFactory(Class<T> type, ObjEntity entity) {
         this.type = type;
@@ -42,6 +42,7 @@ public class TargetPropertyWriterFactory<T> {
         return "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
     }
 
+    // TODO: this and other protected methods are called by another class - TargetPropertyWriterService... Refactor..
     protected void initPkWriter(DbAttribute pkAttribute) {
 
         if (!entity.getDbEntity().equals(pkAttribute.getEntity())) {
@@ -63,7 +64,7 @@ public class TargetPropertyWriterFactory<T> {
 
         getOrCreateWriter(
                 property.getName(),
-                ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributeName(),
+                ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributePath(),
                 () -> new TargetAttributePropertyWriter(property)
         );
     }

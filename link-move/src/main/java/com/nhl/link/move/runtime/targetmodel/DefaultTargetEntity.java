@@ -46,7 +46,7 @@ public class DefaultTargetEntity implements TargetEntity {
     public Optional<TargetAttribute> getAttribute(String path) {
         // TODO: ensure we don't create duplicate attributes for path invariants..
         // while this doesn't seem to harm anything, it just feels dirty.. And sooner or later we'd allow to iterate
-        // over entitye attributes and then it becomes a problem
+        // over entity attributes and then it becomes a problem
         return attributes.computeIfAbsent(path, this::createAttribute);
     }
 
@@ -60,24 +60,17 @@ public class DefaultTargetEntity implements TargetEntity {
         Expression dbExp = entity.translateToDbPath(ExpressionFactory.exp(path));
 
         List<PathComponent<DbAttribute, DbRelationship>> components = new ArrayList<>(2);
-        for (PathComponent<DbAttribute, DbRelationship> c : entity.getDbEntity()
-                .resolvePath(dbExp, Collections.emptyMap())) {
-            components.add(c);
-        }
+        entity.getDbEntity().resolvePath(dbExp, Collections.emptyMap()).forEach(components::add);
 
-        if (components.size() == 0) {
+        if (components.isEmpty()) {
             throw new LmRuntimeException("Null path. Entity: " + entity.getName());
         }
 
-        if (components.size() > 1) {
-            throw new LmRuntimeException("Nested paths not supported. Path: " + dbExp);
-        }
-
-        PathComponent<DbAttribute, DbRelationship> c = components.get(0);
+        PathComponent<DbAttribute, DbRelationship> c = components.get(components.size() - 1);
 
         TargetAttribute attribute = c.getAttribute() != null
-                ? createAttribute(c.getAttribute())
-                : createAttribute(c.getRelationship());
+                ? createAttributeForAttribute(dbExp, components)
+                : createAttributeForRelationship(dbExp, components);
 
         return Optional.of(attribute);
     }
@@ -92,10 +85,12 @@ public class DefaultTargetEntity implements TargetEntity {
         }
     }
 
-    protected TargetAttribute createAttribute(DbAttribute attribute) {
+    protected TargetAttribute createAttributeForAttribute(Expression dbExp, List<PathComponent<DbAttribute, DbRelationship>> components) {
 
         // there can be more than one join for an attribute, only some being straight FKs
         // TODO: still kinda undeterministic.
+
+        DbAttribute attribute = components.get(components.size() - 1).getAttribute();
 
         Optional<ForeignKey> fk = findAllRelationships(attribute)
                 .stream()
@@ -106,13 +101,22 @@ public class DefaultTargetEntity implements TargetEntity {
 
         return new TargetAttribute(
                 this,
-                ASTDbPath.DB_PREFIX + attribute.getName(),
+                dbExp.toString(),
                 attribute.getScale(),
                 javaType(attribute),
                 fk);
     }
 
-    protected TargetAttribute createAttribute(DbRelationship relationship) {
+    protected TargetAttribute createAttributeForRelationship(Expression dbExp, List<PathComponent<DbAttribute, DbRelationship>> components) {
+
+        // TODO: support flattened relationships. We already support flattened attributes
+        //  (see "createAttributeForAttribute" above). Do they make sense in the context of an ETL though?
+
+        if (components.size() > 1) {
+            throw new LmRuntimeException("Flattened relationships not supported. Path: " + dbExp);
+        }
+
+        DbRelationship relationship = components.get(components.size() - 1).getRelationship();
 
         List<DbJoin> joins = relationship.getJoins();
 
@@ -128,6 +132,7 @@ public class DefaultTargetEntity implements TargetEntity {
 
         return new TargetAttribute(
                 this,
+                // TODO:
                 ASTDbPath.DB_PREFIX + firstJoin.getSourceName(),
                 firstJoin.getSource().getScale(),
                 javaType(firstJoin.getSource()),

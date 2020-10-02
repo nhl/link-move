@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
+	 project-version="9">
+	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne"/>
+	<property name="defaultSchema" value="utest"/>
+	<db-entity name="etl_sub1" schema="utest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
+		<db-attribute name="s_key" type="VARCHAR" isMandatory="true" length="100"/>
+		<db-attribute name="s_subp1" type="VARCHAR" length="100"/>
+	</db-entity>
+</data-map>

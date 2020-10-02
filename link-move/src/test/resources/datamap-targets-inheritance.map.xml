@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
+	 project-version="9">
+	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.ti"/>
+	<property name="defaultSchema" value="utest"/>
+	<property name="quoteSqlIdentifiers" value="true"/>
+	<db-entity name="ti_sub1" schema="utest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="sub_key" type="VARCHAR" length="100"/>
+		<db-attribute name="subp1" type="VARCHAR" length="100"/>
+	</db-entity>
+	<db-entity name="ti_super" schema="utest">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="super_key" type="VARCHAR" length="100"/>
+		<db-attribute name="type" type="VARCHAR" isMandatory="true" length="100"/>
+	</db-entity>
+	<obj-entity name="TiSub1" superEntityName="TiSuper" className="com.nhl.link.move.unit.cayenne.ti.TiSub1">
+		<qualifier><![CDATA[type = "sub1"]]></qualifier>
+		<obj-attribute name="subKey" type="java.lang.String" db-attribute-path="sub1.sub_key"/>
+		<obj-attribute name="subp1" type="java.lang.String" db-attribute-path="sub1.subp1"/>
+		<attribute-override name="type" db-attribute-path="type"/>
+	</obj-entity>
+	<obj-entity name="TiSuper" abstract="true" className="com.nhl.link.move.unit.cayenne.ti.TiSuper" dbEntityName="ti_super">
+		<obj-attribute name="superKey" type="java.lang.String" db-attribute-path="super_key"/>
+		<obj-attribute name="type" type="java.lang.String" db-attribute-path="type"/>
+	</obj-entity>
+	<db-relationship name="tiSuper" source="ti_sub1" target="ti_super" toMany="false">
+		<db-attribute-pair source="id" target="id"/>
+	</db-relationship>
+	<db-relationship name="sub1" source="ti_super" target="ti_sub1" toDependentPK="true" toMany="false">
+		<db-attribute-pair source="id" target="id"/>
+	</db-relationship>
+</data-map>
