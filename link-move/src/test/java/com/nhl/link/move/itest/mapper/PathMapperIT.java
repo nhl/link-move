@@ -11,30 +11,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PathMapperIT extends DerbySrcTargetTest {
 
-	private Etl3t e;
+    Etl3t testObject;
 
-	@BeforeEach
-	public void before() {
-		e = targetContext.newObject(Etl3t.class);
-		e.setPhoneNumber("123458");
-		targetContext.commitChanges();
-	}
+    @BeforeEach
+    void createTestObject() {
+        testObject = targetContext.newObject(Etl3t.class);
+        testObject.setPhoneNumber("123458");
+        targetContext.commitChanges();
+    }
 
-	@Test
-	public void testKeyForTarget_Obj() {
-		PathMapper mapper = new PathMapper("phoneNumber");
-		assertEquals("123458", mapper.keyForTarget(e));
-	}
-	
-	@Test
-	public void testKeyForTarget_Db() {
-		PathMapper mapper = new PathMapper("db:phone_number");
-		assertEquals("123458", mapper.keyForTarget(e));
-	}
-	
-	@Test
-	public void testKeyForTarget_DbId() {
-		PathMapper mapper = new PathMapper("db:id");
-		assertEquals(Cayenne.intPKForObject(e), mapper.keyForTarget(e));
-	}
+    @Test
+    public void testKeyForTarget_Obj() {
+        PathMapper mapper = new PathMapper("phoneNumber");
+        assertEquals("123458", mapper.keyForTarget(testObject));
+    }
+
+    @Test
+    public void testKeyForTarget_Db() {
+        PathMapper mapper = new PathMapper("db:phone_number");
+        assertEquals("123458", mapper.keyForTarget(testObject));
+    }
+
+    @Test
+    public void testKeyForTarget_DbId() {
+        PathMapper mapper = new PathMapper("db:id");
+        assertEquals(Cayenne.intPKForObject(testObject), mapper.keyForTarget(testObject));
+    }
 }

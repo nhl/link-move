@@ -29,7 +29,7 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
     protected LmRuntime createEtl() {
         Connector c = new DataSourceConnector("derbysrc", srcDb.getDataSource());
         return new LmRuntimeBuilder()
-                .withTargetRuntime(cayenne.getRuntime())
+                .withTargetRuntime(targetCayenne.getRuntime())
                 .withConnector("derbysrc", c)
                 .withConnectorFactory(StreamConnector.class, new URIConnectorFactory()).build();
     }

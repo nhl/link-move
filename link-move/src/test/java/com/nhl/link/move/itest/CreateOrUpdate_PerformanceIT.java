@@ -27,7 +27,7 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
 
     @BeforeAll
     public static void initQueryCapture() {
-        cayenne.getRuntime().getDataDomain().addFilter(QUERY_CAPTURE);
+        targetCayenne.getRuntime().getDataDomain().addFilter(QUERY_CAPTURE);
     }
 
     @BeforeEach

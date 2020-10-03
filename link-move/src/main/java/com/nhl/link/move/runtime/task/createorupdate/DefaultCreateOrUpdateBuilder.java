@@ -23,16 +23,16 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
         extends BaseTaskBuilder
         implements CreateOrUpdateBuilder<T> {
 
-    private Class<T> type;
-    private CreateOrUpdateTargetMerger<T> merger;
-    private IExtractorService extractorService;
-    private ITargetCayenneService targetCayenneService;
-    private ITokenManager tokenManager;
-    private RowConverter rowConverter;
-    private MapperBuilder mapperBuilder;
+    private final Class<T> type;
+    private final CreateOrUpdateTargetMerger<T> merger;
+    private final IExtractorService extractorService;
+    private final ITargetCayenneService targetCayenneService;
+    private final ITokenManager tokenManager;
+    private final RowConverter rowConverter;
+    private final MapperBuilder mapperBuilder;
     private Mapper mapper;
-    private FkResolver fkResolver;
-    private ListenersBuilder stageListenersBuilder;
+    private final FkResolver fkResolver;
+    private final ListenersBuilder stageListenersBuilder;
     private ExtractorName extractorName;
 
     public DefaultCreateOrUpdateBuilder(
@@ -130,7 +130,12 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
             throw new IllegalStateException("Required 'extractorName' is not set");
         }
 
-        return new CreateOrUpdateTask<T>(extractorName, batchSize, targetCayenneService, extractorService, tokenManager,
+        return new CreateOrUpdateTask<>(
+                extractorName,
+                batchSize,
+                targetCayenneService,
+                extractorService,
+                tokenManager,
                 createProcessor());
     }
 

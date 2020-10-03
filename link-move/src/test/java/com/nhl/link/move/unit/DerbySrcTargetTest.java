@@ -21,7 +21,7 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
     protected static final DerbyTester targetDb = DerbyTester.db();
 
     @BQTestTool(BQTestScope.GLOBAL)
-    protected static final CayenneTester cayenne = CayenneTester.create()
+    protected static final CayenneTester targetCayenne = CayenneTester.create()
             .deleteBeforeEachTest()
             //  TODO: workaround for a CayenneTester bug: generator skips the "sub" table in vertical
             //   inheritance schema.
@@ -43,15 +43,15 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
     protected static final BQRuntime targetApp = Bootique.app()
             .autoLoadModules()
             .module(targetDb.moduleWithTestDataSource("target_db"))
-            .module(cayenne.moduleWithTestHooks())
+            .module(targetCayenne.moduleWithTestHooks())
             .module(b -> CayenneModule.extend(b).addProject("cayenne-linketl-tests-targets.xml"))
             .createRuntime();
 
     protected ObjectContext targetContext;
 
     @BeforeEach
-    public void prepareTarget() {
-        this.targetContext = cayenne.getRuntime().newContext();
+    protected void prepareTargetContext() {
+        this.targetContext = targetCayenne.getRuntime().newContext();
     }
 
     /**
