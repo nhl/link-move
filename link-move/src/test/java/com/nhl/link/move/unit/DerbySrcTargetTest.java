@@ -5,6 +5,7 @@ import io.bootique.BQRuntime;
 import io.bootique.Bootique;
 import io.bootique.cayenne.CayenneModule;
 import io.bootique.cayenne.junit5.CayenneTester;
+import io.bootique.jdbc.junit5.Table;
 import io.bootique.jdbc.junit5.derby.DerbyTester;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTestScope;
@@ -53,12 +54,34 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
         this.targetContext = cayenne.getRuntime().newContext();
     }
 
+    /**
+     * @deprecated replace with Table API
+     */
     protected void targetRunSql(String sql) {
         targetContext.performGenericQuery(new SQLTemplate(Object.class, sql));
     }
 
+    /**
+     * @deprecated replace with Table API
+     */
     protected int targetScalar(String sql) {
         SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
         return query.selectOne(targetContext);
+    }
+
+    protected Table etl1t() {
+        return targetDb.getTable("ETL1T");
+    }
+
+    protected Table etl2t() {
+        return targetDb.getTable("ETL2T");
+    }
+
+    protected Table etl3t() {
+        return targetDb.getTable("ETL3T");
+    }
+
+    protected Table etl5t() {
+        return targetDb.getTable("ETL5T");
     }
 }
