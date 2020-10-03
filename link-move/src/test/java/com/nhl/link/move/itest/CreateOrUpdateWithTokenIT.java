@@ -18,8 +18,10 @@ public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_withtoken.xml").matchBy(Etl1t.NAME).task();
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
-		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', 1)");
+		srcEtl1().insertColumns("name", "age")
+				.values("a", 3)
+				.values("b", 1)
+				.exec();
 
 		Execution e1 = task.run(new IntToken("test_ByAttribute", 2));
 		assertExec(1, 1, 0, 0, e1);
@@ -34,7 +36,7 @@ public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 		Execution e3 = task.run(new IntToken("test_ByAttribute", 8));
 		assertExec(0, 0, 0, 0, e3);
 
-		srcRunSql("UPDATE utest.etl1 SET AGE = 9 WHERE NAME = 'b'");
+		srcEtl1().update().set("age", 9).where("name", "b").exec();
 
 		Execution e4 = task.run(new IntToken("test_ByAttribute", 11));
 		assertExec(1, 0, 1, 0, e4);

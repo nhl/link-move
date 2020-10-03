@@ -17,9 +17,11 @@ public class CreateOrUpdateIT_TransientProperties extends LmIntegrationTest {
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl7t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl7_to_etl7t_byid.xml").matchById().task();
 
-		srcRunSql("INSERT INTO utest.etl7 (ID, FULL_NAME, SEX) VALUES (1, 'Lennon, John', 'M')");
-		srcRunSql("INSERT INTO utest.etl7 (ID, FULL_NAME, SEX) VALUES (2, 'Hendrix, Jimi', 'M')");
-        srcRunSql("INSERT INTO utest.etl7 (ID, FULL_NAME, SEX) VALUES (3, 'Joplin, Janis', 'F')");
+		srcEtl7().insertColumns("id", "full_name", "sex")
+				.values(1, "Lennon, John", "M")
+				.values(2, "Hendrix, Jimi", "M")
+				.values(3, "Joplin, Janis", "F")
+				.exec();
 
 		Execution e1 = task.run();
 		assertExec(3, 3, 0, 0, e1);

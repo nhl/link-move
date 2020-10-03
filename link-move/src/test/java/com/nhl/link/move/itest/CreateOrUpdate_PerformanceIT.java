@@ -46,11 +46,13 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
                 .matchBy(Etl3t.NAME)
                 .task();
 
-        srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
-        srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (17, '5Name1')");
-        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name1', '3PHONE1')");
-        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name2', '3PHONE2')");
-        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name3', '3PHONE3')");
+        srcEtl2().insertColumns("id", "address", "name").values(34, "Address1", "2Name1").exec();
+        srcEtl5().insertColumns("id", "name").values(17, "5Name1").exec();
+        srcEtl3().insertColumns("e2_id", "e5_id", "name", "phone_number")
+                .values(34, 17, "3Name1", "3PHONE1")
+                .values(34, 17, "3Name2", "3PHONE2")
+                .values(34, 17, "3Name3", "3PHONE3")
+                .exec();
 
         targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
         targetRunSql("INSERT INTO utest.etl5t (ID, NAME) VALUES (17, '5Name1')");

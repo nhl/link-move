@@ -21,7 +21,7 @@ public class DeleteIT extends LmIntegrationTest {
 		targetRunSql("INSERT INTO utest.etl6t (ID, NAME) VALUES (1, 'a')");
 		targetRunSql("INSERT INTO utest.etl6t (ID, NAME) VALUES (2, 'b')");
 
-		srcRunSql("INSERT INTO utest.etl6 (ID, NAME) VALUES (1, 'a')");
+		srcEtl6().insertColumns("id", "name").values(1, "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(1, 0, 0, 1, e2);
@@ -33,7 +33,7 @@ public class DeleteIT extends LmIntegrationTest {
 	public void test_ByAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).delete(Etl1t.class)
-				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME).task();
+				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy(Etl1t.NAME).task();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('b', NULL)");
@@ -46,7 +46,7 @@ public class DeleteIT extends LmIntegrationTest {
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('b', NULL)");
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('a')");
+		srcEtl1().insertColumns("name").values("a").exec();
 
 		Execution e2 = task.run();
 		assertExec(1, 0, 0, 1, e2);
@@ -58,13 +58,15 @@ public class DeleteIT extends LmIntegrationTest {
 	public void test_ByAttribute_MultiBatch() {
 
 		LmTask task = etl.service(ITaskService.class).delete(Etl1t.class).batchSize(2)
-				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy(Etl1t.NAME).task();
+				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy(Etl1t.NAME).task();
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('a')");
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('b')");
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('c')");
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('d')");
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('e')");
+		srcEtl1().insertColumns("name")
+				.values("a")
+				.values("b")
+				.values("c")
+				.values("d")
+				.values("e")
+				.exec();
 
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('a', 3)");
 		targetRunSql("INSERT INTO utest.etl1t (NAME, AGE) VALUES ('d', NULL)");

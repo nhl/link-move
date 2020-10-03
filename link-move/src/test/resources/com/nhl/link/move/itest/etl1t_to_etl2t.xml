@@ -6,18 +6,12 @@
 	<connectorId>datanode</connectorId>
 
 	<extractor>
-		<attributes>
-			<attribute>
-				<type>java.lang.String</type>
-				<source>NAME</source>
-				<target>name</target>
-			</attribute>
-		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT name FROM utest.etl1t
+			<![CDATA[SELECT "name" FROM "etl1"
 			]]>
 			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

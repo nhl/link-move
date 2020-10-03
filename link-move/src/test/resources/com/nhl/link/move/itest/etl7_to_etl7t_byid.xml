@@ -7,25 +7,26 @@
 		<attributes>
 			<attribute>
 				<type>java.lang.String</type>
-				<source>FULL_NAME</source>
+				<source>full_name</source>
 				<target>fullName</target>
 			</attribute>
 			<attribute>
 				<type>java.lang.String</type>
-				<source>SEX</source>
+				<source>sex</source>
 				<target>sex</target>
 			</attribute>
 			<attribute>
 				<type>java.lang.Integer</type>
-				<source>ID</source>
+				<source>id</source>
 				<target>db:id</target>
 			</attribute>
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT full_name, sex, id FROM utest.etl7
+			<![CDATA[SELECT "full_name", "sex", "id" FROM "etl7"
 			]]>
 			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

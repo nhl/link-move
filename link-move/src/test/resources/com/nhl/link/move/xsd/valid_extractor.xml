@@ -9,19 +9,19 @@
 		<attributes>
 			<attribute>
 				<type>java.lang.Integer</type>
-				<source>ID</source>
+				<source>id</source>
 				<target>db:id</target>
 			</attribute>
 			<attribute>
 				<type>java.lang.Integer</type>
-				<source>AGE</source>
+				<source>age</source>
 				<target>age</target>
 			</attribute>
 		</attributes>
 
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT * FROM utest.etl1]]>
+			<![CDATA[SELECT * FROM "etl1"]]>
 			</extractor.jdbc.sqltemplate>
 		</properties>
 	</extractor>

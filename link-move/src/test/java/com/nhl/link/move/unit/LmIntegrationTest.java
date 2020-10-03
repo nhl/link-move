@@ -27,8 +27,10 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
     }
 
     protected LmRuntime createEtl() {
-        Connector c = new DataSourceConnector("derbysrc", srcDataSource);
-        return new LmRuntimeBuilder().withConnector("derbysrc", c).withTargetRuntime(targetStack.runtime())
+        Connector c = new DataSourceConnector("derbysrc", srcDb.getDataSource());
+        return new LmRuntimeBuilder()
+                .withConnector("derbysrc", c)
+                .withTargetRuntime(targetStack.runtime())
                 .withConnectorFactory(StreamConnector.class, new URIConnectorFactory()).build();
     }
 

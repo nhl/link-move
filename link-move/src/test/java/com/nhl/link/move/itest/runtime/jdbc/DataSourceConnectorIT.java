@@ -20,12 +20,12 @@ public class DataSourceConnectorIT extends DerbySrcTest {
     private DataSourceConnector connector;
 
     @BeforeEach
-    public void setUp() {
-        this.connector = new DataSourceConnector(srcDataSource);
+    public void startConnector() {
+        this.connector = new DataSourceConnector(srcDb.getDataSource());
     }
 
     @AfterEach
-    public void tearDown() {
+    public void stopConnector() {
         connector.shutdown();
     }
 
@@ -34,8 +34,8 @@ public class DataSourceConnectorIT extends DerbySrcTest {
         ObjectContext context = connector.sharedContext();
         assertNotNull(context);
 
-        SQLExec.query("INSERT INTO utest.etl1 (NAME) VALUES ('a')").execute(context);
-        assertEquals(1, srcScalar("SELECT count(1) from utest.etl1"));
+        SQLExec.query("INSERT INTO \"etl1\" (\"name\") VALUES ('a')").execute(context);
+        srcDb.getTable("etl1").matcher().assertOneMatch();
     }
 
     @Test

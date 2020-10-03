@@ -23,14 +23,13 @@
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT id,
+			<![CDATA[SELECT "id",
 			 	#result('c_boolean', 'java.lang.Integer'),
 			 	#result('c_enum', 'java.lang.String')
-				FROM utest.etl4
+				FROM "etl4"
 			]]>
 			</extractor.jdbc.sqltemplate>
-			<extractor.jdbc.sqltemplate.caps>lower
-			</extractor.jdbc.sqltemplate.caps>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

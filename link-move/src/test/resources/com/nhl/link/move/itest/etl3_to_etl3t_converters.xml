@@ -18,11 +18,10 @@
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT CAST(e2_id AS CHAR) e2_id, name FROM utest.etl3
+			<![CDATA[SELECT CAST("e2_id" AS CHAR) "e2_id", "name" FROM "etl3"
 			]]>
 			</extractor.jdbc.sqltemplate>
-			<extractor.jdbc.sqltemplate.caps>lower
-			</extractor.jdbc.sqltemplate.caps>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

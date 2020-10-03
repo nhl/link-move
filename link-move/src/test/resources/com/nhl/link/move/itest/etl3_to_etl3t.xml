@@ -28,11 +28,10 @@
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT e2_id, e5_id, name, phone_number FROM utest.etl3
+			<![CDATA[SELECT "e2_id", "e5_id", "name", "phone_number" FROM "etl3"
 			]]>
 			</extractor.jdbc.sqltemplate>
-			<extractor.jdbc.sqltemplate.caps>lower
-			</extractor.jdbc.sqltemplate.caps>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

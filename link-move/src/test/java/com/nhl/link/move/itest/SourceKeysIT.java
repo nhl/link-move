@@ -22,10 +22,12 @@ public class SourceKeysIT extends LmIntegrationTest {
 	public void test_ByAttribute() {
 
 		LmTask task = etl.service(ITaskService.class).extractSourceKeys(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").matchBy("name").task();
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy("name").task();
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
-		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
+		srcEtl1().insertColumns("name", "age")
+				.values("a", 3)
+				.values("b", null)
+				.exec();
 
 		Execution e1 = task.run();
 		assertExec(2, 0, 0, 0, e1);
@@ -33,8 +35,8 @@ public class SourceKeysIT extends LmIntegrationTest {
 		assertNotNull(keys1);
 		assertEquals(new HashSet<>(Arrays.asList("a", "b")), keys1);
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('c')");
-		srcRunSql("UPDATE utest.etl1 SET NAME = 'd' WHERE NAME = 'a'");
+		srcEtl1().insertColumns("name").values("c").exec();
+		srcEtl1().update().set("name", "d").where("name", "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 0, 0, 0, e2);

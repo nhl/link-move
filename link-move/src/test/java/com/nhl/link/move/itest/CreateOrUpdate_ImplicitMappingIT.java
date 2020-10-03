@@ -27,8 +27,10 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_implicit.xml").matchBy(key).task();
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
-		srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
+		srcEtl1().insertColumns("name", "age")
+				.values("a", 3)
+				.values("b", null)
+				.exec();
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
@@ -36,8 +38,8 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age is null"));
 
-		srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('c')");
-		srcRunSql("UPDATE utest.etl1 SET AGE = 5 WHERE NAME = 'a'");
+		srcEtl1().insertColumns("name").values("c").exec();
+		srcEtl1().update().set("age", 5).where("name", "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 1, 1, 0, e2);
@@ -45,7 +47,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 5"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'c' AND age is null"));
 
-		srcRunSql("DELETE FROM utest.etl1 WHERE NAME = 'a'");
+		srcEtl1().delete().and("name", "a").exec();
 
 		Execution e3 = task.run();
 		assertExec(2, 0, 0, 0, e3);
@@ -64,8 +66,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 				.matchById()
 				.task();
 
-		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (45, 'a')");
-		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, 'b')");
+		srcEtl5().insertColumns("id", "name").values(45, "a").values(11, "b").exec();
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
@@ -73,8 +74,8 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl5t WHERE NAME = 'a' AND ID = 45"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl5t WHERE NAME = 'b' AND ID = 11"));
 
-		srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (31, 'c')");
-		srcRunSql("UPDATE utest.etl5 SET NAME = 'd' WHERE ID = 45");
+		srcEtl5().insertColumns("id", "name").values(31, "c").exec();
+		srcEtl5().update().set("name", "d").where("id", 45).exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 1, 1, 0, e2);
@@ -82,7 +83,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl5t WHERE NAME = 'd' AND ID = 45"));
 		assertEquals(1, targetScalar("SELECT count(1) from utest.etl5t WHERE NAME = 'c' AND ID = 31"));
 
-		srcRunSql("DELETE FROM utest.etl5 WHERE ID = 45");
+		srcEtl5().delete().and("id", 45).exec();
 
 		Execution e3 = task.run();
 		assertExec(2, 0, 0, 0, e3);

@@ -1,63 +1,69 @@
 package com.nhl.link.move.unit;
 
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.datasource.DataSourceBuilder;
-import org.apache.cayenne.datasource.PoolingDataSource;
-import org.apache.cayenne.query.SQLExec;
-import org.apache.cayenne.query.SQLSelect;
-import org.apache.cayenne.query.SQLTemplate;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import io.bootique.BQRuntime;
+import io.bootique.Bootique;
+import io.bootique.jdbc.junit5.Table;
+import io.bootique.jdbc.junit5.derby.DerbyTester;
+import io.bootique.junit5.BQApp;
+import io.bootique.junit5.BQTest;
+import io.bootique.junit5.BQTestScope;
+import io.bootique.junit5.BQTestTool;
 
+@BQTest
 public abstract class DerbySrcTest {
 
-	protected static CayenneDerbyStack srcStack;
-	protected static PoolingDataSource srcDataSource;
+    @BQTestTool(BQTestScope.GLOBAL)
+    protected static final DerbyTester srcDb = DerbyTester.db()
+            .initDB("classpath:com/nhl/link/move/itest/src-schema-derby.sql")
+            .deleteBeforeEachTest("etl1", "etl2", "etl4", "etl5", "etl3", "etl_sub1");
 
-	@BeforeAll
-	public static void startSrc() {
-		srcStack = new CayenneDerbyStack("derbysrc", "cayenne-linketl-tests-sources.xml");
-		srcDataSource = DataSourceBuilder.url("jdbc:derby:" + srcStack.getDerbyPath() + ";create=true")
-				.driver("org.apache.derby.jdbc.EmbeddedDriver").userName("sa").pool(1, 10).build();
-	}
+    @BQApp(value = BQTestScope.GLOBAL, skipRun = true)
+    protected static final BQRuntime srcApp = Bootique.app()
+            .autoLoadModules()
+            .module(srcDb.moduleWithTestDataSource("src_db"))
+            .createRuntime();
 
-	@AfterAll
-	public static void shutdownSrc() {
+    protected Table srcEtl1() {
+        return srcDb.getTable("etl1");
+    }
 
-		srcStack.shutdown();
+    protected Table srcEtl2() {
+        return srcDb.getTable("etl2");
+    }
 
-		try {
-			srcDataSource.close();
-		} catch (Exception ignored) {
-		}
+    protected Table srcEtl3() {
+        return srcDb.getTable("etl3");
+    }
 
-		srcDataSource = null;
-	}
+    protected Table srcEtl4() {
+        return srcDb.getTable("etl4");
+    }
 
-	@BeforeEach
-	public void deleteSourceData() {
+    protected Table srcEtl5() {
+        return srcDb.getTable("etl5");
+    }
 
-		ObjectContext context = srcStack.newContext();
+    protected Table srcEtl6() {
+        return srcDb.getTable("etl6");
+    }
 
-		// first query in a test set will also load the schema...
+    protected Table srcEtl7() {
+        return srcDb.getTable("etl7");
+    }
 
-		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl1"));
-		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl3"));
-		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl2"));
-		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl4"));
-		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl5"));
+    protected Table srcEtl8() {
+        return srcDb.getTable("etl8");
+    }
 
-		context.performGenericQuery(new SQLTemplate(Object.class, "DELETE from utest.etl_sub1"));
-	}
+    protected Table srcEtl9() {
+        return srcDb.getTable("etl9");
+    }
 
-	protected void srcRunSql(String sql, Object... params) {
-		SQLExec.query(sql).paramsArray(params).execute(srcStack.newContext());
-	}
+    protected Table srcEtl11() {
+        return srcDb.getTable("etl11");
+    }
 
-	protected int srcScalar(String sql) {
-		ObjectContext context = srcStack.newContext();
-		SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
-		return query.selectOne(context);
-	}
+    protected Table srcEtlSub1() {
+        return srcDb.getTable("etl_sub1");
+    }
 }

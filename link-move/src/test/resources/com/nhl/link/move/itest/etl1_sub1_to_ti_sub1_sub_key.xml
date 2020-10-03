@@ -18,7 +18,7 @@
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT s_key, s_subp1 FROM utest.etl_sub1
+			<![CDATA[SELECT "s_key", "s_subp1" FROM "etl_sub1"
 			]]>
 			</extractor.jdbc.sqltemplate>
 			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>

@@ -6,7 +6,7 @@
 	<extractor>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT bin FROM utest.etl11]]>
+			<![CDATA[SELECT "bin" FROM "etl1"1]]>
 			</extractor.jdbc.sqltemplate>
 			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>

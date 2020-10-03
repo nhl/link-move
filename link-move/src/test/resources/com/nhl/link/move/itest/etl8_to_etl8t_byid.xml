@@ -7,30 +7,31 @@
 		<attributes>
 			<attribute>
 				<type>java.lang.Integer</type>
-				<source>ID</source>
+				<source>id</source>
 				<target>db:id</target>
 			</attribute>
 			<attribute>
 				<type>java.math.BigDecimal</type>
-				<source>C_DECIMAL1</source>
+				<source>c_decimal1</source>
 				<target>db:c_decimal1</target>
 			</attribute>
 			<attribute>
 				<type>java.math.BigDecimal</type>
-				<source>C_DECIMAL2</source>
+				<source>c_decimal2</source>
 				<target>db:c_decimal2</target>
 			</attribute>
 			<attribute>
 				<type>java.math.BigDecimal</type>
-				<source>C_DECIMAL3</source>
+				<source>c_decimal3</source>
 				<target>db:c_decimal3</target>
 			</attribute>
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT id, c_decimal1, c_decimal2, c_decimal3 FROM utest.etl8
+			<![CDATA[SELECT "id", "c_decimal1", "c_decimal2", "c_decimal3" FROM "etl8"
 			]]>
 			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

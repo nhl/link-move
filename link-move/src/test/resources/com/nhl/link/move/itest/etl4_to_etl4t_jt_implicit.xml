@@ -6,10 +6,9 @@
 	<extractor>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT id, c_date, c_time, c_timestamp FROM utest.etl4]]>
+			<![CDATA[SELECT "id", "c_date", "c_time", "c_timestamp" FROM "etl4"]]>
 			</extractor.jdbc.sqltemplate>
-			<extractor.jdbc.sqltemplate.caps>lower
-			</extractor.jdbc.sqltemplate.caps>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

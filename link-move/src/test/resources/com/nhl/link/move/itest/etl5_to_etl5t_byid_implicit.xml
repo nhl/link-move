@@ -7,7 +7,7 @@
 	<extractor>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT id, name, name FROM utest.etl5
+			<![CDATA[SELECT "id", "name", "name" FROM "etl5"
 			]]>
 			</extractor.jdbc.sqltemplate>
 			<!-- This (or #result) is required as Derby metadata returns uppercase columns -->

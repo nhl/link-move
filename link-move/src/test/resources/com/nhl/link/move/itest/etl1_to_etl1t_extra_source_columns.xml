@@ -7,7 +7,7 @@
 		<attributes>
 			<attribute>
 				<type>java.lang.String</type>
-				<source>NAME</source>
+				<source>name</source>
 				<target>name</target>
 			</attribute>
 			<attribute>
@@ -22,9 +22,10 @@
 		</attributes>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT name, LENGTH(description) as DL FROM utest.etl1
+			<![CDATA[SELECT "name", LENGTH("description") as "dl" FROM "etl1"
 			]]>
 			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
 		</properties>
 	</extractor>
 </config>

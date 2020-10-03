@@ -17,10 +17,12 @@ public class CreateIT extends LmIntegrationTest {
     public void testSync() {
 
         LmTask task = etl.service(ITaskService.class).create(Etl1t.class)
-                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t.xml").task();
+                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").task();
 
-        srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('a', 3)");
-        srcRunSql("INSERT INTO utest.etl1 (NAME, AGE) VALUES ('b', NULL)");
+        srcEtl1().insertColumns("name", "age")
+                .values("a", 3)
+                .values("b", null)
+                .exec();
 
         Execution e1 = task.run();
         new LmTaskTester()
@@ -34,8 +36,8 @@ public class CreateIT extends LmIntegrationTest {
         assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
         assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age is null"));
 
-        srcRunSql("INSERT INTO utest.etl1 (NAME) VALUES ('c')");
-        srcRunSql("UPDATE utest.etl1 SET AGE = 5 WHERE NAME = 'a'");
+        srcEtl1().insertColumns("name").values("c").exec();
+        srcEtl1().update().set("age", 5).where("name", "a").exec();
 
         Execution e2 = task.run();
         new LmTaskTester()
@@ -49,7 +51,7 @@ public class CreateIT extends LmIntegrationTest {
         assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 5"));
         assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'c' AND age is null"));
 
-        srcRunSql("DELETE FROM utest.etl1 WHERE NAME = 'a'");
+        srcEtl1().delete().and("name", "a").exec();
 
         Execution e3 = task.run();
         new LmTaskTester()
@@ -77,12 +79,20 @@ public class CreateIT extends LmIntegrationTest {
         LmTask task = etl.service(ITaskService.class).create(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").task();
 
-        srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
-        srcRunSql("INSERT INTO utest.etl2 (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
-        srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (17, '5Name1')");
-        srcRunSql("INSERT INTO utest.etl5 (ID, NAME) VALUES (11, '5Name2')");
-        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (58, 17, '3Name1', '3PHONE1')");
-        srcRunSql("INSERT INTO utest.etl3 (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name2', '3PHONE2')");
+        srcEtl2().insertColumns("id", "address", "name")
+                .values(34, "Address1", "2Name1")
+                .values(58, "Address2", "2Name2")
+                .exec();
+
+        srcEtl5().insertColumns("id", "name")
+                .values(17, "5Name1")
+                .values(11, "5Name2")
+                .exec();
+
+        srcEtl3().insertColumns("e2_id", "e5_id", "name", "phone_number")
+                .values(58, 17, "3Name1", "3PHONE1")
+                .values(34, 17, "3Name2", "3PHONE2")
+                .exec();
 
         targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
         targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
