@@ -4,14 +4,13 @@
 	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
 	 project-version="9">
 	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.ti"/>
-	<property name="defaultSchema" value="utest"/>
 	<property name="quoteSqlIdentifiers" value="true"/>
-	<db-entity name="ti_sub1" schema="utest">
+	<db-entity name="ti_sub1">
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="sub_key" type="VARCHAR" length="100"/>
 		<db-attribute name="subp1" type="VARCHAR" length="100"/>
 	</db-entity>
-	<db-entity name="ti_super" schema="utest">
+	<db-entity name="ti_super">
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="super_key" type="VARCHAR" length="100"/>
 		<db-attribute name="type" type="VARCHAR" isMandatory="true" length="100"/>

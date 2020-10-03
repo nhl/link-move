@@ -4,35 +4,34 @@
 	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
 	 project-version="9">
 	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.t"/>
-	<property name="defaultSchema" value="utest"/>
-	<db-entity name="etl10t" schema="utest">
+	<db-entity name="etl10t">
 		<db-attribute name="e9_id" type="INTEGER"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="100"/>
 	</db-entity>
-	<db-entity name="etl11t" schema="utest">
+	<db-entity name="etl11t">
 		<db-attribute name="bin" type="VARBINARY" length="32"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
 	</db-entity>
-	<db-entity name="etl1t" schema="utest">
+	<db-entity name="etl1t">
 		<db-attribute name="age" type="INTEGER"/>
 		<db-attribute name="description" type="VARCHAR" length="100"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="100"/>
 	</db-entity>
-	<db-entity name="etl2t" schema="utest">
+	<db-entity name="etl2t">
 		<db-attribute name="address" type="VARCHAR" length="255"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="100"/>
 	</db-entity>
-	<db-entity name="etl3t" schema="utest">
+	<db-entity name="etl3t">
 		<db-attribute name="e2_id" type="INTEGER"/>
 		<db-attribute name="e5_id" type="INTEGER"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="200"/>
 		<db-attribute name="phone_number" type="VARCHAR" length="12"/>
 	</db-entity>
-	<db-entity name="etl4t" schema="utest">
+	<db-entity name="etl4t">
 		<db-attribute name="c_boolean" type="BOOLEAN"/>
 		<db-attribute name="c_date" type="DATE"/>
 		<db-attribute name="c_decimal" type="DECIMAL" length="10" scale="2"/>
@@ -43,29 +42,29 @@
 		<db-attribute name="c_varchar" type="VARCHAR" length="100"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 	</db-entity>
-	<db-entity name="etl5t" schema="utest">
+	<db-entity name="etl5t">
 		<db-attribute name="date" type="DATE"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="50"/>
 	</db-entity>
-	<db-entity name="etl6t" schema="utest">
+	<db-entity name="etl6t">
 		<db-attribute name="date" type="DATE"/>
 		<db-attribute name="id" type="BIGINT" isPrimaryKey="true" isMandatory="true" length="19"/>
 		<db-attribute name="name" type="VARCHAR" length="50"/>
 	</db-entity>
-	<db-entity name="etl7t" schema="utest">
+	<db-entity name="etl7t">
 		<db-attribute name="first_name" type="VARCHAR" length="50"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="last_name" type="VARCHAR" length="50"/>
 		<db-attribute name="sex" type="VARCHAR" length="1"/>
 	</db-entity>
-	<db-entity name="etl8t" schema="utest">
+	<db-entity name="etl8t">
 		<db-attribute name="c_decimal1" type="DECIMAL" length="10" scale="9"/>
 		<db-attribute name="c_decimal2" type="DECIMAL" length="10" scale="6"/>
 		<db-attribute name="c_decimal3" type="DECIMAL" length="10" scale="9"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 	</db-entity>
-	<db-entity name="etl9t" schema="utest">
+	<db-entity name="etl9t">
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 		<db-attribute name="name" type="VARCHAR" length="100"/>
 	</db-entity>

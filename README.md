@@ -106,7 +106,7 @@ An example using JDBC connector for the source data:
 			     SQLTemplate syntax, including parameters and directives.
 			-->
 			<extractor.jdbc.sqltemplate>
-			       SELECT age, description, name FROM utest.etl1
+			       SELECT age, description, name FROM etl1
 			</extractor.jdbc.sqltemplate>
 		</properties>
 	</extractor>

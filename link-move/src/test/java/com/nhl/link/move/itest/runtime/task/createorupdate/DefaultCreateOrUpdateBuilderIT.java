@@ -24,12 +24,11 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 
     @BeforeEach
     public void before() {
-        this.cayenneService = new TargetCayenneService(targetStack.runtime());
+        this.cayenneService = new TargetCayenneService(cayenne.getRuntime());
     }
 
     @Test
     public void testTask_NoExtractorName() {
-
 
         DefaultCreateOrUpdateBuilder<Etl1t> builder = new DefaultCreateOrUpdateBuilder<>(
                 Etl1t.class,

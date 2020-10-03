@@ -25,13 +25,13 @@ public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 		Execution e1 = task.run(new IntToken("test_ByAttribute", 2));
 		assertExec(1, 1, 0, 0, e1);
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age = 1"));
+		assertEquals(1, targetScalar("SELECT count(1) from etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age = 1"));
 
 		Execution e2 = task.run(new IntToken("test_ByAttribute", 5));
 		assertExec(1, 1, 0, 0, e2);
-		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'a' AND age = 3"));
+		assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
 
 		Execution e3 = task.run(new IntToken("test_ByAttribute", 8));
 		assertExec(0, 0, 0, 0, e3);
@@ -40,8 +40,8 @@ public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 		Execution e4 = task.run(new IntToken("test_ByAttribute", 11));
 		assertExec(1, 0, 1, 0, e4);
-		assertEquals(2, targetScalar("SELECT count(1) from utest.etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from utest.etl1t WHERE NAME = 'b' AND age = 9"));
+		assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
+		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age = 9"));
 	}
 
 }

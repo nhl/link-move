@@ -6,7 +6,7 @@
 	<extractor>
 		<properties>
 			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT "id", "age", "description", "name" FROM "etl1"
+			<![CDATA[SELECT "age", "description", "name" FROM "etl1"
 			WHERE "age" > $startToken and "age" <= $endToken
 			]]>
 			</extractor.jdbc.sqltemplate>

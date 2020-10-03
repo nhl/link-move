@@ -24,8 +24,8 @@
 		<properties>
 			<extractor.jdbc.sqltemplate>
 			<![CDATA[SELECT "id",
-			 	#result('c_boolean', 'java.lang.Integer'),
-			 	#result('c_enum', 'java.lang.String')
+			 	#result('"c_boolean"', 'java.lang.Integer'),
+			 	#result('"c_enum"', 'java.lang.String')
 				FROM "etl4"
 			]]>
 			</extractor.jdbc.sqltemplate>

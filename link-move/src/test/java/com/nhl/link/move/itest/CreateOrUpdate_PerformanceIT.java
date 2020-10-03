@@ -23,12 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
 
-    private static QueryCapture QUERY_CAPTURE;
+    private static final QueryCapture QUERY_CAPTURE = new QueryCapture();
 
     @BeforeAll
     public static void initQueryCapture() {
-        QUERY_CAPTURE = new QueryCapture();
-        targetStack.runtime().getDataDomain().addFilter(QUERY_CAPTURE);
+        cayenne.getRuntime().getDataDomain().addFilter(QUERY_CAPTURE);
     }
 
     @BeforeEach
@@ -54,9 +53,9 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
                 .values(34, 17, "3Name3", "3PHONE3")
                 .exec();
 
-        targetRunSql("INSERT INTO utest.etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
-        targetRunSql("INSERT INTO utest.etl5t (ID, NAME) VALUES (17, '5Name1')");
-        targetRunSql("INSERT INTO utest.etl3t (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name3', '3PHONEXX')");
+        targetRunSql("INSERT INTO etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
+        targetRunSql("INSERT INTO etl5t (ID, NAME) VALUES (17, '5Name1')");
+        targetRunSql("INSERT INTO etl3t (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name3', '3PHONEXX')");
 
 
         Execution e1 = task.run();
