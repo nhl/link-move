@@ -13,8 +13,8 @@ import java.util.Map;
  */
 public class ContainerAwareExtractorModel implements ExtractorModel {
 
-	private ExtractorModelContainer parent;
-	private ExtractorModel delegate;
+	private final ExtractorModelContainer parent;
+	private final ExtractorModel delegate;
 
 	public ContainerAwareExtractorModel(ExtractorModelContainer parent, ExtractorModel delegate) {
 		this.delegate = delegate;

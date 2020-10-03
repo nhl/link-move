@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A {@link ResourceResolver} that loads resources from files located in a given directory.
@@ -19,7 +20,7 @@ public class FolderResourceResolver implements ResourceResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FolderResourceResolver.class);
 
-    private File baseDir;
+    private final File baseDir;
 
     public FolderResourceResolver(File baseDir) {
         LOGGER.info("Extractor XML files will be located under '{}'", baseDir);
@@ -34,7 +35,7 @@ public class FolderResourceResolver implements ResourceResolver {
         LOGGER.info("Will extract XML from {}", file.getAbsolutePath());
 
         try {
-            return new InputStreamReader(new FileInputStream(file), "UTF-8");
+            return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new LmRuntimeException("Error reading extractor config XML from file " + file, e);
         }

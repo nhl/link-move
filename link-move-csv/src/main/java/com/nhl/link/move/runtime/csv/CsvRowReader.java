@@ -73,7 +73,7 @@ public class CsvRowReader implements RowReader {
                 return value.isEmpty() ? Double.valueOf(0d) : Double.valueOf(value);
             }
             case "java.math.BigDecimal": {
-                return value.isEmpty() ? BigDecimal.ZERO : BigDecimal.valueOf(Double.valueOf(value));
+                return value.isEmpty() ? BigDecimal.ZERO : BigDecimal.valueOf(Double.parseDouble(value));
             }
             case "java.util.Date":
             case "java.sql.Date":

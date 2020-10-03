@@ -12,12 +12,12 @@ import java.util.TreeMap;
  */
 public class MutableExtractorModelContainer implements ExtractorModelContainer {
 
-	private String location;
-	private String type;
-	private Set<String> connectorIds;
-	private long loadedOn;
+	private final String location;
+	private final Set<String> connectorIds;
+	private final Map<String, ExtractorModel> extractors;
 
-	private Map<String, ExtractorModel> extractors;
+	private String type;
+	private long loadedOn;
 
 	public MutableExtractorModelContainer(String location) {
 		this.location = location;

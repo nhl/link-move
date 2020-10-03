@@ -9,8 +9,8 @@ import org.apache.cayenne.util.HashCodeBuilder;
  */
 public class ExtractorName {
 
-	private String location;
-	private String name;
+	private final String location;
+	private final String name;
 
 	public static ExtractorName create(String location, String name) {
 
@@ -69,7 +69,7 @@ public class ExtractorName {
 
 	@Override
 	public String toString() {
-		return new StringBuilder("<ExtractorName: ").append(location).append(".").append(name).append(">").toString();
+		return "<ExtractorName: " + location + "." + name + ">";
 	}
 
 }

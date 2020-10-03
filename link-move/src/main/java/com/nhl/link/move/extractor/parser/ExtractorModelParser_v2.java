@@ -183,7 +183,7 @@ public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
             }
         }
 
-        extractor.setAttributes(attributes.toArray(new RowAttribute[attributes.size()]));
+        extractor.setAttributes(attributes.toArray(new RowAttribute[0]));
     }
 
     protected void processProperties(Element propertiesNode, MutableExtractorModel extractor)

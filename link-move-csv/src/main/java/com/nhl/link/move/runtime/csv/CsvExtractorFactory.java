@@ -1,14 +1,14 @@
 package com.nhl.link.move.runtime.csv;
 
-import java.nio.charset.Charset;
-
-import com.nhl.link.move.runtime.extractor.IExtractorFactory;
-
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 import org.apache.commons.csv.CSVFormat;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @since 1.4
@@ -30,14 +30,15 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
 
     /**
      * Source file charset name.
+     *
      * @see java.nio.charset.Charset
      */
     public static final String CHARSET_PROPERTY = "extractor.csv.charset";
 
-    private Charset defaultCharset;
+    private final Charset defaultCharset;
 
     public CsvExtractorFactory() {
-        defaultCharset = Charset.forName("UTF-8");
+        defaultCharset = StandardCharsets.UTF_8;
     }
 
     @Override
@@ -52,33 +53,24 @@ public class CsvExtractorFactory implements IExtractorFactory<StreamConnector> {
 
     @Override
     public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
-        try {
 
-            String charsetName = model.getPropertyValue(CHARSET_PROPERTY);
+        String charsetName = model.getPropertyValue(CHARSET_PROPERTY);
 
-            Charset charset = charsetName != null ? Charset.forName(charsetName) : defaultCharset;
+        Charset charset = charsetName != null ? Charset.forName(charsetName) : defaultCharset;
 
-            CSVFormat csvFormat = CSVFormat.RFC4180;
-            String delimiter = model.getPropertyValue(DELIMITER_PROPERTY);
-            if (delimiter != null) {
-                if (delimiter.length() != 1) {
-                    throw new LmRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
-                }
-                csvFormat = csvFormat.withDelimiter(delimiter.charAt(0));
+        CSVFormat csvFormat = CSVFormat.RFC4180;
+        String delimiter = model.getPropertyValue(DELIMITER_PROPERTY);
+        if (delimiter != null) {
+            if (delimiter.length() != 1) {
+                throw new LmRuntimeException("Invalid delimiter (should be exactly one character): " + delimiter);
             }
-
-            CsvExtractor extractor = new CsvExtractor(connector, model.getAttributes(), charset, csvFormat);
-
-            String readFrom = model.getPropertyValue(READ_FROM_PROPERTY);
-            if (readFrom != null) {
-                Integer n = Integer.valueOf(readFrom);
-                extractor.setReadFrom(n);
-            }
-
-            return extractor;
-        } catch (Exception e) {
-            throw new LmRuntimeException("Failed to create extractor", e);
+            csvFormat = csvFormat.withDelimiter(delimiter.charAt(0));
         }
+
+        String readFromString = model.getPropertyValue(READ_FROM_PROPERTY);
+        Integer readFrom = readFromString != null ? Integer.valueOf(readFromString) : null;
+
+        return new CsvExtractor(connector, model.getAttributes(), charset, csvFormat, readFrom);
     }
 
 }

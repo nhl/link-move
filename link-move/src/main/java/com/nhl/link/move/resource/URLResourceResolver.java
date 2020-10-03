@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @since 2.4
@@ -17,7 +18,7 @@ public class URLResourceResolver implements ResourceResolver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URLResourceResolver.class);
 
-    private URL baseUrl;
+    private final URL baseUrl;
 
     public URLResourceResolver(URL baseUrl) {
         LOGGER.info("Extractor XML files will be located under '{}'", baseUrl);
@@ -37,7 +38,7 @@ public class URLResourceResolver implements ResourceResolver {
         LOGGER.info("Will extract XML from {}", modelUrl);
 
         try {
-            return new InputStreamReader(modelUrl.openStream(), "UTF-8");
+            return new InputStreamReader(modelUrl.openStream(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new LmRuntimeException("Error reading extractor config XML from URL " + modelUrl, e);
         }

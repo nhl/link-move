@@ -15,12 +15,13 @@ import java.util.Set;
  */
 public class MutableExtractorModel implements ExtractorModel {
 
-    private String name;
+    private final String name;
+    private final Set<String> connectorIds;
+    private final Map<String, Collection<String>> properties;
+
     private String type;
-    private Set<String> connectorIds;
     private long loadedOn;
     private RowAttribute[] attributes;
-    private Map<String, Collection<String>> properties;
 
     public MutableExtractorModel(String name) {
         this.name = name;

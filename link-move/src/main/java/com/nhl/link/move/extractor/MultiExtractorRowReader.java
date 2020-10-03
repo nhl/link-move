@@ -28,8 +28,8 @@ public class MultiExtractorRowReader implements RowReader {
         }
     };
 
-    private List<Extractor> extractors;
-    private Map<String, ?> parameters;
+    private final List<Extractor> extractors;
+    private final Map<String, ?> parameters;
 
     private int currentExtractor;
     private RowReader currentReader;

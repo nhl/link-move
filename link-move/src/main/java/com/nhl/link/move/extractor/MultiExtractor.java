@@ -1,13 +1,13 @@
 package com.nhl.link.move.extractor;
 
+import com.nhl.link.move.RowReader;
+
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.RowReader;
-
 public class MultiExtractor implements Extractor {
 
-	private List<Extractor> extractors;
+	private final List<Extractor> extractors;
 
 	public MultiExtractor(List<Extractor> extractors) {
 		this.extractors = extractors;

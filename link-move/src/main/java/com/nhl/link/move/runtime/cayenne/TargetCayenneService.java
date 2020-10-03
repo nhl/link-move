@@ -1,18 +1,17 @@
 package com.nhl.link.move.runtime.cayenne;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.access.DataNode;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.map.EntityResolver;
 
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+
 public class TargetCayenneService implements ITargetCayenneService {
 
-	private ServerRuntime runtime;
+	private final ServerRuntime runtime;
 
 	public TargetCayenneService(ServerRuntime runtime) {
 		this.runtime = runtime;

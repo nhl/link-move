@@ -13,8 +13,8 @@ public class JdbcRowReader implements RowReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcRowReader.class);
 
-    private DataRowIterator rows;
-    private RowAttribute[] header;
+    private final DataRowIterator rows;
+    private final RowAttribute[] header;
 
     public JdbcRowReader(RowAttribute[] header, DataRowIterator rows) {
         this.rows = Objects.requireNonNull(rows);

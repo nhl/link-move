@@ -8,7 +8,7 @@ import org.apache.cayenne.exp.ExpressionFactory;
 
 public class PathMapper implements Mapper {
 
-    private String dbPath;
+    private final String dbPath;
 
     // created lazily and cached... parsing expressions is expensive
     private Expression pathExpression;

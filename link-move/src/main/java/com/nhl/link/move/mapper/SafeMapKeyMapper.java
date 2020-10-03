@@ -11,8 +11,8 @@ import org.apache.cayenne.exp.Expression;
  */
 public class SafeMapKeyMapper implements Mapper {
 
-	private Mapper delegate;
-	private KeyAdapter keyAdapter;
+	private final Mapper delegate;
+	private final KeyAdapter keyAdapter;
 
 	public SafeMapKeyMapper(Mapper delegate, KeyAdapter keyAdapter) {
 		this.delegate = delegate;

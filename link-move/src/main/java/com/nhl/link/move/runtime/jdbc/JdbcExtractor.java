@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class JdbcExtractor implements Extractor {
 
-    private ObjectContext context;
-    private String sqlTemplate;
-    private CapsStrategy capsStrategy;
-    private RowAttribute[] rowHeader;
+    private final ObjectContext context;
+    private final String sqlTemplate;
+    private final CapsStrategy capsStrategy;
+    private final RowAttribute[] rowHeader;
 
     public JdbcExtractor(ObjectContext context, RowAttribute[] rowHeader, String sqlTemplate,
                          CapsStrategy capsStrategy) {
@@ -40,8 +40,6 @@ public class JdbcExtractor implements Extractor {
                 select.lowerColumnNames();
                 break;
             case UPPER:
-                select.upperColumnNames();
-                break;
             case DEFAULT:
                 select.upperColumnNames();
                 break;

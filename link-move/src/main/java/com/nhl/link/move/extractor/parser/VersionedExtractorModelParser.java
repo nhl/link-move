@@ -1,11 +1,10 @@
 package com.nhl.link.move.extractor.parser;
 
-import java.util.Map;
-
-import org.w3c.dom.Element;
-
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import org.w3c.dom.Element;
+
+import java.util.Map;
 
 /**
  * A {@link DOMExtractorModelParser} that can parse multiple versions of XML
@@ -16,8 +15,8 @@ import com.nhl.link.move.extractor.model.ExtractorModelContainer;
  */
 public class VersionedExtractorModelParser implements DOMExtractorModelParser {
 
-	private String defaultNS;
-	private Map<String, DOMExtractorModelParser> parsersByNS;
+	private final String defaultNS;
+	private final Map<String, DOMExtractorModelParser> parsersByNS;
 
 	public VersionedExtractorModelParser(Map<String, DOMExtractorModelParser> parsersByNS, String defaultNS) {
 		this.parsersByNS = parsersByNS;

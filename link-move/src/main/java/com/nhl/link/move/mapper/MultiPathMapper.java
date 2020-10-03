@@ -14,7 +14,7 @@ import static org.apache.cayenne.exp.ExpressionFactory.joinExp;
 
 public class MultiPathMapper implements Mapper {
 
-    private Map<String, Mapper> pathMappers;
+    private final Map<String, Mapper> pathMappers;
 
     public MultiPathMapper(Map<String, Mapper> pathMappers) {
         this.pathMappers = pathMappers;

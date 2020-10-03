@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ConnectorService implements IConnectorService {
 
-    private ConcurrentMap<String, Connector> connectors;
-    private Map<String, IConnectorFactory> factories;
+    private final ConcurrentMap<String, Connector> connectors;
+    private final Map<String, IConnectorFactory> factories;
 
     public ConnectorService(
             @Inject Map<String, IConnectorFactory> factories,

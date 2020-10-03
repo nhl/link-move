@@ -12,10 +12,10 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ExtractorService implements IExtractorService {
 
-    private IExtractorModelService modelService;
-    private IConnectorService connectorService;
-    private ConcurrentMap<ExtractorName, Extractor> extractors;
-    private Map<String, IExtractorFactory> factories;
+    private final IExtractorModelService modelService;
+    private final IConnectorService connectorService;
+    private final ConcurrentMap<ExtractorName, Extractor> extractors;
+    private final Map<String, IExtractorFactory> factories;
 
     public ExtractorService(
             @Inject IExtractorModelService modelService,

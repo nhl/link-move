@@ -1,11 +1,10 @@
 package com.nhl.link.move.runtime.jdbc;
 
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.runtime.connect.IConnectorFactory;
+
+import javax.sql.DataSource;
+import java.util.Map;
 
 /**
  * A factory for {@link JdbcConnector} variety of Connectors based on a map of
@@ -15,7 +14,7 @@ import com.nhl.link.move.runtime.connect.IConnectorFactory;
  */
 public class DataSourceConnectorFactory implements IConnectorFactory<JdbcConnector> {
 
-	private Map<String, DataSource> dataSources;
+	private final Map<String, DataSource> dataSources;
 
 	public DataSourceConnectorFactory(Map<String, DataSource> dataSources) {
 		this.dataSources = dataSources;

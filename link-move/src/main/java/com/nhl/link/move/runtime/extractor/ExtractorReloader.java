@@ -18,10 +18,10 @@ import java.util.Map;
  */
 class ExtractorReloader {
 
-    private IExtractorModelService extractorModelService;
-    private IConnectorService connectorService;
-    private Map<String, IExtractorFactory> factories;
-    private ExtractorName name;
+    private final IExtractorModelService extractorModelService;
+    private final IConnectorService connectorService;
+    private final Map<String, IExtractorFactory> factories;
+    private final ExtractorName name;
 
     private long lastSeen;
     private Extractor delegate;

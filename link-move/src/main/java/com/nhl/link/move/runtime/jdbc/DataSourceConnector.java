@@ -13,8 +13,8 @@ import javax.sql.DataSource;
  */
 public class DataSourceConnector implements JdbcConnector {
 
-	private ServerRuntime runtime;
-	private ObjectContext sharedContext;
+	private final ServerRuntime runtime;
+	private final ObjectContext sharedContext;
 
 	public DataSourceConnector(DataSource dataSource) {
 		this("dsconnector-" + System.nanoTime(), dataSource);

@@ -23,18 +23,20 @@ public class CsvExtractor implements Extractor {
 	private final RowAttribute[] rowHeader;
 	private final Charset charset;
 	private final CSVFormat csvFormat;
+	private final Integer readFrom;
 
-	private Integer readFrom;
+	public CsvExtractor(
+			StreamConnector connector,
+			RowAttribute[] rowHeader,
+			Charset charset,
+			CSVFormat csvFormat,
+			Integer readFrom) {
 
-	public CsvExtractor(StreamConnector connector, RowAttribute[] rowHeader, Charset charset) {
-		this(connector, rowHeader, charset, CSVFormat.DEFAULT);
-	}
-
-	public CsvExtractor(StreamConnector connector, RowAttribute[] rowHeader, Charset charset, CSVFormat csvFormat) {
 		this.connector = connector;
 		this.rowHeader = rowHeader;
 		this.charset = charset;
 		this.csvFormat = csvFormat;
+		this.readFrom = readFrom;
 	}
 
 	@Override
@@ -50,9 +52,5 @@ public class CsvExtractor implements Extractor {
 			rowReader.setReadFrom(readFrom);
 		}
 		return rowReader;
-	}
-
-	public void setReadFrom(Integer readFrom) {
-		this.readFrom = readFrom;
 	}
 }

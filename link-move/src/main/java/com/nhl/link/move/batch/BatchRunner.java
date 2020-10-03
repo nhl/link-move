@@ -15,7 +15,7 @@ public class BatchRunner<S> {
 	static final int DEFAULT_BATCH_SIZE = 500;
 
 	private int batchSize;
-	private BatchProcessor<S> processor;
+	private final BatchProcessor<S> processor;
 
 	public static <S> BatchRunner<S> create(BatchProcessor<S> processor) {
 		return new BatchRunner<>(processor);

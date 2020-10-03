@@ -23,8 +23,8 @@ public class ExtractorModelParser implements IExtractorModelParser {
     // use v1 namespace as the default
     static final String NO_NS_PARSER_NS = ExtractorModelParser_v1.NS;
 
-    private DocumentBuilderFactory domFactory;
-    private DOMExtractorModelParser parser;
+    private final DocumentBuilderFactory domFactory;
+    private final DOMExtractorModelParser parser;
 
     public ExtractorModelParser() {
         this.domFactory = DocumentBuilderFactory.newInstance();
@@ -43,7 +43,7 @@ public class ExtractorModelParser implements IExtractorModelParser {
     public ExtractorModelContainer parse(String name, Reader in) {
         try {
             return parseWithExceptions(name, in);
-        } catch (IOException | ParserConfigurationException | SAXException | ClassNotFoundException | DOMException e) {
+        } catch (IOException | ParserConfigurationException | SAXException | DOMException e) {
             throw new LmRuntimeException("Error reading ExtractorConfig XML", e);
         }
     }
@@ -52,7 +52,6 @@ public class ExtractorModelParser implements IExtractorModelParser {
             ParserConfigurationException,
             SAXException,
             IOException,
-            ClassNotFoundException,
             DOMException {
 
         // don't expect large files, so using DOM for convenience

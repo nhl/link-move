@@ -12,9 +12,9 @@ public class ByteArrayKeyAdapter implements KeyAdapter {
 		return ((ByteArrayKey) mapKey).bytes;
 	}
 
-	class ByteArrayKey {
+	static class ByteArrayKey {
 
-		private byte[] bytes;
+		private final byte[] bytes;
 
 		ByteArrayKey(byte[] bytes) {
 			this.bytes = bytes;
@@ -38,8 +38,8 @@ public class ByteArrayKeyAdapter implements KeyAdapter {
 			if (bytes == null) {
 				return iTotal * iConstant;
 			} else {
-				for (int i = 0; i < bytes.length; i++) {
-					iTotal = iTotal * iConstant + bytes[i];
+				for (byte aByte : bytes) {
+					iTotal = iTotal * iConstant + aByte;
 				}
 			}
 

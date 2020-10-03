@@ -17,7 +17,7 @@ import java.util.List;
 public class DataRowIterator implements Iterator<DataRow>, AutoCloseable {
 
     private DataRow currentRow;
-    private ResultIterator<DataRow> delegate;
+    private final ResultIterator<DataRow> delegate;
 
     public DataRowIterator(ResultIterator<DataRow> delegate) {
         this.delegate = delegate;
