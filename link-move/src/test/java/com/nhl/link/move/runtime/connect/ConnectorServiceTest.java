@@ -2,12 +2,12 @@ package com.nhl.link.move.runtime.connect;
 
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +18,7 @@ public class ConnectorServiceTest {
 	private JdbcConnector connectorB;
 
 	@SuppressWarnings("serial")
-	@Before
+	@BeforeEach
 	public void before() {
 		connectorA = mock(JdbcConnector.class);
 		connectorB = mock(JdbcConnector.class);

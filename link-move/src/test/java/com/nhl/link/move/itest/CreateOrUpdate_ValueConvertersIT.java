@@ -7,12 +7,11 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.*;
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.query.SQLSelect;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 
@@ -128,7 +127,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 		assertExec(1, 0, 1, 0, e3);
 	}
 
-	@Test(expected = Exception.class)
+	@Test
 	public void test_ById_DecimalToDecimal_Exception() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl8t.class)
@@ -137,7 +136,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 		BigDecimal c1 = new BigDecimal("1.000000"), c2 = new BigDecimal("1.000000001"), c3 = new BigDecimal("1.000000000");
 		createOrUpdateEtl8(1, c1, c2, c3);
 
-		task.run();
+		assertThrows(Exception.class, task::run);
 	}
 
 	@Test

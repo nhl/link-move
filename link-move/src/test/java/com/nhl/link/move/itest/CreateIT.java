@@ -7,9 +7,9 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.LmTaskTester;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateIT extends LmIntegrationTest {
 

@@ -3,20 +3,20 @@ package com.nhl.link.move.extractor;
 import com.nhl.link.move.CollectionRowReader;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MultiExtractorTest {
 
     @Test
     public void testGetReader_Empty() {
-        MultiExtractor e = new MultiExtractor(Collections.<Extractor>emptyList());
+        MultiExtractor e = new MultiExtractor(Collections.emptyList());
         assertFound(e, 0);
     }
 
@@ -66,7 +66,7 @@ public class MultiExtractorTest {
 
         int rows = 0;
         try (RowReader reader = extractor.getReader(Collections.emptyMap())) {
-            for (@SuppressWarnings("unused") Object[] row : reader) {
+            for (Object[] ignored : reader) {
                 rows++;
             }
         }

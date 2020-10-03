@@ -6,36 +6,36 @@ import org.apache.cayenne.datasource.PoolingDataSource;
 import org.apache.cayenne.query.SQLExec;
 import org.apache.cayenne.query.SQLSelect;
 import org.apache.cayenne.query.SQLTemplate;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DerbySrcTest {
 
 	protected static CayenneDerbyStack srcStack;
 	protected static PoolingDataSource srcDataSource;
 
-	@BeforeClass
+	@BeforeAll
 	public static void startSrc() {
 		srcStack = new CayenneDerbyStack("derbysrc", "cayenne-linketl-tests-sources.xml");
 		srcDataSource = DataSourceBuilder.url("jdbc:derby:" + srcStack.getDerbyPath() + ";create=true")
 				.driver("org.apache.derby.jdbc.EmbeddedDriver").userName("sa").pool(1, 10).build();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void shutdownSrc() {
 
 		srcStack.shutdown();
 
 		try {
 			srcDataSource.close();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 
 		srcDataSource = null;
 	}
 
-	@Before
+	@BeforeEach
 	public void deleteSourceData() {
 
 		ObjectContext context = srcStack.newContext();
@@ -58,6 +58,6 @@ public abstract class DerbySrcTest {
 	protected int srcScalar(String sql) {
 		ObjectContext context = srcStack.newContext();
 		SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
-		return query.selectOne(context).intValue();
+		return query.selectOne(context);
 	}
 }

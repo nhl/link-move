@@ -4,24 +4,21 @@ import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ExtractorModelParserTest {
 
 	private IExtractorModelParser parser;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		parser = new ExtractorModelParser();
 	}
@@ -32,7 +29,7 @@ public class ExtractorModelParserTest {
 
 	private Reader reader(String resourceName) {
         InputStream in = ExtractorModelParserTest.class.getResourceAsStream(resourceName);
-        assertNotNull("Resource not found: " + resourceName, in);
+        assertNotNull(in, () -> "Resource not found: " + resourceName);
         return new InputStreamReader(in);
     }
 

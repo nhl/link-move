@@ -3,10 +3,11 @@ package com.nhl.link.move.mapper;
 import com.nhl.dflib.Index;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.DataObject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,7 +15,7 @@ public class PathMapperTest {
 
     private PathMapper mapper;
 
-    @Before
+    @BeforeEach
     public void before() {
         mapper = new PathMapper("abc");
     }
@@ -29,9 +30,10 @@ public class PathMapperTest {
         assertEquals(null, mapper.keyForSource(new TestRowProxy(Index.forLabels("a", "abc"), "A", null)));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testKeyForSource_MissingKey() {
-        mapper.keyForSource(new TestRowProxy(Index.forLabels("a"), "A"));
+        assertThrows(LmRuntimeException.class,
+                () -> mapper.keyForSource(new TestRowProxy(Index.forLabels("a"), "A")));
     }
 
     @Test

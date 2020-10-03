@@ -1,19 +1,13 @@
 package com.nhl.link.move.extractor.parser;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Element;
-
-import com.nhl.link.move.extractor.parser.DOMExtractorModelParser;
-import com.nhl.link.move.extractor.parser.ExtractorModelParser_v1;
-import com.nhl.link.move.extractor.parser.VersionedExtractorModelParser;
+import static org.mockito.Mockito.*;
 
 public class VersionedExtractorModelParserTest extends BaseParserTest {
 
@@ -23,7 +17,7 @@ public class VersionedExtractorModelParserTest extends BaseParserTest {
 	private DOMExtractorModelParser mockNS1;
 	private DOMExtractorModelParser mockNS2;
 
-	@Before
+	@BeforeEach
 	public void before() {
 
 		mockNSDefault = mock(DOMExtractorModelParser.class);

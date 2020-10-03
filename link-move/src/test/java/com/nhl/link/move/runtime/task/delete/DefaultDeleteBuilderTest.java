@@ -20,18 +20,15 @@ import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,7 +37,7 @@ public class DefaultDeleteBuilderTest {
 
 	private DefaultDeleteBuilder<Etl1t> builder;
 
-	@Before
+	@BeforeEach
 	public void before() {
 
 		ObjAttribute matchAttribute = new ObjAttribute("abc");
@@ -81,9 +78,9 @@ public class DefaultDeleteBuilderTest {
                 mapperBuilder);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testTask_NoExtractorName() {
-		builder.task();
+		assertThrows(IllegalStateException.class, () -> builder.task());
 	}
 
 	@Test
@@ -134,7 +131,7 @@ public class DefaultDeleteBuilderTest {
 		assertEquals(1, listeners.get(AfterMissingTargetsFiltered.class).size());
 	}
 
-	public class DeleteListener1 {
+	public static class DeleteListener1 {
 
 		@AfterTargetsMapped
 		public void afterTargetsMapped(DeleteSegment<?> s) {

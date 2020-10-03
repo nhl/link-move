@@ -5,21 +5,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nhl.link.move.runtime.json.JacksonService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonQueryTest {
 
@@ -27,8 +19,8 @@ public class JsonQueryTest {
     private QueryCompiler compiler;
     private JsonNode document;
 
-    @Before
-    public void setUp() throws IOException {
+    @BeforeEach
+    public void setUp() {
 
         nodeFactory = JsonNodeFactory.instance;
         compiler = new QueryCompiler();
@@ -483,7 +475,7 @@ public class JsonQueryTest {
         Rob("Rob", 60, null),
         John("John", 3, "Goo goo ga ga");
 
-        private JsonNode node;
+        private final JsonNode node;
 
         Readers(String name, Integer age, String motto) {
 

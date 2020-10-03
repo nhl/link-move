@@ -1,20 +1,19 @@
 package com.nhl.link.move.itest.mapper;
 
-import static org.junit.Assert.assertEquals;
-
-import org.apache.cayenne.Cayenne;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.nhl.link.move.mapper.PathMapper;
 import com.nhl.link.move.unit.DerbySrcTargetTest;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
+import org.apache.cayenne.Cayenne;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PathMapperIT extends DerbySrcTargetTest {
 
 	private Etl3t e;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		e = targetContext.newObject(Etl3t.class);
 		e.setPhoneNumber("123458");

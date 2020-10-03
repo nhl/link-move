@@ -1,9 +1,10 @@
 package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EnumConverterTest {
 
@@ -27,10 +28,10 @@ public class EnumConverterTest {
         assertEquals(Enum2.c, converter.convert("c"));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_E1_InvalidString() {
         EnumConverter<Enum1> converter = new EnumConverter<>(Enum1.class);
-        converter.convert("x");
+        assertThrows(LmRuntimeException.class, () -> converter.convert("x"));
     }
 
     enum Enum1 {

@@ -1,25 +1,21 @@
 package com.nhl.link.move.mapper;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.cayenne.exp.Expression;
+import org.apache.cayenne.exp.ExpressionFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.nhl.link.move.mapper.Mapper;
-import com.nhl.link.move.mapper.MultiPathMapper;
-import com.nhl.link.move.mapper.PathMapper;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultiPathMapper_DBPathTest {
 
 	private MultiPathMapper mapper;
 
-	@Before
+	@BeforeEach
 	public void before() {
 
 		// must ensure predictable key iteration order, so using LinkedMap

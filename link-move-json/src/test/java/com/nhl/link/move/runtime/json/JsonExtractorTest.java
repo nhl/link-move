@@ -7,16 +7,18 @@ import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
 import com.nhl.link.move.runtime.json.query.QueryCompiler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,7 +29,7 @@ public class JsonExtractorTest {
     private QueryCompiler compiler;
     private StreamConnector connector;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         jacksonService = new JacksonService();
@@ -74,7 +76,7 @@ public class JsonExtractorTest {
 
         connector = mock(StreamConnector.class);
         when(connector.getInputStream(anyMap())).thenReturn(
-                new ByteArrayInputStream(source.getBytes("UTF-8")));
+                new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8)));
     }
 
     @Test

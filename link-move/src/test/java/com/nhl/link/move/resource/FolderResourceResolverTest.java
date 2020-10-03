@@ -1,7 +1,7 @@
 package com.nhl.link.move.resource;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,17 +9,14 @@ import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FolderResourceResolverTest {
 
     private FolderResourceResolver resolver;
     private File rootDir;
 
-    @Before
+    @BeforeEach
     public void before() throws URISyntaxException {
         URL extractorResource = getClass().getResource("dummy.xml");
         assertNotNull(extractorResource);

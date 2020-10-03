@@ -11,23 +11,21 @@ import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.ClassDescriptor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class LmRuntimeBuilderTest {
 
     private ServerRuntime cayenneRuntime;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         DbEntity mockDbEntity = mock(DbEntity.class);
@@ -63,11 +61,11 @@ public class LmRuntimeBuilderTest {
         assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testBuild_NoTargetRuntime() {
         LmRuntimeBuilder builder = new LmRuntimeBuilder()
                 .extractorResolver(mock(ResourceResolver.class));
-        builder.build();
+        assertThrows(IllegalStateException.class, builder::build);
     }
 
     @Test

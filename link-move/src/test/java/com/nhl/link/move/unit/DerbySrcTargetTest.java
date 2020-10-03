@@ -4,26 +4,26 @@ import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.SQLSelect;
 import org.apache.cayenne.query.SQLTemplate;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
     protected static CayenneDerbyStack targetStack;
     protected ObjectContext targetContext;
 
-    @BeforeClass
+    @BeforeAll
     public static void startTarget() {
         targetStack = new CayenneDerbyStack("derbytarget", "cayenne-linketl-tests-targets.xml");
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownTarget() {
         targetStack.shutdown();
     }
 
-    @Before
+    @BeforeEach
     public void prepareTarget() {
 
         targetContext = targetStack.newContext();
@@ -47,7 +47,7 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
     protected int targetScalar(String sql) {
         SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
-        return query.selectOne(targetContext).intValue();
+        return query.selectOne(targetContext);
     }
 
 }

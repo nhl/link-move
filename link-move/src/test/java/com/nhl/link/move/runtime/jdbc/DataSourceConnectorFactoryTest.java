@@ -1,17 +1,15 @@
 package com.nhl.link.move.runtime.jdbc;
 
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
-
-import java.util.HashMap;
+import com.nhl.link.move.LmRuntimeException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.jdbc.DataSourceConnectorFactory;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 public class DataSourceConnectorFactoryTest {
 
@@ -20,7 +18,7 @@ public class DataSourceConnectorFactoryTest {
 	private DataSource ds2;
 
 	@SuppressWarnings("serial")
-	@Before
+	@BeforeEach
 	public void before() {
 
 		ds1 = mock(DataSource.class);
@@ -40,9 +38,9 @@ public class DataSourceConnectorFactoryTest {
 		assertSame(ds2, factory.connectorDataSource("ds2"));
 	}
 
-	@Test(expected = LmRuntimeException.class)
+	@Test
 	public void testConnectorDataSource_Missing() {
-		factory.connectorDataSource("ds3");
+		assertThrows(LmRuntimeException.class, () -> factory.connectorDataSource("ds3"));
 	}
 
 }

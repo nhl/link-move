@@ -5,41 +5,33 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
-import org.apache.cayenne.DataChannel;
-import org.apache.cayenne.DataChannelFilter;
-import org.apache.cayenne.DataChannelFilterChain;
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.QueryResponse;
+import org.apache.cayenne.*;
 import org.apache.cayenne.graph.GraphDiff;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.Query;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
 
     private static QueryCapture QUERY_CAPTURE;
 
-    @BeforeClass
+    @BeforeAll
     public static void initQueryCapture() {
         QUERY_CAPTURE = new QueryCapture();
         targetStack.runtime().getDataDomain().addFilter(QUERY_CAPTURE);
     }
 
-    @Before
+    @BeforeEach
     public void resetQueryCapture() {
         QUERY_CAPTURE.queries.clear();
     }
@@ -73,8 +65,8 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
                 .map(q -> q.getMetaData(resolver).getClassDescriptor().getEntity().getName())
                 .collect(toList());
 
-        assertEquals("Each id (including root target) must have been resolved only once. Instead got " + resolvedEntities,
-                3, resolvedEntities.size());
+        assertEquals(3, resolvedEntities.size(),
+                () -> "Each id (including root target) must have been resolved only once. Instead got " + resolvedEntities);
         Set<String> expectedRoots = new HashSet<>(asList("Etl3t", "Etl2t", "Etl5t"));
         assertEquals(expectedRoots, new HashSet<>(resolvedEntities));
     }

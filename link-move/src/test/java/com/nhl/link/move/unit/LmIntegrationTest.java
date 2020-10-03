@@ -7,19 +7,19 @@ import com.nhl.link.move.runtime.LmRuntime;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.connect.URIConnectorFactory;
 import com.nhl.link.move.runtime.jdbc.DataSourceConnector;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class LmIntegrationTest extends DerbySrcTargetTest {
 
     protected LmRuntime etl;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.etl = createEtl();
     }
 
-    @After
+    @AfterEach
     public void shutdown() {
         if (etl != null) {
             etl.shutdown();

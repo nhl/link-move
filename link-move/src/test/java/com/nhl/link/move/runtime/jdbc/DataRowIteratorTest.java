@@ -3,9 +3,9 @@ package com.nhl.link.move.runtime.jdbc;
 import com.nhl.link.move.RowAttribute;
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.ResultIterator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

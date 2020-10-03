@@ -2,25 +2,16 @@ package com.nhl.link.move.extractor.parser;
 
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ExtractorModelParser_v1Test extends BaseParserTest {
 
-	private ExtractorModelParser_v1 parser;
-
-	@Before
-	public void before() {
-		this.parser = new ExtractorModelParser_v1();
-	}
+	final ExtractorModelParser_v1 parser = new ExtractorModelParser_v1();
 
 	@Test
 	public void testParse() {

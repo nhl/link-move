@@ -5,18 +5,19 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.MutableExtractorModel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class XmlExtractor_NamespacesTest {
 
@@ -51,9 +52,9 @@ public class XmlExtractor_NamespacesTest {
         assertEquals(0, rows.size());
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testXmlExtractor_Namespaces_NoBindings() {
-        createExtractor("/doc/ns1:e1", Collections.emptyMap());
+        assertThrows(LmRuntimeException.class, () -> createExtractor("/doc/ns1:e1", Collections.emptyMap()));
     }
 
     private static Extractor createExtractor(String xPath, Map<String, String> namespaceBindings) {
@@ -75,8 +76,8 @@ public class XmlExtractor_NamespacesTest {
         return new StreamConnector() {
 
             @Override
-            public InputStream getInputStream(Map<String, ?> parameters) throws IOException {
-                return new ByteArrayInputStream(xmlDocument.getBytes("UTF-8"));
+            public InputStream getInputStream(Map<String, ?> parameters) {
+                return new ByteArrayInputStream(xmlDocument.getBytes(StandardCharsets.UTF_8));
             }
 
             @Override

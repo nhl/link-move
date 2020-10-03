@@ -8,13 +8,13 @@ import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.exp.Property;
 import org.apache.cayenne.map.ObjEntity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +26,7 @@ public class MapperBuilderTest {
 		return Optional.of(new TargetAttribute(entity, "db:" + baseName, 1, "java.lang.Object", Optional.empty()));
 	}
 
-	@Before
+	@BeforeEach
 	public void before() {
 
 		ObjEntity e = mock(ObjEntity.class);

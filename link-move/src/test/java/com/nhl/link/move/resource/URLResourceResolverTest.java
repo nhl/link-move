@@ -1,7 +1,7 @@
 package com.nhl.link.move.resource;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,22 +10,20 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class URLResourceResolverTest {
 
     private URLResourceResolver loader;
-	private URL rootUrl;
 
-	@Before
+	@BeforeEach
 	public void before() throws URISyntaxException, MalformedURLException {
 
 		URL extractorResource = getClass().getResource("dummy.xml");
 		assertNotNull(extractorResource);
 
-        this.rootUrl = new File(extractorResource.toURI()).getParentFile().toURI().toURL();
-
+		URL rootUrl = new File(extractorResource.toURI()).getParentFile().toURI().toURL();
 		this.loader = new URLResourceResolver(rootUrl);
 	}
 

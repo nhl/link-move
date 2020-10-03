@@ -1,11 +1,6 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.*;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
@@ -17,15 +12,15 @@ import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,7 +29,7 @@ public class DefaultCreateOrUpdateBuilderTest {
 
     private DefaultCreateOrUpdateBuilder<Etl1t> builder;
 
-    @Before
+    @BeforeEach
     public void before() {
 
         ObjAttribute matchAttribute = new ObjAttribute("abc");
@@ -95,7 +90,7 @@ public class DefaultCreateOrUpdateBuilderTest {
         assertEquals(1, listeners.get(AfterTargetsCommitted.class).size());
     }
 
-    public class L1 {
+    public static class L1 {
 
         @AfterSourcesMapped
         public void m1(CreateOrUpdateSegment<?> s) {

@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.xml;
 
 import com.nhl.link.move.BaseRowAttribute;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -12,7 +12,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 import java.util.Iterator;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class XmlRowReaderTest {
 
@@ -25,7 +25,7 @@ public class XmlRowReaderTest {
 	private XmlRowAttribute[] attributes;
 	private NodeList nodes;
 
-	@Before
+	@BeforeEach
 	public void setUpXmlRowReader() throws Exception {
 		xPathFactory = XPathFactory.newInstance();
 		configAttributes();

@@ -19,10 +19,10 @@ import java.util.Map;
  */
 public class CsvExtractor implements Extractor {
 
-	private StreamConnector connector;
-	private RowAttribute[] rowHeader;
-	private Charset charset;
-	private CSVFormat csvFormat;
+	private final StreamConnector connector;
+	private final RowAttribute[] rowHeader;
+	private final Charset charset;
+	private final CSVFormat csvFormat;
 
 	private Integer readFrom;
 

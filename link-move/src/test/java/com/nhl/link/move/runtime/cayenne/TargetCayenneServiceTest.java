@@ -1,21 +1,18 @@
 package com.nhl.link.move.runtime.cayenne;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import org.apache.cayenne.access.DataDomain;
 import org.apache.cayenne.access.DataNode;
 import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import com.nhl.link.move.runtime.cayenne.TargetCayenneService;
+import javax.sql.DataSource;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TargetCayenneServiceTest {
 
@@ -23,7 +20,7 @@ public class TargetCayenneServiceTest {
 	private DataSource ds2;
 	private TargetCayenneService cayenneService;
 
-	@Before
+	@BeforeEach
 	public void before() {
 
 		ds1 = mock(DataSource.class);

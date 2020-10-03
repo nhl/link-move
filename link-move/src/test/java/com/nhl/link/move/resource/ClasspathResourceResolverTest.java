@@ -1,20 +1,19 @@
 package com.nhl.link.move.resource;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClasspathResourceResolverTest {
 
 	private ClasspathResourceResolver loader;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		loader = new ClasspathResourceResolver();
 	}
@@ -33,8 +32,8 @@ public class ClasspathResourceResolverTest {
 
 	}
 
-	@Test(expected = LmRuntimeException.class)
-	public void testReader_Invalid() throws IOException {
-		loader.reader("no-such-resource.xml");
+	@Test
+	public void testReader_Invalid() {
+		assertThrows(LmRuntimeException.class, () -> loader.reader("no-such-resource.xml"));
 	}
 }

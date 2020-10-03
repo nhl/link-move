@@ -7,26 +7,25 @@ import org.apache.cayenne.access.types.ValueObjectType;
 import org.apache.cayenne.access.types.ValueObjectTypeRegistry;
 import org.apache.cayenne.java8.access.types.LocalDateTimeValueType;
 import org.apache.cayenne.query.SQLExec;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DataSourceConnectorIT extends DerbySrcTest {
 
     private DataSourceConnector connector;
 
-    @Before
-    public void setUp() throws SQLException {
+    @BeforeEach
+    public void setUp() {
         this.connector = new DataSourceConnector(srcDataSource);
     }
 
-    @After
-    public void tearDown() throws SQLException {
+    @AfterEach
+    public void tearDown() {
         connector.shutdown();
     }
 

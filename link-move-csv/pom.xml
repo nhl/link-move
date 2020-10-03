@@ -14,7 +14,7 @@
     <description>CSV extractor for link-move framework.</description>
 
     <dependencies>
-        <!-- required runtime dependencies -->
+        <!-- Compile dependencies -->
         <dependency>
             <groupId>com.nhl.link.move</groupId>
             <artifactId>link-move</artifactId>
@@ -26,6 +26,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Unit test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

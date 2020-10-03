@@ -1,7 +1,7 @@
 package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -10,7 +10,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LocalDateConverterTest {
 
@@ -32,9 +33,9 @@ public class LocalDateConverterTest {
         assertEquals(localDate, CONVERTER.convert(date));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_sqlTime() {
-        CONVERTER.convert(new Time(Instant.now().toEpochMilli()));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(new Time(Instant.now().toEpochMilli())));
     }
 
     @Test

@@ -1,14 +1,12 @@
 package com.nhl.link.move;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 
-import org.junit.Test;
-
-import com.nhl.link.move.Execution;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ExecutionTest {
 
@@ -20,7 +18,7 @@ public class ExecutionTest {
 		Map<String, Object> r1 = execution.createReport();
 		assertEquals("xsync", r1.get("Task"));
 		assertEquals(5, r1.get("Parameter[a]"));
-		assertEquals(r1.toString(), 8, r1.size());
+		assertEquals(8, r1.size(), r1.toString());
 		assertEquals("in progress", r1.get("Status"));
 
 		execution.getStats().incrementCreated(5);
@@ -31,17 +29,17 @@ public class ExecutionTest {
 		execution.close();
 
 		Map<String, Object> r2 = execution.createReport();
-		assertEquals(r2.toString(), 8, r2.size());
+		assertEquals(8, r2.size(), r2.toString());
 		assertEquals("finished", r2.get("Status"));
-		assertEquals(55l, r2.get("Extracted"));
-		assertEquals(5l, r2.get("Created"));
-		assertEquals(4l, r2.get("Deleted"));
-		assertEquals(3l, r2.get("Updated"));
+		assertEquals(55L, r2.get("Extracted"));
+		assertEquals(5L, r2.get("Created"));
+		assertEquals(4L, r2.get("Deleted"));
+		assertEquals(3L, r2.get("Updated"));
 	}
 
 	@Test
 	public void testAttribute() {
-		try (Execution execution = new Execution("xsync", Collections.<String, Object> emptyMap())) {
+		try (Execution execution = new Execution("xsync", Collections.emptyMap())) {
 			assertNull(execution.getAttribute("a"));
 
 			execution.setAttribute("a", "MMM");

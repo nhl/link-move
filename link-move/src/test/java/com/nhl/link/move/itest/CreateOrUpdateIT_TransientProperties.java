@@ -5,9 +5,9 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl7t;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateOrUpdateIT_TransientProperties extends LmIntegrationTest {
 

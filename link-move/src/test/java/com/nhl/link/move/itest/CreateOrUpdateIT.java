@@ -10,9 +10,9 @@ import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import com.nhl.link.move.unit.cayenne.t.Etl5t;
 import com.nhl.link.move.unit.cayenne.t.Etl9t;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateOrUpdateIT extends LmIntegrationTest {
 
@@ -208,7 +208,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		assertExec(2, 0, 0, 0, e4);
 	}
 
-	@Test(expected = LmRuntimeException.class)
+	@Test
 	public void test_MatchById_Autoincrement() {
 
 		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
@@ -217,7 +217,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (45, 'a', 67)");
 		srcRunSql("INSERT INTO utest.etl1 (ID, NAME, AGE) VALUES (11, 'b', 4)");
 
-		task.run();
+		assertThrows(LmRuntimeException.class, task::run);
 	}
 	
 	@Test

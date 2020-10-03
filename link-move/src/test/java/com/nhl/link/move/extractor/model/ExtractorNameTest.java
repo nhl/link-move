@@ -1,11 +1,9 @@
 package com.nhl.link.move.extractor.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import com.nhl.link.move.extractor.model.ExtractorName;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ExtractorNameTest {
 

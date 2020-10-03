@@ -11,22 +11,23 @@ import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.DerbySrcTargetTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 
     private ITargetCayenneService cayenneService;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.cayenneService = new TargetCayenneService(targetStack.runtime());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testTask_NoExtractorName() {
 
 
@@ -40,7 +41,7 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
                 mock(ITokenManager.class),
                 mock(MapperBuilder.class));
 
-        builder.task();
+        assertThrows(IllegalStateException.class, builder::task);
     }
 
     @Test

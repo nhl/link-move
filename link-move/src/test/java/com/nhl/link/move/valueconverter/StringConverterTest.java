@@ -1,12 +1,13 @@
 package com.nhl.link.move.valueconverter;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StringConverterTest {
 
@@ -42,24 +43,24 @@ public class StringConverterTest {
         assertEquals("1", CONVERTER.convert(1f));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Float_NaN() {
-        CONVERTER.convert(Float.NaN);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Float.NaN));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Float_PositiveInfinity() {
-        CONVERTER.convert(Float.POSITIVE_INFINITY);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Float.POSITIVE_INFINITY));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Float_NegativeInfinity() {
-        CONVERTER.convert(Float.NEGATIVE_INFINITY);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Float.NEGATIVE_INFINITY));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Float_FractionalPart() {
-        CONVERTER.convert(1.1f);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(1.1f));
     }
 
     @Test
@@ -67,24 +68,24 @@ public class StringConverterTest {
         assertEquals("1", CONVERTER.convert(1d));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Double_NaN() {
-        CONVERTER.convert(Double.NaN);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Double.NaN));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Double_PositiveInfinity() {
-        CONVERTER.convert(Double.POSITIVE_INFINITY);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Double.POSITIVE_INFINITY));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Double_NegativeInfinity() {
-        CONVERTER.convert(Double.NEGATIVE_INFINITY);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Double.NEGATIVE_INFINITY));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_Double_FractionalPart() {
-        CONVERTER.convert(1.1d);
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(1.1d));
     }
 
     @Test
@@ -92,9 +93,9 @@ public class StringConverterTest {
         assertEquals("1", CONVERTER.convert(BigDecimal.ONE));
     }
 
-    @Test(expected = LmRuntimeException.class)
+    @Test
     public void testConvert_BigDecimal_Exception() {
-        CONVERTER.convert(BigDecimal.valueOf(1.1d));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(BigDecimal.valueOf(1.1d)));
     }
 
     @Test

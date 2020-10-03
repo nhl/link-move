@@ -1,28 +1,21 @@
 package com.nhl.link.move.runtime.task;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Matchers;
-
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.*;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.runtime.task.createorupdate.MockCreateOrUpdateListener;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Matchers;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class StageListenersBuilderTest {
 
 	private ListenersBuilder listenersBuilder;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		listenersBuilder = new ListenersBuilder(AfterSourceRowsConverted.class, AfterSourcesMapped.class,
 				AfterTargetsMatched.class, AfterTargetsMerged.class, AfterTargetsCommitted.class);

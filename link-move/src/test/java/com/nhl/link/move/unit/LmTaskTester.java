@@ -2,7 +2,7 @@ package com.nhl.link.move.unit;
 
 import com.nhl.link.move.Execution;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A helper class to test the results of the ETL task run.
@@ -44,19 +44,19 @@ public class LmTaskTester {
     public void test(Execution exec) {
 
         if (expectedExtracted >= 0) {
-            assertEquals("Extracted unexpected number of records.", expectedExtracted, exec.getStats().getExtracted());
+            assertEquals(expectedExtracted, exec.getStats().getExtracted(), "Extracted unexpected number of records.");
         }
 
         if (expectedCreated > 0) {
-            assertEquals("Created unexpected number of records.", expectedCreated, exec.getStats().getCreated());
+            assertEquals(expectedCreated, exec.getStats().getCreated(), "Created unexpected number of records.");
         }
 
         if (expectedUpdated > 0) {
-            assertEquals("Updated unexpected number of records.", expectedUpdated, exec.getStats().getUpdated());
+            assertEquals(expectedUpdated, exec.getStats().getUpdated(), "Updated unexpected number of records.");
         }
 
         if (expectedDeleted > 0) {
-            assertEquals("Deleted unexpected number of records.", expectedDeleted, exec.getStats().getDeleted());
+            assertEquals(expectedDeleted, exec.getStats().getDeleted(), "Deleted unexpected number of records.");
         }
     }
 }
