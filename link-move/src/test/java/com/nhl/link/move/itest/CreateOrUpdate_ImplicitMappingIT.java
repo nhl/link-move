@@ -24,7 +24,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
 	private void test_MatchByKey(String key) {
 
-		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
+		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_implicit.xml").matchBy(key).task();
 
 		srcEtl1().insertColumns("name", "age")
@@ -61,7 +61,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 	@Test
 	public void test_ById() {
 
-		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
+		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl5t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid_implicit.xml")
 				.matchById()
 				.task();

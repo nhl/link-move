@@ -14,7 +14,7 @@ public class CreateIT extends LmIntegrationTest {
     @Test
     public void testSync() {
 
-        LmTask task = etl.service(ITaskService.class).create(Etl1t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).create(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").task();
 
         srcEtl1().insertColumns("name", "age")
@@ -74,7 +74,7 @@ public class CreateIT extends LmIntegrationTest {
     @Test
     public void test_SyncFk() {
 
-        LmTask task = etl.service(ITaskService.class).create(Etl3t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).create(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").task();
 
         srcEtl2().insertColumns("id", "address", "name")

@@ -21,7 +21,7 @@ public class SourceKeysIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = etl.service(ITaskService.class).extractSourceKeys(Etl1t.class)
+		LmTask task = lmRuntime.service(ITaskService.class).extractSourceKeys(Etl1t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy("name").task();
 
 		srcEtl1().insertColumns("name", "age")

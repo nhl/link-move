@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest {
 
 	@Override
-	protected LmRuntime createEtl() {
+	protected LmRuntime createLmRuntime() {
 		// override connector logic defined in super to make source and target the same DB
 		return new LmRuntimeBuilder().withConnectorFromTarget().withTargetRuntime(targetCayenne.getRuntime()).build();
 	}
@@ -22,7 +22,7 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl2t.class)
+		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl2t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl1t_to_etl2t.xml").matchBy(Etl2t.NAME).task();
 
 		targetRunSql("INSERT INTO etl1t (NAME) VALUES ('a')");

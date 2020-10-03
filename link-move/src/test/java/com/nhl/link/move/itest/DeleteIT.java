@@ -15,7 +15,7 @@ public class DeleteIT extends LmIntegrationTest {
 	@Test
 	public void test_ById_Normalized_IntegerToLong() {
 
-		LmTask task = etl.service(ITaskService.class)
+		LmTask task = lmRuntime.service(ITaskService.class)
 				.delete(Etl6t.class)
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml")
 				.task();
@@ -34,7 +34,7 @@ public class DeleteIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = etl.service(ITaskService.class)
+		LmTask task = lmRuntime.service(ITaskService.class)
 				.delete(Etl1t.class)
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")
 				.matchBy(Etl1t.NAME)
@@ -62,7 +62,7 @@ public class DeleteIT extends LmIntegrationTest {
 	@Test
 	public void test_ByAttribute_MultiBatch() {
 
-		LmTask task = etl.service(ITaskService.class)
+		LmTask task = lmRuntime.service(ITaskService.class)
 				.delete(Etl1t.class)
 				.batchSize(2)
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")

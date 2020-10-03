@@ -38,7 +38,7 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
     @Test
     public void test_SyncFk_QueryCounts() {
 
-        LmTask task = etl
+        LmTask task = lmRuntime
                 .service(ITaskService.class)
                 .createOrUpdate(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml")

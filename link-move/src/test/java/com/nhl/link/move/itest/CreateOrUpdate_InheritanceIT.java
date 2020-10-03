@@ -14,7 +14,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
     @Test
     public void test_Subclass_MatchBySubKey() {
 
-        LmTask task = etl.service(ITaskService.class)
+        LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(TiSub1.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_sub1_to_ti_sub1_sub_key.xml")
                 .matchBy(TiSub1.SUB_KEY)
@@ -59,7 +59,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
     @Test
     public void test_Subclass_MatchBySuperKey() {
 
-        LmTask task = etl.service(ITaskService.class)
+        LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(TiSub1.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_sub1_to_ti_sub1_super_key.xml")
                 .matchBy(TiSub1.SUPER_KEY)

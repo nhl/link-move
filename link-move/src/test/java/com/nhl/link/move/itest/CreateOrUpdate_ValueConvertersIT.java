@@ -19,7 +19,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     public void test_ById_IntegerToLong() {
 
         // not specifying "matchById" explicitly ... this should be the default
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl6t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl6t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml").task();
 
         srcEtl6().insertColumns("id", "name")
@@ -56,7 +56,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     @Test
     public void test_ByAttribute_SyncFk() {
 
-        LmTask task = etl.service(ITaskService.class)
+        LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t_converters.xml")
                 .matchBy(Etl3t.NAME)
@@ -76,7 +76,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     @Test
     public void test_ById_IntegerToBoolean() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl4t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters.xml")
                 .task();
 
@@ -98,7 +98,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     @Test
     public void test_ById_StringToEnum() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl4t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters.xml")
                 .task();
 
@@ -120,7 +120,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     @Test
     public void test_ById_DecimalToDecimal() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl8t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl8t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml").task();
 
         srcEtl8().insertColumns("id", "c_decimal1", "c_decimal2", "c_decimal3")
@@ -146,7 +146,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     @Disabled("Until https://github.com/bootique/bootique-jdbc/issues/104 is fixed")
     public void test_ById_DecimalToDecimal_Exception() {
 
-        LmTask task = etl.service(ITaskService.class)
+        LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl8t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml")
                 .task();
@@ -161,7 +161,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     @Test
     public void test_ImplicitJavaTimeConversion() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl4t_jt.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl4t_jt.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_jt_implicit.xml")
                 .task();
 

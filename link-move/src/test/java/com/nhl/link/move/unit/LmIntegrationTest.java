@@ -12,21 +12,21 @@ import org.junit.jupiter.api.BeforeEach;
 
 public abstract class LmIntegrationTest extends DerbySrcTargetTest {
 
-    protected LmRuntime etl;
+    protected LmRuntime lmRuntime;
 
     @BeforeEach
-    public void before() {
-        this.etl = createEtl();
+    protected void initLmRuntime() {
+        this.lmRuntime = createLmRuntime();
     }
 
     @AfterEach
-    public void shutdown() {
-        if (etl != null) {
-            etl.shutdown();
+    protected void stopLmRuntime() {
+        if (lmRuntime != null) {
+            lmRuntime.shutdown();
         }
     }
 
-    protected LmRuntime createEtl() {
+    protected LmRuntime createLmRuntime() {
         Connector c = new DataSourceConnector("derbysrc", srcDb.getDataSource());
         return new LmRuntimeBuilder()
                 .withTargetRuntime(targetCayenne.getRuntime())

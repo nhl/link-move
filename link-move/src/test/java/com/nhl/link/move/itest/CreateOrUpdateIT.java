@@ -19,7 +19,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByAttribute() {
 
-        LmTask task = etl.service(ITaskService.class)
+        LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")
                 .matchBy(Etl1t.NAME)
@@ -59,7 +59,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByDbAttribute() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy("db:name").task();
 
         srcEtl1().insertColumns("name", "age")
@@ -96,7 +96,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByDbAttribute_Binary() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl11t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl11t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl11_to_etl11t.xml").matchBy("db:bin").task();
 
         srcEtl11().insertColumns("id", "bin")
@@ -122,8 +122,11 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByAttributes() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
-                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy(Etl1t.NAME, Etl1t.AGE).task();
+        LmTask task = lmRuntime.service(ITaskService.class)
+                .createOrUpdate(Etl1t.class)
+                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")
+                .matchBy(Etl1t.NAME, Etl1t.AGE)
+                .task();
 
         srcEtl1().insertColumns("name", "age")
                 .values("a", 3)
@@ -153,7 +156,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchById() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl5t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid.xml").matchById().task();
 
         srcEtl5().insertColumns("id", "name").values(45, "a").values(11, "b").exec();
@@ -188,7 +191,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     public void test_MatchById_Default() {
 
         // not specifying "matchById" explicitly ... this should be the default
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl5t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl5t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid.xml").task();
 
         srcEtl5().insertColumns("id", "name").values(45, "a").values(11, "b").exec();
@@ -222,7 +225,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchById_Autoincrement() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_byid.xml").matchById().task();
 
         srcEtl1().insertColumns("id", "name", "age")
@@ -236,7 +239,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_CapsLower() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_lower.xml").matchBy(Etl1t.NAME).task();
 
         srcEtl1().insertColumns("name", "age")
@@ -254,7 +257,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_ExtraSrcColumns() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_extra_source_columns.xml")
                 .matchBy(Etl1t.NAME).task();
 
@@ -273,7 +276,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByAttribute_SyncFk() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").matchBy(Etl3t.NAME).task();
 
         srcEtl2().insertColumns("id", "address", "name")
@@ -303,7 +306,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByAttribute_SyncFk_Nulls() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl3t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").matchBy(Etl3t.NAME).task();
 
         srcEtl2().insertColumns("id", "address", "name").values(34, "Address1", "2Name1").exec();
@@ -340,7 +343,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByAttribute_SyncNulls() {
 
-        LmTask task = etl.service(ITaskService.class).createOrUpdate(Etl1t.class)
+        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy(Etl1t.NAME).task();
 
         targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('a', 3)");
@@ -355,7 +358,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchById_RelationshipOnPK() {
 
-        LmTask task = etl.service(ITaskService.class)
+        LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl9t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl9_to_etl9t.xml")
                 .matchById()
