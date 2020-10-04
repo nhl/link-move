@@ -96,7 +96,7 @@ public class LmRuntimeBuilder {
         this.adapters = new ArrayList<>();
         this.extractorResolverFactory = () -> new ClasspathResourceResolver();
 
-        // default normalizers
+        // default converters
         valueConverters.put(Boolean.class.getName(), BooleanConverter.getConverter());
         valueConverters.put(Boolean.TYPE.getName(), BooleanConverter.getConverter());
         valueConverters.put(Long.class.getName(), LongConverter.getConverter());

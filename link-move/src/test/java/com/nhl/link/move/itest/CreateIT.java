@@ -14,8 +14,10 @@ public class CreateIT extends LmIntegrationTest {
     @Test
     public void testSync() {
 
-        LmTask task = lmRuntime.service(ITaskService.class).create(Etl1t.class)
-                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").task();
+        LmTask task = lmRuntime.service(ITaskService.class)
+                .create(Etl1t.class)
+                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")
+                .task();
 
         srcEtl1().insertColumns("name", "age")
                 .values("a", 3)

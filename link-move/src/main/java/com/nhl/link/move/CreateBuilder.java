@@ -33,8 +33,7 @@ public interface CreateBuilder<T> {
     /**
      * Defines the location of the source data extractor. The name of extractor is assumed to be "default_extractor".
      *
-     * @param location extractor configuration location, relative to some root known
-     *                 to LinkMove.
+     * @param location extractor configuration location, relative to some root known to LinkMove.
      * @return this builder instance
      * @see #sourceExtractor(String, String)
      */

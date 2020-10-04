@@ -31,7 +31,8 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
         return new LmRuntimeBuilder()
                 .withTargetRuntime(targetCayenne.getRuntime())
                 .withConnector("derbysrc", c)
-                .withConnectorFactory(StreamConnector.class, new URIConnectorFactory()).build();
+                .withConnectorFactory(StreamConnector.class, new URIConnectorFactory())
+                .build();
     }
 
     protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {
