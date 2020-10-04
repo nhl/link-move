@@ -29,23 +29,11 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
-import com.nhl.link.move.valueconverter.BigDecimalConverter;
-import com.nhl.link.move.valueconverter.BooleanConverter;
-import com.nhl.link.move.valueconverter.IntegerConverter;
-import com.nhl.link.move.valueconverter.LocalDateConverter;
-import com.nhl.link.move.valueconverter.LocalDateTimeConverter;
-import com.nhl.link.move.valueconverter.LocalTimeConverter;
-import com.nhl.link.move.valueconverter.LongConverter;
-import com.nhl.link.move.valueconverter.StringConverter;
-import com.nhl.link.move.valueconverter.ValueConverter;
-import com.nhl.link.move.valueconverter.ValueConverterFactory;
+import com.nhl.link.move.valueconverter.*;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.di.DIBootstrap;
-import org.apache.cayenne.di.Injector;
-import org.apache.cayenne.di.MapBuilder;
-import org.apache.cayenne.di.Module;
+import org.apache.cayenne.di.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,13 +43,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -242,53 +224,20 @@ public class LmRuntimeBuilder {
             tokenManager = new InMemoryTokenManager();
         }
 
-        Module etlModule = binder -> {
+        Injector injector = DIBootstrap.createInjector(new LmRuntimeModule());
+        return new DefaultLmRuntime(injector);
+    }
 
-            binder.bindMap(Connector.class).putAll(connectors);
+    class LmRuntimeModule implements Module {
 
-            MapBuilder<IConnectorFactory> connectorFactories = binder.bindMap(IConnectorFactory.class)
-                    .putAll(LmRuntimeBuilder.this.connectorFactories);
+        @Override
+        public void configure(Binder binder) {
 
-            for (Entry<String, Class<? extends IConnectorFactory<? extends Connector>>> e : connectorFactoryTypes
-                    .entrySet()) {
-
-                // a bit ugly - need to bind all factory types explicitly
-                // before placing then in a map .. also must drop
-                // parameterization to be able to bind with non-specific
-                // boundaries (<? extends ...>)
-                Class efType = e.getValue();
-                binder.bind(efType).to(efType);
-
-                connectorFactories.put(e.getKey(), e.getValue());
-            }
-
-            MapBuilder<IExtractorFactory> extractorFactories = binder.bindMap(IExtractorFactory.class);
-
-            ServiceLoader<IExtractorFactory> extractorFactoryServiceLoader = ServiceLoader.load(IExtractorFactory.class);
-            for (IExtractorFactory extractorFactory : extractorFactoryServiceLoader) {
-                extractorFactories.put(extractorFactory.getExtractorType(), extractorFactory);
-            }
-
-            extractorFactories.putAll(LmRuntimeBuilder.this.extractorFactories);
-
-            for (Entry<String, Class<? extends IExtractorFactory<?>>> e : extractorFactoryTypes.entrySet()) {
-
-                // a bit ugly - need to bind all factory types explicitly
-                // before placing then in a map .. also must drop
-                // parameterization to be able to bind with non-specific
-                // boundaries (<? extends ...>)
-                Class efType = e.getValue();
-                binder.bind(efType).to(efType);
-
-                extractorFactories.put(e.getKey(), e.getValue());
-            }
-
-            binder.bindMap(ValueConverter.class).putAll(LmRuntimeBuilder.this.valueConverters);
-
-            // Binding CayenneService for the *target*... Note that binding
-            // ServerRuntime directly would result in undesired shutdown
-            // when the ETL module is shutdown.
-            binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
+            bindConnectors(binder);
+            bindConnectorFactories(binder);
+            bindExtractorFactories(binder);
+            bindValueConverters(binder);
+            bindCayenneService(binder);
 
             binder.bind(ResourceResolver.class).toInstance(extractorResolverFactory.get());
             binder.bind(ValueConverterFactory.class).to(ValueConverterFactory.class);
@@ -302,25 +251,58 @@ public class LmRuntimeBuilder {
             binder.bind(IExtractorModelService.class).to(ExtractorModelService.class);
             binder.bind(IExtractorModelParser.class).to(ExtractorModelParser.class);
 
-            // apply adapter-contributed bindings
-            for (LinkEtlAdapter a : adapters) {
-                a.contributeToRuntime(binder);
-            }
-        };
+            // bind adapter-provided services AFTER all the defaults are bound, so they can override services if needed
+            bindAdapters(binder);
+        }
 
-        Injector injector = DIBootstrap.createInjector(etlModule);
+        private void bindConnectors(Binder binder) {
+            binder.bindMap(Connector.class).putAll(connectors);
+        }
 
-        return new LmRuntime() {
+        private void bindConnectorFactories(Binder binder) {
+            MapBuilder<IConnectorFactory> cfMap = binder.bindMap(IConnectorFactory.class);
 
-            @Override
-            public <T> T service(Class<T> serviceType) {
-                return injector.getInstance(serviceType);
-            }
+            cfMap.putAll(connectorFactories);
 
-            @Override
-            public void shutdown() {
-                injector.shutdown();
-            }
-        };
+            connectorFactoryTypes.forEach((n, c) -> {
+                // a bit ugly - need to bind all factory types explicitly before placing then in a map ..
+                // also must drop parameterization to be able to bind with non-specific boundaries (<? extends ...>)
+                Class efType = c;
+                binder.bind(efType).to(efType);
+
+                cfMap.put(n, c);
+            });
+        }
+
+        private void bindExtractorFactories(Binder binder) {
+            MapBuilder<IExtractorFactory> efMap = binder.bindMap(IExtractorFactory.class);
+
+            ServiceLoader.load(IExtractorFactory.class).forEach(ef -> efMap.put(ef.getExtractorType(), ef));
+            efMap.putAll(extractorFactories);
+            extractorFactoryTypes.forEach((n, c) -> {
+
+                // a bit ugly - need to bind all factory types explicitly before placing then in a map ..
+                // also must drop parameterization to be able to bind with non-specific boundaries (<? extends ...>)
+                Class efType = c;
+                binder.bind(efType).to(efType);
+                efMap.put(n, c);
+            });
+        }
+
+        private void bindValueConverters(Binder binder) {
+            binder.bindMap(ValueConverter.class).putAll(valueConverters);
+        }
+
+        private void bindCayenneService(Binder binder) {
+            // Binding CayenneService for the *target*...
+            // Note that binding ServerRuntime directly would result in undesired shutdown when the ETL module is shutdown.
+            binder.bind(ITargetCayenneService.class).toInstance(new TargetCayenneService(targetRuntime));
+        }
+
+        private void bindAdapters(Binder binder) {
+            adapters.forEach(a -> a.contributeToRuntime(binder));
+        }
     }
+
+
 }
