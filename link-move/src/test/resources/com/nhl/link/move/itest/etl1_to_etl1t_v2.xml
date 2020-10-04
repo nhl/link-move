@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT "age", "description", "name" FROM "etl1"]]>
+			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
+		</properties>
+	</extractor>
+</config>

@@ -16,7 +16,7 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
 
     @BeforeEach
     protected void initLmRuntime() {
-        this.lmRuntime = createLmRuntime();
+        this.lmRuntime = testRuntimeBuilder().build();
     }
 
     @AfterEach
@@ -26,13 +26,12 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
         }
     }
 
-    protected LmRuntime createLmRuntime() {
+    protected LmRuntimeBuilder testRuntimeBuilder() {
         Connector c = new DataSourceConnector("derbysrc", srcDb.getDataSource());
         return new LmRuntimeBuilder()
                 .withTargetRuntime(targetCayenne.getRuntime())
                 .withConnector("derbysrc", c)
-                .withConnectorFactory(StreamConnector.class, new URIConnectorFactory())
-                .build();
+                .withConnectorFactory(StreamConnector.class, new URIConnectorFactory());
     }
 
     protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {

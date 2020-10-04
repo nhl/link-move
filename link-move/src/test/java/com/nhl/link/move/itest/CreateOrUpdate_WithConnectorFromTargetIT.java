@@ -2,7 +2,6 @@ package com.nhl.link.move.itest;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.runtime.LmRuntime;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
@@ -12,9 +11,9 @@ import org.junit.jupiter.api.Test;
 public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest {
 
 	@Override
-	protected LmRuntime createLmRuntime() {
+	protected LmRuntimeBuilder testRuntimeBuilder() {
 		// override connector logic defined in super to make source and target the same DB
-		return new LmRuntimeBuilder().withConnectorFromTarget().withTargetRuntime(targetCayenne.getRuntime()).build();
+		return new LmRuntimeBuilder().withConnectorFromTarget().withTargetRuntime(targetCayenne.getRuntime());
 	}
 
 	@Test
