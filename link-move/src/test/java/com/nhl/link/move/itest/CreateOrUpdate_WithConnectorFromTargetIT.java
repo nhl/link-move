@@ -22,11 +22,13 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl2t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1t_to_etl2t.xml").matchBy(Etl2t.NAME).task();
+		LmTask task = lmRuntime.service(ITaskService.class)
+				.createOrUpdate(Etl2t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl1t_to_etl2t.xml")
+				.matchBy(Etl2t.NAME)
+				.task();
 
-		targetRunSql("INSERT INTO etl1t (NAME) VALUES ('a')");
-		targetRunSql("INSERT INTO etl1t (NAME) VALUES ('b')");
+		etl1t().insertColumns("NAME").values("a").values("b").exec();
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
@@ -34,8 +36,8 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'a' AND address is null"));
 		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'b' AND address is null"));
 
-		targetRunSql("INSERT INTO etl1t (NAME) VALUES ('c')");
-		targetRunSql("UPDATE etl1t SET NAME = 'd' WHERE NAME = 'a'");
+		etl1t().insertColumns("NAME").values("c").exec();
+		etl1t().update().set("NAME", "d").where("NAME", "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 2, 0, 0, e2);

@@ -35,7 +35,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" = 'b' AND \"subp1\" = 'p2'"));
 
         srcEtlSub1().insertColumns("s_key", "s_subp1").values("c", null).exec();
-        targetRunSql("UPDATE \"ti_sub1\" SET \"subp1\" = 'p3' WHERE \"subp1\" = 'p1'");
+        tiSub1().update().set("subp1", "p3").where("subp1", "p1").exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
@@ -81,7 +81,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" is null AND \"subp1\" = 'p2'"));
 
         srcEtlSub1().insertColumns("s_key", "s_subp1").values("c", null).exec();
-        targetRunSql("UPDATE \"ti_sub1\" SET \"subp1\" = 'p3' WHERE \"subp1\" = 'p1'");
+        tiSub1().update().set("subp1", "p3").where("subp1", "p1").exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);

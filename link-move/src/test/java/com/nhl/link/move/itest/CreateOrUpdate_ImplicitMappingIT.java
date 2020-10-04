@@ -34,25 +34,25 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
-		assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age is null"));
+		etl1t().matcher().assertMatches(2);
+		etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
+		etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
 
 		srcEtl1().insertColumns("name").values("c").exec();
 		srcEtl1().update().set("age", 5).where("name", "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 1, 1, 0, e2);
-		assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 5"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'c' AND age is null"));
+		etl1t().matcher().assertMatches(3);
+		etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
+		etl1t().matcher().eq("NAME", "c").eq("AGE", null).assertOneMatch();
 
 		srcEtl1().delete().and("name", "a").exec();
 
 		Execution e3 = task.run();
 		assertExec(2, 0, 0, 0, e3);
-		assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 5"));
+		etl1t().matcher().assertMatches(3);
+		etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
 
 		Execution e4 = task.run();
 		assertExec(2, 0, 0, 0, e4);

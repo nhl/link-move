@@ -8,15 +8,16 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 	@Test
 	public void test_ByAttribute() {
 
-		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_withtoken.xml").matchBy(Etl1t.NAME).task();
+		LmTask task = lmRuntime.service(ITaskService.class)
+				.createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_withtoken.xml")
+				.matchBy(Etl1t.NAME)
+				.task();
 
 		srcEtl1().insertColumns("name", "age")
 				.values("a", 3)
@@ -25,13 +26,13 @@ public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 		Execution e1 = task.run(new IntToken("test_ByAttribute", 2));
 		assertExec(1, 1, 0, 0, e1);
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age = 1"));
+		etl1t().matcher().assertOneMatch();
+		etl1t().matcher().eq("NAME", "b").eq("AGE", 1).assertOneMatch();
 
 		Execution e2 = task.run(new IntToken("test_ByAttribute", 5));
 		assertExec(1, 1, 0, 0, e2);
-		assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
+		etl1t().matcher().assertMatches(2);
+		etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
 
 		Execution e3 = task.run(new IntToken("test_ByAttribute", 8));
 		assertExec(0, 0, 0, 0, e3);
@@ -40,8 +41,7 @@ public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 		Execution e4 = task.run(new IntToken("test_ByAttribute", 11));
 		assertExec(1, 0, 1, 0, e4);
-		assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age = 9"));
+		etl1t().matcher().assertMatches(2);
+		etl1t().matcher().eq("NAME", "b").eq("AGE", 9).assertOneMatch();
 	}
-
 }

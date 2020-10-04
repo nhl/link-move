@@ -12,7 +12,6 @@ import io.bootique.junit5.BQTestScope;
 import io.bootique.junit5.BQTestTool;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.SQLSelect;
-import org.apache.cayenne.query.SQLTemplate;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DerbySrcTargetTest extends DerbySrcTest {
@@ -57,13 +56,6 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
     /**
      * @deprecated replace with Table API
      */
-    protected void targetRunSql(String sql) {
-        targetContext.performGenericQuery(new SQLTemplate(Object.class, sql));
-    }
-
-    /**
-     * @deprecated replace with Table API
-     */
     protected int targetScalar(String sql) {
         SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
         return query.selectOne(targetContext);
@@ -81,7 +73,19 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
         return targetDb.getTable("ETL3T");
     }
 
+    protected Table etl4t() {
+        return targetDb.getTable("ETL4T");
+    }
+
     protected Table etl5t() {
         return targetDb.getTable("ETL5T");
+    }
+
+    protected Table etl6t() {
+        return targetDb.getTable("ETL6T");
+    }
+
+    protected Table tiSub1() {
+        return targetDb.getTable("ti_sub1");
     }
 }

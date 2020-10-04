@@ -53,10 +53,9 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
                 .values(34, 17, "3Name3", "3PHONE3")
                 .exec();
 
-        targetRunSql("INSERT INTO etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
-        targetRunSql("INSERT INTO etl5t (ID, NAME) VALUES (17, '5Name1')");
-        targetRunSql("INSERT INTO etl3t (E2_ID, E5_ID, NAME, PHONE_NUMBER) VALUES (34, 17, '3Name3', '3PHONEXX')");
-
+        etl2t().insertColumns("ID", "ADDRESS", "NAME").values(34, "Address1", "2Name1").exec();
+        etl5t().insertColumns("ID", "NAME").values(17, "5Name1").exec();
+        etl3t().insertColumns("E2_ID", "E5_ID", "NAME", "PHONE_NUMBER").values(34, 17, "3Name3", "3PHONEXX").exec();
 
         Execution e1 = task.run();
         assertExec(3, 2, 1, 0, e1);

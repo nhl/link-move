@@ -32,25 +32,25 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age is null"));
+        etl1t().matcher().assertMatches(2);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
+        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
 
         srcEtl1().insertColumns("name").values("c").exec();
         srcEtl1().update().set("age", 5).where("name", "a").exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
-        assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 5"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'c' AND age is null"));
+        etl1t().matcher().assertMatches(3);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("NAME", "c").eq("AGE", null).assertOneMatch();
 
         srcEtl1().delete().and("name", "a").exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
-        assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 5"));
+        etl1t().matcher().assertMatches(3);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -69,25 +69,25 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age is null"));
+        etl1t().matcher().assertMatches(2);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
+        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
 
         srcEtl1().insertColumns("name").values("c").exec();
         srcEtl1().update().set("age", 5).where("name", "a").exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
-        assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 5"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'c' AND age is null"));
+        etl1t().matcher().assertMatches(3);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("NAME", "c").eq("AGE", null).assertOneMatch();
 
         srcEtl1().delete().and("name", "a").exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
-        assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 5"));
+        etl1t().matcher().assertMatches(3);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -135,19 +135,19 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age = 5"));
+        etl1t().matcher().assertMatches(2);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
+        etl1t().matcher().eq("NAME", "b").eq("AGE", 5).assertOneMatch();
 
         // changing one of the key components should result in no-match and a new record insertion
         srcEtl1().update().set("name", "c").where("name", "a").exec();
 
         Execution e2 = task.run();
         assertExec(2, 1, 0, 0, e2);
-        assertEquals(3, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'c' AND age = 3"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age = 5"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
+        etl1t().matcher().assertMatches(3);
+        etl1t().matcher().eq("NAME", "c").eq("AGE", 3).assertOneMatch();
+        etl1t().matcher().eq("NAME", "b").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -249,9 +249,9 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age = 3"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND age is null"));
+        etl1t().matcher().assertMatches(2);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
+        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
     }
 
     @Test
@@ -268,9 +268,9 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND DESCRIPTION is null AND AGE is null"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'b' AND DESCRIPTION is null AND AGE is null"));
+        etl1t().matcher().assertMatches(2);
+        etl1t().matcher().eq("NAME", "a").eq("AGE", null).eq("DESCRIPTION", null).assertOneMatch();
+        etl1t().matcher().eq("NAME", "b").eq("AGE", null).eq("DESCRIPTION", null).assertOneMatch();
     }
 
     @Test
@@ -289,10 +289,14 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
                 .values(34, 17, "3Name2", "3PHONE2")
                 .exec();
 
-        targetRunSql("INSERT INTO etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
-        targetRunSql("INSERT INTO etl2t (ID, ADDRESS, NAME) VALUES (58, 'Address2', '2Name2')");
-        targetRunSql("INSERT INTO etl5t (ID, NAME) VALUES (17, '5Name1')");
-        targetRunSql("INSERT INTO etl5t (ID, NAME) VALUES (11, '5Name2')");
+        etl2t().insertColumns("ID", "ADDRESS", "NAME")
+                .values(34, "Address1", "2Name1")
+                .values(58, "Address2", "2Name2")
+                .exec();
+        etl5t().insertColumns("ID", "NAME")
+                .values(17, "5Name1")
+                .values(11, "5Name2")
+                .exec();
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
@@ -316,9 +320,11 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
                 .values(34, null, "3Name2", "3PHONE2")
                 .exec();
 
-        targetRunSql("INSERT INTO etl2t (ID, ADDRESS, NAME) VALUES (34, 'Address1', '2Name1')");
-        targetRunSql("INSERT INTO etl5t (ID, NAME) VALUES (17, '5Name1')");
-        targetRunSql("INSERT INTO etl5t (ID, NAME) VALUES (11, '5Name2')");
+        etl2t().insertColumns("ID", "ADDRESS", "NAME").values(34, "Address1", "2Name1").exec();
+        etl5t().insertColumns("ID", "NAME")
+                .values(17, "5Name1")
+                .values(11, "5Name2")
+                .exec();
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
@@ -346,13 +352,13 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy(Etl1t.NAME).task();
 
-        targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('a', 3)");
+        etl1t().insertColumns("NAME", "AGE").values("a", 3).exec();
         srcEtl1().insertColumns("name", "age").values("a", null).exec();
 
         Execution e1 = task.run();
         assertExec(1, 0, 1, 0, e1);
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a' AND age is null"));
+        etl1t().matcher().assertOneMatch();
+        etl1t().matcher().eq("NAME", "a").eq("AGE", null).assertOneMatch();
     }
 
     @Test

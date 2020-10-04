@@ -20,8 +20,10 @@ public class DeleteIT extends LmIntegrationTest {
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml")
 				.task();
 
-		targetRunSql("INSERT INTO etl6t (ID, NAME) VALUES (1, 'a')");
-		targetRunSql("INSERT INTO etl6t (ID, NAME) VALUES (2, 'b')");
+		etl6t().insertColumns("ID", "NAME")
+				.values(1, "a")
+				.values(2, "b")
+				.exec();
 
 		srcEtl6().insertColumns("id", "name").values(1, "a").exec();
 
@@ -40,23 +42,28 @@ public class DeleteIT extends LmIntegrationTest {
 				.matchBy(Etl1t.NAME)
 				.task();
 
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('a', 3)");
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('b', NULL)");
+		etl1t().insertColumns("NAME", "AGE")
+				.values("a", 3)
+				.values("b", null)
+				.exec();
 
 		Execution e1 = task.run();
 		assertExec(0, 0, 0, 2, e1);
 
-		assertEquals(0, targetScalar("SELECT count(1) from etl1t"));
+		etl1t().matcher().assertNoMatches();
 
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('a', 3)");
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('b', NULL)");
+		etl1t().insertColumns("NAME", "AGE")
+				.values("a", 3)
+				.values("b", null)
+				.exec();
 
 		srcEtl1().insertColumns("name").values("a").exec();
 
 		Execution e2 = task.run();
 		assertExec(1, 0, 0, 1, e2);
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t WHERE NAME = 'a'"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl1t"));
+
+		etl1t().matcher().assertOneMatch();
+		etl1t().matcher().eq("NAME", "a").assertOneMatch();
 	}
 
 	@Test
@@ -77,15 +84,17 @@ public class DeleteIT extends LmIntegrationTest {
 				.values("e")
 				.exec();
 
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('a', 3)");
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('d', NULL)");
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('f', NULL)");
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('g', NULL)");
-		targetRunSql("INSERT INTO etl1t (NAME, AGE) VALUES ('h', NULL)");
+		etl1t().insertColumns("NAME", "AGE")
+				.values("a", 3)
+				.values("d", null)
+				.values("f", null)
+				.values("g", null)
+				.values("h", null)
+				.exec();
 
 		Execution e1 = task.run();
 		assertExec(5, 0, 0, 3, e1);
 
-		assertEquals(2, targetScalar("SELECT count(1) from etl1t"));
+		etl1t().matcher().assertMatches(2);
 	}
 }

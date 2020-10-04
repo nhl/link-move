@@ -65,7 +65,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         srcEtl2().insertColumns("id", "name").values(1, "abc").exec();
         srcEtl3().insertColumns("e2_id", "name").values(1, "xyz").exec();
 
-        targetRunSql("INSERT INTO etl2t (ID, NAME) VALUES (1, 'abc')");
+        etl2t().insertColumns("ID", "NAME").values(1, "abc").exec();
 
         Execution e1 = task.run();
         assertExec(1, 1, 0, 0, e1);
@@ -85,8 +85,10 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
                 .values(2, false)
                 .exec();
 
-        targetRunSql("INSERT INTO etl4t (ID, C_BOOLEAN) VALUES (1, false)");
-        targetRunSql("INSERT INTO etl4t (ID, C_BOOLEAN) VALUES (2, true)");
+        etl4t().insertColumns("ID", "C_BOOLEAN")
+                .values(1, false)
+                .values(2, true)
+                .exec();
 
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
@@ -107,8 +109,10 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
                 .values(2, "str3")
                 .exec();
 
-        targetRunSql("INSERT INTO etl4t (ID, C_ENUM) VALUES (1, 'str2')");
-        targetRunSql("INSERT INTO etl4t (ID, C_ENUM) VALUES (2, null)");
+        etl4t().insertColumns("ID", "C_ENUM")
+                .values(1, "str2")
+                .values(2, null)
+                .exec();
 
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
