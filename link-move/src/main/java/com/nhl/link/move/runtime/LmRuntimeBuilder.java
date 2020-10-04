@@ -72,19 +72,19 @@ public class LmRuntimeBuilder {
     public static final String START_TOKEN_VAR = "startToken";
     public static final String END_TOKEN_VAR = "endToken";
     private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
-    private Map<String, Connector> connectors;
-    private Map<String, IConnectorFactory> connectorFactories;
-    private Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
+    private final Map<String, Connector> connectors;
+    private final Map<String, IConnectorFactory> connectorFactories;
+    private final Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
 
-    private Map<String, IExtractorFactory> extractorFactories;
-    private Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
+    private final Map<String, IExtractorFactory> extractorFactories;
+    private final Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
 
-    private Map<String, ValueConverter> valueConverters;
+    private final Map<String, ValueConverter> valueConverters;
     private Supplier<ResourceResolver> extractorResolverFactory;
 
     private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
-    private Collection<LinkEtlAdapter> adapters;
+    private final Collection<LinkEtlAdapter> adapters;
 
     public LmRuntimeBuilder() {
         this.connectors = new HashMap<>();
@@ -92,22 +92,27 @@ public class LmRuntimeBuilder {
         this.connectorFactoryTypes = new HashMap<>();
         this.extractorFactories = new HashMap<>();
         this.extractorFactoryTypes = new HashMap<>();
-        this.valueConverters = new HashMap<>();
+        this.valueConverters = createDefaultValueConverters();
         this.adapters = new ArrayList<>();
-        this.extractorResolverFactory = () -> new ClasspathResourceResolver();
+        this.extractorResolverFactory = ClasspathResourceResolver::new;
+    }
 
-        // default converters
-        valueConverters.put(Boolean.class.getName(), BooleanConverter.getConverter());
-        valueConverters.put(Boolean.TYPE.getName(), BooleanConverter.getConverter());
-        valueConverters.put(Long.class.getName(), LongConverter.getConverter());
-        valueConverters.put(Long.TYPE.getName(), LongConverter.getConverter());
-        valueConverters.put(Integer.class.getName(), IntegerConverter.getConverter());
-        valueConverters.put(Integer.TYPE.getName(), IntegerConverter.getConverter());
-        valueConverters.put(BigDecimal.class.getName(), new BigDecimalConverter());
-        valueConverters.put(LocalDate.class.getName(), new LocalDateConverter());
-        valueConverters.put(LocalTime.class.getName(), new LocalTimeConverter());
-        valueConverters.put(LocalDateTime.class.getName(), new LocalDateTimeConverter());
-        valueConverters.put(String.class.getName(), new StringConverter());
+    protected Map<String, ValueConverter> createDefaultValueConverters() {
+        Map<String, ValueConverter> converters = new HashMap<>();
+
+        converters.put(Boolean.class.getName(), BooleanConverter.getConverter());
+        converters.put(Boolean.TYPE.getName(), BooleanConverter.getConverter());
+        converters.put(Long.class.getName(), LongConverter.getConverter());
+        converters.put(Long.TYPE.getName(), LongConverter.getConverter());
+        converters.put(Integer.class.getName(), IntegerConverter.getConverter());
+        converters.put(Integer.TYPE.getName(), IntegerConverter.getConverter());
+        converters.put(BigDecimal.class.getName(), new BigDecimalConverter());
+        converters.put(LocalDate.class.getName(), new LocalDateConverter());
+        converters.put(LocalTime.class.getName(), new LocalTimeConverter());
+        converters.put(LocalDateTime.class.getName(), new LocalDateTimeConverter());
+        converters.put(String.class.getName(), new StringConverter());
+
+        return converters;
     }
 
     /**
