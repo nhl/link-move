@@ -44,35 +44,35 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
             .createRuntime();
 
     protected Table etl1t() {
-        return targetDb.getTable("ETL1T");
+        return targetDb.getTable("etl1t");
     }
 
     protected Table etl2t() {
-        return targetDb.getTable("ETL2T");
+        return targetDb.getTable("etl2t");
     }
 
     protected Table etl3t() {
-        return targetDb.getTable("ETL3T");
+        return targetDb.getTable("etl3t");
     }
 
     protected Table etl4t() {
-        return targetDb.getTable("ETL4T");
+        return targetDb.getTable("etl4t");
     }
 
     protected Table etl5t() {
-        return targetDb.getTable("ETL5T");
+        return targetDb.getTable("etl5t");
     }
 
     protected Table etl6t() {
-        return targetDb.getTable("ETL6T");
+        return targetDb.getTable("etl6t");
     }
 
     protected Table etl7t() {
-        return targetDb.getTable("ETL7T");
+        return targetDb.getTable("etl7t");
     }
 
     protected Table etl11t() {
-        return targetDb.getTable("ETL11T");
+        return targetDb.getTable("etl11t");
     }
 
     protected Table tiSuper() {

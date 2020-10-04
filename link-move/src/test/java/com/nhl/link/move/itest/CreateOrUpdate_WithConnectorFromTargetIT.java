@@ -26,24 +26,24 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 				.matchBy(Etl2t.NAME)
 				.task();
 
-		etl1t().insertColumns("NAME").values("a").values("b").exec();
+		etl1t().insertColumns("name").values("a").values("b").exec();
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
 
 		etl2t().matcher().assertMatches(2);
-		etl2t().matcher().eq("NAME", "a").eq("ADDRESS", null).assertOneMatch();
-		etl2t().matcher().eq("NAME", "b").eq("ADDRESS", null).assertOneMatch();
+		etl2t().matcher().eq("name", "a").eq("address", null).assertOneMatch();
+		etl2t().matcher().eq("name", "b").eq("address", null).assertOneMatch();
 
-		etl1t().insertColumns("NAME").values("c").exec();
-		etl1t().update().set("NAME", "d").where("NAME", "a").exec();
+		etl1t().insertColumns("name").values("c").exec();
+		etl1t().update().set("name", "d").where("name", "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 2, 0, 0, e2);
 		etl2t().matcher().assertMatches(4);
-		etl2t().matcher().eq("NAME", "a").eq("ADDRESS", null).assertOneMatch();
-		etl2t().matcher().eq("NAME", "b").eq("ADDRESS", null).assertOneMatch();
-		etl2t().matcher().eq("NAME", "c").eq("ADDRESS", null).assertOneMatch();
-		etl2t().matcher().eq("NAME", "d").eq("ADDRESS", null).assertOneMatch();
+		etl2t().matcher().eq("name", "a").eq("address", null).assertOneMatch();
+		etl2t().matcher().eq("name", "b").eq("address", null).assertOneMatch();
+		etl2t().matcher().eq("name", "c").eq("address", null).assertOneMatch();
+		etl2t().matcher().eq("name", "d").eq("address", null).assertOneMatch();
 	}
 }

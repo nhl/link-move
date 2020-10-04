@@ -8,7 +8,7 @@
 
     <extractor>
         <properties>
-            <extractor.jdbc.sqltemplate><![CDATA[SELECT NAME FROM ETL1T]]></extractor.jdbc.sqltemplate>
+            <extractor.jdbc.sqltemplate><![CDATA[SELECT "name" FROM "etl1t"]]></extractor.jdbc.sqltemplate>
             <extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
         </properties>
     </extractor>

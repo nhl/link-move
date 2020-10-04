@@ -22,8 +22,8 @@ public class CreateOrUpdate_MultiConnectorsIT extends LmIntegrationTest {
 		assertExec(3, 3, 0, 0, e1);
 
 		etl1t().matcher().assertMatches(3);
-		etl1t().matcher().eq("NAME", "xxx").eq("AGE", 1).assertOneMatch();
-		etl1t().matcher().eq("NAME", "yyy").eq("AGE", 2).assertOneMatch();
-		etl1t().matcher().eq("NAME", "zzz").eq("AGE", 3).assertOneMatch();
+		etl1t().matcher().eq("name", "xxx").eq("age", 1).assertOneMatch();
+		etl1t().matcher().eq("name", "yyy").eq("age", 2).assertOneMatch();
+		etl1t().matcher().eq("name", "zzz").eq("age", 3).assertOneMatch();
 	}
 }

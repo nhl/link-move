@@ -33,8 +33,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
 
         srcEtl1().insertColumns("name").values("c").exec();
         srcEtl1().update().set("age", 5).where("name", "a").exec();
@@ -42,15 +42,15 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
-        etl1t().matcher().eq("NAME", "c").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "c").eq("age", null).assertOneMatch();
 
         srcEtl1().delete().and("name", "a").exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -59,8 +59,11 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     @Test
     public void test_MatchByDbAttribute() {
 
-        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
-                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml").matchBy("db:name").task();
+        LmTask task = lmRuntime.service(ITaskService.class)
+                .createOrUpdate(Etl1t.class)
+                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")
+                .matchBy("db:name")
+                .task();
 
         srcEtl1().insertColumns("name", "age")
                 .values("a", 3)
@@ -70,8 +73,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
 
         srcEtl1().insertColumns("name").values("c").exec();
         srcEtl1().update().set("age", 5).where("name", "a").exec();
@@ -79,15 +82,15 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
-        etl1t().matcher().eq("NAME", "c").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "c").eq("age", null).assertOneMatch();
 
         srcEtl1().delete().and("name", "a").exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -139,8 +142,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", 5).assertOneMatch();
 
         // changing one of the key components should result in no-match and a new record insertion
         srcEtl1().update().set("name", "c").where("name", "a").exec();
@@ -148,9 +151,9 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(2, 1, 0, 0, e2);
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("NAME", "c").eq("AGE", 3).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", 5).assertOneMatch();
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "c").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -171,8 +174,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         assertExec(2, 2, 0, 0, e1);
 
         etl5t().matcher().assertMatches(2);
-        etl5t().matcher().eq("NAME", "a").eq("ID", 45).assertOneMatch();
-        etl5t().matcher().eq("NAME", "b").eq("ID", 11).assertOneMatch();
+        etl5t().matcher().eq("name", "a").eq("id", 45).assertOneMatch();
+        etl5t().matcher().eq("name", "b").eq("id", 11).assertOneMatch();
 
         srcEtl5().insertColumns("id", "name").values(31, "c").exec();
         srcEtl5().update().set("name", "d").where("id", 45).exec();
@@ -180,8 +183,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
         etl5t().matcher().assertMatches(3);
-        etl5t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
-        etl5t().matcher().eq("NAME", "c").eq("ID", 31).assertOneMatch();
+        etl5t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
+        etl5t().matcher().eq("name", "c").eq("id", 31).assertOneMatch();
 
         srcEtl5().delete().and("id", 45).exec();
 
@@ -189,7 +192,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         assertExec(2, 0, 0, 0, e3);
 
         etl5t().matcher().assertMatches(3);
-        etl5t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
+        etl5t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -209,8 +212,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl5t().matcher().assertMatches(2);
-        etl5t().matcher().eq("NAME", "a").eq("ID", 45).assertOneMatch();
-        etl5t().matcher().eq("NAME", "b").eq("ID", 11).assertOneMatch();
+        etl5t().matcher().eq("name", "a").eq("id", 45).assertOneMatch();
+        etl5t().matcher().eq("name", "b").eq("id", 11).assertOneMatch();
 
         srcEtl5().insertColumns("id", "name").values(31, "c").exec();
         srcEtl5().update().set("name", "d").where("id", 45).exec();
@@ -218,15 +221,15 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
         etl5t().matcher().assertMatches(3);
-        etl5t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
-        etl5t().matcher().eq("NAME", "c").eq("ID", 31).assertOneMatch();
+        etl5t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
+        etl5t().matcher().eq("name", "c").eq("id", 31).assertOneMatch();
 
         srcEtl5().delete().and("id", 45).exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
         etl5t().matcher().assertMatches(3);
-        etl5t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
+        etl5t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -266,8 +269,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
     }
 
     @Test
@@ -287,8 +290,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", null).eq("DESCRIPTION", null).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", null).eq("DESCRIPTION", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", null).eq("description", null).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", null).eq("description", null).assertOneMatch();
     }
 
     @Test
@@ -310,11 +313,11 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
                 .values(34, 17, "3Name2", "3PHONE2")
                 .exec();
 
-        etl2t().insertColumns("ID", "ADDRESS", "NAME")
+        etl2t().insertColumns("id", "address", "name")
                 .values(34, "Address1", "2Name1")
                 .values(58, "Address2", "2Name2")
                 .exec();
-        etl5t().insertColumns("ID", "NAME")
+        etl5t().insertColumns("id", "name")
                 .values(17, "5Name1")
                 .values(11, "5Name2")
                 .exec();
@@ -322,8 +325,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl3t().matcher().assertMatches(2);
-        etl3t().matcher().eq("NAME", "3Name1").eq("PHONE_NUMBER", "3PHONE1").eq("E2_ID", 58).eq("E5_ID", 17).assertOneMatch();
-        etl3t().matcher().eq("NAME", "3Name2").eq("PHONE_NUMBER", "3PHONE2").eq("E2_ID", 34).eq("E5_ID", 17).assertOneMatch();
+        etl3t().matcher().eq("name", "3Name1").eq("phone_number", "3PHONE1").eq("e2_id", 58).eq("e5_id", 17).assertOneMatch();
+        etl3t().matcher().eq("name", "3Name2").eq("phone_number", "3PHONE2").eq("e2_id", 34).eq("e5_id", 17).assertOneMatch();
     }
 
     @Test
@@ -342,8 +345,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
                 .values(34, null, "3Name2", "3PHONE2")
                 .exec();
 
-        etl2t().insertColumns("ID", "ADDRESS", "NAME").values(34, "Address1", "2Name1").exec();
-        etl5t().insertColumns("ID", "NAME")
+        etl2t().insertColumns("id", "address", "name").values(34, "Address1", "2Name1").exec();
+        etl5t().insertColumns("id", "name")
                 .values(17, "5Name1")
                 .values(11, "5Name2")
                 .exec();
@@ -351,8 +354,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl3t().matcher().assertMatches(2);
-        etl3t().matcher().eq("NAME", "3Name1").eq("PHONE_NUMBER", "3PHONE1").eq("E2_ID", null).eq("E5_ID", 17).assertOneMatch();
-        etl3t().matcher().eq("NAME", "3Name2").eq("PHONE_NUMBER", "3PHONE2").eq("E2_ID", 34).eq("E5_ID", null).assertOneMatch();
+        etl3t().matcher().eq("name", "3Name1").eq("phone_number", "3PHONE1").eq("e2_id", null).eq("e5_id", 17).assertOneMatch();
+        etl3t().matcher().eq("name", "3Name2").eq("phone_number", "3PHONE2").eq("e2_id", 34).eq("e5_id", null).assertOneMatch();
 
         srcEtl3().update().set("e5_id", null).where("name", "3Name1").exec();
         srcEtl3().update().set("e5_id", 11).where("name", "3Name2").exec();
@@ -360,8 +363,8 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(2, 0, 2, 0, e2);
         etl3t().matcher().assertMatches(2);
-        etl3t().matcher().eq("NAME", "3Name1").eq("PHONE_NUMBER", "3PHONE1").eq("E2_ID", null).eq("E5_ID", null).assertOneMatch();
-        etl3t().matcher().eq("NAME", "3Name2").eq("PHONE_NUMBER", "3PHONE2").eq("E2_ID", 34).eq("E5_ID", 11).assertOneMatch();
+        etl3t().matcher().eq("name", "3Name1").eq("phone_number", "3PHONE1").eq("e2_id", null).eq("e5_id", null).assertOneMatch();
+        etl3t().matcher().eq("name", "3Name2").eq("phone_number", "3PHONE2").eq("e2_id", 34).eq("e5_id", 11).assertOneMatch();
     }
 
     @Test
@@ -373,13 +376,13 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
                 .matchBy(Etl1t.NAME)
                 .task();
 
-        etl1t().insertColumns("NAME", "AGE").values("a", 3).exec();
+        etl1t().insertColumns("name", "age").values("a", 3).exec();
         srcEtl1().insertColumns("name", "age").values("a", null).exec();
 
         Execution e1 = task.run();
         assertExec(1, 0, 1, 0, e1);
         etl1t().matcher().assertOneMatch();
-        etl1t().matcher().eq("NAME", "a").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", null).assertOneMatch();
     }
 
     @Test

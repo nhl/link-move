@@ -18,7 +18,7 @@ public class DeleteIT extends LmIntegrationTest {
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml")
 				.task();
 
-		etl6t().insertColumns("ID", "NAME")
+		etl6t().insertColumns("id", "name")
 				.values(1, "a")
 				.values(2, "b")
 				.exec();
@@ -28,7 +28,7 @@ public class DeleteIT extends LmIntegrationTest {
 		Execution e2 = task.run();
 		assertExec(1, 0, 0, 1, e2);
 		etl6t().matcher().assertOneMatch();
-		etl6t().matcher().eq("NAME", "a").assertOneMatch();
+		etl6t().matcher().eq("name", "a").assertOneMatch();
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class DeleteIT extends LmIntegrationTest {
 				.matchBy(Etl1t.NAME)
 				.task();
 
-		etl1t().insertColumns("NAME", "AGE")
+		etl1t().insertColumns("name", "age")
 				.values("a", 3)
 				.values("b", null)
 				.exec();
@@ -50,7 +50,7 @@ public class DeleteIT extends LmIntegrationTest {
 
 		etl1t().matcher().assertNoMatches();
 
-		etl1t().insertColumns("NAME", "AGE")
+		etl1t().insertColumns("name", "age")
 				.values("a", 3)
 				.values("b", null)
 				.exec();
@@ -61,7 +61,7 @@ public class DeleteIT extends LmIntegrationTest {
 		assertExec(1, 0, 0, 1, e2);
 
 		etl1t().matcher().assertOneMatch();
-		etl1t().matcher().eq("NAME", "a").assertOneMatch();
+		etl1t().matcher().eq("name", "a").assertOneMatch();
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class DeleteIT extends LmIntegrationTest {
 				.values("e")
 				.exec();
 
-		etl1t().insertColumns("NAME", "AGE")
+		etl1t().insertColumns("name", "age")
 				.values("a", 3)
 				.values("d", null)
 				.values("f", null)

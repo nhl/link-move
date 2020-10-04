@@ -28,8 +28,8 @@ public class CreateOrUpdateIT_TransientProperties extends LmIntegrationTest {
 		assertExec(3, 3, 0, 0, e1);
 		etl7t().matcher().assertMatches(3);
 		etl7t().matcher().eq("SEX", null).assertMatches(3);
-		etl7t().matcher().eq("ID", 1).eq("FIRST_NAME", "John").eq("LAST_NAME", "Lennon").assertOneMatch();
-		etl7t().matcher().eq("ID", 2).eq("FIRST_NAME", "Jimi").eq("LAST_NAME", "Hendrix").assertOneMatch();
-		etl7t().matcher().eq("ID", 3).eq("FIRST_NAME", "Janis").eq("LAST_NAME", "Joplin").assertOneMatch();
+		etl7t().matcher().eq("id", 1).eq("first_name", "John").eq("last_name", "Lennon").assertOneMatch();
+		etl7t().matcher().eq("id", 2).eq("first_name", "Jimi").eq("last_name", "Hendrix").assertOneMatch();
+		etl7t().matcher().eq("id", 3).eq("first_name", "Janis").eq("last_name", "Joplin").assertOneMatch();
 	}
 }

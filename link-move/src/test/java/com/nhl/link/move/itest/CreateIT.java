@@ -31,8 +31,8 @@ public class CreateIT extends LmIntegrationTest {
                 .test(e1);
 
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 3).assertOneMatch();
-        etl1t().matcher().eq("NAME", "b").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
 
         srcEtl1().insertColumns("name").values("c").exec();
         srcEtl1().update().set("age", 5).where("name", "a").exec();
@@ -46,8 +46,8 @@ public class CreateIT extends LmIntegrationTest {
                 .test(e2);
 
         etl1t().matcher().assertMatches(5);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
-        etl1t().matcher().eq("NAME", "c").eq("AGE", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "c").eq("age", null).assertOneMatch();
 
         srcEtl1().delete().and("name", "a").exec();
 
@@ -60,7 +60,7 @@ public class CreateIT extends LmIntegrationTest {
                 .test(e3);
 
         etl1t().matcher().assertMatches(7);
-        etl1t().matcher().eq("NAME", "a").eq("AGE", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
 
         Execution e4 = task.run();
         new LmTaskTester()
@@ -92,12 +92,12 @@ public class CreateIT extends LmIntegrationTest {
                 .values(34, 17, "3Name2", "3PHONE2")
                 .exec();
 
-        etl2t().insertColumns("ID", "ADDRESS", "NAME")
+        etl2t().insertColumns("id", "address", "name")
                 .values(34, "Address1", "2Name1")
                 .values(58, "Address2", "2Name2")
                 .exec();
 
-        etl5t().insertColumns("ID", "NAME")
+        etl5t().insertColumns("id", "name")
                 .values(17, "5Name1")
                 .values(11, "5Name2")
                 .exec();
@@ -106,9 +106,9 @@ public class CreateIT extends LmIntegrationTest {
         assertExec(2, 2, 0, 0, e1);
 
         etl3t().matcher().assertMatches(2);
-        etl3t().matcher().eq("E2_ID", 58).eq("E5_ID", 17).eq("NAME", "3Name1").eq("PHONE_NUMBER", "3PHONE1")
+        etl3t().matcher().eq("e2_id", 58).eq("e5_id", 17).eq("name", "3Name1").eq("phone_number", "3PHONE1")
                 .assertOneMatch();
-        etl3t().matcher().eq("E2_ID", 34).eq("E5_ID", 17).eq("NAME", "3Name2").eq("PHONE_NUMBER", "3PHONE2")
+        etl3t().matcher().eq("e2_id", 34).eq("e5_id", 17).eq("name", "3Name2").eq("phone_number", "3PHONE2")
                 .assertOneMatch();
     }
 }

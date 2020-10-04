@@ -31,8 +31,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl6t().matcher().assertMatches(2);
-        etl6t().matcher().eq("NAME", "a").eq("ID", 45).assertOneMatch();
-        etl6t().matcher().eq("NAME", "b").eq("ID", 11).assertOneMatch();
+        etl6t().matcher().eq("name", "a").eq("id", 45).assertOneMatch();
+        etl6t().matcher().eq("name", "b").eq("id", 11).assertOneMatch();
 
         srcEtl6().insertColumns("id", "name").values(31, "c").exec();
         srcEtl6().update().set("name", "d").where("id", 45).exec();
@@ -40,15 +40,15 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
         etl6t().matcher().assertMatches(3);
-        etl6t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
-        etl6t().matcher().eq("NAME", "c").eq("ID", 31).assertOneMatch();
+        etl6t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
+        etl6t().matcher().eq("name", "c").eq("id", 31).assertOneMatch();
 
         srcEtl6().delete().and("id", 45).exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
         etl6t().matcher().assertMatches(3);
-        etl6t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
+        etl6t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -66,12 +66,12 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         srcEtl2().insertColumns("id", "name").values(1, "abc").exec();
         srcEtl3().insertColumns("e2_id", "name").values(1, "xyz").exec();
 
-        etl2t().insertColumns("ID", "NAME").values(1, "abc").exec();
+        etl2t().insertColumns("id", "name").values(1, "abc").exec();
 
         Execution e1 = task.run();
         assertExec(1, 1, 0, 0, e1);
 
-        etl3t().matcher().eq("E2_ID", 1).assertOneMatch();
+        etl3t().matcher().eq("e2_id", 1).assertOneMatch();
     }
 
     @Test
@@ -86,7 +86,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
                 .values(2, false)
                 .exec();
 
-        etl4t().insertColumns("ID", "C_BOOLEAN")
+        etl4t().insertColumns("id", "c_boolean")
                 .values(1, false)
                 .values(2, true)
                 .exec();
@@ -94,8 +94,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
 
-        etl4t().matcher().eq("ID", 1).eq("C_BOOLEAN", true).assertOneMatch();
-        etl4t().matcher().eq("ID", 2).eq("C_BOOLEAN", false).assertOneMatch();
+        etl4t().matcher().eq("id", 1).eq("c_boolean", true).assertOneMatch();
+        etl4t().matcher().eq("id", 2).eq("c_boolean", false).assertOneMatch();
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
                 .values(2, "str3")
                 .exec();
 
-        etl4t().insertColumns("ID", "C_ENUM")
+        etl4t().insertColumns("id", "c_enum")
                 .values(1, "str2")
                 .values(2, null)
                 .exec();
@@ -118,8 +118,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
 
-        etl4t().matcher().eq("ID", 1).eq("C_ENUM", "str1").assertOneMatch();
-        etl4t().matcher().eq("ID", 2).eq("C_ENUM", "str3").assertOneMatch();
+        etl4t().matcher().eq("id", 1).eq("c_enum", "str1").assertOneMatch();
+        etl4t().matcher().eq("id", 2).eq("c_enum", "str3").assertOneMatch();
     }
 
     @Test
@@ -178,7 +178,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         assertExec(1, 1, 0, 0, e1);
 
         etl4t().matcher()
-                .eq("ID", 1).eq("C_DATE", "2020-01-02").eq("C_TIME", "08:01:03").eq("C_TIMESTAMP", "2020-03-04 09:01:04")
+                .eq("id", 1).eq("c_date", "2020-01-02").eq("c_time", "08:01:03").eq("c_timestamp", "2020-03-04 09:01:04")
                 .assertOneMatch();
     }
 }

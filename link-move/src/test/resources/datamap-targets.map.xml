@@ -4,6 +4,7 @@
 	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
 	 project-version="9">
 	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.t"/>
+	<property name="quoteSqlIdentifiers" value="true"/>
 	<db-entity name="etl10t">
 		<db-attribute name="e9_id" type="INTEGER"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
