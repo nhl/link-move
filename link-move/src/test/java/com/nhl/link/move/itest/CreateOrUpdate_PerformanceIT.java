@@ -60,7 +60,7 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(3, 2, 1, 0, e1);
 
-        EntityResolver resolver = targetContext.getEntityResolver();
+        EntityResolver resolver = targetCayenne.getRuntime().getDataDomain().getEntityResolver();
         List<String> resolvedEntities = QUERY_CAPTURE.getOfType(ObjectSelect.class)
                 .map(q -> q.getMetaData(resolver).getClassDescriptor().getEntity().getName())
                 .collect(toList());

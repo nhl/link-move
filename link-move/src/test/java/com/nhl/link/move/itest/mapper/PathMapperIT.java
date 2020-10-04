@@ -4,6 +4,7 @@ import com.nhl.link.move.mapper.PathMapper;
 import com.nhl.link.move.unit.DerbySrcTargetTest;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import org.apache.cayenne.Cayenne;
+import org.apache.cayenne.ObjectContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +16,10 @@ public class PathMapperIT extends DerbySrcTargetTest {
 
     @BeforeEach
     void createTestObject() {
-        testObject = targetContext.newObject(Etl3t.class);
+        ObjectContext context = targetCayenne.getRuntime().newContext();
+        testObject = context.newObject(Etl3t.class);
         testObject.setPhoneNumber("123458");
-        targetContext.commitChanges();
+        context.commitChanges();
     }
 
     @Test

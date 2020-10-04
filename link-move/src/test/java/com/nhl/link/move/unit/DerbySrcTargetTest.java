@@ -10,9 +10,6 @@ import io.bootique.jdbc.junit5.derby.DerbyTester;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTestScope;
 import io.bootique.junit5.BQTestTool;
-import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.query.SQLSelect;
-import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
@@ -46,21 +43,6 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
             .module(b -> CayenneModule.extend(b).addProject("cayenne-linketl-tests-targets.xml"))
             .createRuntime();
 
-    protected ObjectContext targetContext;
-
-    @BeforeEach
-    protected void prepareTargetContext() {
-        this.targetContext = targetCayenne.getRuntime().newContext();
-    }
-
-    /**
-     * @deprecated replace with Table API
-     */
-    protected int targetScalar(String sql) {
-        SQLSelect<Integer> query = SQLSelect.scalarQuery(Integer.class, sql);
-        return query.selectOne(targetContext);
-    }
-
     protected Table etl1t() {
         return targetDb.getTable("ETL1T");
     }
@@ -83,6 +65,10 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
     protected Table etl6t() {
         return targetDb.getTable("ETL6T");
+    }
+
+    protected Table etl7t() {
+        return targetDb.getTable("ETL7T");
     }
 
     protected Table etl11t() {

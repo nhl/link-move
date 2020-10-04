@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
@@ -72,7 +71,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(1, 1, 0, 0, e1);
 
-        assertEquals(1, targetScalar("SELECT count(1) from etl3t WHERE E2_ID = 1"));
+        etl3t().matcher().eq("E2_ID", 1).assertOneMatch();
     }
 
     @Test
@@ -95,8 +94,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
 
-        assertEquals(1, targetScalar("SELECT count(1) from etl4t WHERE ID = 1 AND C_BOOLEAN = TRUE"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl4t WHERE ID = 2 AND C_BOOLEAN = FALSE"));
+        etl4t().matcher().eq("ID", 1).eq("C_BOOLEAN", true).assertOneMatch();
+        etl4t().matcher().eq("ID", 2).eq("C_BOOLEAN", false).assertOneMatch();
     }
 
     @Test
@@ -119,8 +118,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
 
-        assertEquals(1, targetScalar("SELECT count(1) from etl4t WHERE ID = 1 AND C_ENUM = 'str1'"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl4t WHERE ID = 2 AND C_ENUM = 'str3'"));
+        etl4t().matcher().eq("ID", 1).eq("C_ENUM", "str1").assertOneMatch();
+        etl4t().matcher().eq("ID", 2).eq("C_ENUM", "str3").assertOneMatch();
     }
 
     @Test
@@ -178,6 +177,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(1, 1, 0, 0, e1);
 
-        assertEquals(1, targetScalar("SELECT count(1) from etl4t WHERE ID = 1 AND C_DATE = '2020-01-02' AND C_TIME = '08:01:03' AND C_TIMESTAMP = '2020-03-04 09:01:04'"));
+        etl4t().matcher()
+                .eq("ID", 1).eq("C_DATE", "2020-01-02").eq("C_TIME", "08:01:03").eq("C_TIMESTAMP", "2020-03-04 09:01:04")
+                .assertOneMatch();
     }
 }
