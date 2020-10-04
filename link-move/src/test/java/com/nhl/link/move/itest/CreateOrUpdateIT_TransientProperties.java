@@ -14,8 +14,11 @@ public class CreateOrUpdateIT_TransientProperties extends LmIntegrationTest {
     @Test
 	public void test_ById() {
 
-		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl7t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl7_to_etl7t_byid.xml").matchById().task();
+		LmTask task = lmRuntime.service(ITaskService.class)
+				.createOrUpdate(Etl7t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl7_to_etl7t_byid.xml")
+				.matchById()
+				.task();
 
 		srcEtl7().insertColumns("id", "full_name", "sex")
 				.values(1, "Lennon, John", "M")

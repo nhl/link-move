@@ -12,8 +12,11 @@ public class CreateOrUpdate_MultiConnectorsIT extends LmIntegrationTest {
     @Test
 	public void testMultiConnectors_XMLSource() {
 
-		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_multiconnectors.xml").matchBy(Etl1t.NAME).task();
+		LmTask task = lmRuntime.service(ITaskService.class)
+				.createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_multiconnectors.xml")
+				.matchBy(Etl1t.NAME)
+				.task();
 
 		Execution e1 = task.run();
 		assertExec(3, 3, 0, 0, e1);

@@ -7,8 +7,6 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.ti.TiSub1;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
 
     @Test
@@ -27,25 +25,25 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from \"ti_super\""));
-        assertEquals(2, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1'"));
+        tiSuper().matcher().assertMatches(2);
+        tiSuper().matcher().eq("type", "sub1").assertMatches(2);
 
-        assertEquals(2, targetScalar("SELECT count(1) from \"ti_sub1\""));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" = 'a' AND \"subp1\" = 'p1'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" = 'b' AND \"subp1\" = 'p2'"));
+        tiSub1().matcher().assertMatches(2);
+        tiSub1().matcher().eq("sub_key", "a").eq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "b").eq("subp1", "p2").assertOneMatch();
 
         srcEtlSub1().insertColumns("s_key", "s_subp1").values("c", null).exec();
         tiSub1().update().set("subp1", "p3").where("subp1", "p1").exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
-        assertEquals(3, targetScalar("SELECT count(1) from \"ti_super\""));
-        assertEquals(3, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1'"));
+        tiSuper().matcher().assertMatches(3);
+        tiSuper().matcher().eq("type", "sub1").assertMatches(3);
 
-        assertEquals(3, targetScalar("SELECT count(1) from \"ti_sub1\""));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" = 'a' AND \"subp1\" = 'p1'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" = 'b' AND \"subp1\" = 'p2'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" = 'c' AND \"subp1\" IS NULL"));
+        tiSub1().matcher().assertMatches(3);
+        tiSub1().matcher().eq("sub_key", "a").eq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "b").eq("subp1", "p2").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "c").eq("subp1", null).assertOneMatch();
 
         srcEtlSub1().delete().and("s_key", "a").exec();
 
@@ -72,28 +70,29 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from \"ti_super\""));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1' AND \"super_key\" = 'a'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1' AND \"super_key\" = 'b'"));
+        tiSuper().matcher().assertMatches(2);
+        tiSuper().matcher().eq("type", "sub1").eq("super_key", "a").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").eq("super_key", "b").assertOneMatch();
 
-        assertEquals(2, targetScalar("SELECT count(1) from \"ti_sub1\""));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" is null AND \"subp1\" = 'p1'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" is null AND \"subp1\" = 'p2'"));
+        tiSub1().matcher().assertMatches(2);
+        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p2").assertOneMatch();
 
         srcEtlSub1().insertColumns("s_key", "s_subp1").values("c", null).exec();
         tiSub1().update().set("subp1", "p3").where("subp1", "p1").exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
-        assertEquals(3, targetScalar("SELECT count(1) from \"ti_super\""));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1' AND \"super_key\" = 'a'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1' AND \"super_key\" = 'b'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_super\" WHERE \"type\" = 'sub1' AND \"super_key\" = 'c'"));
 
-        assertEquals(3, targetScalar("SELECT count(1) from \"ti_sub1\""));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" is null AND \"subp1\" = 'p1'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" is null AND \"subp1\" = 'p2'"));
-        assertEquals(1, targetScalar("SELECT count(1) from \"ti_sub1\" WHERE \"sub_key\" is null AND \"subp1\" is null"));
+        tiSuper().matcher().assertMatches(3);
+        tiSuper().matcher().eq("type", "sub1").eq("super_key", "a").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").eq("super_key", "b").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").eq("super_key", "c").assertOneMatch();
+
+        tiSub1().matcher().assertMatches(3);
+        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p2").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).eq("subp1", null).assertOneMatch();
 
         srcEtlSub1().delete().and("s_key", "a").exec();
 

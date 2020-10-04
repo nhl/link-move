@@ -85,6 +85,14 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
         return targetDb.getTable("ETL6T");
     }
 
+    protected Table etl11t() {
+        return targetDb.getTable("ETL11T");
+    }
+
+    protected Table tiSuper() {
+        return targetDb.getTable("ti_super");
+    }
+
     protected Table tiSub1() {
         return targetDb.getTable("ti_sub1");
     }

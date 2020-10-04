@@ -8,8 +8,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl5t;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
 	@Test
@@ -24,8 +22,11 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
 	private void test_MatchByKey(String key) {
 
-		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_implicit.xml").matchBy(key).task();
+		LmTask task = lmRuntime.service(ITaskService.class)
+				.createOrUpdate(Etl1t.class)
+				.sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_implicit.xml")
+				.matchBy(key)
+				.task();
 
 		srcEtl1().insertColumns("name", "age")
 				.values("a", 3)
@@ -70,25 +71,26 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
-		assertEquals(2, targetScalar("SELECT count(1) from etl5t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl5t WHERE NAME = 'a' AND ID = 45"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl5t WHERE NAME = 'b' AND ID = 11"));
+
+		etl5t().matcher().assertMatches(2);
+		etl5t().matcher().eq("NAME", "a").eq("ID", 45).assertOneMatch();
+		etl5t().matcher().eq("NAME", "b").eq("ID", 11).assertOneMatch();
 
 		srcEtl5().insertColumns("id", "name").values(31, "c").exec();
 		srcEtl5().update().set("name", "d").where("id", 45).exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 1, 1, 0, e2);
-		assertEquals(3, targetScalar("SELECT count(1) from etl5t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl5t WHERE NAME = 'd' AND ID = 45"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl5t WHERE NAME = 'c' AND ID = 31"));
+		etl5t().matcher().assertMatches(3);
+		etl5t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
+		etl5t().matcher().eq("NAME", "c").eq("ID", 31).assertOneMatch();
 
 		srcEtl5().delete().and("id", 45).exec();
 
 		Execution e3 = task.run();
 		assertExec(2, 0, 0, 0, e3);
-		assertEquals(3, targetScalar("SELECT count(1) from etl5t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl5t WHERE NAME = 'd' AND ID = 45"));
+		etl5t().matcher().assertMatches(3);
+		etl5t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
 
 		Execution e4 = task.run();
 		assertExec(2, 0, 0, 0, e4);

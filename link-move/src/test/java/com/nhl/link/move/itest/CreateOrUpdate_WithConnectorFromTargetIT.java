@@ -9,8 +9,6 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl2t;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest {
 
 	@Override
@@ -32,19 +30,20 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
-		assertEquals(2, targetScalar("SELECT count(1) from etl2t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'a' AND address is null"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'b' AND address is null"));
+
+		etl2t().matcher().assertMatches(2);
+		etl2t().matcher().eq("NAME", "a").eq("ADDRESS", null).assertOneMatch();
+		etl2t().matcher().eq("NAME", "b").eq("ADDRESS", null).assertOneMatch();
 
 		etl1t().insertColumns("NAME").values("c").exec();
 		etl1t().update().set("NAME", "d").where("NAME", "a").exec();
 
 		Execution e2 = task.run();
 		assertExec(3, 2, 0, 0, e2);
-		assertEquals(4, targetScalar("SELECT count(1) from etl2t"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'a' AND address is null"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'b' AND address is null"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'c' AND address is null"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl2t WHERE NAME = 'd' AND address is null"));
+		etl2t().matcher().assertMatches(4);
+		etl2t().matcher().eq("NAME", "a").eq("ADDRESS", null).assertOneMatch();
+		etl2t().matcher().eq("NAME", "b").eq("ADDRESS", null).assertOneMatch();
+		etl2t().matcher().eq("NAME", "c").eq("ADDRESS", null).assertOneMatch();
+		etl2t().matcher().eq("NAME", "d").eq("ADDRESS", null).assertOneMatch();
 	}
 }

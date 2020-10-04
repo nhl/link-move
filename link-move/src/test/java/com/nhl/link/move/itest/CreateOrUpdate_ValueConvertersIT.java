@@ -19,8 +19,10 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     public void test_ById_IntegerToLong() {
 
         // not specifying "matchById" explicitly ... this should be the default
-        LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl6t.class)
-                .sourceExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml").task();
+        LmTask task = lmRuntime.service(ITaskService.class)
+                .createOrUpdate(Etl6t.class)
+                .sourceExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml")
+                .task();
 
         srcEtl6().insertColumns("id", "name")
                 .values(45, "a")
@@ -29,25 +31,25 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
-        assertEquals(2, targetScalar("SELECT count(1) from etl6t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl6t WHERE NAME = 'a' AND ID = 45"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl6t WHERE NAME = 'b' AND ID = 11"));
+        etl6t().matcher().assertMatches(2);
+        etl6t().matcher().eq("NAME", "a").eq("ID", 45).assertOneMatch();
+        etl6t().matcher().eq("NAME", "b").eq("ID", 11).assertOneMatch();
 
         srcEtl6().insertColumns("id", "name").values(31, "c").exec();
         srcEtl6().update().set("name", "d").where("id", 45).exec();
 
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
-        assertEquals(3, targetScalar("SELECT count(1) from etl6t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl6t WHERE NAME = 'd' AND ID = 45"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl6t WHERE NAME = 'c' AND ID = 31"));
+        etl6t().matcher().assertMatches(3);
+        etl6t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
+        etl6t().matcher().eq("NAME", "c").eq("ID", 31).assertOneMatch();
 
         srcEtl6().delete().and("id", 45).exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
-        assertEquals(3, targetScalar("SELECT count(1) from etl6t"));
-        assertEquals(1, targetScalar("SELECT count(1) from etl6t WHERE NAME = 'd' AND ID = 45"));
+        etl6t().matcher().assertMatches(3);
+        etl6t().matcher().eq("NAME", "d").eq("ID", 45).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);

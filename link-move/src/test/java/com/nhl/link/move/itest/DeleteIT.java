@@ -8,8 +8,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl6t;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class DeleteIT extends LmIntegrationTest {
 
 	@Test
@@ -29,8 +27,8 @@ public class DeleteIT extends LmIntegrationTest {
 
 		Execution e2 = task.run();
 		assertExec(1, 0, 0, 1, e2);
-		assertEquals(1, targetScalar("SELECT count(1) from etl6t WHERE NAME = 'a'"));
-		assertEquals(1, targetScalar("SELECT count(1) from etl6t"));
+		etl6t().matcher().assertOneMatch();
+		etl6t().matcher().eq("NAME", "a").assertOneMatch();
 	}
 
 	@Test
