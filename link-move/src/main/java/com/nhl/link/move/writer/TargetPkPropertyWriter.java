@@ -1,10 +1,12 @@
 package com.nhl.link.move.writer;
 
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.cayenne.CayenneCrossVersionBinaryCompat;
 import org.apache.cayenne.DataObject;
-import org.apache.cayenne.ObjectId;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.util.Util;
+
+import java.util.Map;
 
 /**
  * @since 1.4
@@ -26,19 +28,19 @@ public class TargetPkPropertyWriter implements TargetPropertyWriter {
 	@Override
 	public void write(DataObject target, Object value) {
 		// regular meaningless PK
-		target.getObjectId().getReplacementIdMap().put(pk.getName(), value);
+		CayenneCrossVersionBinaryCompat.getReplacementIdMap(target).put(pk.getName(), value);
 	}
 
 	@Override
 	public boolean willWrite(DataObject target, Object value) {
 
-		ObjectId id = target.getObjectId();
-
-		if (Util.nullSafeEquals(id.getIdSnapshot().get(pk.getName()), value)) {
+		Map<String, Object> idSnapshot = CayenneCrossVersionBinaryCompat.getIdSnapshot(target);
+		if (Util.nullSafeEquals(idSnapshot.get(pk.getName()), value)) {
 			return false;
 		}
 
-		if (Util.nullSafeEquals(id.getReplacementIdMap().get(pk.getName()), value)) {
+		Map<String, Object> replacementMap = CayenneCrossVersionBinaryCompat.getReplacementIdMap(target);
+		if (Util.nullSafeEquals(replacementMap.get(pk.getName()), value)) {
 			return false;
 		}
 
