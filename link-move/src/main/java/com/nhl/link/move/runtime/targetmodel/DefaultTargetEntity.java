@@ -1,24 +1,14 @@
 package com.nhl.link.move.runtime.targetmodel;
 
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.cayenne.CayenneCrossVersionBinaryCompat;
 import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
-import org.apache.cayenne.map.DbAttribute;
-import org.apache.cayenne.map.DbEntity;
-import org.apache.cayenne.map.DbJoin;
-import org.apache.cayenne.map.DbRelationship;
-import org.apache.cayenne.map.ObjAttribute;
-import org.apache.cayenne.map.ObjEntity;
-import org.apache.cayenne.map.PathComponent;
+import org.apache.cayenne.map.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -151,7 +141,7 @@ public class DefaultTargetEntity implements TargetEntity {
 
         if (relationship.isSourceIndependentFromTargetChange()
                 || relationship.getJoins().size() > 1
-                || targetDbEntity.getPrimaryKeys().size() > 1) {
+                || CayenneCrossVersionBinaryCompat.pkAttributes(targetDbEntity).limit(2).count() > 1) {
             return Optional.empty();
         }
 

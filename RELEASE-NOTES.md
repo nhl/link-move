@@ -2,6 +2,7 @@
 
 * #185 Target entities with flattened attributes
 * #186 Upgrade to DFLib 0.10 
+* #187 Binary compatibility with Cayenne 4.0, 4.1 and 4.2
 
 ## Release 2.13
 

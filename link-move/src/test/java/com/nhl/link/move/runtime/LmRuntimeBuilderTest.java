@@ -30,7 +30,7 @@ public class LmRuntimeBuilderTest {
 
         DbEntity mockDbEntity = mock(DbEntity.class);
         when(mockDbEntity.getName()).thenReturn("medb");
-        when(mockDbEntity.getPrimaryKeys()).thenReturn(Collections.emptyList());
+        when(mockDbEntity.getAttributes()).thenReturn(Collections.emptyList());
 
         ObjEntity mockEntity = mock(ObjEntity.class);
         when(mockEntity.getName()).thenReturn("me");
