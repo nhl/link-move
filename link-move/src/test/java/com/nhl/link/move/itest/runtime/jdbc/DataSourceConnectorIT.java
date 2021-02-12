@@ -3,9 +3,9 @@ package com.nhl.link.move.itest.runtime.jdbc;
 import com.nhl.link.move.runtime.jdbc.DataSourceConnector;
 import com.nhl.link.move.unit.DerbySrcTest;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.access.types.LocalDateTimeValueType;
 import org.apache.cayenne.access.types.ValueObjectType;
 import org.apache.cayenne.access.types.ValueObjectTypeRegistry;
-import org.apache.cayenne.java8.access.types.LocalDateTimeValueType;
 import org.apache.cayenne.query.SQLExec;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,13 +38,14 @@ public class DataSourceConnectorIT extends DerbySrcTest {
         srcDb.getTable("etl1").matcher().assertOneMatch();
     }
 
+    // TODO: can probably remove this test under Cayenne 4.2. It supports Java 8 out of the box
     @Test
     public void testCayenneJava8Support() {
         ObjectContext context = connector.sharedContext();
 
         ValueObjectTypeRegistry typeRegistry = context.getEntityResolver().getValueObjectTypeRegistry();
         ValueObjectType<LocalDateTime, ?> vt = typeRegistry.getValueType(LocalDateTime.class);
-        assertTrue(vt instanceof LocalDateTimeValueType);
+        assertTrue(vt instanceof LocalDateTimeValueType, () -> "Unexpected type: " + ((vt != null) ? vt.getClass().getName() : "null"));
     }
 
 }

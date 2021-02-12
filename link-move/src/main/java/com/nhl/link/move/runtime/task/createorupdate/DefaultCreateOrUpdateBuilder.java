@@ -13,7 +13,7 @@ import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.Property;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a

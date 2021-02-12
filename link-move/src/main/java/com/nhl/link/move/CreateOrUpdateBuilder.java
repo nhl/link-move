@@ -7,7 +7,7 @@ import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.mapper.Mapper;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.Property;
 
 /**
  * A builder of an {@link LmTask} that performs create-or-update synchronization.

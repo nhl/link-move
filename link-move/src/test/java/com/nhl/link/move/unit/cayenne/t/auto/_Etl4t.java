@@ -1,10 +1,17 @@
 package com.nhl.link.move.unit.cayenne.t.auto;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.cayenne.CayenneDataObject;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.BaseDataObject;
+import org.apache.cayenne.exp.property.BaseProperty;
+import org.apache.cayenne.exp.property.DateProperty;
+import org.apache.cayenne.exp.property.NumericProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import com.nhl.link.move.unit.cayenne.t.TEnum1;
 
@@ -14,75 +21,207 @@ import com.nhl.link.move.unit.cayenne.t.TEnum1;
  * since it may be overwritten next time code is regenerated.
  * If you need to make any customizations, please use subclass.
  */
-public abstract class _Etl4t extends CayenneDataObject {
+public abstract class _Etl4t extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<Boolean> C_BOOLEAN = Property.create("cBoolean", Boolean.class);
-    public static final Property<Date> C_DATE = Property.create("cDate", Date.class);
-    public static final Property<BigDecimal> C_DECIMAL = Property.create("cDecimal", BigDecimal.class);
-    public static final Property<TEnum1> C_ENUM = Property.create("cEnum", TEnum1.class);
-    public static final Property<Integer> C_INT = Property.create("cInt", Integer.class);
-    public static final Property<Date> C_TIME = Property.create("cTime", Date.class);
-    public static final Property<Date> C_TIMESTAMP = Property.create("cTimestamp", Date.class);
-    public static final Property<String> C_VARCHAR = Property.create("cVarchar", String.class);
+    public static final BaseProperty<Boolean> C_BOOLEAN = PropertyFactory.createBase("cBoolean", Boolean.class);
+    public static final DateProperty<Date> C_DATE = PropertyFactory.createDate("cDate", Date.class);
+    public static final NumericProperty<BigDecimal> C_DECIMAL = PropertyFactory.createNumeric("cDecimal", BigDecimal.class);
+    public static final BaseProperty<TEnum1> C_ENUM = PropertyFactory.createBase("cEnum", TEnum1.class);
+    public static final NumericProperty<Integer> C_INT = PropertyFactory.createNumeric("cInt", Integer.class);
+    public static final DateProperty<Date> C_TIME = PropertyFactory.createDate("cTime", Date.class);
+    public static final DateProperty<Date> C_TIMESTAMP = PropertyFactory.createDate("cTimestamp", Date.class);
+    public static final StringProperty<String> C_VARCHAR = PropertyFactory.createString("cVarchar", String.class);
+
+    protected Boolean cBoolean;
+    protected Date cDate;
+    protected BigDecimal cDecimal;
+    protected TEnum1 cEnum;
+    protected Integer cInt;
+    protected Date cTime;
+    protected Date cTimestamp;
+    protected String cVarchar;
+
 
     public void setCBoolean(Boolean cBoolean) {
-        writeProperty("cBoolean", cBoolean);
+        beforePropertyWrite("cBoolean", this.cBoolean, cBoolean);
+        this.cBoolean = cBoolean;
     }
+
     public Boolean getCBoolean() {
-        return (Boolean)readProperty("cBoolean");
+        beforePropertyRead("cBoolean");
+        return this.cBoolean;
     }
 
     public void setCDate(Date cDate) {
-        writeProperty("cDate", cDate);
+        beforePropertyWrite("cDate", this.cDate, cDate);
+        this.cDate = cDate;
     }
+
     public Date getCDate() {
-        return (Date)readProperty("cDate");
+        beforePropertyRead("cDate");
+        return this.cDate;
     }
 
     public void setCDecimal(BigDecimal cDecimal) {
-        writeProperty("cDecimal", cDecimal);
+        beforePropertyWrite("cDecimal", this.cDecimal, cDecimal);
+        this.cDecimal = cDecimal;
     }
+
     public BigDecimal getCDecimal() {
-        return (BigDecimal)readProperty("cDecimal");
+        beforePropertyRead("cDecimal");
+        return this.cDecimal;
     }
 
     public void setCEnum(TEnum1 cEnum) {
-        writeProperty("cEnum", cEnum);
+        beforePropertyWrite("cEnum", this.cEnum, cEnum);
+        this.cEnum = cEnum;
     }
+
     public TEnum1 getCEnum() {
-        return (TEnum1)readProperty("cEnum");
+        beforePropertyRead("cEnum");
+        return this.cEnum;
     }
 
     public void setCInt(Integer cInt) {
-        writeProperty("cInt", cInt);
+        beforePropertyWrite("cInt", this.cInt, cInt);
+        this.cInt = cInt;
     }
+
     public Integer getCInt() {
-        return (Integer)readProperty("cInt");
+        beforePropertyRead("cInt");
+        return this.cInt;
     }
 
     public void setCTime(Date cTime) {
-        writeProperty("cTime", cTime);
+        beforePropertyWrite("cTime", this.cTime, cTime);
+        this.cTime = cTime;
     }
+
     public Date getCTime() {
-        return (Date)readProperty("cTime");
+        beforePropertyRead("cTime");
+        return this.cTime;
     }
 
     public void setCTimestamp(Date cTimestamp) {
-        writeProperty("cTimestamp", cTimestamp);
+        beforePropertyWrite("cTimestamp", this.cTimestamp, cTimestamp);
+        this.cTimestamp = cTimestamp;
     }
+
     public Date getCTimestamp() {
-        return (Date)readProperty("cTimestamp");
+        beforePropertyRead("cTimestamp");
+        return this.cTimestamp;
     }
 
     public void setCVarchar(String cVarchar) {
-        writeProperty("cVarchar", cVarchar);
+        beforePropertyWrite("cVarchar", this.cVarchar, cVarchar);
+        this.cVarchar = cVarchar;
     }
+
     public String getCVarchar() {
-        return (String)readProperty("cVarchar");
+        beforePropertyRead("cVarchar");
+        return this.cVarchar;
+    }
+
+    @Override
+    public Object readPropertyDirectly(String propName) {
+        if(propName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        switch(propName) {
+            case "cBoolean":
+                return this.cBoolean;
+            case "cDate":
+                return this.cDate;
+            case "cDecimal":
+                return this.cDecimal;
+            case "cEnum":
+                return this.cEnum;
+            case "cInt":
+                return this.cInt;
+            case "cTime":
+                return this.cTime;
+            case "cTimestamp":
+                return this.cTimestamp;
+            case "cVarchar":
+                return this.cVarchar;
+            default:
+                return super.readPropertyDirectly(propName);
+        }
+    }
+
+    @Override
+    public void writePropertyDirectly(String propName, Object val) {
+        if(propName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        switch (propName) {
+            case "cBoolean":
+                this.cBoolean = (Boolean)val;
+                break;
+            case "cDate":
+                this.cDate = (Date)val;
+                break;
+            case "cDecimal":
+                this.cDecimal = (BigDecimal)val;
+                break;
+            case "cEnum":
+                this.cEnum = (TEnum1)val;
+                break;
+            case "cInt":
+                this.cInt = (Integer)val;
+                break;
+            case "cTime":
+                this.cTime = (Date)val;
+                break;
+            case "cTimestamp":
+                this.cTimestamp = (Date)val;
+                break;
+            case "cVarchar":
+                this.cVarchar = (String)val;
+                break;
+            default:
+                super.writePropertyDirectly(propName, val);
+        }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        writeSerialized(out);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        readSerialized(in);
+    }
+
+    @Override
+    protected void writeState(ObjectOutputStream out) throws IOException {
+        super.writeState(out);
+        out.writeObject(this.cBoolean);
+        out.writeObject(this.cDate);
+        out.writeObject(this.cDecimal);
+        out.writeObject(this.cEnum);
+        out.writeObject(this.cInt);
+        out.writeObject(this.cTime);
+        out.writeObject(this.cTimestamp);
+        out.writeObject(this.cVarchar);
+    }
+
+    @Override
+    protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        super.readState(in);
+        this.cBoolean = (Boolean)in.readObject();
+        this.cDate = (Date)in.readObject();
+        this.cDecimal = (BigDecimal)in.readObject();
+        this.cEnum = (TEnum1)in.readObject();
+        this.cInt = (Integer)in.readObject();
+        this.cTime = (Date)in.readObject();
+        this.cTimestamp = (Date)in.readObject();
+        this.cVarchar = (String)in.readObject();
     }
 
 }
