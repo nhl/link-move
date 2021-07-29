@@ -52,7 +52,7 @@
         <cayenne-version>4.0.2</cayenne-version>
         <jackson-version>2.12.3</jackson-version>
         <apache-commons-csv-version>1.3</apache-commons-csv-version>
-        <dflib-version>0.10</dflib-version>
+        <dflib-version>0.12</dflib-version>
         <junit5.version>5.7.2</junit5.version>
         <bootique.version>2.0.B1</bootique.version>
     </properties>

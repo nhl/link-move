@@ -1,6 +1,7 @@
 ## Release 2.15
 
 * #190 Bootique dependency leaks via BOM impor
+* #191 Upgrade to DFLib 0.12
 
 ## Release 2.14
 
