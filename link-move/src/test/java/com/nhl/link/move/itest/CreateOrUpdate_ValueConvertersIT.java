@@ -43,7 +43,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         etl6t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
         etl6t().matcher().eq("name", "c").eq("id", 31).assertOneMatch();
 
-        srcEtl6().delete().and("id", 45).exec();
+        srcEtl6().delete().where("id", 45).exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);

@@ -14,11 +14,13 @@ import io.bootique.junit5.BQTestTool;
 public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
     @BQTestTool(BQTestScope.GLOBAL)
-    protected static final DerbyTester targetDb = DerbyTester.db();
+    protected static final DerbyTester targetDb = DerbyTester.db()
+            .initDB("classpath:com/nhl/link/move/itest/target-schema-derby.sql");
 
     @BQTestTool(BQTestScope.GLOBAL)
     protected static final CayenneTester targetCayenne = CayenneTester.create()
             .deleteBeforeEachTest()
+            .skipSchemaCreation()
             //  TODO: workaround for a CayenneTester bug: generator skips the "sub" table in vertical
             //   inheritance schema.
             .tables("ti_super", "ti_sub1")

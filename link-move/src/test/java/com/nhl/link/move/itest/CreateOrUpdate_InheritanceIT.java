@@ -45,7 +45,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         tiSub1().matcher().eq("sub_key", "b").eq("subp1", "p2").assertOneMatch();
         tiSub1().matcher().eq("sub_key", "c").eq("subp1", null).assertOneMatch();
 
-        srcEtlSub1().delete().and("s_key", "a").exec();
+        srcEtlSub1().delete().where("s_key", "a").exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
@@ -94,7 +94,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         tiSub1().matcher().eq("sub_key", null).eq("subp1", "p2").assertOneMatch();
         tiSub1().matcher().eq("sub_key", null).eq("subp1", null).assertOneMatch();
 
-        srcEtlSub1().delete().and("s_key", "a").exec();
+        srcEtlSub1().delete().where("s_key", "a").exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);

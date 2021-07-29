@@ -51,7 +51,7 @@ public class CreateIT extends LmIntegrationTest {
         etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
         etl1t().matcher().eq("name", "c").eq("age", null).assertOneMatch();
 
-        srcEtl1().delete().and("name", "a").exec();
+        srcEtl1().delete().where("name", "a").exec();
 
         Execution e3 = task.run();
         new LmTaskTester()
