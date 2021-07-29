@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nhl.link.move</groupId>
@@ -110,13 +111,22 @@
                 <scope>import</scope>
                 <version>${dflib-version}</version>
             </dependency>
+
+            <!--
+           Importing individual Bootique modules for tests instead of a BOM, as BOM would be treated as a
+           dependency by the downstream projects.
+           -->
             <dependency>
-                <groupId>io.bootique.bom</groupId>
-                <artifactId>bootique-bom</artifactId>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>io.bootique.jdbc</groupId>
+                <artifactId>bootique-jdbc-junit5-derby</artifactId>
                 <version>${bootique.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.bootique.cayenne</groupId>
+                <artifactId>bootique-cayenne-junit5</artifactId>
+                <version>${bootique.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.cayenne</groupId>
                 <artifactId>cayenne-server</artifactId>

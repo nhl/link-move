@@ -1,3 +1,7 @@
+## Release 2.15
+
+* #190 Bootique dependency leaks via BOM impor
+
 ## Release 2.14
 
 * #185 Target entities with flattened attributes
