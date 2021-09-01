@@ -75,6 +75,7 @@ public class DefaultCreateOrUpdateBuilderTest {
 
         Map<Class<? extends Annotation>, List<StageListener>> listeners = listenersBuilder.getListeners();
 
+        assertNotNull(listeners.get(AfterSourceRowsExtracted.class));
         assertNotNull(listeners.get(AfterSourcesMapped.class));
         assertNotNull(listeners.get(AfterSourceRowsConverted.class));
         assertNotNull(listeners.get(AfterTargetsMatched.class));
@@ -82,6 +83,7 @@ public class DefaultCreateOrUpdateBuilderTest {
         assertNotNull(listeners.get(AfterTargetsMerged.class));
         assertNotNull(listeners.get(AfterTargetsCommitted.class));
 
+        assertEquals(1, listeners.get(AfterSourceRowsExtracted.class).size());
         assertEquals(1, listeners.get(AfterSourcesMapped.class).size());
         assertEquals(1, listeners.get(AfterSourceRowsConverted.class).size());
         assertEquals(1, listeners.get(AfterTargetsMatched.class).size());
@@ -91,6 +93,11 @@ public class DefaultCreateOrUpdateBuilderTest {
     }
 
     public static class L1 {
+
+        @AfterSourceRowsExtracted
+        public void m0(CreateOrUpdateSegment<?> s) {
+
+        }
 
         @AfterSourcesMapped
         public void m1(CreateOrUpdateSegment<?> s) {

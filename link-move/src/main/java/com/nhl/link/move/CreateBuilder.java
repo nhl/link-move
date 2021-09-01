@@ -52,8 +52,9 @@ public interface CreateBuilder<T> {
 
     /**
      * Adds a listener of transformation stages of batch segments. It should have methods annotated with
-     * {@link AfterSourceRowsConverted}, {@link AfterTargetsMapped}, {@link AfterTargetsMerged},
-     * {@link AfterTargetsCommitted}, etc. Annotated method signature should be as follows:
+     * {@link com.nhl.link.move.annotation.AfterSourceRowsExtracted}, {@link AfterSourceRowsConverted},
+     * {@link AfterTargetsMapped}, {@link AfterTargetsMerged}, {@link AfterTargetsCommitted}, etc. Annotated method
+     * signature should be as follows:
      *
      * <pre>
      * @AfterXyz

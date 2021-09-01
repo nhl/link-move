@@ -85,8 +85,8 @@ public interface CreateOrUpdateBuilder<T> {
 
     /**
      * Adds a listener of transformation stages of batch segments. It should have methods annotated with
-     * {@link AfterSourceRowsConverted}, {@link AfterSourcesMapped}, {@link AfterTargetsMapped},
-     * {@link AfterTargetsMerged}, {@link AfterTargetsCommitted}.
+     * {@link com.nhl.link.move.annotation.AfterSourceRowsExtracted}, {@link AfterSourceRowsConverted},
+     * {@link AfterSourcesMapped}, {@link AfterTargetsMapped}, {@link AfterTargetsMerged}, {@link AfterTargetsCommitted}.
      *
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance

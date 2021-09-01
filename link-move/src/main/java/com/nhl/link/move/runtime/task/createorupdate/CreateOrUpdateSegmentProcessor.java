@@ -48,6 +48,8 @@ public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
     public void process(Execution exec, CreateOrUpdateSegment<T> segment) {
 
+        notifyListeners(AfterSourceRowsExtracted.class, exec, segment);
+
         // execute create-or-update pipeline stages
         convertSrc(exec, segment);
         mapSrc(exec, segment);

@@ -8,8 +8,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation of a data segment transformation stage listener method that should
- * be called after source Rows are converted to maps.
+ * Annotation of a data segment transformation stage listener method that should be called after source Rows are
+ * converted to a "normalized" form.
  * 
  * @since 1.3
  */

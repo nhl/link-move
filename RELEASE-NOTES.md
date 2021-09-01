@@ -1,3 +1,7 @@
+## Release 2.16
+
+* #192 @AfterSourceRowsExtracted annotation
+
 ## Release 2.15
 
 * #190 Bootique dependency leaks via BOM impor

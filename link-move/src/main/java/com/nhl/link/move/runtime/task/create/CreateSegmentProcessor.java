@@ -38,6 +38,7 @@ public class CreateSegmentProcessor<T extends DataObject> {
     }
 
     public void process(Execution exec, CreateSegment<T> segment) {
+        notifyListeners(AfterSourceRowsExtracted.class, exec, segment);
         convertSrc(exec, segment);
         mapToTarget(exec, segment);
         resolveFks(exec, segment);

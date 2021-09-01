@@ -61,6 +61,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
 
     ListenersBuilder createListenersBuilder() {
         return new ListenersBuilder(
+                AfterSourceRowsExtracted.class,
                 AfterSourceRowsConverted.class,
                 AfterSourcesMapped.class,
                 AfterTargetsMatched.class,
