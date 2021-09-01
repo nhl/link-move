@@ -40,6 +40,13 @@ public class CreateSegment<T> {
         return sourceRows;
     }
 
+    /**
+     * @since 2.17
+     */
+    public void setSourceRows(DataFrame sourceRows) {
+        this.sourceRows = sourceRows;
+    }
+
     public DataFrame getSources() {
         return sources;
     }

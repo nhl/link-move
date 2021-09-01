@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.RowAttribute;
 import com.nhl.dflib.DataFrame;
+import com.nhl.link.move.RowAttribute;
 import org.apache.cayenne.ObjectContext;
 
 /**
@@ -37,6 +37,13 @@ public class CreateOrUpdateSegment<T> {
 
     public DataFrame getSourceRows() {
         return sourceRows;
+    }
+
+    /**
+     * @since 2.17
+     */
+    public void setSourceRows(DataFrame sourceRows) {
+        this.sourceRows = sourceRows;
     }
 
     public RowAttribute[] getSourceRowsHeader() {
