@@ -1,17 +1,28 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import static org.mockito.Mockito.mock;
-
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.*;
+import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
 
 public class MockCreateOrUpdateListener {
 
 	private MockCreateOrUpdateListener mockDelegate = mock(MockCreateOrUpdateListener.class);
+
+	public MockCreateOrUpdateListener verify(int times) {
+		return Mockito.verify(mockDelegate, Mockito.times(times));
+	}
+
+	@AfterSourceRowsExtracted
+	public void afterSourceRowsExtracted(Execution execution, CreateOrUpdateSegment<?> segment) {
+		mockDelegate.afterSourceRowsExtracted(execution, segment);
+	}
+
+	@AfterFksResolved
+	public void afterFksResolved(Execution execution, CreateOrUpdateSegment<?> segment) {
+		mockDelegate.afterFksResolved(execution, segment);
+	}
 
 	@AfterTargetsMatched
 	public void afterTargetMatched(Execution execution, CreateOrUpdateSegment<?> segment) {

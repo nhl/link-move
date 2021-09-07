@@ -1,5 +1,7 @@
 package com.nhl.link.move.runtime.task;
 
+import com.nhl.link.move.LmRuntimeException;
+
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -9,18 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.Execution;
-
 /**
  * @since 1.3
  */
 public class ListenersBuilder {
 
-	private static MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+	private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
-	private Class<? extends Annotation>[] annotations;
-	private Map<Class<? extends Annotation>, List<StageListener>> listeners;
+	private final Class<? extends Annotation>[] annotations;
+	private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
 	@SafeVarargs
 	public ListenersBuilder(Class<? extends Annotation>... annotations) {
@@ -55,25 +54,16 @@ public class ListenersBuilder {
 					if (listenerWrapper == null) {
 						final MethodHandle handle = LOOKUP.unreflect(m);
 
-						listenerWrapper = new StageListener() {
-
-							@Override
-							public void afterStageFinished(Execution exec, Object segment) {
-								try {
-									handle.invoke(listener, exec, segment);
-								} catch (Throwable e) {
-									throw new LmRuntimeException("Error invoking listener " + at.getSimpleName(), e);
-								}
+						listenerWrapper = (exec, segment) -> {
+							try {
+								handle.invoke(listener, exec, segment);
+							} catch (Throwable e) {
+								throw new LmRuntimeException("Error invoking listener " + at.getSimpleName(), e);
 							}
 						};
 					}
 
-					List<StageListener> list = listeners.get(at);
-					if (list == null) {
-						list = new ArrayList<>();
-						listeners.put(at, list);
-					}
-
+					List<StageListener> list = listeners.computeIfAbsent(at, k -> new ArrayList<>());
 					list.add(listenerWrapper);
 				}
 			}
