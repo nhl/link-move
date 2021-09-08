@@ -1,3 +1,7 @@
+## Release 2.1
+
+* #194 @AfterFksResolved callback is not invoked
+
 ## Release 2.16, 2.17
 
 * #192 @AfterSourceRowsExtracted annotation

@@ -66,6 +66,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
                 AfterSourcesMapped.class,
                 AfterTargetsMatched.class,
                 AfterTargetsMapped.class,
+                AfterFksResolved.class,
                 AfterTargetsMerged.class,
                 AfterTargetsCommitted.class);
     }

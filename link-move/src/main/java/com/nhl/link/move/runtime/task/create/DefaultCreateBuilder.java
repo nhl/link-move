@@ -19,15 +19,15 @@ import org.apache.cayenne.DataObject;
  */
 public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder implements CreateBuilder<T> {
 
-    private CreateTargetMapper<T> mapper;
-    private CreateTargetMerger<T> merger;
-    private FkResolver fkResolver;
-    private ITokenManager tokenManager;
+    private final CreateTargetMapper<T> mapper;
+    private final CreateTargetMerger<T> merger;
+    private final FkResolver fkResolver;
+    private final ITokenManager tokenManager;
     private ExtractorName extractorName;
-    private ListenersBuilder stageListenersBuilder;
-    private IExtractorService extractorService;
-    private ITargetCayenneService targetCayenneService;
-    private RowConverter rowConverter;
+    private final ListenersBuilder stageListenersBuilder;
+    private final IExtractorService extractorService;
+    private final ITargetCayenneService targetCayenneService;
+    private final RowConverter rowConverter;
 
     public DefaultCreateBuilder(
             CreateTargetMapper<T> mapper,
@@ -56,6 +56,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
                 AfterSourceRowsExtracted.class,
                 AfterSourceRowsConverted.class,
                 AfterTargetsMapped.class,
+                AfterFksResolved.class,
                 AfterTargetsMerged.class,
                 AfterTargetsCommitted.class);
     }
