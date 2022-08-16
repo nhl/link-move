@@ -1,4 +1,4 @@
-## Release 2.1
+## Release 2.18
 
 * #194 @AfterFksResolved callback is not invoked
 
