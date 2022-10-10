@@ -1,6 +1,7 @@
 ## Release 3.0.M1
 
 * #199 Require Java 11
+* #200 Upgrade to Cayenne 4.2
 * #201 Upgrade Jackson to 2.13.4
 
 ## Release 2.18
