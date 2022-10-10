@@ -5,7 +5,7 @@
     <parent>
         <artifactId>link-move-parent</artifactId>
         <groupId>com.nhl.link.move</groupId>
-        <version>2.19-SNAPSHOT</version>
+        <version>3.0.M1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

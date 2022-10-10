@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -35,7 +36,7 @@ public class LocalTimeConverterTest {
 
     @Test
     public void testConvert_sqlTime() {
-        LocalTime localTime = LocalTime.now();
+        LocalTime localTime = LocalTime.now().truncatedTo(ChronoUnit.MILLIS);
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
         calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
         java.sql.Time time = new Time(calendar.getTimeInMillis());
@@ -44,7 +45,7 @@ public class LocalTimeConverterTest {
 
     @Test
     public void testConvert_sqlTimestamp() {
-        LocalTime localTime = LocalTime.now();
+        LocalTime localTime = LocalTime.now().truncatedTo(ChronoUnit.MILLIS);
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
         calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());

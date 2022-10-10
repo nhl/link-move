@@ -4,7 +4,7 @@
 
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-parent</artifactId>
-    <version>2.19-SNAPSHOT</version>
+    <version>3.0.M1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -14,16 +14,14 @@
     </modules>
 
     <name>Library: link-move (Parent)</name>
-    <description>A model-driven dynamically-configurable framework to acquire data
-        from external sources and save in your application database.
-    </description>
+    <description>A model-driven ETL framework for your apps</description>
 
     <url>https://github.com/nhl/link-move</url>
 
     <licenses>
         <license>
             <name>Apache License</name>
-            <url>https://github.com/nhl/link-rest/blob/master/LICENSE</url>
+            <url>https://github.com/nhl/link-move/blob/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -43,8 +41,7 @@
         <!-- standard Maven properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!-- Custom properties (mostly framework versions) -->
         <slf4j-version>1.7.25</slf4j-version>
@@ -174,47 +171,44 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.10.1</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.4.1</version>
                     <configuration>
-                        <!-- Java 8 is too strict about Javadoc omissions -->
-                        <doclint>none</doclint>
+                        <additionalOptions>
+                            <additionalOption>-Xdoclint:none</additionalOption>
+                        </additionalOptions>
                     </configuration>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.0.0</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.2.1</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.0.0-M6</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M7</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M7</version>
                     <executions>
                         <execution>
                             <id>integration-test</id>
@@ -244,6 +238,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

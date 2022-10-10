@@ -1,3 +1,7 @@
+## Release 3.0.M1
+
+* #199 Require Java 11
+
 ## Release 2.18
 
 * #194 @AfterFksResolved callback is not invoked

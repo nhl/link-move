@@ -34,6 +34,7 @@ import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.*;
+import org.apache.cayenne.di.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
