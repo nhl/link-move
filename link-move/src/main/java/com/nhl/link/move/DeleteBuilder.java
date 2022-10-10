@@ -1,9 +1,9 @@
 package com.nhl.link.move;
 
 import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.exp.Property;
 
 import com.nhl.link.move.mapper.Mapper;
+import org.apache.cayenne.exp.property.Property;
 
 /**
  * since 1.3

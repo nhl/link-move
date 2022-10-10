@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap"
+<data-map xmlns="http://cayenne.apache.org/schema/10/modelMap"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
-	 project-version="9">
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/10/modelMap https://cayenne.apache.org/schema/10/modelMap.xsd"
+	 project-version="10">
 	<property name="defaultPackage" value="com.nhl.link.move.unit.cayenne.ti"/>
 	<property name="quoteSqlIdentifiers" value="true"/>
 	<db-entity name="ti_sub1">
@@ -25,10 +25,10 @@
 		<obj-attribute name="superKey" type="java.lang.String" db-attribute-path="super_key"/>
 		<obj-attribute name="type" type="java.lang.String" db-attribute-path="type"/>
 	</obj-entity>
-	<db-relationship name="tiSuper" source="ti_sub1" target="ti_super" toMany="false">
+	<db-relationship name="tiSuper" source="ti_sub1" target="ti_super">
 		<db-attribute-pair source="id" target="id"/>
 	</db-relationship>
-	<db-relationship name="sub1" source="ti_super" target="ti_sub1" toDependentPK="true" toMany="false">
+	<db-relationship name="sub1" source="ti_super" target="ti_sub1" toDependentPK="true">
 		<db-attribute-pair source="id" target="id"/>
 	</db-relationship>
 </data-map>

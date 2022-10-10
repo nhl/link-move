@@ -89,10 +89,9 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         tiSuper().matcher().eq("type", "sub1").eq("super_key", "b").assertOneMatch();
         tiSuper().matcher().eq("type", "sub1").eq("super_key", "c").assertOneMatch();
 
-        tiSub1().matcher().assertMatches(3);
+        tiSub1().matcher().assertMatches(2);
         tiSub1().matcher().eq("sub_key", null).eq("subp1", "p1").assertOneMatch();
         tiSub1().matcher().eq("sub_key", null).eq("subp1", "p2").assertOneMatch();
-        tiSub1().matcher().eq("sub_key", null).eq("subp1", null).assertOneMatch();
 
         srcEtlSub1().delete().where("s_key", "a").exec();
 

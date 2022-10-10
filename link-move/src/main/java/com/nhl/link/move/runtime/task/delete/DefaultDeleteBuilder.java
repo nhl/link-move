@@ -14,7 +14,7 @@ import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.Property;
 
 /**
  * @since 1.3

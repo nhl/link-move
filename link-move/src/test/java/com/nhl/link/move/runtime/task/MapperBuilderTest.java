@@ -6,7 +6,7 @@ import com.nhl.link.move.mapper.PathMapper;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.PropertyFactory;
 import org.apache.cayenne.map.ObjEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,21 +40,21 @@ public class MapperBuilderTest {
 
 	@Test
 	public void testCreateMapper_ByPropreties_Single() {
-		Mapper mapper = builder.matchBy(Property.create("a", Object.class)).createMapper();
+		Mapper mapper = builder.matchBy(PropertyFactory.createString("a", String.class)).createMapper();
 		assertNotNull(mapper);
 		assertTrue(mapper instanceof PathMapper);
 	}
 
 	@Test
 	public void testCreateMapper_ByPropreties_Multi() {
-		Mapper mapper = builder.matchBy(Property.create("a", Object.class), Property.create("b", Object.class)).createMapper();
+		Mapper mapper = builder.matchBy(PropertyFactory.createString("a", String.class), PropertyFactory.createString("b", String.class)).createMapper();
 		assertNotNull(mapper);
 		assertTrue(mapper instanceof MultiPathMapper);
 	}
 
 	@Test
 	public void testMatchBy_Additivity() {
-		Map<String, Mapper> mappers = builder.matchBy(Property.create("a", Object.class), Property.create("b", Object.class))
+		Map<String, Mapper> mappers = builder.matchBy(PropertyFactory.createString("a", String.class), PropertyFactory.createString("b", String.class))
 				.matchBy("c").createPathMappers();
 		assertEquals(3, mappers.size());
 		assertTrue(mappers.containsKey("db:a"));

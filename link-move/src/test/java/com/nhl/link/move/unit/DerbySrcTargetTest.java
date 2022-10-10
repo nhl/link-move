@@ -1,10 +1,21 @@
 package com.nhl.link.move.unit;
 
-import com.nhl.link.move.unit.cayenne.t.*;
+import com.nhl.link.move.unit.cayenne.t.Etl10t;
+import com.nhl.link.move.unit.cayenne.t.Etl11t;
+import com.nhl.link.move.unit.cayenne.t.Etl1t;
+import com.nhl.link.move.unit.cayenne.t.Etl2t;
+import com.nhl.link.move.unit.cayenne.t.Etl3t;
+import com.nhl.link.move.unit.cayenne.t.Etl4t;
+import com.nhl.link.move.unit.cayenne.t.Etl4t_jt;
+import com.nhl.link.move.unit.cayenne.t.Etl5t;
+import com.nhl.link.move.unit.cayenne.t.Etl6t;
+import com.nhl.link.move.unit.cayenne.t.Etl7t;
+import com.nhl.link.move.unit.cayenne.t.Etl8t;
+import com.nhl.link.move.unit.cayenne.t.Etl9t;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
-import io.bootique.cayenne.CayenneModule;
-import io.bootique.cayenne.junit5.CayenneTester;
+import io.bootique.cayenne.v42.CayenneModule;
+import io.bootique.cayenne.v42.junit5.CayenneTester;
 import io.bootique.jdbc.junit5.Table;
 import io.bootique.jdbc.junit5.derby.DerbyTester;
 import io.bootique.junit5.BQApp;

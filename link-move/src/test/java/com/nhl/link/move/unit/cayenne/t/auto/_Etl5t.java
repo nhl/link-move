@@ -1,10 +1,16 @@
 package com.nhl.link.move.unit.cayenne.t.auto;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.cayenne.CayenneDataObject;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.BaseDataObject;
+import org.apache.cayenne.exp.property.DateProperty;
+import org.apache.cayenne.exp.property.ListProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 
@@ -14,40 +20,115 @@ import com.nhl.link.move.unit.cayenne.t.Etl3t;
  * since it may be overwritten next time code is regenerated.
  * If you need to make any customizations, please use subclass.
  */
-public abstract class _Etl5t extends CayenneDataObject {
+public abstract class _Etl5t extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
     public static final String ID_PK_COLUMN = "id";
 
-    public static final Property<Date> DATE = Property.create("date", Date.class);
-    public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<List<Etl3t>> E2S = Property.create("e2s", List.class);
+    public static final DateProperty<Date> DATE = PropertyFactory.createDate("date", Date.class);
+    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
+    public static final ListProperty<Etl3t> E2S = PropertyFactory.createList("e2s", Etl3t.class);
+
+    protected Date date;
+    protected String name;
+
+    protected Object e2s;
 
     public void setDate(Date date) {
-        writeProperty("date", date);
+        beforePropertyWrite("date", this.date, date);
+        this.date = date;
     }
+
     public Date getDate() {
-        return (Date)readProperty("date");
+        beforePropertyRead("date");
+        return this.date;
     }
 
     public void setName(String name) {
-        writeProperty("name", name);
+        beforePropertyWrite("name", this.name, name);
+        this.name = name;
     }
+
     public String getName() {
-        return (String)readProperty("name");
+        beforePropertyRead("name");
+        return this.name;
     }
 
     public void addToE2s(Etl3t obj) {
         addToManyTarget("e2s", obj, true);
     }
+
     public void removeFromE2s(Etl3t obj) {
         removeToManyTarget("e2s", obj, true);
     }
+
     @SuppressWarnings("unchecked")
     public List<Etl3t> getE2s() {
         return (List<Etl3t>)readProperty("e2s");
     }
 
+    @Override
+    public Object readPropertyDirectly(String propName) {
+        if(propName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        switch(propName) {
+            case "date":
+                return this.date;
+            case "name":
+                return this.name;
+            case "e2s":
+                return this.e2s;
+            default:
+                return super.readPropertyDirectly(propName);
+        }
+    }
+
+    @Override
+    public void writePropertyDirectly(String propName, Object val) {
+        if(propName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        switch (propName) {
+            case "date":
+                this.date = (Date)val;
+                break;
+            case "name":
+                this.name = (String)val;
+                break;
+            case "e2s":
+                this.e2s = val;
+                break;
+            default:
+                super.writePropertyDirectly(propName, val);
+        }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        writeSerialized(out);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        readSerialized(in);
+    }
+
+    @Override
+    protected void writeState(ObjectOutputStream out) throws IOException {
+        super.writeState(out);
+        out.writeObject(this.date);
+        out.writeObject(this.name);
+        out.writeObject(this.e2s);
+    }
+
+    @Override
+    protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        super.readState(in);
+        this.date = (Date)in.readObject();
+        this.name = (String)in.readObject();
+        this.e2s = in.readObject();
+    }
 
 }
