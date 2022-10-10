@@ -46,7 +46,7 @@
         <!-- Custom properties (mostly framework versions) -->
         <slf4j.version>1.7.25</slf4j.version>
         <cayenne.version>4.2.RC1</cayenne.version>
-        <jackson.version>2.12.3</jackson.version>
+        <jackson.version>2.13.4</jackson.version>
         <commons.csv.version>1.3</commons.csv.version>
         <dflib.version>0.12</dflib.version>
         <junit5.version>5.7.2</junit5.version>
