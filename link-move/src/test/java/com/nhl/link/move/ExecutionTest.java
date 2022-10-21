@@ -11,12 +11,32 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class ExecutionTest {
 
     @Test
+    public void testToString() {
+        Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5));
+        assertEquals("{\"created\":0,\"deleted\":0,\"extracted\":0,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
+                "\"startedOn\":\"" + execution.getStats().getStartedOn() + "\",\"status\":\"in progress\"," +
+                "\"task\":\"xsync\",\"updated\":0}", execution.toString());
+
+        execution.getStats().incrementCreated(5);
+        execution.getStats().incrementDeleted(4);
+        execution.getStats().incrementExtracted(55);
+        execution.getStats().incrementUpdated(3);
+
+        execution.close();
+
+        assertEquals("{\"created\":5,\"deleted\":4,\"duration\":\"" + execution.getStats().getDuration() + "\"," +
+                "\"extracted\":55,\"extractor\":\"l.n\",\"parameters\":{\"a\":5},\"startedOn\":\"" + execution.getStats().getStartedOn() + "\"," +
+                "\"status\":\"finished\",\"task\":\"xsync\",\"updated\":3}", execution.toString());
+    }
+
+    @Deprecated(since = "3.0")
+    @Test
     public void testCreateReport() {
 
         Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5));
 
         assertEquals(Map.of(
-                        "Task", "xsync",
+                        "Task", "xsync:l.n",
                         "Parameter[a]", 5,
                         "Status", "in progress",
                         "Started on", execution.getStats().getStartedOn(),
@@ -35,7 +55,7 @@ public class ExecutionTest {
         execution.close();
 
         assertEquals(Map.of(
-                        "Task", "xsync",
+                        "Task", "xsync:l.n",
                         "Parameter[a]", 5,
                         "Status", "finished",
                         "Started on", execution.getStats().getStartedOn(),

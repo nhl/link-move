@@ -35,7 +35,7 @@ public class ExecutionStats {
      * @since 3.0
      */
     public Duration getDuration() {
-        return Duration.between(startedOn, stoppedOn);
+        return stoppedOn != null ? Duration.between(startedOn, stoppedOn) : null;
     }
 
     public void incrementExtracted(long count) {

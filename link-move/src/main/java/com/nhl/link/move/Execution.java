@@ -35,7 +35,50 @@ public class Execution implements AutoCloseable {
 
     @Override
     public String toString() {
-        return createReport().toString();
+
+        // generate JSON-ish output
+
+        StringBuilder paramsOut = new StringBuilder("{");
+        for (Entry<String, ?> p : parameters.entrySet()) {
+            append(paramsOut, p.getKey(), p.getValue());
+        }
+
+        StringBuilder out = new StringBuilder("{");
+        append(out, "created", stats.getCreated());
+        append(out, "deleted", stats.getDeleted());
+        append(out, "duration", stats.getDuration());
+        append(out, "extracted", stats.getExtracted());
+        append(out, "extractor", extractorName);
+        append(out, "parameters", paramsOut.append("}").toString(), false);
+        append(out, "startedOn", stats.getStartedOn());
+        append(out, "status", stats.isStopped() ? "finished" : "in progress");
+        append(out, "task", taskName);
+        append(out, "updated", stats.getUpdated());
+
+        return out.append("}").toString();
+    }
+
+    private void append(StringBuilder out, String key, Object val) {
+        append(out, key, val, !(val instanceof Number));
+    }
+
+    private void append(StringBuilder out, String key, Object val, boolean quote) {
+        if (val == null) {
+            return;
+        }
+
+        if (out.length() > 1) {
+            out.append(',');
+        }
+
+        out.append("\"").append(key).append("\":");
+
+        if (quote) {
+            out.append("\"").append(val).append("\"");
+
+        } else {
+            out.append(val);
+        }
     }
 
     /**
@@ -64,7 +107,11 @@ public class Execution implements AutoCloseable {
 
     /**
      * Creates task execution report as a map of labels vs. values.
+     *
+     * @deprecated since 3.0. Execution reports are used primarily for logging, which is now handled by
+     * {@link com.nhl.link.move.runtime.log.LmLogger}, so this API is no longer usefu.
      */
+    @Deprecated(since = "3.0")
     public Map<String, Object> createReport() {
 
         // keep order of insertion consistent so that the report is easily printable
