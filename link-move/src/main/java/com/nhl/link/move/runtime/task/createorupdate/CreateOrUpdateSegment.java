@@ -12,7 +12,6 @@ public class CreateOrUpdateSegment<T> {
     public static final String KEY_COLUMN = "$lm_key";
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String TARGET_CREATED_COLUMN = "$lm_target_created";
-    public static final String TARGET_CHANGED_COLUMN = "$lm_target_changed";
 
     private ObjectContext context;
     private RowAttribute[] sourceRowsHeader;
