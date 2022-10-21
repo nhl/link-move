@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Execution implements AutoCloseable {
 
+    protected final long id;
     protected final String taskName;
     protected final ExtractorName extractorName;
     protected final Map<String, ?> parameters;
@@ -23,7 +24,8 @@ public class Execution implements AutoCloseable {
     /**
      * @since 3.0
      */
-    public Execution(String taskName, ExtractorName extractorName, Map<String, ?> params, LmLogger logger) {
+    public Execution(long id, String taskName, ExtractorName extractorName, Map<String, ?> params, LmLogger logger) {
+        this.id = id;
         this.taskName = taskName;
         this.extractorName = extractorName;
         this.parameters = params;
@@ -83,6 +85,16 @@ public class Execution implements AutoCloseable {
         } else {
             out.append(val);
         }
+    }
+
+    /**
+     * Returns transaction id. It is an incrementing number and is unique within a JVM. It is used primarily for
+     * logging, so there's no goal to keep it globally unique.
+     *
+     * @since 3.0
+     */
+    public long getId() {
+        return id;
     }
 
     /**

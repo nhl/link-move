@@ -17,29 +17,32 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void batchStarted(Execution exec) {
-        logger.debug("[{}] batch started", exec.getTaskName());
+        logger.debug("[{}/{}] batch started", exec.getTaskName(), exec.getId());
     }
 
     @Override
     public void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
-        logger.debug("[{}] batch finished, processed {}, deleted {} object(s)",
+        logger.debug("[{}/{}] batch finished, processed {}, deleted {} object(s)",
                 exec.getTaskName(),
+                exec.getId(),
                 objectsProcessed,
                 objectsDeleted);
     }
 
     @Override
     public void createBatchFinished(Execution exec, int rowsProcessed, int objectsInserted) {
-        logger.debug("[{}] batch finished, processed {} row(s), created {} object(s)",
+        logger.debug("[{}/{}] batch finished, processed {} row(s), created {} object(s)",
                 exec.getTaskName(),
+                exec.getId(),
                 rowsProcessed,
                 objectsInserted);
     }
 
     @Override
     public void createOrUpdateBatchFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
-        logger.debug("[{}] batch finished, processed {} row(s), created {}, updated {} object(s)",
+        logger.debug("[{}/{}] batch finished, processed {} row(s), created {}, updated {} object(s)",
                 exec.getTaskName(),
+                exec.getId(),
                 rowsProcessed,
                 objectsInserted,
                 objectsUpdated);
@@ -47,8 +50,9 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, int keysExtracted) {
-        logger.debug("[{}] batch finished, processed {} row(s), extracted {} keys(s)",
+        logger.debug("[{}/{}] batch finished, processed {} row(s), extracted {} keys(s)",
                 exec.getTaskName(),
+                exec.getId(),
                 rowsProcessed,
                 keysExtracted);
     }

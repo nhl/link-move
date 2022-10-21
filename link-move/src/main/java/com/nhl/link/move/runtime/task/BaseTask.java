@@ -15,11 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @since 1.3
  */
 public abstract class BaseTask implements LmTask {
+
+    private static final AtomicLong idGenerator = new AtomicLong();
 
     private final LmLogger logger;
 
@@ -55,7 +58,8 @@ public abstract class BaseTask implements LmTask {
     }
 
     protected Execution createExecution(ExtractorName extractorName, Map<String, ?> params) {
-        return new Execution(label, extractorName, params, logger);
+        long next = idGenerator.getAndIncrement();
+        return new Execution(next, label, extractorName, params, logger);
     }
 
     @Override
