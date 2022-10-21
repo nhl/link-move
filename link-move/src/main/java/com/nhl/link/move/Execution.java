@@ -50,6 +50,7 @@ public class Execution implements AutoCloseable {
         }
 
         StringBuilder out = new StringBuilder("{");
+        append(out, "id", id);
         append(out, "created", stats.getCreated());
         append(out, "deleted", stats.getDeleted());
         append(out, "duration", stats.getDuration());

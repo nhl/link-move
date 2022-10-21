@@ -15,7 +15,7 @@ public class ExecutionTest {
     @Test
     public void testToString() {
         Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class));
-        assertEquals("{\"created\":0,\"deleted\":0,\"extracted\":0,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
+        assertEquals("{\"id\":1,\"created\":0,\"deleted\":0,\"extracted\":0,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
                 "\"startedOn\":\"" + execution.getStats().getStartedOn() + "\",\"status\":\"in progress\"," +
                 "\"task\":\"xsync\",\"updated\":0}", execution.toString());
 
@@ -26,7 +26,7 @@ public class ExecutionTest {
 
         execution.close();
 
-        assertEquals("{\"created\":5,\"deleted\":4,\"duration\":\"" + execution.getStats().getDuration() + "\"," +
+        assertEquals("{\"id\":1,\"created\":5,\"deleted\":4,\"duration\":\"" + execution.getStats().getDuration() + "\"," +
                 "\"extracted\":55,\"extractor\":\"l.n\",\"parameters\":{\"a\":5},\"startedOn\":\"" + execution.getStats().getStartedOn() + "\"," +
                 "\"status\":\"finished\",\"task\":\"xsync\",\"updated\":3}", execution.toString());
     }
