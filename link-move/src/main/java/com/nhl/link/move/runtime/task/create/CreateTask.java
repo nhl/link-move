@@ -48,6 +48,11 @@ public class CreateTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
+    protected String createLabel() {
+        return "create";
+    }
+
+    @Override
     protected Execution doRun(Map<String, ?> params) {
 
         Objects.requireNonNull(params, "Null params");

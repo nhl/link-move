@@ -50,6 +50,11 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
+    protected String createLabel() {
+        return "create-or-update";
+    }
+
+    @Override
     protected Execution doRun(Map<String, ?> params) {
 
         Objects.requireNonNull(params, "Null params");

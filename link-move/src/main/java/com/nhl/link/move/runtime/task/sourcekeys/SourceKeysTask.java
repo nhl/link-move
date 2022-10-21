@@ -48,6 +48,11 @@ public class SourceKeysTask extends BaseTask {
     }
 
     @Override
+    protected String createLabel() {
+        return "source-keys";
+    }
+
+    @Override
     protected Execution doRun(Map<String, ?> params) {
 
         Objects.requireNonNull(params, "Null params");

@@ -55,6 +55,11 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
+    protected String createLabel() {
+        return "delete";
+    }
+
+    @Override
     protected Execution doRun(Map<String, ?> params) {
 
         Objects.requireNonNull(params, "Null params");
