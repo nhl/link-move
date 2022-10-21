@@ -1,5 +1,7 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
 import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
@@ -7,8 +9,6 @@ import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
@@ -17,6 +17,7 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * An {@link LmTask} that extracts all the keys from the source data store. The
@@ -26,15 +27,22 @@ import java.util.Map;
  */
 public class SourceKeysTask extends BaseTask {
 
+    private static final String EXEC_LABEL = SourceKeysTask.class.getSimpleName();
+
     public static final String RESULT_KEY = SourceKeysTask.class.getName() + ".RESULT";
 
-    private int batchSize;
-    private IExtractorService extractorService;
-    private ExtractorName sourceExtractorName;
-    private SourceKeysSegmentProcessor processor;
+    private final int batchSize;
+    private final IExtractorService extractorService;
+    private final ExtractorName sourceExtractorName;
+    private final SourceKeysSegmentProcessor processor;
 
-    public SourceKeysTask(ExtractorName sourceExtractorName, int batchSize, IExtractorService extractorService,
-                          ITokenManager tokenManager, SourceKeysSegmentProcessor processor) {
+    public SourceKeysTask(
+            ExtractorName sourceExtractorName,
+            int batchSize,
+            IExtractorService extractorService,
+            ITokenManager tokenManager,
+            SourceKeysSegmentProcessor processor) {
+
         super(tokenManager);
 
         this.sourceExtractorName = sourceExtractorName;
@@ -46,11 +54,9 @@ public class SourceKeysTask extends BaseTask {
     @Override
     protected Execution doRun(Map<String, ?> params) {
 
-        if (params == null) {
-            throw new NullPointerException("Null params");
-        }
+        Objects.requireNonNull(params, "Null params");
 
-        try (Execution execution = new Execution("SourceKeysTask:" + sourceExtractorName, params);) {
+        try (Execution execution = new Execution(EXEC_LABEL, sourceExtractorName, params)) {
 
             execution.setAttribute(RESULT_KEY, new HashSet<>());
 
@@ -69,8 +75,7 @@ public class SourceKeysTask extends BaseTask {
     }
 
     /**
-     * Returns a RowReader obtained from a named extractor and wrapped in a read
-     * stats counter.
+     * Returns a RowReader obtained from a named extractor and wrapped in a read stats counter.
      */
     protected RowReader getRowReader(final Execution execution, Map<String, ?> extractorParams) {
         Extractor extractor = extractorService.getExtractor(sourceExtractorName);

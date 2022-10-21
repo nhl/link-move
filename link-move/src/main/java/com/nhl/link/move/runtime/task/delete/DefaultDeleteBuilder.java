@@ -5,6 +5,7 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
@@ -21,16 +22,16 @@ import org.apache.cayenne.exp.property.Property;
  */
 public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder implements DeleteBuilder<T> {
 
-    private ITaskService taskService;
-    private ITokenManager tokenManager;
-    private ITargetCayenneService targetCayenneService;
-    private Class<T> type;
+    private final ITaskService taskService;
+    private final ITokenManager tokenManager;
+    private final ITargetCayenneService targetCayenneService;
+    private final Class<T> type;
+    private final MapperBuilder mapperBuilder;
+    private final ListenersBuilder listenersBuilder;
 
     private Expression targetFilter;
-    private String extractorName;
+    private ExtractorName extractorName;
     private Mapper mapper;
-    private MapperBuilder mapperBuilder;
-    private ListenersBuilder listenersBuilder;
 
     public DefaultDeleteBuilder(
             Class<T> type,
@@ -77,8 +78,8 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
     }
 
     @Override
-    public DefaultDeleteBuilder<T> sourceMatchExtractor(String extractorName) {
-        this.extractorName = extractorName;
+    public DeleteBuilder<T> sourceMatchExtractor(String location, String name) {
+        this.extractorName = ExtractorName.create(location, name);
         return this;
     }
 
@@ -111,12 +112,12 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 
     @Override
     public DeleteTask<T> task() throws IllegalStateException {
+
         if (extractorName == null) {
             throw new IllegalStateException("Required 'sourceMatchExtractor' is not set");
         }
 
-        return new DeleteTask<T>(extractorName, batchSize, type, targetFilter, targetCayenneService, tokenManager,
-                createProcessor());
+        return new DeleteTask<>(extractorName, batchSize, type, targetFilter, targetCayenneService, tokenManager, createProcessor());
     }
 
     private DeleteSegmentProcessor<T> createProcessor() {

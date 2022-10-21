@@ -1,5 +1,7 @@
 package com.nhl.link.move;
 
+import com.nhl.link.move.extractor.model.ExtractorName;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,18 +11,22 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Represents a single execution of an {@link LmTask}. Tracks task parameters
- * and execution statistics.
+ * A single execution of an {@link LmTask}. Tracks task parameters and execution statistics.
  */
 public class Execution implements AutoCloseable {
 
-    protected String name;
-    protected Map<String, ?> parameters;
-    protected Map<String, Object> attributes;
-    protected ExecutionStats stats;
+    protected final String taskName;
+    protected final ExtractorName extractorName;
+    protected final Map<String, ?> parameters;
+    protected final Map<String, Object> attributes;
+    protected final ExecutionStats stats;
 
-    public Execution(String name, Map<String, ?> params) {
-        this.name = name;
+    /**
+     * @since 3.0
+     */
+    public Execution(String taskName, ExtractorName extractorName, Map<String, ?> params) {
+        this.taskName = taskName;
+        this.extractorName = extractorName;
         this.parameters = params;
         this.attributes = new ConcurrentHashMap<>();
         this.stats = new ExecutionStats();
@@ -40,9 +46,26 @@ public class Execution implements AutoCloseable {
 
     /**
      * @since 2.8
+     * @deprecated since 3.0 {@link #getExtractorName()} and {@link #getTaskName()} are used instead to identify the
+     * execution.
      */
+    @Deprecated(since = "3.0")
     public String getName() {
-        return name;
+        return taskName + ":" + extractorName;
+    }
+
+    /**
+     * @since 3.0
+     */
+    public String getTaskName() {
+        return taskName;
+    }
+
+    /**
+     * @since 3.0
+     */
+    public ExtractorName getExtractorName() {
+        return extractorName;
     }
 
     /**
@@ -54,9 +77,7 @@ public class Execution implements AutoCloseable {
         // printable
         Map<String, Object> report = new LinkedHashMap<>();
 
-        if (name != null) {
-            report.put("Task", name);
-        }
+        report.put("Task", getName());
 
         for (Entry<String, ?> p : parameters.entrySet()) {
             report.put("Parameter[" + p.getKey() + "]", p.getValue());

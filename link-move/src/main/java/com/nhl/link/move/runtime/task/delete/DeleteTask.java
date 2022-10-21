@@ -6,6 +6,7 @@ import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -24,16 +25,18 @@ import java.util.Map;
  */
 public class DeleteTask<T extends DataObject> extends BaseTask {
 
-    String extractorName;
-    int batchSize;
-    Class<T> type;
-    Expression targetFilter;
+    private static final String EXEC_LABEL = DeleteTask.class.getSimpleName();
+
+    private final ExtractorName extractorName;
+    private final int batchSize;
+    private final Class<T> type;
+    private final Expression targetFilter;
 
     private DeleteSegmentProcessor<T> processor;
     private ITargetCayenneService targetCayenneService;
 
     public DeleteTask(
-            String extractorName,
+            ExtractorName extractorName,
             int batchSize,
             Class<T> type,
             Expression targetFilter,
@@ -54,7 +57,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
     @Override
     protected Execution doRun(Map<String, ?> params) {
 
-        try (Execution execution = new Execution("DeleteTask:" + extractorName, params);) {
+        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params);) {
 
             BatchProcessor<T> batchProcessor = createBatchProcessor(execution);
 

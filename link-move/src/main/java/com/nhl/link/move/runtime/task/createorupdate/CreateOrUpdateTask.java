@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
+    private static final String EXEC_LABEL = CreateOrUpdateTask.class.getSimpleName();
+
     private ExtractorName extractorName;
     private int batchSize;
     private ITargetCayenneService targetCayenneService;
@@ -57,7 +59,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             throw new NullPointerException("Null params");
         }
 
-        try (Execution execution = new Execution("CreateOrUpdateTask:" + extractorName, params);) {
+        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params);) {
 
             try (RowReader data = getRowReader(execution, params)) {
                 BatchProcessor batchProcessor = createBatchProcessor(execution, data.getHeader());

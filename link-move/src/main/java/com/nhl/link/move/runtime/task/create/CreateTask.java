@@ -1,13 +1,13 @@
 package com.nhl.link.move.runtime.task.create;
 
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
 import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -24,6 +24,8 @@ import java.util.Map;
  * @since 2.6
  */
 public class CreateTask<T extends DataObject> extends BaseTask {
+
+    private static final String EXEC_LABEL = CreateTask.class.getSimpleName();
 
     private ExtractorName extractorName;
     private int batchSize;
@@ -55,7 +57,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
             throw new NullPointerException("Null params");
         }
 
-        try (Execution execution = new Execution("CreateTask:" + extractorName, params)) {
+        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
 
             try (RowReader data = getRowReader(execution, params)) {
                 BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());

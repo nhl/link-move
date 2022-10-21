@@ -59,15 +59,9 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
     }
 
     @Override
-    public SourceKeysBuilder sourceExtractor(String location, String name) {
-        this.sourceExtractorName = ExtractorName.create(location, name);
+    public SourceKeysBuilder sourceExtractor(ExtractorName extractorName) {
+        sourceExtractorName = extractorName;
         return this;
-    }
-
-    @Override
-    public SourceKeysBuilder sourceExtractor(String location) {
-        // v.1 style naming...
-        return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
     }
 
     @Override
