@@ -38,22 +38,6 @@ public class ExecutionStats {
         return stoppedOn != null ? Duration.between(startedOn, stoppedOn) : null;
     }
 
-    public void incrementExtracted(long count) {
-        this.extracted += count;
-    }
-
-    public void incrementCreated(long count) {
-        this.created += count;
-    }
-
-    public void incrementUpdated(long count) {
-        this.updated += count;
-    }
-
-    public void incrementDeleted(long count) {
-        this.deleted += count;
-    }
-
     public long getExtracted() {
         return extracted;
     }
@@ -100,4 +84,21 @@ public class ExecutionStats {
     public long getFinished() {
         return stoppedOn != null ? stoppedOn.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
     }
+
+    public void incrementExtracted(long count) {
+        this.extracted += count;
+    }
+
+    public void incrementCreated(long count) {
+        this.created += count;
+    }
+
+    public void incrementUpdated(long count) {
+        this.updated += count;
+    }
+
+    public void incrementDeleted(long count) {
+        this.deleted += count;
+    }
+
 }
