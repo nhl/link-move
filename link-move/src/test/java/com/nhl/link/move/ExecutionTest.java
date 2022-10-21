@@ -15,11 +15,17 @@ public class ExecutionTest {
 
         Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5));
 
-        Map<String, Object> r1 = execution.createReport();
-        assertEquals("xsync:<ExtractorName: l.n>", r1.get("Task"));
-        assertEquals(5, r1.get("Parameter[a]"));
-        assertEquals(8, r1.size(), r1.toString());
-        assertEquals("in progress", r1.get("Status"));
+        assertEquals(Map.of(
+                        "Task", "xsync",
+                        "Parameter[a]", 5,
+                        "Status", "in progress",
+                        "Started on", execution.getStats().getStartedOn(),
+                        "Extracted", 0L,
+                        "Created", 0L,
+                        "Updated", 0L,
+                        "Deleted", 0L
+                ),
+                execution.createReport());
 
         execution.getStats().incrementCreated(5);
         execution.getStats().incrementDeleted(4);
@@ -28,18 +34,24 @@ public class ExecutionTest {
 
         execution.close();
 
-        Map<String, Object> r2 = execution.createReport();
-        assertEquals(8, r2.size(), r2.toString());
-        assertEquals("finished", r2.get("Status"));
-        assertEquals(55L, r2.get("Extracted"));
-        assertEquals(5L, r2.get("Created"));
-        assertEquals(4L, r2.get("Deleted"));
-        assertEquals(3L, r2.get("Updated"));
+        assertEquals(Map.of(
+                        "Task", "xsync",
+                        "Parameter[a]", 5,
+                        "Status", "finished",
+                        "Started on", execution.getStats().getStartedOn(),
+                        "Duration", execution.getStats().getDuration(),
+                        "Extracted", 55L,
+                        "Created", 5L,
+                        "Updated", 3L,
+                        "Deleted", 4L
+                ),
+                execution.createReport());
     }
 
     @Test
     public void testAttribute() {
         try (Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of())) {
+      
             assertNull(execution.getAttribute("a"));
 
             execution.setAttribute("a", "MMM");

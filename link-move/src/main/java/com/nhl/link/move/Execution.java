@@ -1,10 +1,6 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,9 +25,7 @@ public class Execution implements AutoCloseable {
         this.extractorName = extractorName;
         this.parameters = params;
         this.attributes = new ConcurrentHashMap<>();
-        this.stats = new ExecutionStats();
-
-        this.stats.executionStarted();
+        this.stats = new ExecutionStats().executionStarted();
     }
 
     @Override
@@ -73,8 +67,7 @@ public class Execution implements AutoCloseable {
      */
     public Map<String, Object> createReport() {
 
-        // let's keep order of insertion consistent so that the report is easily
-        // printable
+        // keep order of insertion consistent so that the report is easily printable
         Map<String, Object> report = new LinkedHashMap<>();
 
         report.put("Task", getName());
@@ -83,14 +76,13 @@ public class Execution implements AutoCloseable {
             report.put("Parameter[" + p.getKey() + "]", p.getValue());
         }
 
-        DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-
         if (stats.isStopped()) {
             report.put("Status", "finished");
+            report.put("Started on", stats.getStartedOn());
             report.put("Duration", stats.getDuration());
         } else {
             report.put("Status", "in progress");
-            report.put("Started on ", format.format(new Date(stats.getStarted())));
+            report.put("Started on", stats.getStartedOn());
         }
 
         report.put("Extracted", stats.getExtracted());
@@ -129,5 +121,4 @@ public class Execution implements AutoCloseable {
     public ExecutionStats getStats() {
         return stats;
     }
-
 }
