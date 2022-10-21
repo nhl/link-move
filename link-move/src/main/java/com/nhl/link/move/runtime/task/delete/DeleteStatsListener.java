@@ -22,8 +22,7 @@ public class DeleteStatsListener {
     @AfterTargetsExtracted
     public void targetsExtracted(Execution e, DeleteSegment<?> segment) {
         e.getLogger().batchStarted(e);
-        // TODO: not reporting Execution.extracted metric because it is set by the SourceKeysTask..
-        //  probably need to report both target and source extractors
+        e.getStats().incrementExtracted(segment.getTargets().height());
     }
 
     @AfterTargetsCommitted

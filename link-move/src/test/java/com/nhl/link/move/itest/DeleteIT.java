@@ -26,7 +26,7 @@ public class DeleteIT extends LmIntegrationTest {
 		srcEtl6().insertColumns("id", "name").values(1, "a").exec();
 
 		Execution e2 = task.run();
-		assertExec(1, 0, 0, 1, e2);
+		assertExec(2, 0, 0, 1, e2);
 		etl6t().matcher().assertOneMatch();
 		etl6t().matcher().eq("name", "a").assertOneMatch();
 	}
@@ -46,7 +46,7 @@ public class DeleteIT extends LmIntegrationTest {
 				.exec();
 
 		Execution e1 = task.run();
-		assertExec(0, 0, 0, 2, e1);
+		assertExec(2, 0, 0, 2, e1);
 
 		etl1t().matcher().assertNoMatches();
 
@@ -58,7 +58,7 @@ public class DeleteIT extends LmIntegrationTest {
 		srcEtl1().insertColumns("name").values("a").exec();
 
 		Execution e2 = task.run();
-		assertExec(1, 0, 0, 1, e2);
+		assertExec(2, 0, 0, 1, e2);
 
 		etl1t().matcher().assertOneMatch();
 		etl1t().matcher().eq("name", "a").assertOneMatch();

@@ -38,9 +38,6 @@ public class ExtractSourceKeysStage {
 	@SuppressWarnings("unchecked")
 	private Set<Object> loadKeys(Execution parentExec) {
 		Execution exec = keysSubtask.run(parentExec.getParameters());
-
-		parentExec.getStats().incrementExtracted(exec.getStats().getExtracted());
-
 		Set<Object> keys = (Set<Object>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
 		if (keys == null) {
 			throw new LmRuntimeException("Unexpected state of keys subtask. No attribute for key: "
