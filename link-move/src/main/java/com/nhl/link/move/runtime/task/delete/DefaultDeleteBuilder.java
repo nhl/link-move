@@ -4,6 +4,7 @@ import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
+import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
@@ -48,12 +49,13 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
         this.mapperBuilder = mapperBuilder;
         this.listenersBuilder = createListenersBuilder();
 
-        // always add stats listener..
+        // always add stats listener
         stageListener(DeleteStatsListener.instance());
     }
 
     ListenersBuilder createListenersBuilder() {
         return new ListenersBuilder(
+                AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
                 AfterSourceKeysExtracted.class,
                 AfterMissingTargetsFiltered.class);
@@ -130,7 +132,11 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
         MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>();
         DeleteTargetStage<T> deleter = new DeleteTargetStage<>();
 
-        return new DeleteSegmentProcessor<>(targetMapper, sourceKeysExtractor, sourceMatcher, deleter,
+        return new DeleteSegmentProcessor<>(
+                targetMapper,
+                sourceKeysExtractor,
+                sourceMatcher,
+                deleter,
                 listenersBuilder.getListeners());
     }
 }

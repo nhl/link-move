@@ -4,6 +4,7 @@ import com.nhl.dflib.Exp;
 import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
+import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 
 /**
@@ -17,6 +18,11 @@ public class CreateOrUpdateStatsListener {
 
     public static CreateOrUpdateStatsListener instance() {
         return instance;
+    }
+
+    @AfterSourceRowsExtracted
+    public void sourceRowsExtracted(Execution e, CreateOrUpdateSegment<?> segment) {
+        e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
     @AfterTargetsMerged

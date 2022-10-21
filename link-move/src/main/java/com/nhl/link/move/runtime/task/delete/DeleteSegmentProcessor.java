@@ -13,15 +13,18 @@ import java.util.Map;
 
 public class DeleteSegmentProcessor<T extends DataObject> {
 
-    private TargetMapper<T> targetMapper;
-    private ExtractSourceKeysStage sourceKeysExtractor;
-    private MissingTargetsFilterStage<T> missingTargetsFilter;
-    private DeleteTargetStage<T> deleter;
-    private Map<Class<? extends Annotation>, List<StageListener>> listeners;
+    private final TargetMapper<T> targetMapper;
+    private final ExtractSourceKeysStage sourceKeysExtractor;
+    private final MissingTargetsFilterStage<T> missingTargetsFilter;
+    private final DeleteTargetStage<T> deleter;
+    private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
-    public DeleteSegmentProcessor(TargetMapper<T> targetMapper, ExtractSourceKeysStage sourceKeysExtractor,
-                                  MissingTargetsFilterStage<T> missingTargetsFilter, DeleteTargetStage<T> deleter,
-                                  Map<Class<? extends Annotation>, List<StageListener>> listeners) {
+    public DeleteSegmentProcessor(
+            TargetMapper<T> targetMapper,
+            ExtractSourceKeysStage sourceKeysExtractor,
+            MissingTargetsFilterStage<T> missingTargetsFilter,
+            DeleteTargetStage<T> deleter,
+            Map<Class<? extends Annotation>, List<StageListener>> listeners) {
         this.targetMapper = targetMapper;
         this.sourceKeysExtractor = sourceKeysExtractor;
         this.missingTargetsFilter = missingTargetsFilter;

@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.ExecutionStats;
+import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 
 /**
@@ -15,9 +15,13 @@ public class CreateStatsListener {
         return instance;
     }
 
+    @AfterSourceRowsExtracted
+    public void sourceRowsExtracted(Execution e, CreateSegment<?> segment) {
+        e.getStats().incrementExtracted(segment.getSourceRows().height());
+    }
+
     @AfterTargetsMapped
     public void targetCreated(Execution e, CreateSegment<?> segment) {
-        ExecutionStats stats = e.getStats();
-        stats.incrementCreated(segment.getMapped().height());
+        e.getStats().incrementCreated(segment.getMapped().height());
     }
 }

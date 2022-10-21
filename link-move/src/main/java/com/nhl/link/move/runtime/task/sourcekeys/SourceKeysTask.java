@@ -2,14 +2,12 @@ package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
-import com.nhl.link.move.CountingRowReader;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
-import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
@@ -60,7 +58,7 @@ public class SourceKeysTask extends BaseTask {
 
             execution.setAttribute(RESULT_KEY, new HashSet<>());
 
-            try (RowReader data = getRowReader(execution, params)) {
+            try (RowReader data = getRowReader(params)) {
                 BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
                 BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
             }
@@ -77,8 +75,7 @@ public class SourceKeysTask extends BaseTask {
     /**
      * Returns a RowReader obtained from a named extractor and wrapped in a read stats counter.
      */
-    protected RowReader getRowReader(final Execution execution, Map<String, ?> extractorParams) {
-        Extractor extractor = extractorService.getExtractor(sourceExtractorName);
-        return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
+    protected RowReader getRowReader(Map<String, ?> extractorParams) {
+        return extractorService.getExtractor(sourceExtractorName).getReader(extractorParams);
     }
 }

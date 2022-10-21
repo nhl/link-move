@@ -48,7 +48,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
         this.rowConverter = rowConverter;
         this.stageListenersBuilder = createListenersBuilder();
 
-        // always add stats listener..
+        // always add stats listener
         stageListener(CreateStatsListener.instance());
     }
 

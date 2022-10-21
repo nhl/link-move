@@ -1,14 +1,12 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.link.move.CountingRowReader;
+import com.nhl.dflib.DataFrame;
+import com.nhl.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
-import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
@@ -61,7 +59,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
         try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
 
-            try (RowReader data = getRowReader(execution, params)) {
+            try (RowReader data = getRowReader(params)) {
                 BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
                 BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
             }
@@ -77,12 +75,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
                 new CreateOrUpdateSegment<>(context, rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
     }
 
-    /**
-     * Returns a RowReader obtained from a named extractor and wrapped in a read
-     * stats counter.
-     */
-    protected RowReader getRowReader(Execution execution, Map<String, ?> extractorParams) {
-        Extractor extractor = extractorService.getExtractor(extractorName);
-        return new CountingRowReader(extractor.getReader(extractorParams), execution.getStats());
+    protected RowReader getRowReader(Map<String, ?> extractorParams) {
+        return extractorService.getExtractor(extractorName).getReader(extractorParams);
     }
 }
