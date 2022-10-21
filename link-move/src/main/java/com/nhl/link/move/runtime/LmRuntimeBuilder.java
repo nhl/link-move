@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime;
 
+import com.nhl.link.move.SyncToken;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
@@ -65,6 +66,7 @@ public class LmRuntimeBuilder {
     private final Map<String, ValueConverter> valueConverters;
     private Supplier<ResourceResolver> extractorResolverFactory;
 
+    @Deprecated(since = "3.0")
     private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
     private final Collection<LinkEtlAdapter> adapters;
@@ -116,6 +118,10 @@ public class LmRuntimeBuilder {
         return this;
     }
 
+    /**
+     * @deprecated as we are no longer planning to support {@link SyncToken}
+     */
+    @Deprecated(since = "3.0")
     public LmRuntimeBuilder withTokenManager(ITokenManager tokenManager) {
         this.tokenManager = tokenManager;
         return this;

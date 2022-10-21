@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * persistent store to preserve the last token position between the container
  * restarts.
  */
+@Deprecated(since = "3.0")
 public class InMemoryTokenManager implements ITokenManager {
 
     private Map<String, SyncToken> tokens;

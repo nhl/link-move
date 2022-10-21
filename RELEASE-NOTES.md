@@ -5,6 +5,7 @@
 * #201 Upgrade Jackson to 2.13.4
 * #204 Upgrade jackson-databind to 2.13.4.2
 * #205 Upgrade to DFLib 0.15
+* #206 Deprecate SyncToken
 
 ## Release 2.18
 

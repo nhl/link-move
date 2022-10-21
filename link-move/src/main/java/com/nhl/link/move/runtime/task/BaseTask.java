@@ -17,6 +17,7 @@ import java.util.Objects;
  */
 public abstract class BaseTask implements LmTask {
 
+    @Deprecated(since = "3.0")
     private ITokenManager tokenManager;
 
     public BaseTask(ITokenManager tokenManager) {
@@ -36,7 +37,7 @@ public abstract class BaseTask implements LmTask {
     @Override
     // tagged as final to help upgrading to 2.8 ... users must override "doRun" instead
     public final Execution run(Map<String, ?> params) {
-        return LmTask.super.run(params);
+        return doRun(params);
     }
 
     @Override
