@@ -31,9 +31,8 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
     private final int batchSize;
     private final Class<T> type;
     private final Expression targetFilter;
-
-    private DeleteSegmentProcessor<T> processor;
-    private ITargetCayenneService targetCayenneService;
+    private final DeleteSegmentProcessor<T> processor;
+    private final ITargetCayenneService targetCayenneService;
 
     public DeleteTask(
             ExtractorName extractorName,
@@ -57,7 +56,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
     @Override
     protected Execution doRun(Map<String, ?> params) {
 
-        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params);) {
+        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
 
             BatchProcessor<T> batchProcessor = createBatchProcessor(execution);
 
@@ -80,7 +79,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 
         return rows -> {
 
-            // executing in the select context..
+            // executing in the select context
             ObjectContext context = rows.get(0).getObjectContext();
             DataFrame df = DataFrame.newFrame(columns).columns(Series.forData(rows));
             processor.process(execution, new DeleteSegment<>(context, df));

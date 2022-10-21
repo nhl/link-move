@@ -27,11 +27,11 @@ public class CreateTask<T extends DataObject> extends BaseTask {
 
     private static final String EXEC_LABEL = CreateTask.class.getSimpleName();
 
-    private ExtractorName extractorName;
-    private int batchSize;
-    private ITargetCayenneService targetCayenneService;
-    private IExtractorService extractorService;
-    private CreateSegmentProcessor<T> processor;
+    private final ExtractorName extractorName;
+    private final int batchSize;
+    private final ITargetCayenneService targetCayenneService;
+    private final IExtractorService extractorService;
+    private final CreateSegmentProcessor<T> processor;
 
     public CreateTask(
             ExtractorName extractorName,
@@ -71,7 +71,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
         Index columns = toIndex(rowHeader);
-        return rows -> processor.process(execution, new CreateSegment<T>(context, rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
+        return rows -> processor.process(execution, new CreateSegment<>(context, rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
     }
 
     /**

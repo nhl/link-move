@@ -29,11 +29,11 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
     private static final String EXEC_LABEL = CreateOrUpdateTask.class.getSimpleName();
 
-    private ExtractorName extractorName;
-    private int batchSize;
-    private ITargetCayenneService targetCayenneService;
-    private IExtractorService extractorService;
-    private CreateOrUpdateSegmentProcessor<T> processor;
+    private final ExtractorName extractorName;
+    private final int batchSize;
+    private final ITargetCayenneService targetCayenneService;
+    private final IExtractorService extractorService;
+    private final CreateOrUpdateSegmentProcessor<T> processor;
 
     public CreateOrUpdateTask(
             ExtractorName extractorName,
@@ -59,10 +59,10 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             throw new NullPointerException("Null params");
         }
 
-        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params);) {
+        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
 
             try (RowReader data = getRowReader(execution, params)) {
-                BatchProcessor batchProcessor = createBatchProcessor(execution, data.getHeader());
+                BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
                 BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
             }
 
