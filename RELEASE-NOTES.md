@@ -4,7 +4,7 @@
 * #200 Upgrade to Cayenne 4.2
 * #201 Upgrade Jackson to 2.13.4
 * #204 Upgrade jackson-databind to 2.13.4.2
-* #205 Upgrade to DFLib 0.14
+* #205 Upgrade to DFLib 0.15
 
 ## Release 2.18
 
