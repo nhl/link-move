@@ -30,9 +30,10 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
     private final ITokenManager tokenManager;
     private final RowConverter rowConverter;
     private final MapperBuilder mapperBuilder;
-    private Mapper mapper;
     private final FkResolver fkResolver;
     private final ListenersBuilder stageListenersBuilder;
+
+    private Mapper mapper;
     private ExtractorName extractorName;
 
     public DefaultCreateOrUpdateBuilder(

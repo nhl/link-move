@@ -23,11 +23,12 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
     private final CreateTargetMerger<T> merger;
     private final FkResolver fkResolver;
     private final ITokenManager tokenManager;
-    private ExtractorName extractorName;
     private final ListenersBuilder stageListenersBuilder;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
     private final RowConverter rowConverter;
+
+    private ExtractorName extractorName;
 
     public DefaultCreateBuilder(
             CreateTargetMapper<T> mapper,

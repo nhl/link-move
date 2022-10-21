@@ -18,11 +18,11 @@ import com.nhl.link.move.valueconverter.ValueConverterFactory;
  */
 public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceKeysBuilder {
 
-    private IExtractorService extractorService;
-    private ITokenManager tokenManager;
-    private SourceMapperBuilder mapperBuilder;
-    private TargetEntity targetEntity;
-    private ValueConverterFactory valueConverterFactory;
+    private final IExtractorService extractorService;
+    private final ITokenManager tokenManager;
+    private final SourceMapperBuilder mapperBuilder;
+    private final TargetEntity targetEntity;
+    private final ValueConverterFactory valueConverterFactory;
 
     private ExtractorName sourceExtractorName;
 
