@@ -12,6 +12,32 @@ import org.junit.jupiter.api.Test;
 public class CreateIT extends LmIntegrationTest {
 
     @Test
+    public void testSync_MultiBatch() {
+
+        LmTask task = lmRuntime.service(ITaskService.class)
+                .create(Etl1t.class)
+                .batchSize(2)
+                .sourceExtractor("com/nhl/link/move/itest/etl1_to_etl1t_upper.xml")
+                .task();
+
+        srcEtl1().insertColumns("name", "age")
+                .values("a", 3)
+                .values("b", null)
+                .values("c", 6)
+                .values("d", 8)
+                .values("e", 12)
+                .exec();
+
+        Execution e1 = task.run();
+        new LmTaskTester()
+                .shouldExtract(5)
+                .shouldCreate(5)
+                .shouldUpdate(0)
+                .shouldDelete(0)
+                .test(e1);
+    }
+
+    @Test
     public void testSync() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
