@@ -5,6 +5,7 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
+import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
@@ -55,6 +56,7 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
 
     ListenersBuilder createListenersBuilder() {
         return new ListenersBuilder(
+                AfterTargetsExtracted.class,
                 AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
                 AfterSourceKeysExtracted.class,

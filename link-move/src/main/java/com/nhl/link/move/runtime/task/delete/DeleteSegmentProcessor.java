@@ -3,6 +3,7 @@ package com.nhl.link.move.runtime.task.delete;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
+import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.runtime.task.StageListener;
 import org.apache.cayenne.DataObject;
@@ -33,6 +34,8 @@ public class DeleteSegmentProcessor<T extends DataObject> {
     }
 
     public void process(Execution exec, DeleteSegment<T> segment) {
+        notifyListeners(AfterTargetsExtracted.class, exec, segment);
+
         mapTarget(exec, segment);
         extractSourceKeys(exec, segment);
         filterMissingTargets(exec, segment);

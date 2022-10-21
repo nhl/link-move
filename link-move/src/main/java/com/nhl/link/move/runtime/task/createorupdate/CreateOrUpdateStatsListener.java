@@ -26,7 +26,7 @@ public class CreateOrUpdateStatsListener {
     }
 
     @AfterTargetsMerged
-    public void targetCreated(Execution e, CreateOrUpdateSegment<?> segment) {
+    public void targetMerged(Execution e, CreateOrUpdateSegment<?> segment) {
         Series<Boolean> wasCreated = segment.getMerged().getColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
         int created = wasCreated.select(Exp.$bool("x")).size();
