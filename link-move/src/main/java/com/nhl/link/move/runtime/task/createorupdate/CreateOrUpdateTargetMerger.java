@@ -43,6 +43,6 @@ public class CreateOrUpdateTargetMerger<T extends DataObject> {
             }
         }
 
-        return df.filterRows(changed.toSeries());
+        return df.selectRows(changed.toSeries());
     }
 }
