@@ -5,7 +5,7 @@ import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
 
 /**
  * A listener that collects task stats and stores them in the Execution's {@link ExecutionStats} object.
@@ -22,11 +22,12 @@ public class CreateOrUpdateStatsListener {
 
     @AfterSourceRowsExtracted
     public void sourceRowsExtracted(Execution e, CreateOrUpdateSegment<?> segment) {
+        e.getLogger().batchStarted(e);
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
-    @AfterTargetsMerged
-    public void targetMerged(Execution e, CreateOrUpdateSegment<?> segment) {
+    @AfterTargetsCommitted
+    public void targetsCommitted(Execution e, CreateOrUpdateSegment<?> segment) {
         Series<Boolean> wasCreated = segment.getMerged().getColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
         int created = wasCreated.select(Exp.$bool("x")).size();
@@ -34,5 +35,7 @@ public class CreateOrUpdateStatsListener {
 
         e.getStats().incrementCreated(created);
         e.getStats().incrementUpdated(updated);
+
+        e.getLogger().createOrUpdateBatchFinished(e, segment.getSourceRows().height(), created, updated);
     }
 }

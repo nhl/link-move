@@ -1,6 +1,8 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,16 +17,18 @@ public class Execution implements AutoCloseable {
     protected final ExtractorName extractorName;
     protected final Map<String, ?> parameters;
     protected final Map<String, Object> attributes;
+    protected final LmLogger logger;
     protected final ExecutionStats stats;
 
     /**
      * @since 3.0
      */
-    public Execution(String taskName, ExtractorName extractorName, Map<String, ?> params) {
+    public Execution(String taskName, ExtractorName extractorName, Map<String, ?> params, LmLogger logger) {
         this.taskName = taskName;
         this.extractorName = extractorName;
         this.parameters = params;
         this.attributes = new ConcurrentHashMap<>();
+        this.logger = logger;
         this.stats = new ExecutionStats().executionStarted();
     }
 
@@ -109,7 +113,7 @@ public class Execution implements AutoCloseable {
      * Creates task execution report as a map of labels vs. values.
      *
      * @deprecated since 3.0. Execution reports are used primarily for logging, which is now handled by
-     * {@link com.nhl.link.move.runtime.log.LmLogger}, so this API is no longer usefu.
+     * {@link com.nhl.link.move.log.LmLogger}, so this API is no longer useful.
      */
     @Deprecated(since = "3.0")
     public Map<String, Object> createReport() {
@@ -163,6 +167,13 @@ public class Execution implements AutoCloseable {
      */
     public Map<String, ?> getParameters() {
         return parameters;
+    }
+
+    /**
+     * @since 3.0
+     */
+    public LmLogger getLogger() {
+        return logger;
     }
 
     public ExecutionStats getStats() {

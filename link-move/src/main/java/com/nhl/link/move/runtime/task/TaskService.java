@@ -5,6 +5,7 @@ import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.SourceKeysBuilder;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
@@ -28,15 +29,16 @@ import org.apache.cayenne.map.ObjEntity;
 
 public class TaskService implements ITaskService {
 
-    private IExtractorService extractorService;
-    private ITargetCayenneService targetCayenneService;
+    private final IExtractorService extractorService;
+    private final ITargetCayenneService targetCayenneService;
 
     @Deprecated(since = "3.0")
-    private ITokenManager tokenManager;
-    private IKeyAdapterFactory keyAdapterFactory;
-    private TargetEntityMap targetEntityMap;
-    private ITargetPropertyWriterService writerService;
-    private ValueConverterFactory valueConverterFactory;
+    private final ITokenManager tokenManager;
+    private final IKeyAdapterFactory keyAdapterFactory;
+    private final TargetEntityMap targetEntityMap;
+    private final ITargetPropertyWriterService writerService;
+    private final ValueConverterFactory valueConverterFactory;
+    private final LmLogger logger;
 
     public TaskService(
             @Inject IExtractorService extractorService,
@@ -45,7 +47,8 @@ public class TaskService implements ITaskService {
             @Inject IKeyAdapterFactory keyAdapterFactory,
             @Inject TargetEntityMap targetEntityMap,
             @Inject ITargetPropertyWriterService writerService,
-            @Inject ValueConverterFactory valueConverterFactory) {
+            @Inject ValueConverterFactory valueConverterFactory,
+            @Inject LmLogger logger) {
 
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
@@ -54,6 +57,7 @@ public class TaskService implements ITaskService {
         this.targetEntityMap = targetEntityMap;
         this.writerService = writerService;
         this.valueConverterFactory = valueConverterFactory;
+        this.logger = logger;
     }
 
     @Override
@@ -73,7 +77,8 @@ public class TaskService implements ITaskService {
                 rowConverter,
                 targetCayenneService,
                 extractorService,
-                tokenManager);
+                tokenManager,
+                logger);
     }
 
     @Override
@@ -94,7 +99,8 @@ public class TaskService implements ITaskService {
                 targetCayenneService,
                 extractorService,
                 tokenManager,
-                mapperBuilder);
+                mapperBuilder,
+                logger);
     }
 
     protected <T extends DataObject> ObjEntity lookupEntity(Class<T> type) {
@@ -113,7 +119,8 @@ public class TaskService implements ITaskService {
                 extractorService,
                 tokenManager,
                 keyAdapterFactory,
-                valueConverterFactory);
+                valueConverterFactory,
+                logger);
     }
 
     @Override
@@ -124,7 +131,8 @@ public class TaskService implements ITaskService {
                 extractorService,
                 tokenManager,
                 keyAdapterFactory,
-                valueConverterFactory);
+                valueConverterFactory,
+                logger);
     }
 
     @Override
@@ -143,7 +151,8 @@ public class TaskService implements ITaskService {
                 targetCayenneService,
                 tokenManager,
                 this,
-                mapperBuilder);
+                mapperBuilder,
+                logger);
     }
 
 }

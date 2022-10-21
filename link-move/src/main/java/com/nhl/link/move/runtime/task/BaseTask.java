@@ -6,6 +6,8 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.SyncToken;
+import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
@@ -19,11 +21,16 @@ import java.util.Objects;
  */
 public abstract class BaseTask implements LmTask {
 
-    @Deprecated(since = "3.0")
-    private ITokenManager tokenManager;
+    private final LmLogger logger;
 
-    public BaseTask(ITokenManager tokenManager) {
+    @Deprecated(since = "3.0")
+    private final ITokenManager tokenManager;
+    private final String label;
+
+    public BaseTask(ITokenManager tokenManager, LmLogger logger) {
         this.tokenManager = tokenManager;
+        this.logger = logger;
+        this.label = createLabel();
     }
 
     /**
@@ -41,6 +48,14 @@ public abstract class BaseTask implements LmTask {
         }
 
         return Index.forLabels(columns);
+    }
+
+    protected String createLabel() {
+        return getClass().getSimpleName();
+    }
+
+    protected Execution createExecution(ExtractorName extractorName, Map<String, ?> params) {
+        return new Execution(label, extractorName, params, logger);
     }
 
     @Override

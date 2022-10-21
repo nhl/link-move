@@ -2,27 +2,30 @@ package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.SourceKeysBuilder;
+import com.nhl.link.move.annotation.AfterSourceKeysCollected;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
-import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 
+import java.lang.annotation.Annotation;
+
 /**
  * @since 1.3
  */
-public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceKeysBuilder {
+public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysBuilder> implements SourceKeysBuilder {
 
     private final IExtractorService extractorService;
     private final ITokenManager tokenManager;
     private final SourceMapperBuilder mapperBuilder;
-    private final ListenersBuilder stageListenersBuilder;
+
     private final TargetEntity targetEntity;
     private final ValueConverterFactory valueConverterFactory;
 
@@ -33,21 +36,24 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
             IExtractorService extractorService,
             ITokenManager tokenManager,
             IKeyAdapterFactory keyAdapterFactory,
-            ValueConverterFactory valueConverterFactory) {
+            ValueConverterFactory valueConverterFactory,
+            LmLogger logger) {
+
+        super(logger);
 
         this.extractorService = extractorService;
         this.tokenManager = tokenManager;
         this.mapperBuilder = new SourceMapperBuilder(targetEntity, keyAdapterFactory);
         this.targetEntity = targetEntity;
         this.valueConverterFactory = valueConverterFactory;
-        this.stageListenersBuilder = createListenersBuilder();
 
         // always add stats listener
         stageListener(SourceKeysStatsListener.instance());
     }
 
-    ListenersBuilder createListenersBuilder() {
-        return new ListenersBuilder(AfterSourceRowsExtracted.class);
+    @Override
+    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
+        return new Class[]{AfterSourceRowsExtracted.class, AfterSourceKeysCollected.class};
     }
 
     @Override
@@ -57,25 +63,19 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
             throw new IllegalStateException("Required 'extractorName' is not set");
         }
 
-        return new SourceKeysTask(sourceExtractorName, batchSize, extractorService, tokenManager, createProcessor());
+        return new SourceKeysTask(sourceExtractorName, batchSize, extractorService, tokenManager, createProcessor(), logger);
     }
 
     private SourceKeysSegmentProcessor createProcessor() {
         Mapper mapper = mapperBuilder.build();
         SourceKeysCollector sourceMapper = new SourceKeysCollector(mapper);
         RowConverter converter = new RowConverter(targetEntity, valueConverterFactory);
-        return new SourceKeysSegmentProcessor(converter, sourceMapper, stageListenersBuilder.getListeners());
+        return new SourceKeysSegmentProcessor(converter, sourceMapper, getListeners());
     }
 
     @Override
     public SourceKeysBuilder sourceExtractor(ExtractorName extractorName) {
         sourceExtractorName = extractorName;
-        return this;
-    }
-
-    @Override
-    public SourceKeysBuilder batchSize(int batchSize) {
-        this.batchSize = batchSize;
         return this;
     }
 
@@ -88,12 +88,6 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder implements SourceK
     @Override
     public SourceKeysBuilder matchBy(String... columns) {
         mapperBuilder.matchBy(columns);
-        return this;
-    }
-
-    @Override
-    public SourceKeysBuilder stageListener(Object listener) {
-        stageListenersBuilder.addListener(listener);
         return this;
     }
 }

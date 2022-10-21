@@ -1,5 +1,6 @@
 package com.nhl.link.move.itest.runtime.task.createorupdate;
 
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
@@ -31,7 +32,8 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
                 new TargetCayenneService(targetCayenne.getRuntime()),
                 mock(IExtractorService.class),
                 mock(ITokenManager.class),
-                mock(MapperBuilder.class));
+                mock(MapperBuilder.class),
+                mock(LmLogger.class));
     }
 
     @Test

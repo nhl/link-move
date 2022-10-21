@@ -6,6 +6,7 @@ import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
@@ -24,8 +25,6 @@ import java.util.Objects;
  */
 public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
-    private static final String EXEC_LABEL = CreateOrUpdateTask.class.getSimpleName();
-
     private final ExtractorName extractorName;
     private final int batchSize;
     private final ITargetCayenneService targetCayenneService;
@@ -38,9 +37,10 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            CreateOrUpdateSegmentProcessor<T> processor) {
+            CreateOrUpdateSegmentProcessor<T> processor,
+            LmLogger logger) {
 
-        super(tokenManager);
+        super(tokenManager, logger);
 
         this.extractorName = extractorName;
         this.batchSize = batchSize;
@@ -54,7 +54,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
         Objects.requireNonNull(params, "Null params");
 
-        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
+        try (Execution execution = createExecution(extractorName, params)) {
 
             try (RowReader data = getRowReader(params)) {
                 BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());

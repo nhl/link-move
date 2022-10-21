@@ -1,18 +1,20 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 public class ExecutionTest {
 
     @Test
     public void testToString() {
-        Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5));
+        Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class));
         assertEquals("{\"created\":0,\"deleted\":0,\"extracted\":0,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
                 "\"startedOn\":\"" + execution.getStats().getStartedOn() + "\",\"status\":\"in progress\"," +
                 "\"task\":\"xsync\",\"updated\":0}", execution.toString());
@@ -33,7 +35,7 @@ public class ExecutionTest {
     @Test
     public void testCreateReport() {
 
-        Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5));
+        Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class));
 
         assertEquals(Map.of(
                         "Task", "xsync:l.n",
@@ -70,7 +72,7 @@ public class ExecutionTest {
 
     @Test
     public void testAttribute() {
-        try (Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of())) {
+        try (Execution execution = new Execution("xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class))) {
       
             assertNull(execution.getAttribute("a"));
 

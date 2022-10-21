@@ -1,6 +1,7 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.annotation.AfterSourceKeysCollected;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
@@ -44,6 +45,7 @@ public class SourceKeysSegmentProcessor {
         @SuppressWarnings("unchecked")
         Set<Object> keys = (Set<Object>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
         mapper.collectSourceKeys(keys, segment.getSources());
+        notifyListeners(AfterSourceKeysCollected.class, exec, segment);
     }
 
     private void notifyListeners(Class<? extends Annotation> type, Execution exec, SourceKeysSegment segment) {

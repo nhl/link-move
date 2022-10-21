@@ -1,6 +1,7 @@
 package com.nhl.link.move.runtime.task;
 
 import com.nhl.link.move.DeleteBuilder;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
@@ -48,7 +49,8 @@ public class TaskServiceTest {
 				keyAdapterFactory,
 				mockPathNormalizer,
 				writerService,
-				mock(ValueConverterFactory.class));
+				mock(ValueConverterFactory.class),
+				mock(LmLogger.class));
 	}
 
 	@Test

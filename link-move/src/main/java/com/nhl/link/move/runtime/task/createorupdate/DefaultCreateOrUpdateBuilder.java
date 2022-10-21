@@ -2,26 +2,32 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.annotation.*;
+import com.nhl.link.move.annotation.AfterFksResolved;
+import com.nhl.link.move.annotation.AfterSourceRowsConverted;
+import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
+import com.nhl.link.move.annotation.AfterSourcesMapped;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMatched;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
-import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.property.Property;
 
+import java.lang.annotation.Annotation;
+
 /**
- * A builder of an ETL task that matches source data with target data based on a
- * certain unique attribute on both sides.
+ * A builder of an ETL task that matches source data with target data based on a certain unique attribute on both sides.
  */
-public class DefaultCreateOrUpdateBuilder<T extends DataObject>
-        extends BaseTaskBuilder
-        implements CreateOrUpdateBuilder<T> {
+public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder<T>> implements CreateOrUpdateBuilder<T> {
 
     private final Class<T> type;
     private final CreateOrUpdateTargetMerger<T> merger;
@@ -31,7 +37,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
     private final RowConverter rowConverter;
     private final MapperBuilder mapperBuilder;
     private final FkResolver fkResolver;
-    private final ListenersBuilder stageListenersBuilder;
 
     private Mapper mapper;
     private ExtractorName extractorName;
@@ -44,7 +49,10 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            MapperBuilder mapperBuilder) {
+            MapperBuilder mapperBuilder,
+            LmLogger logger) {
+
+        super(logger);
 
         this.type = type;
         this.merger = merger;
@@ -54,22 +62,21 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
         this.tokenManager = tokenManager;
         this.rowConverter = rowConverter;
         this.mapperBuilder = mapperBuilder;
-        this.stageListenersBuilder = createListenersBuilder();
 
         // always add stats listener..
         stageListener(CreateOrUpdateStatsListener.instance());
     }
 
-    ListenersBuilder createListenersBuilder() {
-        return new ListenersBuilder(
-                AfterSourceRowsExtracted.class,
+    @Override
+    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
+        return new Class[]{AfterSourceRowsExtracted.class,
                 AfterSourceRowsConverted.class,
                 AfterSourcesMapped.class,
                 AfterTargetsMatched.class,
                 AfterTargetsMapped.class,
                 AfterFksResolved.class,
                 AfterTargetsMerged.class,
-                AfterTargetsCommitted.class);
+                AfterTargetsCommitted.class};
     }
 
     @Override
@@ -112,21 +119,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
     }
 
     @Override
-    public DefaultCreateOrUpdateBuilder<T> batchSize(int batchSize) {
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    /**
-     * @since 1.3
-     */
-    @Override
-    public CreateOrUpdateBuilder<T> stageListener(Object listener) {
-        stageListenersBuilder.addListener(listener);
-        return this;
-    }
-
-    @Override
     public LmTask task() throws IllegalStateException {
 
         if (extractorName == null) {
@@ -139,7 +131,8 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
                 targetCayenneService,
                 extractorService,
                 tokenManager,
-                createProcessor());
+                createProcessor(),
+                logger);
     }
 
     private CreateOrUpdateSegmentProcessor<T> createProcessor() {
@@ -157,6 +150,6 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject>
                 targetMapper,
                 merger,
                 fkResolver,
-                stageListenersBuilder.getListeners());
+                getListeners());
     }
 }

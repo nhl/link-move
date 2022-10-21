@@ -7,6 +7,7 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -26,8 +27,6 @@ import java.util.Objects;
  */
 public class DeleteTask<T extends DataObject> extends BaseTask {
 
-    private static final String EXEC_LABEL = DeleteTask.class.getSimpleName();
-
     private final ExtractorName extractorName;
     private final int batchSize;
     private final Class<T> type;
@@ -42,9 +41,10 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
-            DeleteSegmentProcessor<T> processor) {
+            DeleteSegmentProcessor<T> processor,
+            LmLogger logger) {
 
-        super(tokenManager);
+        super(tokenManager, logger);
 
         this.extractorName = extractorName;
         this.batchSize = batchSize;
@@ -59,7 +59,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 
         Objects.requireNonNull(params, "Null params");
 
-        try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
+        try (Execution execution = createExecution(extractorName, params)) {
 
             BatchProcessor<T> batchProcessor = createBatchProcessor(execution);
 

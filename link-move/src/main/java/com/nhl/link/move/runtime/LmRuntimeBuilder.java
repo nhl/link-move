@@ -4,6 +4,8 @@ import com.nhl.link.move.SyncToken;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
+import com.nhl.link.move.log.LmLogger;
+import com.nhl.link.move.log.Slf4jLmLogger;
 import com.nhl.link.move.resource.ClasspathResourceResolver;
 import com.nhl.link.move.resource.FolderResourceResolver;
 import com.nhl.link.move.resource.ResourceResolver;
@@ -246,6 +248,7 @@ public class LmRuntimeBuilder {
             bindValueConverters(binder);
             bindCayenneService(binder);
 
+            binder.bind(LmLogger.class).to(Slf4jLmLogger.class);
             binder.bind(ResourceResolver.class).toInstance(extractorResolverFactory.get());
             binder.bind(ValueConverterFactory.class).to(ValueConverterFactory.class);
             binder.bind(IExtractorService.class).to(ExtractorService.class);

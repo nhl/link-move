@@ -1,17 +1,13 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.task.ITaskService;
-import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
-import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
@@ -22,12 +18,9 @@ import org.apache.cayenne.map.ObjEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -66,7 +59,8 @@ public class DefaultDeleteBuilderTest {
 								mock(IExtractorService.class),
 								mock(ITokenManager.class),
 								keyAdapterFactory,
-                                mock(ValueConverterFactory.class)));
+                                mock(ValueConverterFactory.class),
+								mock(LmLogger.class)));
 
 		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockTargetEntity, keyAdapterFactory);
 
@@ -74,7 +68,8 @@ public class DefaultDeleteBuilderTest {
 				cayenneService,
 				mock(ITokenManager.class),
 				taskService,
-                mapperBuilder);
+                mapperBuilder,
+				mock(LmLogger.class));
 	}
 
 	@Test
@@ -82,61 +77,4 @@ public class DefaultDeleteBuilderTest {
 		assertThrows(IllegalStateException.class, () -> builder.task());
 	}
 
-
-	@Test
-	public void testCreateListenersBuilder() {
-
-		ListenersBuilder listenersBuilder = builder.createListenersBuilder();
-
-		DeleteListener1 l1 = new DeleteListener1();
-		DeleteListener2 l2 = new DeleteListener2();
-		NotAListener l3 = new NotAListener();
-
-		listenersBuilder.addListener(l1);
-		listenersBuilder.addListener(l2);
-		listenersBuilder.addListener(l3);
-
-		Map<Class<? extends Annotation>, List<StageListener>> listeners = listenersBuilder.getListeners();
-
-		assertNotNull(listeners.get(AfterTargetsMapped.class));
-		assertNotNull(listeners.get(AfterSourceKeysExtracted.class));
-		assertNotNull(listeners.get(AfterMissingTargetsFiltered.class));
-		
-		assertEquals(1, listeners.get(AfterTargetsMapped.class).size());
-		assertEquals(2, listeners.get(AfterSourceKeysExtracted.class).size());
-		assertEquals(1, listeners.get(AfterMissingTargetsFiltered.class).size());
-	}
-
-	public static class DeleteListener1 {
-
-		@AfterTargetsMapped
-		public void afterTargetsMapped(DeleteSegment<?> s) {
-
-		}
-
-		@AfterSourceKeysExtracted
-		public void afterSourceKeysExtracted(DeleteSegment<?> s) {
-
-		}
-	}
-
-	public class DeleteListener2 {
-
-		@AfterMissingTargetsFiltered
-		public void afterMissingTargetsFiltered(DeleteSegment<?> s) {
-
-		}
-		
-		@AfterSourceKeysExtracted
-		public void afterSourceKeysExtracted(DeleteSegment<?> s) {
-
-		}
-	}
-
-	public class NotAListener {
-
-		public void someMethod(DeleteSegment<?> s) {
-
-		}
-	}
 }

@@ -7,6 +7,7 @@ import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
@@ -23,8 +24,6 @@ import java.util.Objects;
  */
 public class SourceKeysTask extends BaseTask {
 
-    private static final String EXEC_LABEL = SourceKeysTask.class.getSimpleName();
-
     public static final String RESULT_KEY = SourceKeysTask.class.getName() + ".RESULT";
 
     private final int batchSize;
@@ -37,9 +36,10 @@ public class SourceKeysTask extends BaseTask {
             int batchSize,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            SourceKeysSegmentProcessor processor) {
+            SourceKeysSegmentProcessor processor,
+            LmLogger logger) {
 
-        super(tokenManager);
+        super(tokenManager, logger);
 
         this.sourceExtractorName = sourceExtractorName;
         this.batchSize = batchSize;
@@ -52,7 +52,7 @@ public class SourceKeysTask extends BaseTask {
 
         Objects.requireNonNull(params, "Null params");
 
-        try (Execution execution = new Execution(EXEC_LABEL, sourceExtractorName, params)) {
+        try (Execution execution = createExecution(sourceExtractorName, params)) {
 
             execution.setAttribute(RESULT_KEY, new HashSet<>());
 

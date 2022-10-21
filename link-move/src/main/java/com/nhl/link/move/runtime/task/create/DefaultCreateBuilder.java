@@ -2,28 +2,34 @@ package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.CreateBuilder;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.annotation.*;
+import com.nhl.link.move.annotation.AfterFksResolved;
+import com.nhl.link.move.annotation.AfterSourceRowsConverted;
+import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
-import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 
+import java.lang.annotation.Annotation;
+
 /**
  * @param <T>
  * @since 2.6
  */
-public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder implements CreateBuilder<T> {
+public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateBuilder<T>> implements CreateBuilder<T> {
 
     private final CreateTargetMapper<T> mapper;
     private final CreateTargetMerger<T> merger;
     private final FkResolver fkResolver;
     private final ITokenManager tokenManager;
-    private final ListenersBuilder stageListenersBuilder;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
     private final RowConverter rowConverter;
@@ -37,8 +43,10 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
-            ITokenManager tokenManager) {
+            ITokenManager tokenManager,
+            LmLogger logger) {
 
+        super(logger);
         this.mapper = mapper;
         this.merger = merger;
         this.fkResolver = fkResolver;
@@ -46,37 +54,25 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
         this.rowConverter = rowConverter;
-        this.stageListenersBuilder = createListenersBuilder();
 
         // always add stats listener
         stageListener(CreateStatsListener.instance());
     }
 
-    ListenersBuilder createListenersBuilder() {
-        return new ListenersBuilder(
+    @Override
+    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
+        return new Class[]{
                 AfterSourceRowsExtracted.class,
                 AfterSourceRowsConverted.class,
                 AfterTargetsMapped.class,
                 AfterFksResolved.class,
                 AfterTargetsMerged.class,
-                AfterTargetsCommitted.class);
+                AfterTargetsCommitted.class};
     }
 
     @Override
     public CreateBuilder<T> sourceExtractor(String location, String name) {
         this.extractorName = ExtractorName.create(location, name);
-        return this;
-    }
-
-    @Override
-    public CreateBuilder<T> batchSize(int batchSize) {
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    @Override
-    public CreateBuilder<T> stageListener(Object listener) {
-        stageListenersBuilder.addListener(listener);
         return this;
     }
 
@@ -92,7 +88,8 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
                 targetCayenneService,
                 extractorService,
                 tokenManager,
-                createProcessor());
+                createProcessor(),
+                logger);
     }
 
     private CreateSegmentProcessor<T> createProcessor() {
@@ -101,6 +98,6 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder 
                 mapper,
                 merger,
                 fkResolver,
-                stageListenersBuilder.getListeners());
+                getListeners());
     }
 }

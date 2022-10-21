@@ -9,28 +9,29 @@ import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ITaskService;
-import com.nhl.link.move.runtime.task.ListenersBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
 
+import java.lang.annotation.Annotation;
+
 /**
  * @since 1.3
  */
-public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder implements DeleteBuilder<T> {
+public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultDeleteBuilder<T>> implements DeleteBuilder<T> {
 
     private final ITaskService taskService;
     private final ITokenManager tokenManager;
     private final ITargetCayenneService targetCayenneService;
     private final Class<T> type;
     private final MapperBuilder mapperBuilder;
-    private final ListenersBuilder listenersBuilder;
 
     private Expression targetFilter;
     private ExtractorName extractorName;
@@ -41,40 +42,31 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
             ITaskService taskService,
-            MapperBuilder mapperBuilder) {
+            MapperBuilder mapperBuilder,
+            LmLogger logger) {
+
+        super(logger);
 
         this.tokenManager = tokenManager;
         this.taskService = taskService;
         this.targetCayenneService = targetCayenneService;
         this.type = type;
-
         this.mapperBuilder = mapperBuilder;
-        this.listenersBuilder = createListenersBuilder();
 
         // always add stats listener
         stageListener(DeleteStatsListener.instance());
     }
 
-    ListenersBuilder createListenersBuilder() {
-        return new ListenersBuilder(
+    @Override
+    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
+        return new Class[]{
                 AfterTargetsExtracted.class,
                 AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
                 AfterSourceKeysExtracted.class,
                 AfterMissingTargetsFiltered.class,
-                AfterTargetsCommitted.class);
-    }
-
-    @Override
-    public DefaultDeleteBuilder<T> stageListener(Object listener) {
-        listenersBuilder.addListener(listener);
-        return this;
-    }
-
-    @Override
-    public DefaultDeleteBuilder<T> batchSize(int batchSize) {
-        this.batchSize = batchSize;
-        return this;
+                AfterTargetsCommitted.class
+        };
     }
 
     @Override
@@ -123,7 +115,15 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
             throw new IllegalStateException("Required 'sourceMatchExtractor' is not set");
         }
 
-        return new DeleteTask<>(extractorName, batchSize, type, targetFilter, targetCayenneService, tokenManager, createProcessor());
+        return new DeleteTask<>(
+                extractorName,
+                batchSize,
+                type,
+                targetFilter,
+                targetCayenneService,
+                tokenManager,
+                createProcessor(),
+                logger);
     }
 
     private DeleteSegmentProcessor<T> createProcessor() {
@@ -141,6 +141,6 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
                 sourceKeysExtractor,
                 sourceMatcher,
                 deleter,
-                listenersBuilder.getListeners());
+                getListeners());
     }
 }
