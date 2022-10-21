@@ -1,13 +1,13 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.dflib.row.RowProxy;
+import com.nhl.dflib.Exp;
+import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 
 /**
- * A listener that collects task stats and stores them in the Execution's
- * {@link ExecutionStats} object.
+ * A listener that collects task stats and stores them in the Execution's {@link ExecutionStats} object.
  *
  * @since 1.3
  */
@@ -21,17 +21,12 @@ public class CreateOrUpdateStatsListener {
 
     @AfterTargetsMerged
     public void targetCreated(Execution e, CreateOrUpdateSegment<?> segment) {
-        ExecutionStats stats = e.getStats();
-        segment.getMerged().forEach(r -> updateStats(stats, r));
-    }
+        Series<Boolean> wasCreated = segment.getMerged().getColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
-    private void updateStats(ExecutionStats stats, RowProxy row) {
+        int created = wasCreated.select(Exp.$bool("x")).size();
+        int updated = wasCreated.size() - created;
 
-        boolean created = (boolean) row.get(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
-        if (created) {
-            stats.incrementCreated(1);
-        } else {
-            stats.incrementUpdated(1);
-        }
+        e.getStats().incrementCreated(created);
+        e.getStats().incrementUpdated(updated);
     }
 }
