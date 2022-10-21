@@ -16,6 +16,7 @@ import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A task that reads streamed source data and creates/updates records in a
@@ -53,9 +54,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
     @Override
     protected Execution doRun(Map<String, ?> params) {
 
-        if (params == null) {
-            throw new NullPointerException("Null params");
-        }
+        Objects.requireNonNull(params, "Null params");
 
         try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
 

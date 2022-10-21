@@ -33,9 +33,6 @@ public class DeleteSegmentProcessor<T extends DataObject> {
     }
 
     public void process(Execution exec, DeleteSegment<T> segment) {
-
-        // execute delete stages
-
         mapTarget(exec, segment);
         extractSourceKeys(exec, segment);
         filterMissingTargets(exec, segment);

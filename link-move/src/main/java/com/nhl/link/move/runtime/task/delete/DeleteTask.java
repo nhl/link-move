@@ -17,6 +17,7 @@ import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.query.ObjectSelect;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A task that allows to delete target objects not present in the source.
@@ -55,6 +56,8 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 
     @Override
     protected Execution doRun(Map<String, ?> params) {
+
+        Objects.requireNonNull(params, "Null params");
 
         try (Execution execution = new Execution(EXEC_LABEL, extractorName, params)) {
 
