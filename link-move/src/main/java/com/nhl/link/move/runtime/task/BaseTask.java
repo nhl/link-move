@@ -6,6 +6,8 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.SyncToken;
+import com.nhl.link.move.batch.BatchProcessor;
+import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
@@ -30,6 +32,7 @@ public abstract class BaseTask implements LmTask {
     private final ITokenManager tokenManager;
     private final String label;
     private final ExtractorName extractorName;
+    private final int batchSize;
 
     /**
      * @since 3.0
@@ -48,10 +51,11 @@ public abstract class BaseTask implements LmTask {
         return Index.forLabels(columns);
     }
 
-    public BaseTask(ExtractorName extractorName, ITokenManager tokenManager, LmLogger logger) {
+    public BaseTask(ExtractorName extractorName, int batchSize, ITokenManager tokenManager, LmLogger logger) {
+        this.extractorName = extractorName;
+        this.batchSize = batchSize;
         this.tokenManager = tokenManager;
         this.logger = logger;
-        this.extractorName = extractorName;
         this.label = createLabel();
     }
 
@@ -89,6 +93,10 @@ public abstract class BaseTask implements LmTask {
         // inherit ID from parent
         long id = parentExec != null ? parentExec.getId() : idGenerator.getAndIncrement();
         return new Execution(id, label, extractorName, params, logger);
+    }
+
+    protected <S> BatchRunner<S> createBatchRunner(BatchProcessor<S> processor) {
+        return BatchRunner.create(processor).withBatchSize(batchSize);
     }
 
     /**

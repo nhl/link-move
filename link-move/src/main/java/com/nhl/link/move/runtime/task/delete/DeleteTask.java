@@ -5,7 +5,6 @@ import com.nhl.dflib.Index;
 import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.batch.BatchProcessor;
-import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -24,7 +23,6 @@ import org.apache.cayenne.query.ObjectSelect;
  */
 public class DeleteTask<T extends DataObject> extends BaseTask {
 
-    private final int batchSize;
     private final Class<T> type;
     private final Expression targetFilter;
     private final DeleteSegmentProcessor<T> processor;
@@ -40,9 +38,8 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             DeleteSegmentProcessor<T> processor,
             LmLogger logger) {
 
-        super(extractorName, tokenManager, logger);
+        super(extractorName, batchSize, tokenManager, logger);
 
-        this.batchSize = batchSize;
         this.type = type;
         this.targetFilter = targetFilter;
         this.targetCayenneService = targetCayenneService;
@@ -60,7 +57,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
         BatchProcessor<T> batchProcessor = createBatchProcessor(exec);
 
         try (ResultIterator<T> data = createTargetSelect()) {
-            BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
+            createBatchRunner(batchProcessor).run(data);
         }
     }
 

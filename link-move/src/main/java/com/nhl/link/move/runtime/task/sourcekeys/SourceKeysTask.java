@@ -5,7 +5,6 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
-import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
@@ -24,7 +23,6 @@ public class SourceKeysTask extends BaseTask {
 
     public static final String RESULT_KEY = SourceKeysTask.class.getName() + ".RESULT";
 
-    private final int batchSize;
     private final IExtractorService extractorService;
     private final SourceKeysSegmentProcessor processor;
 
@@ -36,9 +34,8 @@ public class SourceKeysTask extends BaseTask {
             SourceKeysSegmentProcessor processor,
             LmLogger logger) {
 
-        super(sourceExtractorName, tokenManager, logger);
+        super(sourceExtractorName, batchSize, tokenManager, logger);
 
-        this.batchSize = batchSize;
         this.extractorService = extractorService;
         this.processor = processor;
     }
@@ -55,7 +52,7 @@ public class SourceKeysTask extends BaseTask {
 
         try (RowReader data = getRowReader(exec)) {
             BatchProcessor<Object[]> batchProcessor = createBatchProcessor(exec, data.getHeader());
-            BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
+            createBatchRunner(batchProcessor).run(data);
         }
     }
 
@@ -71,4 +68,5 @@ public class SourceKeysTask extends BaseTask {
     protected RowReader getRowReader(Execution execution) {
         return extractorService.getExtractor(execution.getExtractorName()).getReader(execution.getParameters());
     }
+
 }

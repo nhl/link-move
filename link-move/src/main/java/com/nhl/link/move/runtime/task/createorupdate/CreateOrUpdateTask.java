@@ -4,7 +4,6 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.batch.BatchProcessor;
-import com.nhl.link.move.batch.BatchRunner;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -22,7 +21,6 @@ import org.apache.cayenne.ObjectContext;
  */
 public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
-    private final int batchSize;
     private final ITargetCayenneService targetCayenneService;
     private final IExtractorService extractorService;
     private final CreateOrUpdateSegmentProcessor<T> processor;
@@ -36,9 +34,8 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             CreateOrUpdateSegmentProcessor<T> processor,
             LmLogger logger) {
 
-        super(extractorName, tokenManager, logger);
+        super(extractorName, batchSize, tokenManager, logger);
 
-        this.batchSize = batchSize;
         this.targetCayenneService = targetCayenneService;
         this.extractorService = extractorService;
         this.processor = processor;
@@ -54,7 +51,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
         try (RowReader data = getRowReader(exec)) {
             BatchProcessor<Object[]> batchProcessor = createBatchProcessor(exec, data.getHeader());
-            BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
+            createBatchRunner(batchProcessor).run(data);
         }
     }
 
