@@ -13,8 +13,6 @@ import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * An {@link LmTask} that extracts all the keys from the source data store. The
@@ -28,7 +26,6 @@ public class SourceKeysTask extends BaseTask {
 
     private final int batchSize;
     private final IExtractorService extractorService;
-    private final ExtractorName sourceExtractorName;
     private final SourceKeysSegmentProcessor processor;
 
     public SourceKeysTask(
@@ -39,9 +36,8 @@ public class SourceKeysTask extends BaseTask {
             SourceKeysSegmentProcessor processor,
             LmLogger logger) {
 
-        super(tokenManager, logger);
+        super(sourceExtractorName, tokenManager, logger);
 
-        this.sourceExtractorName = sourceExtractorName;
         this.batchSize = batchSize;
         this.extractorService = extractorService;
         this.processor = processor;
@@ -53,20 +49,13 @@ public class SourceKeysTask extends BaseTask {
     }
 
     @Override
-    protected Execution doRun(Map<String, ?> params) {
+    protected void doRun(Execution exec) {
 
-        Objects.requireNonNull(params, "Null params");
+        exec.setAttribute(RESULT_KEY, new HashSet<>());
 
-        try (Execution execution = createExecution(sourceExtractorName, params)) {
-
-            execution.setAttribute(RESULT_KEY, new HashSet<>());
-
-            try (RowReader data = getRowReader(params)) {
-                BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
-                BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
-            }
-
-            return execution;
+        try (RowReader data = getRowReader(exec)) {
+            BatchProcessor<Object[]> batchProcessor = createBatchProcessor(exec, data.getHeader());
+            BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
         }
     }
 
@@ -79,7 +68,7 @@ public class SourceKeysTask extends BaseTask {
     /**
      * Returns a RowReader obtained from a named extractor and wrapped in a read stats counter.
      */
-    protected RowReader getRowReader(Map<String, ?> extractorParams) {
-        return extractorService.getExtractor(sourceExtractorName).getReader(extractorParams);
+    protected RowReader getRowReader(Execution execution) {
+        return extractorService.getExtractor(execution.getExtractorName()).getReader(execution.getParameters());
     }
 }

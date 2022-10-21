@@ -30,6 +30,13 @@ public interface LmTask {
     Execution run(Map<String, ?> params);
 
     /**
+     * A flavor of "run" that allows tasks to start subtasks within their own execution.
+     *
+     * @since 3.0
+     */
+    Execution run(Map<String, ?> params, Execution parentExec);
+
+    /**
      * @deprecated as we are no longer planning to support {@link SyncToken}
      */
     @Deprecated(since = "3.0")

@@ -14,9 +14,6 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
-import java.util.Map;
-import java.util.Objects;
-
 /**
  * A task that reads streamed source data and creates/updates records in a
  * target DB.
@@ -25,7 +22,6 @@ import java.util.Objects;
  */
 public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
-    private final ExtractorName extractorName;
     private final int batchSize;
     private final ITargetCayenneService targetCayenneService;
     private final IExtractorService extractorService;
@@ -40,9 +36,8 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             CreateOrUpdateSegmentProcessor<T> processor,
             LmLogger logger) {
 
-        super(tokenManager, logger);
+        super(extractorName, tokenManager, logger);
 
-        this.extractorName = extractorName;
         this.batchSize = batchSize;
         this.targetCayenneService = targetCayenneService;
         this.extractorService = extractorService;
@@ -55,18 +50,11 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
-    protected Execution doRun(Map<String, ?> params) {
+    protected void doRun(Execution exec) {
 
-        Objects.requireNonNull(params, "Null params");
-
-        try (Execution execution = createExecution(extractorName, params)) {
-
-            try (RowReader data = getRowReader(params)) {
-                BatchProcessor<Object[]> batchProcessor = createBatchProcessor(execution, data.getHeader());
-                BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
-            }
-
-            return execution;
+        try (RowReader data = getRowReader(exec)) {
+            BatchProcessor<Object[]> batchProcessor = createBatchProcessor(exec, data.getHeader());
+            BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
         }
     }
 
@@ -77,7 +65,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
                 new CreateOrUpdateSegment<>(context, rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
     }
 
-    protected RowReader getRowReader(Map<String, ?> extractorParams) {
-        return extractorService.getExtractor(extractorName).getReader(extractorParams);
+    protected RowReader getRowReader(Execution exec) {
+        return extractorService.getExtractor(exec.getExtractorName()).getReader(exec.getParameters());
     }
 }

@@ -17,14 +17,14 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void batchStarted(Execution exec) {
-        logger.debug("[{}/{}] batch started", exec.getTaskName(), exec.getId());
+        logger.debug("[{}/{}] batch started", exec.getId(), exec.getTaskName());
     }
 
     @Override
     public void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
         logger.debug("[{}/{}] batch finished, processed {}, deleted {} object(s)",
-                exec.getTaskName(),
                 exec.getId(),
+                exec.getTaskName(),
                 objectsProcessed,
                 objectsDeleted);
     }
@@ -32,8 +32,8 @@ public class Slf4jLmLogger implements LmLogger {
     @Override
     public void createBatchFinished(Execution exec, int rowsProcessed, int objectsInserted) {
         logger.debug("[{}/{}] batch finished, processed {} row(s), created {} object(s)",
-                exec.getTaskName(),
                 exec.getId(),
+                exec.getTaskName(),
                 rowsProcessed,
                 objectsInserted);
     }
@@ -41,8 +41,8 @@ public class Slf4jLmLogger implements LmLogger {
     @Override
     public void createOrUpdateBatchFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
         logger.debug("[{}/{}] batch finished, processed {} row(s), created {}, updated {} object(s)",
-                exec.getTaskName(),
                 exec.getId(),
+                exec.getTaskName(),
                 rowsProcessed,
                 objectsInserted,
                 objectsUpdated);
@@ -51,8 +51,8 @@ public class Slf4jLmLogger implements LmLogger {
     @Override
     public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, int keysExtracted) {
         logger.debug("[{}/{}] batch finished, processed {} row(s), extracted {} keys(s)",
-                exec.getTaskName(),
                 exec.getId(),
+                exec.getTaskName(),
                 rowsProcessed,
                 keysExtracted);
     }

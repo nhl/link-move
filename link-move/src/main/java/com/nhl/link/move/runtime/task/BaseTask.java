@@ -29,12 +29,7 @@ public abstract class BaseTask implements LmTask {
     @Deprecated(since = "3.0")
     private final ITokenManager tokenManager;
     private final String label;
-
-    public BaseTask(ITokenManager tokenManager, LmLogger logger) {
-        this.tokenManager = tokenManager;
-        this.logger = logger;
-        this.label = createLabel();
-    }
+    private final ExtractorName extractorName;
 
     /**
      * @since 3.0
@@ -53,26 +48,30 @@ public abstract class BaseTask implements LmTask {
         return Index.forLabels(columns);
     }
 
-    protected String createLabel() {
-        return getClass().getSimpleName();
-    }
-
-    protected Execution createExecution(ExtractorName extractorName, Map<String, ?> params) {
-        long next = idGenerator.getAndIncrement();
-        return new Execution(next, label, extractorName, params, logger);
+    public BaseTask(ExtractorName extractorName, ITokenManager tokenManager, LmLogger logger) {
+        this.tokenManager = tokenManager;
+        this.logger = logger;
+        this.extractorName = extractorName;
+        this.label = createLabel();
     }
 
     @Override
-    // tagged as final to help upgrading to 2.8 ... users must override "doRun" instead
-    public final Execution run(Map<String, ?> params) {
-        return doRun(params);
+    public Execution run(Map<String, ?> params) {
+        return run(params, null);
+    }
+
+    @Override
+    public Execution run(Map<String, ?> params, Execution parentExec) {
+        try (Execution execution = createExec(params, parentExec)) {
+            doRun(execution);
+            return execution;
+        }
     }
 
     @Override
     public Execution run(SyncToken token, Map<String, ?> params) {
 
-        Map<String, ?> runParams = token != null ? mergeParams(token, params) : params;
-        Execution exec = doRun(runParams);
+        Execution exec = run(token != null ? mergeParams(token, params) : params);
 
         if (token != null) {
             // if we ever start using delayed executions, token should be saved inside the execution...
@@ -82,11 +81,22 @@ public abstract class BaseTask implements LmTask {
         return exec;
     }
 
-    /**
-     * @since 2.8
-     */
-    protected abstract Execution doRun(Map<String, ?> params);
+    protected String createLabel() {
+        return getClass().getSimpleName();
+    }
 
+    protected Execution createExec(Map<String, ?> params, Execution parentExec) {
+        // inherit ID from parent
+        long id = parentExec != null ? parentExec.getId() : idGenerator.getAndIncrement();
+        return new Execution(id, label, extractorName, params, logger);
+    }
+
+    /**
+     * @since 3.0
+     */
+    protected abstract void doRun(Execution exec);
+
+    @Deprecated(since = "3.0")
     protected Map<String, Object> mergeParams(SyncToken token, Map<String, ?> params) {
         Objects.requireNonNull(token);
 

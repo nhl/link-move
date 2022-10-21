@@ -17,9 +17,6 @@ import org.apache.cayenne.ResultIterator;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.query.ObjectSelect;
 
-import java.util.Map;
-import java.util.Objects;
-
 /**
  * A task that allows to delete target objects not present in the source.
  *
@@ -27,7 +24,6 @@ import java.util.Objects;
  */
 public class DeleteTask<T extends DataObject> extends BaseTask {
 
-    private final ExtractorName extractorName;
     private final int batchSize;
     private final Class<T> type;
     private final Expression targetFilter;
@@ -44,9 +40,8 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             DeleteSegmentProcessor<T> processor,
             LmLogger logger) {
 
-        super(tokenManager, logger);
+        super(extractorName, tokenManager, logger);
 
-        this.extractorName = extractorName;
         this.batchSize = batchSize;
         this.type = type;
         this.targetFilter = targetFilter;
@@ -60,19 +55,12 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
     }
 
     @Override
-    protected Execution doRun(Map<String, ?> params) {
+    protected void doRun(Execution exec) {
 
-        Objects.requireNonNull(params, "Null params");
+        BatchProcessor<T> batchProcessor = createBatchProcessor(exec);
 
-        try (Execution execution = createExecution(extractorName, params)) {
-
-            BatchProcessor<T> batchProcessor = createBatchProcessor(execution);
-
-            try (ResultIterator<T> data = createTargetSelect()) {
-                BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
-            }
-
-            return execution;
+        try (ResultIterator<T> data = createTargetSelect()) {
+            BatchRunner.create(batchProcessor).withBatchSize(batchSize).run(data);
         }
     }
 
