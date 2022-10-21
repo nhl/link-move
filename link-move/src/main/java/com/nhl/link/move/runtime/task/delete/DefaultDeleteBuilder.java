@@ -5,6 +5,7 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.extractor.model.ExtractorName;
@@ -60,7 +61,8 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder 
                 AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
                 AfterSourceKeysExtracted.class,
-                AfterMissingTargetsFiltered.class);
+                AfterMissingTargetsFiltered.class,
+                AfterTargetsCommitted.class);
     }
 
     @Override

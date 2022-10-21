@@ -3,6 +3,7 @@ package com.nhl.link.move.runtime.task.delete;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
 import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.runtime.task.StageListener;
@@ -40,7 +41,7 @@ public class DeleteSegmentProcessor<T extends DataObject> {
         extractSourceKeys(exec, segment);
         filterMissingTargets(exec, segment);
         deleteTarget(segment);
-        commitTarget(segment);
+        commitTarget(exec, segment);
     }
 
     private void mapTarget(Execution exec, DeleteSegment<T> segment) {
@@ -65,8 +66,9 @@ public class DeleteSegmentProcessor<T extends DataObject> {
         deleter.delete(segment.getContext(), segment.getMissingTargets());
     }
 
-    private void commitTarget(DeleteSegment<T> segment) {
+    private void commitTarget(Execution exec, DeleteSegment<T> segment) {
         segment.getContext().commitChanges();
+        notifyListeners(AfterTargetsCommitted.class, exec, segment);
     }
 
     private void notifyListeners(Class<? extends Annotation> type, Execution exec, DeleteSegment<T> segment) {
