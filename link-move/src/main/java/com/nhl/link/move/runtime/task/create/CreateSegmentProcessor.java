@@ -17,11 +17,11 @@ import java.util.Map;
  */
 public class CreateSegmentProcessor<T extends DataObject> {
 
-    private RowConverter rowConverter;
-    private Map<Class<? extends Annotation>, List<StageListener>> listeners;
-    private CreateTargetMapper<T> mapper;
-    private CreateTargetMerger<T> merger;
-    private FkResolver fkResolver;
+    private final RowConverter rowConverter;
+    private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
+    private final CreateTargetMapper<T> mapper;
+    private final CreateTargetMerger<T> merger;
+    private final FkResolver fkResolver;
 
     public CreateSegmentProcessor(
             RowConverter rowConverter,

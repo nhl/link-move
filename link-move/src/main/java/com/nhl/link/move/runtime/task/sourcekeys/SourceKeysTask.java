@@ -1,7 +1,5 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
@@ -68,8 +66,9 @@ public class SourceKeysTask extends BaseTask {
     }
 
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
-        Index columns = toIndex(rowHeader);
-        return rows -> processor.process(execution, new SourceKeysSegment(rowHeader, DataFrame.newFrame(columns).objectsToRows(rows, r -> r)));
+        return rows -> processor.process(
+                execution,
+                new SourceKeysSegment(rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.task;
 
+import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
@@ -9,6 +10,7 @@ import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,6 +24,13 @@ public abstract class BaseTask implements LmTask {
 
     public BaseTask(ITokenManager tokenManager) {
         this.tokenManager = tokenManager;
+    }
+
+    /**
+     * @since 3.0
+     */
+    protected static DataFrame srcRowsAsDataFrame(RowAttribute[] rowHeader, List<Object[]> rows) {
+        return DataFrame.newFrame(toIndex(rowHeader)).objectsToRows(rows, r -> r);
     }
 
     protected static Index toIndex(RowAttribute[] rowHeader) {

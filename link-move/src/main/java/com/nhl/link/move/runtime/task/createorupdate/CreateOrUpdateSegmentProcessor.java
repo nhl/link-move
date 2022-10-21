@@ -18,12 +18,12 @@ import java.util.Map;
  */
 public class CreateOrUpdateSegmentProcessor<T extends DataObject> {
 
-    private RowConverter rowConverter;
-    private SourceMapper sourceMapper;
-    private CreateOrUpdateTargetMatcher<T> matcher;
-    private CreateOrUpdateTargetMapper<T> mapper;
-    private CreateOrUpdateTargetMerger<T> merger;
-    private FkResolver fkResolver;
+    private final RowConverter rowConverter;
+    private final SourceMapper sourceMapper;
+    private final CreateOrUpdateTargetMatcher<T> matcher;
+    private final CreateOrUpdateTargetMapper<T> mapper;
+    private final CreateOrUpdateTargetMerger<T> merger;
+    private final FkResolver fkResolver;
 
 
     private Map<Class<? extends Annotation>, List<StageListener>> listeners;
