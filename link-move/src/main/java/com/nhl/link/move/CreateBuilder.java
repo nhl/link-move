@@ -9,10 +9,9 @@ import com.nhl.link.move.extractor.model.ExtractorModel;
 /**
  * A builder of an {@link LmTask} that performs fast "create" synchronization without any source/target key matching.
  *
- * @param <T> The type of target objects being synchronized.
  * @since 2.6
  */
-public interface CreateBuilder<T> {
+public interface CreateBuilder {
 
     /**
      * Creates a new task based on the builder information.
@@ -28,7 +27,7 @@ public interface CreateBuilder<T> {
      * @param name     extractor name within configuration.
      * @return this builder instance
      */
-    CreateBuilder<T> sourceExtractor(String location, String name);
+    CreateBuilder sourceExtractor(String location, String name);
 
     /**
      * Defines the location of the source data extractor. The name of extractor is assumed to be "default_extractor".
@@ -37,7 +36,7 @@ public interface CreateBuilder<T> {
      * @return this builder instance
      * @see #sourceExtractor(String, String)
      */
-    default CreateBuilder<T> sourceExtractor(String location) {
+    default CreateBuilder sourceExtractor(String location) {
         return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
     }
 
@@ -48,7 +47,7 @@ public interface CreateBuilder<T> {
      * @param batchSize the size of an internal processing batch.
      * @return this builder instance
      */
-    CreateBuilder<T> batchSize(int batchSize);
+    CreateBuilder batchSize(int batchSize);
 
     /**
      * Adds a listener of transformation stages of batch segments. It should have methods annotated with
@@ -64,6 +63,6 @@ public interface CreateBuilder<T> {
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
      */
-    CreateBuilder<T> stageListener(Object listener);
+    CreateBuilder stageListener(Object listener);
 
 }

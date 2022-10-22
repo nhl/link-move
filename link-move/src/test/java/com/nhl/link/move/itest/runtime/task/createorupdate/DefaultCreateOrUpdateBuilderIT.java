@@ -20,11 +20,11 @@ import static org.mockito.Mockito.mock;
 
 public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
 
-    private DefaultCreateOrUpdateBuilder<Etl1t> builder;
+    private DefaultCreateOrUpdateBuilder builder;
 
     @BeforeEach
     public void createBuilder() {
-        this.builder = new DefaultCreateOrUpdateBuilder<>(
+        this.builder = new DefaultCreateOrUpdateBuilder(
                 Etl1t.class,
                 mock(CreateOrUpdateTargetMerger.class),
                 mock(FkResolver.class),

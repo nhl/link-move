@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 public class DefaultDeleteBuilderTest {
 
-	private DefaultDeleteBuilder<Etl1t> builder;
+	private DefaultDeleteBuilder builder;
 
 	@BeforeEach
 	public void before() {
@@ -64,7 +64,7 @@ public class DefaultDeleteBuilderTest {
 
 		MapperBuilder mapperBuilder = new MapperBuilder(targetEntity, mockTargetEntity, keyAdapterFactory);
 
-		this.builder = new DefaultDeleteBuilder<>(Etl1t.class,
+		this.builder = new DefaultDeleteBuilder(Etl1t.class,
 				cayenneService,
 				mock(ITokenManager.class),
 				taskService,

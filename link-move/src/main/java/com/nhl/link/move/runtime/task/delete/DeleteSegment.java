@@ -10,8 +10,8 @@ public class DeleteSegment {
 	public static final String TARGET_COLUMN = "$lm_target";
 	public static final String KEY_COLUMN = "$lm_key";
 
-	private ObjectContext context;
-	private DataFrame targets;
+	private final ObjectContext context;
+	private final DataFrame targets;
 
 	private Set<Object> sourceKeys;
 	private DataFrame mappedTargets;

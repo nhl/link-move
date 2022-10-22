@@ -15,16 +15,14 @@ import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.create.CreateTargetMapper;
 import com.nhl.link.move.runtime.task.create.CreateTargetMerger;
 import com.nhl.link.move.runtime.task.create.DefaultCreateBuilder;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateTargetMerger;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateTargetMerger;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.Persistent;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.map.ObjEntity;
 
@@ -62,7 +60,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends Persistent> CreateBuilder<T> create(Class<T> type) {
+    public CreateBuilder create(Class<?> type) {
 
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
@@ -70,7 +68,7 @@ public class TaskService implements ITaskService {
         FkResolver fkResolver = new FkResolver(targetEntity);
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
-        return new DefaultCreateBuilder<>(
+        return new DefaultCreateBuilder(
                 new CreateTargetMapper(type),
                 merger,
                 fkResolver,
@@ -82,7 +80,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends Persistent> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
+    public CreateOrUpdateBuilder createOrUpdate(Class<?> type) {
 
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
@@ -91,7 +89,7 @@ public class TaskService implements ITaskService {
         CreateOrUpdateTargetMerger merger = new CreateOrUpdateTargetMerger(writerService.getWriterFactory(type));
         FkResolver fkResolver = new FkResolver(targetEntity);
 
-        return new DefaultCreateOrUpdateBuilder<>(
+        return new DefaultCreateOrUpdateBuilder(
                 type,
                 merger,
                 fkResolver,
@@ -112,7 +110,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends Persistent> SourceKeysBuilder extractSourceKeys(Class<T> type) {
+    public SourceKeysBuilder extractSourceKeys(Class<?> type) {
         ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(type);
         return new DefaultSourceKeysBuilder(
                 targetEntityMap.get(targetEntity),
@@ -136,7 +134,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends Persistent> DeleteBuilder<T> delete(Class<T> type) {
+    public DeleteBuilder delete(Class<?> type) {
 
         ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
         if (entity == null) {
@@ -146,7 +144,7 @@ public class TaskService implements ITaskService {
         TargetEntity targetEntity = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
 
-        return new DefaultDeleteBuilder<>(
+        return new DefaultDeleteBuilder(
                 type,
                 targetCayenneService,
                 tokenManager,

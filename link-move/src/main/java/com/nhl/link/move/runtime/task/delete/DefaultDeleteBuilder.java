@@ -16,8 +16,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.DataObject;
-import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
 
@@ -26,12 +24,12 @@ import java.lang.annotation.Annotation;
 /**
  * @since 1.3
  */
-public class DefaultDeleteBuilder<T extends Persistent> extends BaseTaskBuilder<DefaultDeleteBuilder<T>> implements DeleteBuilder<T> {
+public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> implements DeleteBuilder {
 
     private final ITaskService taskService;
     private final ITokenManager tokenManager;
     private final ITargetCayenneService targetCayenneService;
-    private final Class<T> type;
+    private final Class<?> type;
     private final MapperBuilder mapperBuilder;
 
     private Expression targetFilter;
@@ -39,7 +37,7 @@ public class DefaultDeleteBuilder<T extends Persistent> extends BaseTaskBuilder<
     private Mapper mapper;
 
     public DefaultDeleteBuilder(
-            Class<T> type,
+            Class<?> type,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
             ITaskService taskService,
@@ -71,52 +69,52 @@ public class DefaultDeleteBuilder<T extends Persistent> extends BaseTaskBuilder<
     }
 
     @Override
-    public DefaultDeleteBuilder<T> targetFilter(Expression targetFilter) {
+    public DefaultDeleteBuilder targetFilter(Expression targetFilter) {
         this.targetFilter = targetFilter;
         return this;
     }
 
     @Override
-    public DeleteBuilder<T> sourceMatchExtractor(String location, String name) {
+    public DeleteBuilder sourceMatchExtractor(String location, String name) {
         this.extractorName = ExtractorName.create(location, name);
         return this;
     }
 
     @Override
-    public DefaultDeleteBuilder<T> matchBy(Mapper mapper) {
+    public DefaultDeleteBuilder matchBy(Mapper mapper) {
         this.mapper = mapper;
         return this;
     }
 
     @Override
-    public DefaultDeleteBuilder<T> matchBy(String... keyAttributes) {
+    public DefaultDeleteBuilder matchBy(String... keyAttributes) {
         this.mapper = null;
         this.mapperBuilder.matchBy(keyAttributes);
         return this;
     }
 
     @Override
-    public DefaultDeleteBuilder<T> matchBy(Property<?>... matchAttributes) {
+    public DefaultDeleteBuilder matchBy(Property<?>... matchAttributes) {
         this.mapper = null;
         this.mapperBuilder.matchBy(matchAttributes);
         return this;
     }
 
     @Override
-    public DefaultDeleteBuilder<T> matchById() {
+    public DefaultDeleteBuilder matchById() {
         this.mapper = null;
         this.mapperBuilder.matchById();
         return this;
     }
 
     @Override
-    public DeleteTask<T> task() throws IllegalStateException {
+    public DeleteTask task() throws IllegalStateException {
 
         if (extractorName == null) {
             throw new IllegalStateException("Required 'sourceMatchExtractor' is not set");
         }
 
-        return new DeleteTask<>(
+        return new DeleteTask(
                 extractorName,
                 batchSize,
                 type,

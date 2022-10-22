@@ -16,15 +16,13 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.Persistent;
 
 import java.lang.annotation.Annotation;
 
 /**
- * @param <T>
  * @since 2.6
  */
-public class DefaultCreateBuilder<T extends Persistent> extends BaseTaskBuilder<DefaultCreateBuilder<T>> implements CreateBuilder<T> {
+public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder> implements CreateBuilder {
 
     private final CreateTargetMapper mapper;
     private final CreateTargetMerger merger;
@@ -71,7 +69,7 @@ public class DefaultCreateBuilder<T extends Persistent> extends BaseTaskBuilder<
     }
 
     @Override
-    public CreateBuilder<T> sourceExtractor(String location, String name) {
+    public CreateBuilder sourceExtractor(String location, String name) {
         this.extractorName = ExtractorName.create(location, name);
         return this;
     }
@@ -83,7 +81,7 @@ public class DefaultCreateBuilder<T extends Persistent> extends BaseTaskBuilder<
             throw new IllegalStateException("Required 'extractorName' is not set");
         }
 
-        return new CreateTask<>(extractorName,
+        return new CreateTask(extractorName,
                 batchSize,
                 targetCayenneService,
                 extractorService,

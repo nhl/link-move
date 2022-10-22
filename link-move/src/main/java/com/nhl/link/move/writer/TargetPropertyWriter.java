@@ -11,7 +11,7 @@ package com.nhl.link.move.writer;
 public interface TargetPropertyWriter {
 
     /**
-     * Sets a value of a property corresponding to this writer of a target DataObject.
+     * Sets a value of a property corresponding to this writer of a target object.
      */
     void write(Object target, Object value);
 

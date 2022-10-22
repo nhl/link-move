@@ -9,17 +9,16 @@ import org.apache.cayenne.exp.property.Property;
 /**
  * since 1.3
  */
-public interface DeleteBuilder<T> {
+public interface DeleteBuilder {
 
     /**
-     * Creates a new task that will delete target objects not found in the
-     * source.
+     * Creates a new task that will delete target objects not found in the source.
      */
     LmTask task() throws IllegalStateException;
 
-    DeleteBuilder<T> targetFilter(Expression filter);
+    DeleteBuilder targetFilter(Expression filter);
 
-    default DeleteBuilder<T> sourceMatchExtractor(String location) {
+    default DeleteBuilder sourceMatchExtractor(String location) {
         return sourceMatchExtractor(location, ExtractorModel.DEFAULT_NAME);
     }
 
@@ -31,17 +30,17 @@ public interface DeleteBuilder<T> {
      * @return this builder instance
      * @since 3.0
      */
-    DeleteBuilder<T> sourceMatchExtractor(String location, String name);
+    DeleteBuilder sourceMatchExtractor(String location, String name);
 
-    DeleteBuilder<T> matchBy(Mapper mapper);
+    DeleteBuilder matchBy(Mapper mapper);
 
-    DeleteBuilder<T> matchBy(String... keyAttributes);
+    DeleteBuilder matchBy(String... keyAttributes);
 
-    DeleteBuilder<T> matchBy(Property<?>... keyAttributes);
+    DeleteBuilder matchBy(Property<?>... keyAttributes);
 
-    DeleteBuilder<T> matchById();
+    DeleteBuilder matchById();
 
-    DeleteBuilder<T> batchSize(int batchSize);
+    DeleteBuilder batchSize(int batchSize);
 
-    DeleteBuilder<T> stageListener(Object listener);
+    DeleteBuilder stageListener(Object listener);
 }

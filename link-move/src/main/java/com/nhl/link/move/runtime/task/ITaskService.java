@@ -4,7 +4,6 @@ import com.nhl.link.move.CreateBuilder;
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.SourceKeysBuilder;
-import org.apache.cayenne.Persistent;
 
 public interface ITaskService {
 
@@ -15,26 +14,26 @@ public interface ITaskService {
      *
      * @since 2.6
      */
-    <T extends Persistent> CreateBuilder<T> create(Class<T> type);
+    CreateBuilder create(Class<?> type);
 
     /**
      * Returns a builder of "create-or-update" ETL synchronization task.
      *
      * @since 1.3
      */
-    <T extends Persistent> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type);
+    CreateOrUpdateBuilder createOrUpdate(Class<?> type);
 
     /**
      * Returns a builder of target delete ETL synchronization task.
      *
      * @since 1.3
      */
-    <T extends Persistent> DeleteBuilder<T> delete(Class<T> type);
+    DeleteBuilder delete(Class<?> type);
 
     /**
      * @since 1.3
      */
-    <T extends Persistent> SourceKeysBuilder extractSourceKeys(Class<T> type);
+    SourceKeysBuilder extractSourceKeys(Class<?> type);
 
     /**
      * @since 1.4

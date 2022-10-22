@@ -21,9 +21,9 @@ import org.apache.cayenne.query.ObjectSelect;
  *
  * @since 1.3
  */
-public class DeleteTask<T extends Persistent> extends BaseTask {
+public class DeleteTask extends BaseTask {
 
-    private final Class<T> type;
+    private final Class<?> type;
     private final Expression targetFilter;
     private final DeleteSegmentProcessor processor;
     private final ITargetCayenneService targetCayenneService;
@@ -31,7 +31,7 @@ public class DeleteTask<T extends Persistent> extends BaseTask {
     public DeleteTask(
             ExtractorName extractorName,
             int batchSize,
-            Class<T> type,
+            Class<?> type,
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
@@ -54,19 +54,19 @@ public class DeleteTask<T extends Persistent> extends BaseTask {
     @Override
     protected void doRun(Execution exec) {
 
-        BatchProcessor<T> batchProcessor = createBatchProcessor(exec);
+        BatchProcessor<? extends Persistent> batchProcessor = createBatchProcessor(exec);
 
-        try (ResultIterator<T> data = createTargetSelect()) {
+        try (ResultIterator data = createTargetSelect()) {
             createBatchRunner(batchProcessor).run(data);
         }
     }
 
-    protected ResultIterator<T> createTargetSelect() {
-        ObjectSelect<T> query = ObjectSelect.query(type).where(targetFilter);
+    protected ResultIterator<?> createTargetSelect() {
+        ObjectSelect<?> query = ObjectSelect.query(type).where(targetFilter);
         return targetCayenneService.newContext().iterator(query);
     }
 
-    protected BatchProcessor<T> createBatchProcessor(Execution execution) {
+    protected BatchProcessor<? extends Persistent> createBatchProcessor(Execution execution) {
 
         Index columns = Index.forLabels(DeleteSegment.TARGET_COLUMN);
 

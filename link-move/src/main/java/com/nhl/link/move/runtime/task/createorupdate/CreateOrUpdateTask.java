@@ -10,7 +10,6 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
 /**
@@ -19,7 +18,7 @@ import org.apache.cayenne.ObjectContext;
  *
  * @since 1.3
  */
-public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
+public class CreateOrUpdateTask extends BaseTask {
 
     private final ITargetCayenneService targetCayenneService;
     private final IExtractorService extractorService;

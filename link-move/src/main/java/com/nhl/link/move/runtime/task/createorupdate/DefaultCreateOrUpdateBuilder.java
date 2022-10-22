@@ -19,7 +19,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.property.Property;
 
 import java.lang.annotation.Annotation;
@@ -27,9 +26,9 @@ import java.lang.annotation.Annotation;
 /**
  * A builder of an ETL task that matches source data with target data based on a certain unique attribute on both sides.
  */
-public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder<T>> implements CreateOrUpdateBuilder<T> {
+public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder> implements CreateOrUpdateBuilder {
 
-    private final Class<T> type;
+    private final Class<?> type;
     private final CreateOrUpdateTargetMerger merger;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
@@ -42,7 +41,7 @@ public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTask
     private ExtractorName extractorName;
 
     public DefaultCreateOrUpdateBuilder(
-            Class<T> type,
+            Class<?> type,
             CreateOrUpdateTargetMerger merger,
             FkResolver fkResolver,
             RowConverter rowConverter,
@@ -80,19 +79,19 @@ public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTask
     }
 
     @Override
-    public DefaultCreateOrUpdateBuilder<T> sourceExtractor(String location, String name) {
+    public DefaultCreateOrUpdateBuilder sourceExtractor(String location, String name) {
         this.extractorName = ExtractorName.create(location, name);
         return this;
     }
 
     @Override
-    public DefaultCreateOrUpdateBuilder<T> matchBy(Mapper mapper) {
+    public DefaultCreateOrUpdateBuilder matchBy(Mapper mapper) {
         this.mapper = mapper;
         return this;
     }
 
     @Override
-    public DefaultCreateOrUpdateBuilder<T> matchBy(String... keyAttributes) {
+    public DefaultCreateOrUpdateBuilder matchBy(String... keyAttributes) {
         this.mapper = null;
         this.mapperBuilder.matchBy(keyAttributes);
         return this;
@@ -102,7 +101,7 @@ public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTask
      * @since 1.1
      */
     @Override
-    public DefaultCreateOrUpdateBuilder<T> matchBy(Property<?>... matchAttributes) {
+    public DefaultCreateOrUpdateBuilder matchBy(Property<?>... matchAttributes) {
         this.mapper = null;
         this.mapperBuilder.matchBy(matchAttributes);
         return this;
@@ -112,7 +111,7 @@ public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTask
      * @since 1.4
      */
     @Override
-    public DefaultCreateOrUpdateBuilder<T> matchById() {
+    public DefaultCreateOrUpdateBuilder matchById() {
         this.mapper = null;
         this.mapperBuilder.matchById();
         return this;
@@ -125,7 +124,7 @@ public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTask
             throw new IllegalStateException("Required 'extractorName' is not set");
         }
 
-        return new CreateOrUpdateTask<>(
+        return new CreateOrUpdateTask(
                 extractorName,
                 batchSize,
                 targetCayenneService,

@@ -14,7 +14,7 @@ import org.apache.cayenne.exp.property.Property;
  *
  * @since 1.3
  */
-public interface CreateOrUpdateBuilder<T> {
+public interface CreateOrUpdateBuilder {
 
     /**
      * Creates a new task based on the builder information.
@@ -32,7 +32,7 @@ public interface CreateOrUpdateBuilder<T> {
      * @return this builder instance
      * @since 1.4
      */
-    CreateOrUpdateBuilder<T> sourceExtractor(String location, String name);
+    CreateOrUpdateBuilder sourceExtractor(String location, String name);
 
     /**
      * Defines the location of the source data extractor. The name of extractor is assumed to be "default_extractor".
@@ -42,7 +42,7 @@ public interface CreateOrUpdateBuilder<T> {
      * @see #sourceExtractor(String, String)
      * @since 1.3
      */
-    default CreateOrUpdateBuilder<T> sourceExtractor(String location) {
+    default CreateOrUpdateBuilder sourceExtractor(String location) {
         return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
     }
 
@@ -52,7 +52,7 @@ public interface CreateOrUpdateBuilder<T> {
      * @param mapper a custom {@link Mapper} to match sources against targets.
      * @return this builder instance
      */
-    CreateOrUpdateBuilder<T> matchBy(Mapper mapper);
+    CreateOrUpdateBuilder matchBy(Mapper mapper);
 
     /**
      * Instructs the task to match sources and targets based on one or more attributes.
@@ -60,18 +60,17 @@ public interface CreateOrUpdateBuilder<T> {
      * @param keyAttributes target attributes to use in source-to-target mapper.
      * @return this builder instance
      */
-    CreateOrUpdateBuilder<T> matchBy(String... keyAttributes);
+    CreateOrUpdateBuilder matchBy(String... keyAttributes);
 
     /**
-     * Instructs the task to match sources and targets based on one or more
-     * DataObject properties.
+     * Instructs the task to match sources and targets based on one or more Persistent properties.
      *
      * @param keyAttributes target attributes to use in source-to-target mapper.
      * @return this builder instance
      */
-    CreateOrUpdateBuilder<T> matchBy(Property<?>... keyAttributes);
+    CreateOrUpdateBuilder matchBy(Property<?>... keyAttributes);
 
-    CreateOrUpdateBuilder<T> matchById();
+    CreateOrUpdateBuilder matchById();
 
     /**
      * Defines the number of records that are processed together as a single
@@ -81,7 +80,7 @@ public interface CreateOrUpdateBuilder<T> {
      * @return this builder instance
      * @since 1.3
      */
-    CreateOrUpdateBuilder<T> batchSize(int batchSize);
+    CreateOrUpdateBuilder batchSize(int batchSize);
 
     /**
      * Adds a listener of transformation stages of batch segments. It should have methods annotated with
@@ -92,6 +91,6 @@ public interface CreateOrUpdateBuilder<T> {
      * @return this builder instance
      * @since 1.3
      */
-    CreateOrUpdateBuilder<T> stageListener(Object listener);
+    CreateOrUpdateBuilder stageListener(Object listener);
 
 }
