@@ -21,7 +21,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
 
     private final ITargetCayenneService targetCayenneService;
     private final IExtractorService extractorService;
-    private final CreateSegmentProcessor<T> processor;
+    private final CreateSegmentProcessor processor;
 
     public CreateTask(
             ExtractorName extractorName,
@@ -29,7 +29,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            CreateSegmentProcessor<T> processor,
+            CreateSegmentProcessor processor,
             LmLogger logger) {
 
         super(extractorName, batchSize, tokenManager, logger);

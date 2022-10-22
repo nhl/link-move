@@ -1,32 +1,35 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.*;
+import com.nhl.link.move.annotation.AfterFksResolved;
+import com.nhl.link.move.annotation.AfterSourceRowsConverted;
+import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
+import com.nhl.link.move.annotation.AfterTargetsCommitted;
+import com.nhl.link.move.annotation.AfterTargetsMapped;
+import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.runtime.task.StageListener;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import org.apache.cayenne.DataObject;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @param <T>
  * @since 2.6
  */
-public class CreateSegmentProcessor<T extends DataObject> {
+public class CreateSegmentProcessor {
 
     private final RowConverter rowConverter;
     private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
     private final CreateTargetMapper mapper;
-    private final CreateTargetMerger<T> merger;
+    private final CreateTargetMerger merger;
     private final FkResolver fkResolver;
 
     public CreateSegmentProcessor(
             RowConverter rowConverter,
             CreateTargetMapper mapper,
-            CreateTargetMerger<T> merger,
+            CreateTargetMerger merger,
             FkResolver fkResolver,
             Map<Class<? extends Annotation>, List<StageListener>> listeners) {
 

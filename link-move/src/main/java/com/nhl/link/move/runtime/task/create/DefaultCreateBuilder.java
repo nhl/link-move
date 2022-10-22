@@ -27,7 +27,7 @@ import java.lang.annotation.Annotation;
 public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateBuilder<T>> implements CreateBuilder<T> {
 
     private final CreateTargetMapper mapper;
-    private final CreateTargetMerger<T> merger;
+    private final CreateTargetMerger merger;
     private final FkResolver fkResolver;
     private final ITokenManager tokenManager;
     private final IExtractorService extractorService;
@@ -38,7 +38,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<
 
     public DefaultCreateBuilder(
             CreateTargetMapper mapper,
-            CreateTargetMerger<T> merger,
+            CreateTargetMerger merger,
             FkResolver fkResolver,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
@@ -92,8 +92,8 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<
                 logger);
     }
 
-    private CreateSegmentProcessor<T> createProcessor() {
-        return new CreateSegmentProcessor<>(
+    private CreateSegmentProcessor createProcessor() {
+        return new CreateSegmentProcessor(
                 rowConverter,
                 mapper,
                 merger,

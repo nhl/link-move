@@ -22,18 +22,18 @@ import java.util.function.Supplier;
 /**
  * @since 1.6
  */
-public class TargetPropertyWriterFactory<T> {
+public class TargetPropertyWriterFactory {
 
     private static final TargetPropertyWriter NULL_WRITER = (t, v) -> {
     };
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetPropertyWriterFactory.class);
 
-    private final Class<T> type;
+    private final Class<?> type;
     private final ObjEntity entity;
     private final Map<String, TargetPropertyWriter> writers = new ConcurrentHashMap<>();
 
-    public TargetPropertyWriterFactory(Class<T> type, ObjEntity entity) {
+    public TargetPropertyWriterFactory(Class<?> type, ObjEntity entity) {
         this.type = type;
         this.entity = entity;
     }

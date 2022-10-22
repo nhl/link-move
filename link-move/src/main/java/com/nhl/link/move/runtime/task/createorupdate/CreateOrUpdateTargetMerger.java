@@ -13,9 +13,9 @@ import org.apache.cayenne.DataObject;
  */
 public class CreateOrUpdateTargetMerger<T extends DataObject> {
 
-    protected TargetPropertyWriterFactory<T> writerFactory;
+    protected TargetPropertyWriterFactory writerFactory;
 
-    public CreateOrUpdateTargetMerger(TargetPropertyWriterFactory<T> writerFactory) {
+    public CreateOrUpdateTargetMerger(TargetPropertyWriterFactory writerFactory) {
         this.writerFactory = writerFactory;
     }
 

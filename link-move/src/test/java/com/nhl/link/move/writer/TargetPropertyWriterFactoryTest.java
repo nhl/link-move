@@ -10,7 +10,7 @@ public class TargetPropertyWriterFactoryTest {
 
     @Test
     public void testGetOrCreateWriter_Null() {
-        TargetPropertyWriterFactory<C1> factory = new TargetPropertyWriterFactory<>(C1.class, mock(ObjEntity.class));
+        TargetPropertyWriterFactory factory = new TargetPropertyWriterFactory(C1.class, mock(ObjEntity.class));
         assertThrows(NullPointerException.class, () -> factory.getOrCreateWriter("dummy", "dbDummy", () -> null));
     }
 
@@ -18,7 +18,7 @@ public class TargetPropertyWriterFactoryTest {
     public void testGetOrCreateWriter_Default() {
         TargetPropertyWriter expected = (t, v) -> {};
 
-        TargetPropertyWriterFactory<C1> factory = new TargetPropertyWriterFactory<>(C1.class, mock(ObjEntity.class));
+        TargetPropertyWriterFactory factory = new TargetPropertyWriterFactory(C1.class, mock(ObjEntity.class));
         assertSame(expected, factory.getOrCreateWriter("dummy", "dbDummy", () -> expected));
         assertSame(expected, factory.getOrCreateWriter("dummy", "dbDummy", () -> expected));
     }
@@ -27,7 +27,7 @@ public class TargetPropertyWriterFactoryTest {
     public void testGetOrCreateWriter_Setter() {
         TargetPropertyWriter defaultWriter = (t, v) -> {};
 
-        TargetPropertyWriterFactory<C1> factory = new TargetPropertyWriterFactory<>(C1.class, mock(ObjEntity.class));
+        TargetPropertyWriterFactory factory = new TargetPropertyWriterFactory(C1.class, mock(ObjEntity.class));
         TargetPropertyWriter setter = factory.getOrCreateWriter("me", "dbDummy", () -> defaultWriter);
         assertNotSame(defaultWriter, setter);
         assertSame(setter, factory.getOrCreateWriter("me", "dbDummy", () -> defaultWriter));

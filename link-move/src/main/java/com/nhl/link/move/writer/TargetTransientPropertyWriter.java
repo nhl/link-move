@@ -1,6 +1,5 @@
 package com.nhl.link.move.writer;
 
-import org.apache.cayenne.Persistent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +12,14 @@ public class TargetTransientPropertyWriter implements TargetPropertyWriter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetTransientPropertyWriter.class);
 
-    private Method setter;
+    private final Method setter;
 
     public TargetTransientPropertyWriter(Method setter) {
         this.setter = setter;
     }
 
     @Override
-    public void write(Persistent target, Object value) {
+    public void write(Object target, Object value) {
         try {
             setter.invoke(target, value);
         } catch (Exception e) {
@@ -30,7 +29,7 @@ public class TargetTransientPropertyWriter implements TargetPropertyWriter {
     }
 
     @Override
-    public boolean willWrite(Persistent target, Object value) {
+    public boolean willWrite(Object target, Object value) {
         return true;
     }
 }

@@ -65,7 +65,7 @@ public class TaskService implements ITaskService {
 
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
-        CreateTargetMerger<T> merger = new CreateTargetMerger<>(writerService.getWriterFactory(type));
+        CreateTargetMerger merger = new CreateTargetMerger(writerService.getWriterFactory(type));
         FkResolver fkResolver = new FkResolver(targetEntity);
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
@@ -102,7 +102,7 @@ public class TaskService implements ITaskService {
                 logger);
     }
 
-    protected <T extends DataObject> ObjEntity lookupEntity(Class<T> type) {
+    protected ObjEntity lookupEntity(Class<?> type) {
         ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
         if (entity == null) {
             throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");

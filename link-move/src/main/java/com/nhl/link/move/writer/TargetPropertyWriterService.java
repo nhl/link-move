@@ -18,29 +18,27 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TargetPropertyWriterService implements ITargetPropertyWriterService {
 
-    private ITargetCayenneService targetCayenneService;
-
-    private ConcurrentMap<Class<?>, TargetPropertyWriterFactory<?>> writerFactories;
+    private final ITargetCayenneService targetCayenneService;
+    private final ConcurrentMap<Class<?>, TargetPropertyWriterFactory> writerFactories;
 
     public TargetPropertyWriterService(@Inject ITargetCayenneService targetCayenneService) {
         this.targetCayenneService = targetCayenneService;
         this.writerFactories = new ConcurrentHashMap<>();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public <T> TargetPropertyWriterFactory<T> getWriterFactory(Class<T> type) {
-        return (TargetPropertyWriterFactory<T>) writerFactories.computeIfAbsent(type, this::createWriterFactory);
+    public TargetPropertyWriterFactory getWriterFactory(Class<?> type) {
+        return writerFactories.computeIfAbsent(type, this::createWriterFactory);
     }
 
-    private <T> TargetPropertyWriterFactory<T> createWriterFactory(Class<T> type) {
+    private <T> TargetPropertyWriterFactory createWriterFactory(Class<T> type) {
 
         ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
         if (entity == null) {
             throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
         }
 
-        TargetPropertyWriterFactory<T> writerFactory = new TargetPropertyWriterFactory<>(type, entity);
+        TargetPropertyWriterFactory writerFactory = new TargetPropertyWriterFactory(type, entity);
         ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
 
         // precompile all possible obj: and db: invariants

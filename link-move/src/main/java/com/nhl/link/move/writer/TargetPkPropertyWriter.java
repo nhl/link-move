@@ -24,20 +24,25 @@ public class TargetPkPropertyWriter implements TargetPropertyWriter {
 	}
 
 	@Override
-	public void write(Persistent target, Object value) {
+	public void write(Object target, Object value) {
+
+		Persistent pt = (Persistent) target;
+
 		// regular meaningless PK
-		target.getObjectId().getReplacementIdMap().put(pk.getName(), value);
+		pt.getObjectId().getReplacementIdMap().put(pk.getName(), value);
 	}
 
 	@Override
-	public boolean willWrite(Persistent target, Object value) {
+	public boolean willWrite(Object target, Object value) {
 
-		Map<String, Object> idSnapshot = target.getObjectId().getIdSnapshot();
+		Persistent pt = (Persistent) target;
+
+		Map<String, Object> idSnapshot = pt.getObjectId().getIdSnapshot();
 		if (Util.nullSafeEquals(idSnapshot.get(pk.getName()), value)) {
 			return false;
 		}
 
-		Map<String, Object> replacementMap = target.getObjectId().getReplacementIdMap();
+		Map<String, Object> replacementMap = pt.getObjectId().getReplacementIdMap();
 		if (Util.nullSafeEquals(replacementMap.get(pk.getName()), value)) {
 			return false;
 		}
