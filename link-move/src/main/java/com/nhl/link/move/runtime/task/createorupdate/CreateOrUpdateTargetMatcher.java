@@ -17,13 +17,13 @@ import java.util.Map;
 /**
  * @since 1.3
  */
-public class CreateOrUpdateTargetMatcher<T> {
+public class CreateOrUpdateTargetMatcher {
 
-    private Class<T> type;
-    private Mapper mapper;
+    private final Class<?> type;
+    private final Mapper mapper;
     private Index index;
 
-    public CreateOrUpdateTargetMatcher(Class<T> type, Mapper mapper) {
+    public CreateOrUpdateTargetMatcher(Class<?> type, Mapper mapper) {
         this.type = type;
         this.mapper = mapper;
         this.index = Index.forLabels(CreateOrUpdateSegment.TARGET_COLUMN);
@@ -44,7 +44,7 @@ public class CreateOrUpdateTargetMatcher<T> {
         }
     }
 
-    private DataFrame toDataFrame(List<T> data) {
+    private DataFrame toDataFrame(List<?> data) {
         return DataFrame.newFrame(index).columns(Series.forData(data));
     }
 }

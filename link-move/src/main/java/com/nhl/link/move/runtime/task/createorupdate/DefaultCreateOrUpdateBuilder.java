@@ -30,7 +30,7 @@ import java.lang.annotation.Annotation;
 public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder<T>> implements CreateOrUpdateBuilder<T> {
 
     private final Class<T> type;
-    private final CreateOrUpdateTargetMerger<T> merger;
+    private final CreateOrUpdateTargetMerger merger;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
     private final ITokenManager tokenManager;
@@ -43,7 +43,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
 
     public DefaultCreateOrUpdateBuilder(
             Class<T> type,
-            CreateOrUpdateTargetMerger<T> merger,
+            CreateOrUpdateTargetMerger merger,
             FkResolver fkResolver,
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
@@ -63,7 +63,7 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
         this.rowConverter = rowConverter;
         this.mapperBuilder = mapperBuilder;
 
-        // always add stats listener..
+        // always add stats listener
         stageListener(CreateOrUpdateStatsListener.instance());
     }
 
@@ -135,19 +135,15 @@ public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTask
                 logger);
     }
 
-    private CreateOrUpdateSegmentProcessor<T> createProcessor() {
+    private CreateOrUpdateSegmentProcessor createProcessor() {
 
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
-        SourceMapper sourceMapper = new SourceMapper(mapper);
-        CreateOrUpdateTargetMatcher<T> targetMatcher = new CreateOrUpdateTargetMatcher<>(type, mapper);
-        CreateOrUpdateTargetMapper<T> targetMapper = new CreateOrUpdateTargetMapper<>(type, mapper);
-
-        return new CreateOrUpdateSegmentProcessor<>(
+        return new CreateOrUpdateSegmentProcessor(
                 rowConverter,
-                sourceMapper,
-                targetMatcher,
-                targetMapper,
+                new SourceMapper(mapper),
+                new CreateOrUpdateTargetMatcher(type, mapper),
+                new CreateOrUpdateTargetMapper(type, mapper),
                 merger,
                 fkResolver,
                 getListeners());

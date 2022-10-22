@@ -9,12 +9,12 @@ import org.apache.cayenne.ObjectContext;
 /**
  * @since 2.6
  */
-public class CreateOrUpdateTargetMapper<T extends DataObject> {
+public class CreateOrUpdateTargetMapper {
 
-    private Class<T> type;
+    private Class<?> type;
     private Mapper mapper;
 
-    public CreateOrUpdateTargetMapper(Class<T> type, Mapper mapper) {
+    public CreateOrUpdateTargetMapper(Class<?> type, Mapper mapper) {
         this.mapper = mapper;
         this.type = type;
     }
@@ -37,11 +37,11 @@ public class CreateOrUpdateTargetMapper<T extends DataObject> {
         return v == null;
     }
 
-    private T createIfMissing(Object v, ObjectContext context) {
+    private Object createIfMissing(Object v, ObjectContext context) {
 
         // Note that "context.newObject" is an impure function. Though we don't see its undesired side effects on
         // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
 
-        return v != null ? (T) v : context.newObject(type);
+        return v != null ? v : context.newObject(type);
     }
 }

@@ -7,16 +7,16 @@ import org.apache.cayenne.ObjectContext;
 /**
  * @since 1.3
  */
-public class CreateOrUpdateSegment<T> {
+public class CreateOrUpdateSegment {
 
     public static final String KEY_COLUMN = "$lm_key";
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String TARGET_CREATED_COLUMN = "$lm_target_created";
 
-    private ObjectContext context;
-    private RowAttribute[] sourceRowsHeader;
-    private DataFrame sourceRows;
+    private final ObjectContext context;
+    private final RowAttribute[] sourceRowsHeader;
 
+    private DataFrame sourceRows;
     private DataFrame sources;
     private DataFrame mappedSources;
     private DataFrame matchedTargets;

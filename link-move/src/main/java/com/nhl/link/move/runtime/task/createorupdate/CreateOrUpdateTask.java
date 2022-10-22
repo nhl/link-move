@@ -23,7 +23,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
 
     private final ITargetCayenneService targetCayenneService;
     private final IExtractorService extractorService;
-    private final CreateOrUpdateSegmentProcessor<T> processor;
+    private final CreateOrUpdateSegmentProcessor processor;
 
     public CreateOrUpdateTask(
             ExtractorName extractorName,
@@ -31,7 +31,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
             ITokenManager tokenManager,
-            CreateOrUpdateSegmentProcessor<T> processor,
+            CreateOrUpdateSegmentProcessor processor,
             LmLogger logger) {
 
         super(extractorName, batchSize, tokenManager, logger);
@@ -59,7 +59,7 @@ public class CreateOrUpdateTask<T extends DataObject> extends BaseTask {
         ObjectContext context = targetCayenneService.newContext();
         return rows -> processor.process(
                 execution,
-                new CreateOrUpdateSegment<>(context, rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
+                new CreateOrUpdateSegment(context, rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
     }
 
     protected RowReader getRowReader(Execution exec) {

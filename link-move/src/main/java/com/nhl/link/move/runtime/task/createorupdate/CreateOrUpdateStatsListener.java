@@ -21,13 +21,13 @@ public class CreateOrUpdateStatsListener {
     }
 
     @AfterSourceRowsExtracted
-    public void sourceRowsExtracted(Execution e, CreateOrUpdateSegment<?> segment) {
+    public void sourceRowsExtracted(Execution e, CreateOrUpdateSegment segment) {
         e.getLogger().batchStarted(e);
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
     @AfterTargetsCommitted
-    public void targetsCommitted(Execution e, CreateOrUpdateSegment<?> segment) {
+    public void targetsCommitted(Execution e, CreateOrUpdateSegment segment) {
         Series<Boolean> wasCreated = segment.getMerged().getColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
         int created = wasCreated.select(Exp.$bool("x")).size();

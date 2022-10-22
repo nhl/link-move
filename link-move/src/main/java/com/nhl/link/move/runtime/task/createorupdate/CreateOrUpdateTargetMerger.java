@@ -6,14 +6,13 @@ import com.nhl.dflib.accumulator.BooleanAccumulator;
 import com.nhl.link.move.runtime.task.common.ProcessorUtil;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
-import org.apache.cayenne.DataObject;
 
 /**
  * @since 2.6
  */
-public class CreateOrUpdateTargetMerger<T extends DataObject> {
+public class CreateOrUpdateTargetMerger {
 
-    protected TargetPropertyWriterFactory writerFactory;
+    protected final TargetPropertyWriterFactory writerFactory;
 
     public CreateOrUpdateTargetMerger(TargetPropertyWriterFactory writerFactory) {
         this.writerFactory = writerFactory;
@@ -21,7 +20,7 @@ public class CreateOrUpdateTargetMerger<T extends DataObject> {
 
     public DataFrame merge(DataFrame df) {
 
-        Series<T> targets = df.getColumn(CreateOrUpdateSegment.TARGET_COLUMN);
+        Series<?> targets = df.getColumn(CreateOrUpdateSegment.TARGET_COLUMN);
         int len = targets.size();
         BooleanAccumulator changed = new BooleanAccumulator(len);
 
@@ -34,7 +33,7 @@ public class CreateOrUpdateTargetMerger<T extends DataObject> {
             Series<?> values = df.getColumn(label);
 
             for (int i = 0; i < len; i++) {
-                T target = targets.get(i);
+                Object target = targets.get(i);
                 Object v = values.get(i);
                 if (writer.willWrite(target, v)) {
                     changed.set(i, true);

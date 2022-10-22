@@ -87,7 +87,7 @@ public class TaskService implements ITaskService {
         TargetEntity targetEntity = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
         RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
-        CreateOrUpdateTargetMerger<T> merger = new CreateOrUpdateTargetMerger<>(writerService.getWriterFactory(type));
+        CreateOrUpdateTargetMerger merger = new CreateOrUpdateTargetMerger(writerService.getWriterFactory(type));
         FkResolver fkResolver = new FkResolver(targetEntity);
 
         return new DefaultCreateOrUpdateBuilder<>(
