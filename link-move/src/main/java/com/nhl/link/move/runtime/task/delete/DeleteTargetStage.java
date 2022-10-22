@@ -7,10 +7,10 @@ import org.apache.cayenne.ObjectContext;
 /**
  * @since 1.3
  */
-public class DeleteTargetStage<T> {
+public class DeleteTargetStage {
 
 	public void delete(ObjectContext context, DataFrame df) {
-		Series<T> toDelete = df.getColumn(DeleteSegment.TARGET_COLUMN);
+		Series<?> toDelete = df.getColumn(DeleteSegment.TARGET_COLUMN);
 		context.deleteObjects(toDelete.toList());
 	}
 }

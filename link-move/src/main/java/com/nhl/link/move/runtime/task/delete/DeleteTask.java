@@ -25,7 +25,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
 
     private final Class<T> type;
     private final Expression targetFilter;
-    private final DeleteSegmentProcessor<T> processor;
+    private final DeleteSegmentProcessor processor;
     private final ITargetCayenneService targetCayenneService;
 
     public DeleteTask(
@@ -35,7 +35,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
-            DeleteSegmentProcessor<T> processor,
+            DeleteSegmentProcessor processor,
             LmLogger logger) {
 
         super(extractorName, batchSize, tokenManager, logger);
@@ -75,7 +75,7 @@ public class DeleteTask<T extends DataObject> extends BaseTask {
             // executing in the select context
             ObjectContext context = rows.get(0).getObjectContext();
             DataFrame df = DataFrame.newFrame(columns).columns(Series.forData(rows));
-            processor.process(execution, new DeleteSegment<>(context, df));
+            processor.process(execution, new DeleteSegment(context, df));
         };
     }
 }

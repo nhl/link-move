@@ -1,7 +1,6 @@
 package com.nhl.link.move.mapper;
 
 import com.nhl.dflib.row.RowProxy;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
 /**
@@ -20,7 +19,7 @@ public class SafeMapKeyMapper implements Mapper {
 	}
 
 	@Override
-	public Object keyForTarget(DataObject target) {
+	public Object keyForTarget(Object target) {
 		return keyAdapter.toMapKey(delegate.keyForTarget(target));
 	}
 

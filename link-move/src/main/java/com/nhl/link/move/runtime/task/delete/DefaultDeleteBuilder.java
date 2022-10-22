@@ -126,21 +126,16 @@ public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder<
                 logger);
     }
 
-    private DeleteSegmentProcessor<T> createProcessor() {
+    private DeleteSegmentProcessor createProcessor() {
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
         LmTask keysSubtask = taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
 
-        TargetMapper<T> targetMapper = new TargetMapper<>(mapper);
-        ExtractSourceKeysStage sourceKeysExtractor = new ExtractSourceKeysStage(keysSubtask);
-        MissingTargetsFilterStage<T> sourceMatcher = new MissingTargetsFilterStage<>();
-        DeleteTargetStage<T> deleter = new DeleteTargetStage<>();
-
-        return new DeleteSegmentProcessor<>(
-                targetMapper,
-                sourceKeysExtractor,
-                sourceMatcher,
-                deleter,
+        return new DeleteSegmentProcessor(
+                new TargetMapper(mapper),
+                new ExtractSourceKeysStage(keysSubtask),
+                new MissingTargetsFilterStage(),
+                new DeleteTargetStage(),
                 getListeners());
     }
 }

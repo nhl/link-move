@@ -1,19 +1,17 @@
 package com.nhl.link.move.mapper;
 
 import com.nhl.dflib.row.RowProxy;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
 /**
- * A strategy object for calculating a "key" from source and target objects of
- * the ETL. Keys are then used during the LOAD phase of the ETL execution to
- * match sources and targets.
+ * A strategy for calculating a "key" from source and target objects, so that an ETL pipeline could find matching
+ * pairs of sources and targets.
  */
 public interface Mapper {
 
-	Object keyForTarget(DataObject target);
+    Object keyForTarget(Object target);
 
-	Expression expressionForKey(Object key);
+    Expression expressionForKey(Object key);
 
-	Object keyForSource(RowProxy source);
+    Object keyForSource(RowProxy source);
 }

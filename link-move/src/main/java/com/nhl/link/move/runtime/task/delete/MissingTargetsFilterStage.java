@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @since 1.3
  */
-public class MissingTargetsFilterStage<T> {
+public class MissingTargetsFilterStage {
 
     public DataFrame filterMissing(
             DataFrame mappedTargets,

@@ -2,12 +2,11 @@ package com.nhl.link.move.runtime.task.delete;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
-import org.apache.cayenne.DataObject;
 
 /**
  * @since 1.3
  */
-public class TargetMapper<T extends DataObject> {
+public class TargetMapper {
 
     private Mapper mapper;
 
@@ -21,6 +20,6 @@ public class TargetMapper<T extends DataObject> {
 
         return df.addColumn(
                 DeleteSegment.KEY_COLUMN,
-                r -> mapper.keyForTarget((T) r.get(DeleteSegment.TARGET_COLUMN)));
+                r -> mapper.keyForTarget(r.get(DeleteSegment.TARGET_COLUMN)));
     }
 }

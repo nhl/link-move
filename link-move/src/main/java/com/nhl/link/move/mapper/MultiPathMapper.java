@@ -1,7 +1,6 @@
 package com.nhl.link.move.mapper;
 
 import com.nhl.dflib.row.RowProxy;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class MultiPathMapper implements Mapper {
     }
 
     @Override
-    public Object keyForTarget(DataObject target) {
+    public Object keyForTarget(Object target) {
         Map<String, Object> keyMap = new HashMap<>(pathMappers.size() * 2);
 
         for (Entry<String, Mapper> e : pathMappers.entrySet()) {

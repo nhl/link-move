@@ -159,12 +159,12 @@ public class ListenersBuilderTest {
     public static class DeleteListener1 {
 
         @AfterTargetsMapped
-        public void afterTargetsMapped(DeleteSegment<?> s) {
+        public void afterTargetsMapped(DeleteSegment s) {
 
         }
 
         @AfterSourceKeysExtracted
-        public void afterSourceKeysExtracted(DeleteSegment<?> s) {
+        public void afterSourceKeysExtracted(DeleteSegment s) {
 
         }
     }
@@ -172,19 +172,19 @@ public class ListenersBuilderTest {
     public static class DeleteListener2 {
 
         @AfterMissingTargetsFiltered
-        public void afterMissingTargetsFiltered(DeleteSegment<?> s) {
+        public void afterMissingTargetsFiltered(DeleteSegment s) {
 
         }
 
         @AfterSourceKeysExtracted
-        public void afterSourceKeysExtracted(DeleteSegment<?> s) {
+        public void afterSourceKeysExtracted(DeleteSegment s) {
 
         }
     }
 
     public static class NotAListener {
 
-        public void someMethod(DeleteSegment<?> s) {
+        public void someMethod(DeleteSegment s) {
 
         }
     }

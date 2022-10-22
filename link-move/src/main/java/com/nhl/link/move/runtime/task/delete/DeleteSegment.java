@@ -5,7 +5,7 @@ import org.apache.cayenne.ObjectContext;
 
 import java.util.Set;
 
-public class DeleteSegment<T> {
+public class DeleteSegment {
 
 	public static final String TARGET_COLUMN = "$lm_target";
 	public static final String KEY_COLUMN = "$lm_key";

@@ -2,7 +2,6 @@ package com.nhl.link.move.mapper;
 
 import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 
@@ -58,7 +57,7 @@ public class PathMapper implements Mapper {
     }
 
     @Override
-    public Object keyForTarget(DataObject target) {
+    public Object keyForTarget(Object target) {
 
         // cases:
         // 1. "obj:" expressions are object properties
