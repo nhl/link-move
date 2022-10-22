@@ -17,35 +17,35 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void batchStarted(Execution exec) {
-        logger.debug("[{}/{}/{}] batch started", exec.getId(), exec.getStats().getBatches(), exec.getTaskName());
+        logger.debug("[{}/{}] batch:{}", exec.getId(), exec.getTaskName(), exec.getStats().getBatches());
     }
 
     @Override
     public void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
-        logger.debug("[{}/{}/{}] batch finished, processed {}, deleted {} object(s)",
+        logger.debug("[{}/{}] batch:{} done in:{} out_deleted:{}",
                 exec.getId(),
-                exec.getStats().getBatches(),
                 exec.getTaskName(),
+                exec.getStats().getBatches(),
                 objectsProcessed,
                 objectsDeleted);
     }
 
     @Override
     public void createBatchFinished(Execution exec, int rowsProcessed, int objectsInserted) {
-        logger.debug("[{}/{}/{}] batch finished, processed {} row(s), created {} object(s)",
+        logger.debug("[{}/{}] batch:{} done in:{} out_created:{}",
                 exec.getId(),
-                exec.getStats().getBatches(),
                 exec.getTaskName(),
+                exec.getStats().getBatches(),
                 rowsProcessed,
                 objectsInserted);
     }
 
     @Override
     public void createOrUpdateBatchFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
-        logger.debug("[{}/{}/{}] batch finished, processed {} row(s), created {}, updated {} object(s)",
+        logger.debug("[{}/{}] batch:{} done in:{} out_created:{} out_updated:{}",
                 exec.getId(),
-                exec.getStats().getBatches(),
                 exec.getTaskName(),
+                exec.getStats().getBatches(),
                 rowsProcessed,
                 objectsInserted,
                 objectsUpdated);
@@ -53,10 +53,10 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, int keysExtracted) {
-        logger.debug("[{}/{}/{}] batch finished, processed {} row(s), extracted {} keys(s)",
+        logger.debug("[{}/{}] batch:{} done in:{}, out_keys:{}",
                 exec.getId(),
-                exec.getStats().getBatches(),
                 exec.getTaskName(),
+                exec.getStats().getBatches(),
                 rowsProcessed,
                 keysExtracted);
     }
