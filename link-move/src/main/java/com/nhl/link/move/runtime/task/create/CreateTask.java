@@ -55,7 +55,7 @@ public class CreateTask<T extends DataObject> extends BaseTask {
 
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
-        return rows -> processor.process(execution, new CreateSegment<>(context, rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
+        return rows -> processor.process(execution, new CreateSegment(context, rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
     }
 
     protected RowReader getRowReader(Execution exec) {

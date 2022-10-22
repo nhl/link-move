@@ -19,13 +19,13 @@ public class CreateSegmentProcessor<T extends DataObject> {
 
     private final RowConverter rowConverter;
     private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
-    private final CreateTargetMapper<T> mapper;
+    private final CreateTargetMapper mapper;
     private final CreateTargetMerger<T> merger;
     private final FkResolver fkResolver;
 
     public CreateSegmentProcessor(
             RowConverter rowConverter,
-            CreateTargetMapper<T> mapper,
+            CreateTargetMapper mapper,
             CreateTargetMerger<T> merger,
             FkResolver fkResolver,
             Map<Class<? extends Annotation>, List<StageListener>> listeners) {
@@ -37,7 +37,7 @@ public class CreateSegmentProcessor<T extends DataObject> {
         this.fkResolver = fkResolver;
     }
 
-    public void process(Execution exec, CreateSegment<T> segment) {
+    public void process(Execution exec, CreateSegment segment) {
         notifyListeners(AfterSourceRowsExtracted.class, exec, segment);
         convertSrc(exec, segment);
         mapToTarget(exec, segment);
@@ -46,32 +46,32 @@ public class CreateSegmentProcessor<T extends DataObject> {
         commitTarget(exec, segment);
     }
 
-    private void convertSrc(Execution exec, CreateSegment<T> segment) {
+    private void convertSrc(Execution exec, CreateSegment segment) {
         segment.setSources(rowConverter.convert(segment.getSourceRowsHeader(), segment.getSourceRows()));
         notifyListeners(AfterSourceRowsConverted.class, exec, segment);
     }
 
-    private void mapToTarget(Execution exec, CreateSegment<T> segment) {
+    private void mapToTarget(Execution exec, CreateSegment segment) {
         segment.setMapped(mapper.map(segment.getContext(), segment.getSources()));
         notifyListeners(AfterTargetsMapped.class, exec, segment);
     }
 
-    private void resolveFks(Execution exec, CreateSegment<T> segment) {
+    private void resolveFks(Execution exec, CreateSegment segment) {
         segment.setFksResolved(fkResolver.resolveFks(segment.getContext(), segment.getMapped()));
         notifyListeners(AfterFksResolved.class, exec, segment);
     }
 
-    private void mergeToTarget(Execution exec, CreateSegment<T> segment) {
+    private void mergeToTarget(Execution exec, CreateSegment segment) {
         segment.setMerged(merger.merge(segment.getFksResolved()));
         notifyListeners(AfterTargetsMerged.class, exec, segment);
     }
 
-    private void commitTarget(Execution exec, CreateSegment<T> segment) {
+    private void commitTarget(Execution exec, CreateSegment segment) {
         segment.getContext().commitChanges();
         notifyListeners(AfterTargetsCommitted.class, exec, segment);
     }
 
-    private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateSegment<T> segment) {
+    private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateSegment segment) {
         List<StageListener> listenersOfType = listeners.get(type);
         if (listenersOfType != null) {
             for (StageListener l : listenersOfType) {

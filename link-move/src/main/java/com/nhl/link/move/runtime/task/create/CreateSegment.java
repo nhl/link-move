@@ -5,10 +5,9 @@ import com.nhl.dflib.DataFrame;
 import org.apache.cayenne.ObjectContext;
 
 /**
- * @param <T>
  * @since 2.6
  */
-public class CreateSegment<T> {
+public class CreateSegment {
 
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String TARGET_CREATED_COLUMN = "$lm_target_created";

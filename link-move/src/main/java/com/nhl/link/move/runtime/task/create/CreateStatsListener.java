@@ -16,13 +16,13 @@ public class CreateStatsListener {
     }
 
     @AfterSourceRowsExtracted
-    public void sourceRowsExtracted(Execution e, CreateSegment<?> segment) {
+    public void sourceRowsExtracted(Execution e, CreateSegment segment) {
         e.getLogger().batchStarted(e);
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
     @AfterTargetsCommitted
-    public void targetsCommitted(Execution e, CreateSegment<?> segment) {
+    public void targetsCommitted(Execution e, CreateSegment segment) {
         e.getStats().incrementCreated(segment.getMapped().height());
 
         // call the logger before incrementing the batch count, so that start and end batch numbers match

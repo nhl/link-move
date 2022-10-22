@@ -26,7 +26,7 @@ import java.lang.annotation.Annotation;
  */
 public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateBuilder<T>> implements CreateBuilder<T> {
 
-    private final CreateTargetMapper<T> mapper;
+    private final CreateTargetMapper mapper;
     private final CreateTargetMerger<T> merger;
     private final FkResolver fkResolver;
     private final ITokenManager tokenManager;
@@ -37,7 +37,7 @@ public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<
     private ExtractorName extractorName;
 
     public DefaultCreateBuilder(
-            CreateTargetMapper<T> mapper,
+            CreateTargetMapper mapper,
             CreateTargetMerger<T> merger,
             FkResolver fkResolver,
             RowConverter rowConverter,

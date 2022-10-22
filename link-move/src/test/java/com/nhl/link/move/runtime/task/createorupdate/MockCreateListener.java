@@ -16,47 +16,47 @@ public class MockCreateListener {
 	}
 
 	@AfterSourceRowsExtracted
-	public void afterSourceRowsExtracted(Execution execution, CreateSegment<?> segment) {
+	public void afterSourceRowsExtracted(Execution execution, CreateSegment segment) {
 		mockDelegate.afterSourceRowsExtracted(execution, segment);
 	}
 
 	@AfterFksResolved
-	public void afterFksResolved(Execution execution, CreateSegment<?> segment) {
+	public void afterFksResolved(Execution execution, CreateSegment segment) {
 		mockDelegate.afterFksResolved(execution, segment);
 	}
 
 	@AfterTargetsMatched
-	public void afterTargetMatched(Execution execution, CreateSegment<?> segment) {
+	public void afterTargetMatched(Execution execution, CreateSegment segment) {
 		mockDelegate.afterTargetMatched(execution, segment);
 	}
 	
 	@AfterTargetsMatched
-	public void afterTargetMatched2(Execution execution, CreateSegment<?> segment) {
+	public void afterTargetMatched2(Execution execution, CreateSegment segment) {
 		mockDelegate.afterTargetMatched2(execution, segment);
 	}
 
 	@AfterTargetsMapped
-	public void afterTargetMapped(Execution execution, CreateSegment<?> segment) {
+	public void afterTargetMapped(Execution execution, CreateSegment segment) {
 		mockDelegate.afterTargetMapped(execution, segment);
 	}
 
 	@AfterSourceRowsConverted
-	public void afterSourceRowsConverted(Execution execution, CreateSegment<?> segment) {
+	public void afterSourceRowsConverted(Execution execution, CreateSegment segment) {
 		mockDelegate.afterSourceRowsConverted(execution, segment);
 	}
 	
 	@AfterSourcesMapped
-	public void afterSourceMapped(Execution execution, CreateSegment<?> segment) {
+	public void afterSourceMapped(Execution execution, CreateSegment segment) {
 		mockDelegate.afterSourceMapped(execution, segment);
 	}
 	
 	@AfterTargetsMerged
-	public void afterTargetMerged(Execution execution, CreateSegment<?> segment) {
+	public void afterTargetMerged(Execution execution, CreateSegment segment) {
 		mockDelegate.afterTargetMerged(execution, segment);
 	}
 
 	@AfterTargetsCommitted
-	public void afterTargetCommited(Execution execution, CreateSegment<?> segment) {
+	public void afterTargetCommited(Execution execution, CreateSegment segment) {
 		mockDelegate.afterTargetCommited(execution, segment);
 	}
 }

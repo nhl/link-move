@@ -4,18 +4,16 @@ import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
 import com.nhl.dflib.row.RowBuilder;
 import com.nhl.dflib.row.RowProxy;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
 
 /**
- * @param <T>
  * @since 2.6
  */
-public class CreateTargetMapper<T extends DataObject> {
+public class CreateTargetMapper {
 
-    private Class<T> type;
+    private final Class<?> type;
 
-    public CreateTargetMapper(Class<T> type) {
+    public CreateTargetMapper(Class<?> type) {
         this.type = type;
     }
 
@@ -31,7 +29,7 @@ public class CreateTargetMapper<T extends DataObject> {
         to.set(CreateSegment.TARGET_CREATED_COLUMN, true);
     }
 
-    protected T create(ObjectContext context) {
+    protected Object create(ObjectContext context) {
 
         // Note that "context.newObject" is an impure function. Though we don't see its undesired side effects on
         // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
