@@ -1,6 +1,6 @@
 package com.nhl.link.move.writer;
 
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.reflect.AttributeProperty;
 import org.apache.cayenne.util.Util;
 
@@ -16,13 +16,13 @@ public class TargetAttributePropertyWriter implements TargetPropertyWriter {
 	}
 
 	@Override
-	public void write(DataObject target, Object value) {
+	public void write(Persistent target, Object value) {
 		Object oldValue = property.readProperty(target);
 		property.writeProperty(target, oldValue, value);
 	}
 
 	@Override
-	public boolean willWrite(DataObject target, Object value) {
+	public boolean willWrite(Persistent target, Object value) {
 		Object oldValue = property.readProperty(target);
 		return !Util.nullSafeEquals(oldValue, value);
 	}

@@ -1,6 +1,6 @@
 package com.nhl.link.move.writer;
 
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.reflect.ToOneProperty;
 import org.apache.cayenne.util.Util;
 
@@ -9,19 +9,19 @@ import org.apache.cayenne.util.Util;
  */
 public class TargetToOnePropertyWriter implements TargetPropertyWriter {
 
-	private ToOneProperty property;
+	private final ToOneProperty property;
 
 	public TargetToOnePropertyWriter(ToOneProperty property) {
 		this.property = property;
 	}
 
 	@Override
-	public void write(DataObject target, Object value) {
+	public void write(Persistent target, Object value) {
 		property.setTarget(target, value, true);
 	}
 
 	@Override
-	public boolean willWrite(DataObject target, Object value) {
+	public boolean willWrite(Persistent target, Object value) {
 		Object oldValue = property.readProperty(target);
 		return !Util.nullSafeEquals(oldValue, value);
 	}

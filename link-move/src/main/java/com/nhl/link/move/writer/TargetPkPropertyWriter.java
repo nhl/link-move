@@ -1,7 +1,7 @@
 package com.nhl.link.move.writer;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.util.Util;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class TargetPkPropertyWriter implements TargetPropertyWriter {
 
-	private DbAttribute pk;
+	private final DbAttribute pk;
 
 	public TargetPkPropertyWriter(DbAttribute pk) {
 
@@ -21,17 +21,16 @@ public class TargetPkPropertyWriter implements TargetPropertyWriter {
 		}
 
 		this.pk = pk;
-
 	}
 
 	@Override
-	public void write(DataObject target, Object value) {
+	public void write(Persistent target, Object value) {
 		// regular meaningless PK
 		target.getObjectId().getReplacementIdMap().put(pk.getName(), value);
 	}
 
 	@Override
-	public boolean willWrite(DataObject target, Object value) {
+	public boolean willWrite(Persistent target, Object value) {
 
 		Map<String, Object> idSnapshot = target.getObjectId().getIdSnapshot();
 		if (Util.nullSafeEquals(idSnapshot.get(pk.getName()), value)) {
