@@ -12,10 +12,10 @@ public class CreateSegment {
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String TARGET_CREATED_COLUMN = "$lm_target_created";
 
-    private ObjectContext context;
-    private RowAttribute[] sourceRowsHeader;
-    private DataFrame sourceRows;
+    private final ObjectContext context;
+    private final RowAttribute[] sourceRowsHeader;
 
+    private DataFrame sourceRows;
     private DataFrame sources;
     private DataFrame mapped;
     private DataFrame fksResolved;

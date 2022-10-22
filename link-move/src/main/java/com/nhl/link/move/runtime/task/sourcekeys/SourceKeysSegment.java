@@ -8,7 +8,7 @@ import com.nhl.dflib.DataFrame;
  */
 public class SourceKeysSegment {
 
-	private RowAttribute[] sourceRowsHeader;
+	private final RowAttribute[] sourceRowsHeader;
 
 	private DataFrame sourceRows;
 	private DataFrame sources;
