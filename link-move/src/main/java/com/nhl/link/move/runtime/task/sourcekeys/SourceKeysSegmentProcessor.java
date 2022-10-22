@@ -32,11 +32,11 @@ public class SourceKeysSegmentProcessor {
     public void process(Execution exec, SourceKeysSegment segment) {
         notifyListeners(AfterSourceRowsExtracted.class, exec, segment);
 
-        convertSrc(exec, segment);
+        convertSrc(segment);
         collectSourceKeys(exec, segment);
     }
 
-    private void convertSrc(Execution exec, SourceKeysSegment segment) {
+    private void convertSrc(SourceKeysSegment segment) {
         segment.setSources(rowConverter.convert(segment.getSourceRowsHeader(), segment.getSourceRows()));
     }
 
