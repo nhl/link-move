@@ -4,6 +4,7 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterSourceKeysCollected;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -25,11 +26,11 @@ public class SourceKeysStatsListener {
 
     @AfterSourceKeysCollected
     public void sourceKeysCollected(Execution e, SourceKeysSegment segment) {
-        Set<Object> keys = (Set<Object>) e.getAttribute(SourceKeysTask.RESULT_KEY);
-        int keysExtracted = keys != null ? keys.size() : 0;
+        Set<?> keys = (Set<?>) e.getAttribute(SourceKeysTask.RESULT_KEY);
+        Set<?> keysReported = keys != null ? keys : Collections.emptySet();
 
         // call the logger before incrementing the batch count, so that start and end batch numbers match
-        e.getLogger().sourceKeysBatchFinished(e, segment.getSourceRows().height(), keysExtracted);
+        e.getLogger().sourceKeysBatchFinished(e, segment.getSourceRows().height(), keysReported);
         e.getStats().incrementBatches(1);
     }
 }

@@ -4,6 +4,8 @@ import com.nhl.link.move.Execution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+
 /**
  * @since 3.0
  */
@@ -52,12 +54,20 @@ public class Slf4jLmLogger implements LmLogger {
     }
 
     @Override
-    public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, int keysExtracted) {
-        logger.debug("[{}/{}] batch:{} done in:{}, out_keys:{}",
+    public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, Set<?> keysExtracted) {
+        logger.debug("[{}/{}] batch:{} done in:{} out_keys:{}",
                 exec.getId(),
                 exec.getTaskName(),
                 exec.getStats().getBatches(),
                 rowsProcessed,
-                keysExtracted);
+                keysExtracted.size());
+
+        if (!keysExtracted.isEmpty() && logger.isTraceEnabled()) {
+            logger.trace("[{}/{}] batch:{} out_keys:{}",
+                    exec.getId(),
+                    exec.getTaskName(),
+                    exec.getStats().getBatches(),
+                    keysExtracted);
+        }
     }
 }
