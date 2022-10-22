@@ -48,19 +48,26 @@ public class Execution implements AutoCloseable {
         for (Entry<String, ?> p : parameters.entrySet()) {
             append(paramsOut, p.getKey(), p.getValue());
         }
+        paramsOut.append("}");
+
+        StringBuilder statsOut = new StringBuilder("{");
+        append(statsOut, "batches", stats.getBatches());
+        append(statsOut, "created", stats.getCreated());
+        append(statsOut, "deleted", stats.getDeleted());
+        append(statsOut, "duration", stats.getDuration());
+        append(statsOut, "extracted", stats.getExtracted());
+        append(statsOut, "startedOn", stats.getStartedOn());
+        append(statsOut, "status", stats.isStopped() ? "finished" : "in progress");
+        append(statsOut, "updated", stats.getUpdated());
+
+        statsOut.append("}");
 
         StringBuilder out = new StringBuilder("{");
         append(out, "id", id);
-        append(out, "created", stats.getCreated());
-        append(out, "deleted", stats.getDeleted());
-        append(out, "duration", stats.getDuration());
-        append(out, "extracted", stats.getExtracted());
         append(out, "extractor", extractorName);
-        append(out, "parameters", paramsOut.append("}").toString(), false);
-        append(out, "startedOn", stats.getStartedOn());
-        append(out, "status", stats.isStopped() ? "finished" : "in progress");
+        append(out, "parameters", paramsOut.toString(), false);
+        append(out, "stats", statsOut.toString(), false);
         append(out, "task", taskName);
-        append(out, "updated", stats.getUpdated());
 
         return out.append("}").toString();
     }

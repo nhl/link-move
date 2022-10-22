@@ -36,6 +36,8 @@ public class CreateOrUpdateStatsListener {
         e.getStats().incrementCreated(created);
         e.getStats().incrementUpdated(updated);
 
+        // call the logger before incrementing the batch count, so that start and end batch numbers match
         e.getLogger().createOrUpdateBatchFinished(e, segment.getSourceRows().height(), created, updated);
+        e.getStats().incrementBatches(1);
     }
 }

@@ -17,13 +17,14 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void batchStarted(Execution exec) {
-        logger.debug("[{}/{}] batch started", exec.getId(), exec.getTaskName());
+        logger.debug("[{}/{}/{}] batch started", exec.getId(), exec.getStats().getBatches(), exec.getTaskName());
     }
 
     @Override
     public void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
-        logger.debug("[{}/{}] batch finished, processed {}, deleted {} object(s)",
+        logger.debug("[{}/{}/{}] batch finished, processed {}, deleted {} object(s)",
                 exec.getId(),
+                exec.getStats().getBatches(),
                 exec.getTaskName(),
                 objectsProcessed,
                 objectsDeleted);
@@ -31,8 +32,9 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void createBatchFinished(Execution exec, int rowsProcessed, int objectsInserted) {
-        logger.debug("[{}/{}] batch finished, processed {} row(s), created {} object(s)",
+        logger.debug("[{}/{}/{}] batch finished, processed {} row(s), created {} object(s)",
                 exec.getId(),
+                exec.getStats().getBatches(),
                 exec.getTaskName(),
                 rowsProcessed,
                 objectsInserted);
@@ -40,8 +42,9 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void createOrUpdateBatchFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
-        logger.debug("[{}/{}] batch finished, processed {} row(s), created {}, updated {} object(s)",
+        logger.debug("[{}/{}/{}] batch finished, processed {} row(s), created {}, updated {} object(s)",
                 exec.getId(),
+                exec.getStats().getBatches(),
                 exec.getTaskName(),
                 rowsProcessed,
                 objectsInserted,
@@ -50,8 +53,9 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, int keysExtracted) {
-        logger.debug("[{}/{}] batch finished, processed {} row(s), extracted {} keys(s)",
+        logger.debug("[{}/{}/{}] batch finished, processed {} row(s), extracted {} keys(s)",
                 exec.getId(),
+                exec.getStats().getBatches(),
                 exec.getTaskName(),
                 rowsProcessed,
                 keysExtracted);

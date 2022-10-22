@@ -15,20 +15,24 @@ public class ExecutionTest {
     @Test
     public void testToString() {
         Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class));
-        assertEquals("{\"id\":1,\"created\":0,\"deleted\":0,\"extracted\":0,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
+        assertEquals("{\"id\":1,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
+                "\"stats\":{\"batches\":0,\"created\":0,\"deleted\":0,\"extracted\":0," +
                 "\"startedOn\":\"" + execution.getStats().getStartedOn() + "\",\"status\":\"in progress\"," +
-                "\"task\":\"xsync\",\"updated\":0}", execution.toString());
+                "\"updated\":0},\"task\":\"xsync\"}", execution.toString());
 
         execution.getStats().incrementCreated(5);
         execution.getStats().incrementDeleted(4);
         execution.getStats().incrementExtracted(55);
         execution.getStats().incrementUpdated(3);
+        execution.getStats().incrementBatches(1);
 
         execution.close();
 
-        assertEquals("{\"id\":1,\"created\":5,\"deleted\":4,\"duration\":\"" + execution.getStats().getDuration() + "\"," +
-                "\"extracted\":55,\"extractor\":\"l.n\",\"parameters\":{\"a\":5},\"startedOn\":\"" + execution.getStats().getStartedOn() + "\"," +
-                "\"status\":\"finished\",\"task\":\"xsync\",\"updated\":3}", execution.toString());
+        assertEquals("{\"id\":1,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
+                "\"stats\":{\"batches\":1,\"created\":5,\"deleted\":4," +
+                "\"duration\":\"" + execution.getStats().getDuration() + "\",\"extracted\":55," +
+                "\"startedOn\":\"" + execution.getStats().getStartedOn() + "\",\"status\":\"finished\"," +
+                "\"updated\":3},\"task\":\"xsync\"}", execution.toString());
     }
 
     @Deprecated(since = "3.0")

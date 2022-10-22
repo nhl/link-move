@@ -24,6 +24,9 @@ public class CreateStatsListener {
     @AfterTargetsCommitted
     public void targetsCommitted(Execution e, CreateSegment<?> segment) {
         e.getStats().incrementCreated(segment.getMapped().height());
+
+        // call the logger before incrementing the batch count, so that start and end batch numbers match
         e.getLogger().createBatchFinished(e, segment.getSourceRows().height(), segment.getMapped().height());
+        e.getStats().incrementBatches(1);
     }
 }

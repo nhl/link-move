@@ -9,6 +9,7 @@ import java.time.ZoneId;
  */
 public class ExecutionStats {
 
+    protected int batches;
     protected long extracted;
     protected long created;
     protected long updated;
@@ -68,6 +69,12 @@ public class ExecutionStats {
         return stoppedOn;
     }
 
+    /**
+     * @since 3.0
+     */
+    public int getBatches() {
+        return batches;
+    }
 
     /**
      * @deprecated since 3.0 in favor of {@link #getStartedOn()}
@@ -83,6 +90,10 @@ public class ExecutionStats {
     @Deprecated(since = "3.0")
     public long getFinished() {
         return stoppedOn != null ? stoppedOn.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
+    }
+
+    public void incrementBatches(int count) {
+        this.batches += count;
     }
 
     public void incrementExtracted(long count) {

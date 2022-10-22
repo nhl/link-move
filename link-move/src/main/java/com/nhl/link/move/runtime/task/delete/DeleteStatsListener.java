@@ -28,6 +28,9 @@ public class DeleteStatsListener {
     @AfterTargetsCommitted
     public void targetsCommitted(Execution e, DeleteSegment<?> segment) {
         e.getStats().incrementDeleted(segment.getMissingTargets().height());
+
+        // call the logger before incrementing the batch count, so that start and end batch numbers match
         e.getLogger().deleteBatchFinished(e, segment.getTargets().height(), segment.getMissingTargets().height());
+        e.getStats().incrementBatches(1);
     }
 }

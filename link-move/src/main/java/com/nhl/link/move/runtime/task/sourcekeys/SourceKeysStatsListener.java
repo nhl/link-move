@@ -25,9 +25,11 @@ public class SourceKeysStatsListener {
 
     @AfterSourceKeysCollected
     public void sourceKeysCollected(Execution e, SourceKeysSegment segment) {
-        // TODO: should this be stored in the segment?
         Set<Object> keys = (Set<Object>) e.getAttribute(SourceKeysTask.RESULT_KEY);
         int keysExtracted = keys != null ? keys.size() : 0;
+
+        // call the logger before incrementing the batch count, so that start and end batch numbers match
         e.getLogger().sourceKeysBatchFinished(e, segment.getSourceRows().height(), keysExtracted);
+        e.getStats().incrementBatches(1);
     }
 }
