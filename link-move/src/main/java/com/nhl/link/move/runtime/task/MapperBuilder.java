@@ -1,8 +1,11 @@
 package com.nhl.link.move.runtime.task;
 
 import com.nhl.link.move.ClassNameResolver;
-import com.nhl.link.move.mapper.*;
-import com.nhl.link.move.runtime.cayenne.CayenneCrossVersionBinaryCompat;
+import com.nhl.link.move.mapper.KeyAdapter;
+import com.nhl.link.move.mapper.Mapper;
+import com.nhl.link.move.mapper.MultiPathMapper;
+import com.nhl.link.move.mapper.PathMapper;
+import com.nhl.link.move.mapper.SafeMapKeyMapper;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
@@ -15,7 +18,14 @@ import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.ObjRelationship;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * A helper dealing with {@link Mapper} assembly on behalf of {@link com.nhl.link.move.CreateOrUpdateBuilder} and
@@ -67,7 +77,7 @@ public class MapperBuilder {
     public MapperBuilder matchById() {
 
         int before = paths.size();
-        CayenneCrossVersionBinaryCompat.pkAttributes(entity.getDbEntity()).forEach(pk -> this.paths.add(ASTDbPath.DB_PREFIX + pk.getName()));
+        entity.getDbEntity().getPrimaryKeys().forEach(pk -> this.paths.add(ASTDbPath.DB_PREFIX + pk.getName()));
 
         if (before == paths.size()) {
             throw new IllegalStateException("Target entity has no PKs defined: " + entity.getDbEntityName());

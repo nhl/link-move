@@ -1,7 +1,6 @@
 package com.nhl.link.move.writer;
 
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.runtime.cayenne.CayenneCrossVersionBinaryCompat;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.util.Util;
@@ -28,18 +27,18 @@ public class TargetPkPropertyWriter implements TargetPropertyWriter {
 	@Override
 	public void write(DataObject target, Object value) {
 		// regular meaningless PK
-		CayenneCrossVersionBinaryCompat.getReplacementIdMap(target).put(pk.getName(), value);
+		target.getObjectId().getReplacementIdMap().put(pk.getName(), value);
 	}
 
 	@Override
 	public boolean willWrite(DataObject target, Object value) {
 
-		Map<String, Object> idSnapshot = CayenneCrossVersionBinaryCompat.getIdSnapshot(target);
+		Map<String, Object> idSnapshot = target.getObjectId().getIdSnapshot();
 		if (Util.nullSafeEquals(idSnapshot.get(pk.getName()), value)) {
 			return false;
 		}
 
-		Map<String, Object> replacementMap = CayenneCrossVersionBinaryCompat.getReplacementIdMap(target);
+		Map<String, Object> replacementMap = target.getObjectId().getReplacementIdMap();
 		if (Util.nullSafeEquals(replacementMap.get(pk.getName()), value)) {
 			return false;
 		}
