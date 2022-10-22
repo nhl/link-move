@@ -19,7 +19,7 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.property.Property;
 
 import java.lang.annotation.Annotation;
@@ -27,7 +27,7 @@ import java.lang.annotation.Annotation;
 /**
  * A builder of an ETL task that matches source data with target data based on a certain unique attribute on both sides.
  */
-public class DefaultCreateOrUpdateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder<T>> implements CreateOrUpdateBuilder<T> {
+public class DefaultCreateOrUpdateBuilder<T extends Persistent> extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder<T>> implements CreateOrUpdateBuilder<T> {
 
     private final Class<T> type;
     private final CreateOrUpdateTargetMerger merger;

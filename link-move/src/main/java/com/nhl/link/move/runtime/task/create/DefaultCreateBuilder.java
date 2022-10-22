@@ -16,7 +16,7 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 
 import java.lang.annotation.Annotation;
 
@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
  * @param <T>
  * @since 2.6
  */
-public class DefaultCreateBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultCreateBuilder<T>> implements CreateBuilder<T> {
+public class DefaultCreateBuilder<T extends Persistent> extends BaseTaskBuilder<DefaultCreateBuilder<T>> implements CreateBuilder<T> {
 
     private final CreateTargetMapper mapper;
     private final CreateTargetMerger merger;

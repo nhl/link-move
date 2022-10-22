@@ -24,6 +24,7 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.map.ObjEntity;
 
@@ -61,7 +62,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends DataObject> CreateBuilder<T> create(Class<T> type) {
+    public <T extends Persistent> CreateBuilder<T> create(Class<T> type) {
 
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
@@ -81,7 +82,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
+    public <T extends Persistent> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type) {
 
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
@@ -111,7 +112,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends DataObject> SourceKeysBuilder extractSourceKeys(Class<T> type) {
+    public <T extends Persistent> SourceKeysBuilder extractSourceKeys(Class<T> type) {
         ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(type);
         return new DefaultSourceKeysBuilder(
                 targetEntityMap.get(targetEntity),
@@ -135,7 +136,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public <T extends DataObject> DeleteBuilder<T> delete(Class<T> type) {
+    public <T extends Persistent> DeleteBuilder<T> delete(Class<T> type) {
 
         ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
         if (entity == null) {

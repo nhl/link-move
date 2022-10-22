@@ -17,6 +17,7 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
 
@@ -25,7 +26,7 @@ import java.lang.annotation.Annotation;
 /**
  * @since 1.3
  */
-public class DefaultDeleteBuilder<T extends DataObject> extends BaseTaskBuilder<DefaultDeleteBuilder<T>> implements DeleteBuilder<T> {
+public class DefaultDeleteBuilder<T extends Persistent> extends BaseTaskBuilder<DefaultDeleteBuilder<T>> implements DeleteBuilder<T> {
 
     private final ITaskService taskService;
     private final ITokenManager tokenManager;

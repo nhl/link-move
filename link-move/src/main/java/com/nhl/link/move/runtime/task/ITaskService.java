@@ -1,11 +1,10 @@
 package com.nhl.link.move.runtime.task;
 
 import com.nhl.link.move.CreateBuilder;
-import org.apache.cayenne.DataObject;
-
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.SourceKeysBuilder;
+import org.apache.cayenne.Persistent;
 
 public interface ITaskService {
 
@@ -16,26 +15,26 @@ public interface ITaskService {
      *
      * @since 2.6
      */
-    <T extends DataObject> CreateBuilder<T> create(Class<T> type);
+    <T extends Persistent> CreateBuilder<T> create(Class<T> type);
 
     /**
      * Returns a builder of "create-or-update" ETL synchronization task.
      *
      * @since 1.3
      */
-    <T extends DataObject> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type);
+    <T extends Persistent> CreateOrUpdateBuilder<T> createOrUpdate(Class<T> type);
 
     /**
      * Returns a builder of target delete ETL synchronization task.
      *
      * @since 1.3
      */
-    <T extends DataObject> DeleteBuilder<T> delete(Class<T> type);
+    <T extends Persistent> DeleteBuilder<T> delete(Class<T> type);
 
     /**
      * @since 1.3
      */
-    <T extends DataObject> SourceKeysBuilder extractSourceKeys(Class<T> type);
+    <T extends Persistent> SourceKeysBuilder extractSourceKeys(Class<T> type);
 
     /**
      * @since 1.4

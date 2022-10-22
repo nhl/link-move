@@ -10,8 +10,8 @@ import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
-import org.apache.cayenne.DataObject;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.ResultIterator;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.query.ObjectSelect;
@@ -21,7 +21,7 @@ import org.apache.cayenne.query.ObjectSelect;
  *
  * @since 1.3
  */
-public class DeleteTask<T extends DataObject> extends BaseTask {
+public class DeleteTask<T extends Persistent> extends BaseTask {
 
     private final Class<T> type;
     private final Expression targetFilter;
