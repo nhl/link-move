@@ -25,7 +25,12 @@ public class Execution {
     /**
      * @since 3.0
      */
-    public Execution(long id, String taskName, ExtractorName extractorName, Map<String, ?> params, LmLogger logger) {
+    public Execution(
+            long id,
+            String taskName,
+            ExtractorName extractorName,
+            Map<String, ?> params, LmLogger logger) {
+
         this.id = id;
         this.taskName = taskName;
         this.extractorName = extractorName;

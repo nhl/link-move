@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public abstract class BaseTask implements LmTask {
 
-    private static final AtomicLong idGenerator = new AtomicLong();
+    private static final AtomicLong execIdGenerator = new AtomicLong();
 
     protected final LmLogger logger;
 
@@ -97,9 +97,9 @@ public abstract class BaseTask implements LmTask {
     }
 
     protected Execution createExec(Map<String, ?> params, Execution parentExec) {
-        // inherit ID from parent
-        long id = parentExec != null ? parentExec.getId() : idGenerator.getAndIncrement();
-        return new Execution(id, label, extractorName, params, logger);
+        // inherit the ID from parent
+        long execId = parentExec != null ? parentExec.getId() : execIdGenerator.getAndIncrement();
+        return new Execution(execId, label, extractorName, params, logger);
     }
 
     protected <S> BatchRunner<S> createBatchRunner(BatchProcessor<S> processor) {
