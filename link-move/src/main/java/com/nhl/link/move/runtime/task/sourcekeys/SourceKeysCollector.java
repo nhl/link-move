@@ -9,7 +9,8 @@ import java.util.Set;
  * @since 1.3
  */
 public class SourceKeysCollector {
-	private Mapper mapper;
+
+	private final Mapper mapper;
 
 	public SourceKeysCollector(Mapper mapper) {
 		this.mapper = mapper;

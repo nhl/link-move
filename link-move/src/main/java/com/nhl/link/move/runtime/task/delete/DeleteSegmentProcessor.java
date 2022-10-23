@@ -49,7 +49,7 @@ public class DeleteSegmentProcessor {
     }
 
     private void extractSourceKeys(Execution exec, DeleteSegment segment) {
-        segment.setSourceKeys(sourceKeysExtractor.extractSourceKeys(exec, segment.getContext()));
+        segment.setSourceKeys(sourceKeysExtractor.extractSourceKeys(exec));
         notifyListeners(AfterSourceKeysExtracted.class, exec, segment);
     }
 
