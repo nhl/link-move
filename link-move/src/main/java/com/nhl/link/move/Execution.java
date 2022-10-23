@@ -35,6 +35,9 @@ public class Execution implements AutoCloseable {
         this.stats = new ExecutionStats().executionStarted();
     }
 
+    /**
+     * Closing the execution would record the timestamp for stats reporting.
+     */
     @Override
     public void close() {
         stats.executionStopped();
@@ -97,7 +100,7 @@ public class Execution implements AutoCloseable {
     }
 
     /**
-     * Returns transaction id. It is an incrementing number and is unique within a JVM. It is used primarily for
+     * Returns execution id. It is an incrementing number and is unique within a JVM. It is used primarily for
      * logging, so there's no goal to keep it globally unique.
      *
      * @since 3.0
@@ -134,7 +137,8 @@ public class Execution implements AutoCloseable {
      * Creates task execution report as a map of labels vs. values.
      *
      * @deprecated since 3.0. Execution reports are used primarily for logging, which is now handled by
-     * {@link com.nhl.link.move.log.LmLogger}, so this API is no longer useful.
+     * {@link com.nhl.link.move.log.LmLogger}, so this API is no longer useful. The closest approximation
+     * of the "report" is a {@link #toString()} method.
      */
     @Deprecated(since = "3.0")
     public Map<String, Object> createReport() {
