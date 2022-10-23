@@ -2,6 +2,8 @@ package com.nhl.link.move.log;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
+import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
 import org.slf4j.Logger;
 
@@ -27,7 +29,16 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
 
     @Override
     public void execStarted() {
-        logger.info("{} start", label);
+        ExtractorName extractorName = exec.getExtractorName();
+        if (extractorName != null) {
+            if (extractorName.getName() != null && !ExtractorModel.DEFAULT_NAME.equals(extractorName.getName())) {
+                logger.info("{} start extractor:{}:{}", label, extractorName.getLocation(), extractorName.getName());
+            } else {
+                logger.info("{} start extractor:{}", label, extractorName.getLocation());
+            }
+        } else {
+            logger.info("{} start", label);
+        }
     }
 
     @Override
