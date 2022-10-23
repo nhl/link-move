@@ -26,7 +26,7 @@ public abstract class BaseTask implements LmTask {
 
     private static final AtomicLong idGenerator = new AtomicLong();
 
-    private final LmLogger logger;
+    protected final LmLogger logger;
 
     @Deprecated(since = "3.0")
     private final ITokenManager tokenManager;
@@ -66,10 +66,17 @@ public abstract class BaseTask implements LmTask {
 
     @Override
     public Execution run(Map<String, ?> params, Execution parentExec) {
-        try (Execution execution = createExec(params, parentExec)) {
-            doRun(execution);
-            return execution;
+        Execution exec = createExec(params, parentExec);
+        onExecStarted(exec);
+
+        try {
+            doRun(exec);
+        } finally {
+            exec.stop();
+            onExecFinished(exec);
         }
+
+        return exec;
     }
 
     @Override
@@ -102,7 +109,19 @@ public abstract class BaseTask implements LmTask {
     /**
      * @since 3.0
      */
+    protected void onExecStarted(Execution exec) {
+        logger.execStarted(exec);
+    }
+
+    /**
+     * @since 3.0
+     */
     protected abstract void doRun(Execution exec);
+
+    /**
+     * @since 3.0
+     */
+    protected abstract void onExecFinished(Execution exec);
 
     @Deprecated(since = "3.0")
     protected Map<String, Object> mergeParams(SyncToken token, Map<String, ?> params) {

@@ -9,6 +9,16 @@ import java.util.Set;
  */
 public interface LmLogger {
 
+    void execStarted(Execution exec);
+
+    void deleteExecFinished(Execution exec);
+
+    void createExecFinished(Execution exec);
+
+    void createOrUpdateExecFinished(Execution exec);
+
+    void sourceKeysExecFinished(Execution exec);
+
     void batchStarted(Execution exec);
 
     void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted);

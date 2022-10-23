@@ -51,6 +51,11 @@ public class CreateTask extends BaseTask {
         }
     }
 
+    @Override
+    protected void onExecFinished(Execution exec) {
+        logger.createExecFinished(exec);
+    }
+
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
         return rows -> processor.process(

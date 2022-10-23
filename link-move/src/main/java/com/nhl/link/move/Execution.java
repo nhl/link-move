@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * A single execution of an {@link LmTask}. Tracks task parameters and execution statistics.
  */
-public class Execution implements AutoCloseable {
+public class Execution {
 
     protected final long id;
     protected final String taskName;
@@ -36,10 +36,17 @@ public class Execution implements AutoCloseable {
     }
 
     /**
-     * Closing the execution would record the timestamp for stats reporting.
+     * @deprecated in favor of {@link #stop()}
      */
-    @Override
+    @Deprecated(since = "3.0")
     public void close() {
+        stop();
+    }
+
+    /**
+     * Record the timestamp for stats reporting.
+     */
+    public void stop() {
         stats.executionStopped();
     }
 

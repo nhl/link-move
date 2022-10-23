@@ -56,6 +56,11 @@ public class SourceKeysTask extends BaseTask {
         }
     }
 
+    @Override
+    protected void onExecFinished(Execution exec) {
+        logger.sourceKeysExecFinished(exec);
+    }
+
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         return rows -> processor.process(
                 execution,

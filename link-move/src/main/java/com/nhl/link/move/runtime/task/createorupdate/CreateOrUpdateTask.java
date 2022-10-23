@@ -54,6 +54,11 @@ public class CreateOrUpdateTask extends BaseTask {
         }
     }
 
+    @Override
+    protected void onExecFinished(Execution exec) {
+        logger.createOrUpdateExecFinished(exec);
+    }
+
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         ObjectContext context = targetCayenneService.newContext();
         return rows -> processor.process(

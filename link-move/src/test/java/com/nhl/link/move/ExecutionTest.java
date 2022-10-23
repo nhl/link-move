@@ -26,7 +26,7 @@ public class ExecutionTest {
         execution.getStats().incrementUpdated(3);
         execution.getStats().incrementBatches(1);
 
-        execution.close();
+        execution.stop();
 
         assertEquals("{\"id\":1,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
                 "\"stats\":{\"batches\":1,\"created\":5,\"deleted\":4," +
@@ -58,7 +58,7 @@ public class ExecutionTest {
         execution.getStats().incrementExtracted(55);
         execution.getStats().incrementUpdated(3);
 
-        execution.close();
+        execution.stop();
 
         assertEquals(Map.of(
                         "Task", "xsync:l.n",
@@ -76,15 +76,14 @@ public class ExecutionTest {
 
     @Test
     public void testAttribute() {
-        try (Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class))) {
-      
-            assertNull(execution.getAttribute("a"));
+        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class));
 
-            execution.setAttribute("a", "MMM");
-            assertEquals("MMM", execution.getAttribute("a"));
+        assertNull(execution.getAttribute("a"));
 
-            execution.setAttribute("a", null);
-            assertNull(execution.getAttribute("a"));
-        }
+        execution.setAttribute("a", "MMM");
+        assertEquals("MMM", execution.getAttribute("a"));
+
+        execution.setAttribute("a", null);
+        assertNull(execution.getAttribute("a"));
     }
 }

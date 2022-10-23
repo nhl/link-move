@@ -61,6 +61,11 @@ public class DeleteTask extends BaseTask {
         }
     }
 
+    @Override
+    protected void onExecFinished(Execution exec) {
+        logger.deleteExecFinished(exec);
+    }
+
     protected ResultIterator<?> createTargetSelect() {
         ObjectSelect<?> query = ObjectSelect.query(type).where(targetFilter);
         return targetCayenneService.newContext().iterator(query);
