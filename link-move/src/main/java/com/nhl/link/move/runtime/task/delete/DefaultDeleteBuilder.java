@@ -3,7 +3,6 @@ package com.nhl.link.move.runtime.task.delete;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsExtracted;
@@ -62,7 +61,6 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
                 AfterTargetsExtracted.class,
                 AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
-                AfterSourceKeysExtracted.class,
                 AfterMissingTargetsFiltered.class,
                 AfterTargetsCommitted.class
         };
@@ -114,6 +112,8 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
             throw new IllegalStateException("Required 'sourceMatchExtractor' is not set");
         }
 
+        Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
+
         return new DeleteTask(
                 extractorName,
                 batchSize,
@@ -121,18 +121,18 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
                 targetFilter,
                 targetCayenneService,
                 tokenManager,
-                createProcessor(),
+                createSourceKeysSubtask(mapper),
+                createProcessor(mapper),
                 logger);
     }
 
-    private DeleteSegmentProcessor createProcessor() {
-        Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
+    private LmTask createSourceKeysSubtask(Mapper mapper) {
+        return taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
+    }
 
-        LmTask keysSubtask = taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
-
+    private DeleteSegmentProcessor createProcessor(Mapper mapper) {
         return new DeleteSegmentProcessor(
                 new TargetMapper(mapper),
-                new ExtractSourceKeysStage(keysSubtask),
                 new MissingTargetsFilterStage(),
                 new DeleteTargetStage(),
                 getListeners());

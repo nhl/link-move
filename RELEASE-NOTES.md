@@ -9,6 +9,7 @@
 * #206 Deprecate SyncToken
 * #207 Tasks and Segments should not have generic types
 * #208 LmExecution logging
+* #209 DeleteTask to load source keys outside the first segment
 
 ## Release 2.18
 

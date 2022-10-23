@@ -4,17 +4,23 @@ import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
 import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
+import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.LmTask;
 import com.nhl.link.move.batch.BatchProcessor;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
+import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.Persistent;
 import org.apache.cayenne.ResultIterator;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.query.ObjectSelect;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * A task that allows to delete target objects not present in the source.
@@ -25,6 +31,7 @@ public class DeleteTask extends BaseTask {
 
     private final Class<?> type;
     private final Expression targetFilter;
+    private final LmTask sourceKeysSubtask;
     private final DeleteSegmentProcessor processor;
     private final ITargetCayenneService targetCayenneService;
 
@@ -35,6 +42,7 @@ public class DeleteTask extends BaseTask {
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
+            LmTask sourceKeysSubtask,
             DeleteSegmentProcessor processor,
             LmLogger logger) {
 
@@ -43,6 +51,7 @@ public class DeleteTask extends BaseTask {
         this.type = type;
         this.targetFilter = targetFilter;
         this.targetCayenneService = targetCayenneService;
+        this.sourceKeysSubtask = sourceKeysSubtask;
         this.processor = processor;
     }
 
@@ -54,11 +63,25 @@ public class DeleteTask extends BaseTask {
     @Override
     protected void doRun(Execution exec) {
 
-        BatchProcessor<? extends Persistent> batchProcessor = createBatchProcessor(exec);
 
         try (ResultIterator data = createTargetSelect()) {
+
+            // do not preload the keys if there are no target objects
+            Set<Object> keys = data.hasNextRow() ? loadKeys(exec) : Collections.emptySet();
+            BatchProcessor<? extends Persistent> batchProcessor = createBatchProcessor(exec, keys);
             createBatchRunner(batchProcessor).run(data);
         }
+    }
+
+    protected Set<Object> loadKeys(Execution deleteExec) {
+        Execution childExec = sourceKeysSubtask.run(deleteExec.getParameters(), deleteExec);
+        Set<Object> keys = (Set<Object>) childExec.getAttribute(SourceKeysTask.RESULT_KEY);
+        if (keys == null) {
+            throw new LmRuntimeException("Unexpected state of keys subtask. No attribute for key: "
+                    + SourceKeysTask.RESULT_KEY);
+        }
+
+        return keys;
     }
 
     @Override
@@ -71,7 +94,7 @@ public class DeleteTask extends BaseTask {
         return targetCayenneService.newContext().iterator(query);
     }
 
-    protected BatchProcessor<? extends Persistent> createBatchProcessor(Execution execution) {
+    protected BatchProcessor<? extends Persistent> createBatchProcessor(Execution exec, Set<Object> keys) {
 
         Index columns = Index.forLabels(DeleteSegment.TARGET_COLUMN);
 
@@ -79,8 +102,10 @@ public class DeleteTask extends BaseTask {
 
             // executing in the select context
             ObjectContext context = rows.get(0).getObjectContext();
-            DataFrame targets = DataFrame.newFrame(columns).columns(Series.forData(rows));
-            processor.process(execution, new DeleteSegment(context).setTargets(targets));
+            DeleteSegment segment = new DeleteSegment(context)
+                    .setTargets(DataFrame.newFrame(columns).columns(Series.forData(rows)))
+                    .setSourceKeys(keys);
+            processor.process(exec, segment);
         };
     }
 }

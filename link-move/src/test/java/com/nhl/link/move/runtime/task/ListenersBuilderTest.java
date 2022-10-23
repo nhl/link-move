@@ -3,7 +3,6 @@ package com.nhl.link.move.runtime.task;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterFksResolved;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.annotation.AfterSourcesMapped;
@@ -133,7 +132,6 @@ public class ListenersBuilderTest {
                 AfterTargetsExtracted.class,
                 AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
-                AfterSourceKeysExtracted.class,
                 AfterMissingTargetsFiltered.class,
                 AfterTargetsCommitted.class);
 
@@ -148,11 +146,11 @@ public class ListenersBuilderTest {
         Map<Class<? extends Annotation>, List<StageListener>> listeners = listenersBuilder.getListeners();
 
         assertNotNull(listeners.get(AfterTargetsMapped.class));
-        assertNotNull(listeners.get(AfterSourceKeysExtracted.class));
+        assertNotNull(listeners.get(AfterTargetsExtracted.class));
         assertNotNull(listeners.get(AfterMissingTargetsFiltered.class));
 
         assertEquals(1, listeners.get(AfterTargetsMapped.class).size());
-        assertEquals(2, listeners.get(AfterSourceKeysExtracted.class).size());
+        assertEquals(2, listeners.get(AfterTargetsExtracted.class).size());
         assertEquals(1, listeners.get(AfterMissingTargetsFiltered.class).size());
     }
 
@@ -163,7 +161,7 @@ public class ListenersBuilderTest {
 
         }
 
-        @AfterSourceKeysExtracted
+        @AfterTargetsExtracted
         public void afterSourceKeysExtracted(DeleteSegment s) {
 
         }
@@ -176,7 +174,7 @@ public class ListenersBuilderTest {
 
         }
 
-        @AfterSourceKeysExtracted
+        @AfterTargetsExtracted
         public void afterSourceKeysExtracted(DeleteSegment s) {
 
         }

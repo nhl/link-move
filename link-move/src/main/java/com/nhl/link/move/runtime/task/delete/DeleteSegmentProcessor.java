@@ -2,7 +2,6 @@ package com.nhl.link.move.runtime.task.delete;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourceKeysExtracted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
@@ -15,19 +14,16 @@ import java.util.Map;
 public class DeleteSegmentProcessor {
 
     private final TargetMapper targetMapper;
-    private final ExtractSourceKeysStage sourceKeysExtractor;
     private final MissingTargetsFilterStage missingTargetsFilter;
     private final DeleteTargetStage deleter;
     private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
 
     public DeleteSegmentProcessor(
             TargetMapper targetMapper,
-            ExtractSourceKeysStage sourceKeysExtractor,
             MissingTargetsFilterStage missingTargetsFilter,
             DeleteTargetStage deleter,
             Map<Class<? extends Annotation>, List<StageListener>> listeners) {
         this.targetMapper = targetMapper;
-        this.sourceKeysExtractor = sourceKeysExtractor;
         this.missingTargetsFilter = missingTargetsFilter;
         this.deleter = deleter;
         this.listeners = listeners;
@@ -37,7 +33,6 @@ public class DeleteSegmentProcessor {
         notifyListeners(AfterTargetsExtracted.class, exec, segment);
 
         mapTarget(exec, segment);
-        extractSourceKeys(exec, segment);
         filterMissingTargets(exec, segment);
         deleteTarget(segment);
         commitTarget(exec, segment);
@@ -46,11 +41,6 @@ public class DeleteSegmentProcessor {
     private void mapTarget(Execution exec, DeleteSegment segment) {
         segment.setMappedTargets(targetMapper.map(segment.getTargets()));
         notifyListeners(AfterTargetsMapped.class, exec, segment);
-    }
-
-    private void extractSourceKeys(Execution exec, DeleteSegment segment) {
-        segment.setSourceKeys(sourceKeysExtractor.extractSourceKeys(exec));
-        notifyListeners(AfterSourceKeysExtracted.class, exec, segment);
     }
 
     private void filterMissingTargets(Execution exec, DeleteSegment segment) {
