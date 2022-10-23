@@ -11,6 +11,18 @@ import org.junit.jupiter.api.Test;
 public class DeleteIT extends LmIntegrationTest {
 
 	@Test
+	public void test_EmptyTarget() {
+
+		LmTask task = lmRuntime.service(ITaskService.class)
+				.delete(Etl6t.class)
+				.sourceMatchExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml")
+				.task();
+
+		Execution e = task.run();
+		assertExec(0, 0, 0, 0, e);
+	}
+
+	@Test
 	public void test_ById_Normalized_IntegerToLong() {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
