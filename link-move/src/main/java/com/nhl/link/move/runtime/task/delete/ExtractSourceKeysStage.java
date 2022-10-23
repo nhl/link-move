@@ -11,7 +11,7 @@ public class ExtractSourceKeysStage {
 
     public static final String SOURCE_KEYS_KEY = ExtractSourceKeysStage.class.getName() + ".SOURCE_KEYS";
 
-    private LmTask keysSubtask;
+    private final LmTask keysSubtask;
 
     public ExtractSourceKeysStage(LmTask keysSubtask) {
         this.keysSubtask = keysSubtask;

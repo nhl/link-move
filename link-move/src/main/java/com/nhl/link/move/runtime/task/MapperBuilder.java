@@ -35,12 +35,12 @@ import java.util.Set;
  */
 public class MapperBuilder {
 
-    private IKeyAdapterFactory keyAdapterFactory;
-    private TargetEntity targetEntity;
+    private final IKeyAdapterFactory keyAdapterFactory;
+    private final TargetEntity targetEntity;
 
     // TODO: now that we have TargetEntity, can we use it here instead of Cayenne ObjEntity
-    private ObjEntity entity;
-    private Set<String> paths;
+    private final ObjEntity entity;
+    private final Set<String> paths;
 
     public MapperBuilder(ObjEntity entity, TargetEntity targetEntity, IKeyAdapterFactory keyAdapterFactory) {
         this.entity = entity;
