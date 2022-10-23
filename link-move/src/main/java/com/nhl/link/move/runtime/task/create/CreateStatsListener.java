@@ -26,7 +26,7 @@ public class CreateStatsListener {
         e.getStats().incrementCreated(segment.getMapped().height());
 
         // call the logger before incrementing the batch count, so that start and end batch numbers match
-        e.getLogger().createSegmentFinished(segment.getSourceRows().height(), segment.getMapped().height());
+        e.getLogger().createSegmentFinished(segment.getSourceRows().height(), segment.getMapped().getColumn(CreateSegment.TARGET_COLUMN));
         e.getStats().incrementSegments(1);
     }
 }

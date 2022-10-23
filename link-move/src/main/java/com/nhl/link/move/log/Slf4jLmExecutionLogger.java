@@ -108,15 +108,10 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
 
         if (objectsDeleted.size() > 0 && logger.isTraceEnabled()) {
 
-            boolean singleColumnId = objectsDeleted.get(0).getObjectId().getIdSnapshot().size() == 1;
-            List<?> ids = singleColumnId
-                    ? objectsDeleted.map(p -> p.getObjectId().getIdSnapshot().values().iterator().next()).toList()
-                    : objectsDeleted.map(p -> p.getObjectId().getIdSnapshot()).toList();
-
             logger.trace("{} segment:{} deleted_ids:{}",
                     label,
                     exec.getStats().getSegments(),
-                    ids);
+                    loggableIds(objectsDeleted));
         }
 
         logger.debug("{} segment:{} done in:{} out_deleted:{}",
@@ -127,12 +122,20 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
     }
 
     @Override
-    public void createSegmentFinished(int rowsProcessed, int objectsInserted) {
+    public void createSegmentFinished(int rowsProcessed, Series<? extends Persistent> objectsInserted) {
+        if (objectsInserted.size() > 0 && logger.isTraceEnabled()) {
+
+            logger.trace("{} segment:{} created_ids:{}",
+                    label,
+                    exec.getStats().getSegments(),
+                    loggableIds(objectsInserted));
+        }
+
         logger.debug("{} segment:{} done in:{} out_created:{}",
                 label,
                 exec.getStats().getSegments(),
                 rowsProcessed,
-                objectsInserted);
+                objectsInserted.size());
     }
 
     @Override
@@ -166,5 +169,17 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
         return exec.getParentExecution() != null
                 ? "[" + exec.getId() + "/" + exec.getParentExecution().getTaskName() + "/" + exec.getTaskName() + "]"
                 : "[" + exec.getId() + "/" + exec.getTaskName() + "]";
+    }
+
+    private List<?> loggableIds(Series<? extends Persistent> objects) {
+
+        if (objects.size() == 0) {
+            return Collections.emptyList();
+        }
+
+        boolean singleColumnId = objects.get(0).getObjectId().getIdSnapshot().size() == 1;
+        return singleColumnId
+                ? objects.map(p -> p.getObjectId().getIdSnapshot().values().iterator().next()).toList()
+                : objects.map(p -> p.getObjectId().getIdSnapshot()).toList();
     }
 }
