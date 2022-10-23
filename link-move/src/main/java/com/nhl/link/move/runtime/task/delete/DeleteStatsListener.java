@@ -30,7 +30,7 @@ public class DeleteStatsListener {
         e.getStats().incrementDeleted(segment.getMissingTargets().height());
 
         // call the logger before incrementing the segment count, so that start and end segment numbers match
-        e.getLogger().deleteSegmentFinished(segment.getTargets().height(), segment.getMissingTargets().height());
+        e.getLogger().deleteSegmentFinished(segment.getTargets().height(), segment.getMissingTargets().getColumn(DeleteSegment.TARGET_COLUMN));
         e.getStats().incrementSegments(1);
     }
 }

@@ -1,13 +1,16 @@
 package com.nhl.link.move.log;
 
+import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
+import org.apache.cayenne.Persistent;
 import org.slf4j.Logger;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -101,12 +104,26 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
     }
 
     @Override
-    public void deleteSegmentFinished(int objectsProcessed, int objectsDeleted) {
+    public void deleteSegmentFinished(int objectsProcessed, Series<? extends Persistent> objectsDeleted) {
+
+        if (objectsDeleted.size() > 0 && logger.isTraceEnabled()) {
+
+            boolean singleColumnId = objectsDeleted.get(0).getObjectId().getIdSnapshot().size() == 1;
+            List<?> ids = singleColumnId
+                    ? objectsDeleted.map(p -> p.getObjectId().getIdSnapshot().values().iterator().next()).toList()
+                    : objectsDeleted.map(p -> p.getObjectId().getIdSnapshot()).toList();
+
+            logger.trace("{} segment:{} deleted_ids:{}",
+                    label,
+                    exec.getStats().getSegments(),
+                    ids);
+        }
+
         logger.debug("{} segment:{} done in:{} out_deleted:{}",
                 label,
                 exec.getStats().getSegments(),
                 objectsProcessed,
-                objectsDeleted);
+                objectsDeleted.size());
     }
 
     @Override

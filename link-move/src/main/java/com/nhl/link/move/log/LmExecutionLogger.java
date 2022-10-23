@@ -1,5 +1,8 @@
 package com.nhl.link.move.log;
 
+import com.nhl.dflib.Series;
+import org.apache.cayenne.Persistent;
+
 import java.util.Set;
 
 /**
@@ -19,7 +22,7 @@ public interface LmExecutionLogger {
 
     void segmentStarted();
 
-    void deleteSegmentFinished(int objectsProcessed, int objectsDeleted);
+    void deleteSegmentFinished(int objectsProcessed, Series<? extends Persistent> objectsDeleted);
 
     void createSegmentFinished(int rowsProcessed, int objectsInserted);
 
