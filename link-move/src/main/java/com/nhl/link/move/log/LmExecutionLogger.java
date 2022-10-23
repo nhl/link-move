@@ -26,7 +26,7 @@ public interface LmExecutionLogger {
 
     void createSegmentFinished(int rowsProcessed, Series<? extends Persistent> objectsInserted);
 
-    void createOrUpdateSegmentFinished(int rowsProcessed, int objectsInserted, int objectsUpdated);
+    void createOrUpdateSegmentFinished(int rowsProcessed, Series<? extends Persistent> objectsInserted, Series<? extends Persistent> objectsUpdated);
 
     void sourceKeysSegmentFinished(int rowsProcessed, Set<?> keysExtracted);
 }

@@ -139,13 +139,35 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
     }
 
     @Override
-    public void createOrUpdateSegmentFinished(int rowsProcessed, int objectsInserted, int objectsUpdated) {
+    public void createOrUpdateSegmentFinished(
+            int rowsProcessed,
+            Series<? extends Persistent> objectsInserted,
+            Series<? extends Persistent> objectsUpdated) {
+
+        if (logger.isTraceEnabled()) {
+            if (objectsInserted.size() > 0) {
+
+                logger.trace("{} segment:{} created_ids:{}",
+                        label,
+                        exec.getStats().getSegments(),
+                        loggableIds(objectsInserted));
+            }
+
+            if (objectsUpdated.size() > 0) {
+
+                logger.trace("{} segment:{} updated_ids:{}",
+                        label,
+                        exec.getStats().getSegments(),
+                        loggableIds(objectsUpdated));
+            }
+        }
+
         logger.debug("{} segment:{} done in:{} out_created:{} out_updated:{}",
                 label,
                 exec.getStats().getSegments(),
                 rowsProcessed,
-                objectsInserted,
-                objectsUpdated);
+                objectsInserted.size(),
+                objectsUpdated.size());
     }
 
     @Override

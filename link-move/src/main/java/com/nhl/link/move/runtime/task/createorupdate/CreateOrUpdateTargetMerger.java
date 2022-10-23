@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
+import com.nhl.dflib.BooleanSeries;
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Series;
 import com.nhl.dflib.accumulator.BooleanAccumulator;
@@ -24,7 +25,7 @@ public class CreateOrUpdateTargetMerger {
         int len = targets.size();
         BooleanAccumulator changed = new BooleanAccumulator(len);
 
-        Series<Boolean> created = df.getColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+        BooleanSeries created = df.getColumnAsBoolean(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
         created.forEach(changed::add);
 
         for (String label : ProcessorUtil.dataColumns(df)) {

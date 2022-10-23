@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Hasher;
+import com.nhl.dflib.accumulator.BooleanAccumulator;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
 
@@ -26,9 +27,12 @@ public class CreateOrUpdateTargetMapper {
         Hasher lkm = r -> r.get(CreateOrUpdateSegment.KEY_COLUMN);
         Hasher rkm = r -> mapper.keyForTarget(r.get(CreateOrUpdateSegment.TARGET_COLUMN));
 
-        return sources
-                .leftJoin().on(lkm, rkm).with(targets)
-                .addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, r -> isCreated(r.get(CreateOrUpdateSegment.TARGET_COLUMN)))
+        DataFrame df = sources.leftJoin().on(lkm, rkm).with(targets);
+
+        BooleanAccumulator createdColumn = new BooleanAccumulator(df.height());
+        df.forEach(r -> createdColumn.add(isCreated(r.get(CreateOrUpdateSegment.TARGET_COLUMN))));
+
+        return df.addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, createdColumn.toSeries())
                 .convertColumn(CreateOrUpdateSegment.TARGET_COLUMN, r -> createIfMissing(r, context));
     }
 
