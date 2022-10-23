@@ -7,6 +7,7 @@
 * #205 Upgrade to DFLib 0.15
 * #206 Deprecate SyncToken
 * #207 Tasks and Segments should not have generic types
+* #208 LmExecution logging
 
 ## Release 2.18
 
