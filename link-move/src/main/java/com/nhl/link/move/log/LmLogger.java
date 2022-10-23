@@ -19,13 +19,13 @@ public interface LmLogger {
 
     void sourceKeysExecFinished(Execution exec);
 
-    void batchStarted(Execution exec);
+    void segmentStarted(Execution exec);
 
-    void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted);
+    void deleteSegmentFinished(Execution exec, int objectsProcessed, int objectsDeleted);
 
-    void createBatchFinished(Execution exec, int rowsProcessed, int objectsInserted);
+    void createSegmentFinished(Execution exec, int rowsProcessed, int objectsInserted);
 
-    void createOrUpdateBatchFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated);
+    void createOrUpdateSegmentFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated);
 
-    void sourceKeysBatchFinished(Execution exec, int rowsProcessed, Set<?> keysExtracted);
+    void sourceKeysSegmentFinished(Execution exec, int rowsProcessed, Set<?> keysExtracted);
 }

@@ -33,7 +33,7 @@ public class Slf4jLmLogger implements LmLogger {
                 exec.getId(),
                 exec.getTaskName(),
                 stats.getDuration(),
-                stats.getBatches(),
+                stats.getSegments(),
                 stats.getExtracted(),
                 stats.getCreated());
     }
@@ -42,11 +42,11 @@ public class Slf4jLmLogger implements LmLogger {
     public void createOrUpdateExecFinished(Execution exec) {
         ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] exec done time:{} batches:{} in:{} out_created:{} out_updated:{}",
+        logger.info("[{}/{}] exec done time:{} segments:{} in:{} out_created:{} out_updated:{}",
                 exec.getId(),
                 exec.getTaskName(),
                 stats.getDuration(),
-                stats.getBatches(),
+                stats.getSegments(),
                 stats.getExtracted(),
                 stats.getCreated(),
                 stats.getUpdated());
@@ -56,11 +56,11 @@ public class Slf4jLmLogger implements LmLogger {
     public void deleteExecFinished(Execution exec) {
         ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] exec done time:{} batches:{} in:{} out_deleted:{}",
+        logger.info("[{}/{}] exec done time:{} segments:{} in:{} out_deleted:{}",
                 exec.getId(),
                 exec.getTaskName(),
                 stats.getDuration(),
-                stats.getBatches(),
+                stats.getSegments(),
                 stats.getExtracted(),
                 stats.getDeleted());
     }
@@ -72,69 +72,69 @@ public class Slf4jLmLogger implements LmLogger {
 
             Set<?> keys = (Set<?>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
             Set<?> keysReported = keys != null ? keys : Collections.emptySet();
-            
+
             ExecutionStats stats = exec.getStats();
 
-            logger.info("[{}/{}] exec done time:{} batches:{} in:{} out_keys:{}",
+            logger.info("[{}/{}] exec done time:{} segments:{} in:{} out_keys:{}",
                     exec.getId(),
                     exec.getTaskName(),
                     stats.getDuration(),
-                    stats.getBatches(),
+                    stats.getSegments(),
                     stats.getExtracted(),
                     keysReported.size());
         }
     }
 
     @Override
-    public void batchStarted(Execution exec) {
-        logger.debug("[{}/{}] batch:{}", exec.getId(), exec.getTaskName(), exec.getStats().getBatches());
+    public void segmentStarted(Execution exec) {
+        logger.debug("[{}/{}] segment:{}", exec.getId(), exec.getTaskName(), exec.getStats().getSegments());
     }
 
     @Override
-    public void deleteBatchFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
-        logger.debug("[{}/{}] batch:{} done in:{} out_deleted:{}",
+    public void deleteSegmentFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
+        logger.debug("[{}/{}] segment:{} done in:{} out_deleted:{}",
                 exec.getId(),
                 exec.getTaskName(),
-                exec.getStats().getBatches(),
+                exec.getStats().getSegments(),
                 objectsProcessed,
                 objectsDeleted);
     }
 
     @Override
-    public void createBatchFinished(Execution exec, int rowsProcessed, int objectsInserted) {
-        logger.debug("[{}/{}] batch:{} done in:{} out_created:{}",
+    public void createSegmentFinished(Execution exec, int rowsProcessed, int objectsInserted) {
+        logger.debug("[{}/{}] segment:{} done in:{} out_created:{}",
                 exec.getId(),
                 exec.getTaskName(),
-                exec.getStats().getBatches(),
+                exec.getStats().getSegments(),
                 rowsProcessed,
                 objectsInserted);
     }
 
     @Override
-    public void createOrUpdateBatchFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
-        logger.debug("[{}/{}] batch:{} done in:{} out_created:{} out_updated:{}",
+    public void createOrUpdateSegmentFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
+        logger.debug("[{}/{}] segment:{} done in:{} out_created:{} out_updated:{}",
                 exec.getId(),
                 exec.getTaskName(),
-                exec.getStats().getBatches(),
+                exec.getStats().getSegments(),
                 rowsProcessed,
                 objectsInserted,
                 objectsUpdated);
     }
 
     @Override
-    public void sourceKeysBatchFinished(Execution exec, int rowsProcessed, Set<?> keysExtracted) {
+    public void sourceKeysSegmentFinished(Execution exec, int rowsProcessed, Set<?> keysExtracted) {
         if (!keysExtracted.isEmpty() && logger.isTraceEnabled()) {
-            logger.trace("[{}/{}] batch:{} out_keys:{}",
+            logger.trace("[{}/{}] segment:{} out_keys:{}",
                     exec.getId(),
                     exec.getTaskName(),
-                    exec.getStats().getBatches(),
+                    exec.getStats().getSegments(),
                     keysExtracted);
         }
 
-        logger.debug("[{}/{}] batch:{} done in:{} out_keys:{}",
+        logger.debug("[{}/{}] segment:{} done in:{} out_keys:{}",
                 exec.getId(),
                 exec.getTaskName(),
-                exec.getStats().getBatches(),
+                exec.getStats().getSegments(),
                 rowsProcessed,
                 keysExtracted.size());
     }

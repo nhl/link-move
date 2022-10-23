@@ -24,7 +24,7 @@ public class ExecutionTest {
         execution.getStats().incrementDeleted(4);
         execution.getStats().incrementExtracted(55);
         execution.getStats().incrementUpdated(3);
-        execution.getStats().incrementBatches(1);
+        execution.getStats().incrementSegments(1);
 
         execution.stop();
 

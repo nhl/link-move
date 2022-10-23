@@ -62,7 +62,7 @@ public class Execution {
         paramsOut.append("}");
 
         StringBuilder statsOut = new StringBuilder("{");
-        append(statsOut, "batches", stats.getBatches());
+        append(statsOut, "batches", stats.getSegments());
         append(statsOut, "created", stats.getCreated());
         append(statsOut, "deleted", stats.getDeleted());
         append(statsOut, "duration", stats.getDuration());

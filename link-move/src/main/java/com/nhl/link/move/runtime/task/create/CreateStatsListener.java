@@ -17,7 +17,7 @@ public class CreateStatsListener {
 
     @AfterSourceRowsExtracted
     public void sourceRowsExtracted(Execution e, CreateSegment segment) {
-        e.getLogger().batchStarted(e);
+        e.getLogger().segmentStarted(e);
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
@@ -26,7 +26,7 @@ public class CreateStatsListener {
         e.getStats().incrementCreated(segment.getMapped().height());
 
         // call the logger before incrementing the batch count, so that start and end batch numbers match
-        e.getLogger().createBatchFinished(e, segment.getSourceRows().height(), segment.getMapped().height());
-        e.getStats().incrementBatches(1);
+        e.getLogger().createSegmentFinished(e, segment.getSourceRows().height(), segment.getMapped().height());
+        e.getStats().incrementSegments(1);
     }
 }

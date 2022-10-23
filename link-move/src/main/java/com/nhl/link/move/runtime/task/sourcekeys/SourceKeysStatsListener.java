@@ -20,7 +20,7 @@ public class SourceKeysStatsListener {
 
     @AfterSourceRowsExtracted
     public void sourceRowsExtracted(Execution e, SourceKeysSegment segment) {
-        e.getLogger().batchStarted(e);
+        e.getLogger().segmentStarted(e);
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
@@ -29,8 +29,8 @@ public class SourceKeysStatsListener {
         Set<?> keys = (Set<?>) e.getAttribute(SourceKeysTask.RESULT_KEY);
         Set<?> keysReported = keys != null ? keys : Collections.emptySet();
 
-        // call the logger before incrementing the batch count, so that start and end batch numbers match
-        e.getLogger().sourceKeysBatchFinished(e, segment.getSourceRows().height(), keysReported);
-        e.getStats().incrementBatches(1);
+        // call the logger before incrementing the segment count, so that start and end segment numbers match
+        e.getLogger().sourceKeysSegmentFinished(e, segment.getSourceRows().height(), keysReported);
+        e.getStats().incrementSegments(1);
     }
 }

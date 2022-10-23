@@ -9,7 +9,7 @@ import java.time.ZoneId;
  */
 public class ExecutionStats {
 
-    protected int batches;
+    protected int segments;
     protected long extracted;
     protected long created;
     protected long updated;
@@ -72,8 +72,8 @@ public class ExecutionStats {
     /**
      * @since 3.0
      */
-    public int getBatches() {
-        return batches;
+    public int getSegments() {
+        return segments;
     }
 
     /**
@@ -92,8 +92,8 @@ public class ExecutionStats {
         return stoppedOn != null ? stoppedOn.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
     }
 
-    public void incrementBatches(int count) {
-        this.batches += count;
+    public void incrementSegments(int count) {
+        this.segments += count;
     }
 
     public void incrementExtracted(long count) {
