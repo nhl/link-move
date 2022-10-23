@@ -74,8 +74,8 @@ public class DeleteTask extends BaseTask {
 
             // executing in the select context
             ObjectContext context = rows.get(0).getObjectContext();
-            DataFrame df = DataFrame.newFrame(columns).columns(Series.forData(rows));
-            processor.process(execution, new DeleteSegment(context, df));
+            DataFrame targets = DataFrame.newFrame(columns).columns(Series.forData(rows));
+            processor.process(execution, new DeleteSegment(context).setTargets(targets));
         };
     }
 }

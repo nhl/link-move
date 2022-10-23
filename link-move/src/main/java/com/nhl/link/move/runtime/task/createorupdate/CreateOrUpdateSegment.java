@@ -24,8 +24,7 @@ public class CreateOrUpdateSegment {
     private DataFrame merged;
     private DataFrame fksResolved;
 
-    public CreateOrUpdateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
-        this.sourceRows = sourceRows;
+    public CreateOrUpdateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader) {
         this.context = context;
         this.sourceRowsHeader = sourceRowsHeader;
     }
@@ -41,8 +40,9 @@ public class CreateOrUpdateSegment {
     /**
      * @since 2.17
      */
-    public void setSourceRows(DataFrame sourceRows) {
+    public CreateOrUpdateSegment setSourceRows(DataFrame sourceRows) {
         this.sourceRows = sourceRows;
+        return this;
     }
 
     public RowAttribute[] getSourceRowsHeader() {
@@ -53,24 +53,27 @@ public class CreateOrUpdateSegment {
         return sources;
     }
 
-    public void setSources(DataFrame sources) {
+    public CreateOrUpdateSegment setSources(DataFrame sources) {
         this.sources = sources;
+        return this;
     }
 
     public DataFrame getMappedSources() {
         return mappedSources;
     }
 
-    public void setMappedSources(DataFrame mappedSegment) {
+    public CreateOrUpdateSegment setMappedSources(DataFrame mappedSegment) {
         this.mappedSources = mappedSegment;
+        return this;
     }
 
     public DataFrame getMatchedTargets() {
         return matchedTargets;
     }
 
-    public void setMatchedTargets(DataFrame matchedTargets) {
+    public CreateOrUpdateSegment setMatchedTargets(DataFrame matchedTargets) {
         this.matchedTargets = matchedTargets;
+        return this;
     }
 
     /**
@@ -83,16 +86,18 @@ public class CreateOrUpdateSegment {
     /**
      * @since 2.6
      */
-    public void setMapped(DataFrame mapped) {
+    public CreateOrUpdateSegment setMapped(DataFrame mapped) {
         this.mapped = mapped;
+        return this;
     }
 
     public DataFrame getMerged() {
         return merged;
     }
 
-    public void setMerged(DataFrame merged) {
+    public CreateOrUpdateSegment setMerged(DataFrame merged) {
         this.merged = merged;
+        return this;
     }
 
     /**
@@ -105,7 +110,8 @@ public class CreateOrUpdateSegment {
     /**
      * @since 2.12
      */
-    public void setFksResolved(DataFrame fksResolved) {
+    public CreateOrUpdateSegment setFksResolved(DataFrame fksResolved) {
         this.fksResolved = fksResolved;
+        return this;
     }
 }

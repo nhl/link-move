@@ -59,7 +59,7 @@ public class SourceKeysTask extends BaseTask {
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
         return rows -> processor.process(
                 execution,
-                new SourceKeysSegment(rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
+                new SourceKeysSegment(rowHeader).setSourceRows(srcRowsAsDataFrame(rowHeader, rows)));
     }
 
     /**

@@ -11,14 +11,13 @@ public class DeleteSegment {
 	public static final String KEY_COLUMN = "$lm_key";
 
 	private final ObjectContext context;
-	private final DataFrame targets;
 
+	private DataFrame targets;
 	private Set<Object> sourceKeys;
 	private DataFrame mappedTargets;
 	private DataFrame missingTargets;
 
-	public DeleteSegment(ObjectContext context, DataFrame targets) {
-		this.targets = targets;
+	public DeleteSegment(ObjectContext context) {
 		this.context = context;
 	}
 
@@ -31,6 +30,14 @@ public class DeleteSegment {
 	}
 
 	/**
+	 * @since 3.0
+	 */
+	public DeleteSegment setTargets(DataFrame targets) {
+		this.targets = targets;
+		return this;
+	}
+
+	/**
 	 * @since 1.6
 	 */
 	public Set<Object> getSourceKeys() {
@@ -40,23 +47,26 @@ public class DeleteSegment {
 	/**
 	 * @since 1.6
 	 */
-	public void setSourceKeys(Set<Object> sourceKeys) {
+	public DeleteSegment setSourceKeys(Set<Object> sourceKeys) {
 		this.sourceKeys = sourceKeys;
+		return this;
 	}
 
 	public DataFrame getMappedTargets() {
 		return mappedTargets;
 	}
 
-	public void setMappedTargets(DataFrame mappedTargets) {
+	public DeleteSegment setMappedTargets(DataFrame mappedTargets) {
 		this.mappedTargets = mappedTargets;
+		return this;
 	}
 
 	public DataFrame getMissingTargets() {
 		return missingTargets;
 	}
 
-	public void setMissingTargets(DataFrame missingTargets) {
+	public DeleteSegment setMissingTargets(DataFrame missingTargets) {
 		this.missingTargets = missingTargets;
+		return this;
 	}
 }

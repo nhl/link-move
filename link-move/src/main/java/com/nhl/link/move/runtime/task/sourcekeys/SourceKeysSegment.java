@@ -8,29 +8,37 @@ import com.nhl.dflib.DataFrame;
  */
 public class SourceKeysSegment {
 
-	private final RowAttribute[] sourceRowsHeader;
+    private final RowAttribute[] sourceRowsHeader;
 
-	private DataFrame sourceRows;
-	private DataFrame sources;
+    private DataFrame sourceRows;
+    private DataFrame sources;
 
-	public SourceKeysSegment(RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
-		this.sourceRowsHeader = sourceRowsHeader;
-		this.sourceRows = sourceRows;
-	}
+    public SourceKeysSegment(RowAttribute[] sourceRowsHeader) {
+        this.sourceRowsHeader = sourceRowsHeader;
+    }
 
-	public DataFrame getSourceRows() {
-		return sourceRows;
-	}
+    public RowAttribute[] getSourceRowsHeader() {
+        return sourceRowsHeader;
+    }
 
-	public RowAttribute[] getSourceRowsHeader() {
-		return sourceRowsHeader;
-	}
+    public DataFrame getSourceRows() {
+        return sourceRows;
+    }
 
-	public DataFrame getSources() {
-		return sources;
-	}
+    /**
+     * @since 3.0
+     */
+    public SourceKeysSegment setSourceRows(DataFrame sourceRows) {
+        this.sourceRows = sourceRows;
+        return this;
+    }
 
-	public void setSources(DataFrame sources) {
-		this.sources = sources;
-	}
+    public DataFrame getSources() {
+        return sources;
+    }
+
+    public SourceKeysSegment setSources(DataFrame sources) {
+        this.sources = sources;
+        return this;
+    }
 }

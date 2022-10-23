@@ -21,9 +21,8 @@ public class CreateSegment {
     private DataFrame fksResolved;
     private DataFrame merged;
 
-    public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader, DataFrame sourceRows) {
+    public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader) {
         this.sourceRowsHeader = sourceRowsHeader;
-        this.sourceRows = sourceRows;
         this.context = context;
     }
 
@@ -42,32 +41,36 @@ public class CreateSegment {
     /**
      * @since 2.17
      */
-    public void setSourceRows(DataFrame sourceRows) {
+    public CreateSegment setSourceRows(DataFrame sourceRows) {
         this.sourceRows = sourceRows;
+        return this;
     }
 
     public DataFrame getSources() {
         return sources;
     }
 
-    public void setSources(DataFrame translatedSegment) {
+    public CreateSegment setSources(DataFrame translatedSegment) {
         this.sources = translatedSegment;
+        return this;
     }
 
     public DataFrame getMerged() {
         return merged;
     }
 
-    public void setMerged(DataFrame merged) {
+    public CreateSegment setMerged(DataFrame merged) {
         this.merged = merged;
+        return this;
     }
 
     public DataFrame getMapped() {
         return mapped;
     }
 
-    public void setMapped(DataFrame mapped) {
+    public CreateSegment setMapped(DataFrame mapped) {
         this.mapped = mapped;
+        return this;
     }
 
     /**
@@ -80,7 +83,8 @@ public class CreateSegment {
     /**
      * @since 2.12
      */
-    public void setFksResolved(DataFrame fksResolved) {
+    public CreateSegment setFksResolved(DataFrame fksResolved) {
         this.fksResolved = fksResolved;
+        return this;
     }
 }

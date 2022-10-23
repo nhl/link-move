@@ -58,7 +58,7 @@ public class CreateOrUpdateTask extends BaseTask {
         ObjectContext context = targetCayenneService.newContext();
         return rows -> processor.process(
                 execution,
-                new CreateOrUpdateSegment(context, rowHeader, srcRowsAsDataFrame(rowHeader, rows)));
+                new CreateOrUpdateSegment(context, rowHeader).setSourceRows(srcRowsAsDataFrame(rowHeader, rows)));
     }
 
     protected RowReader getRowReader(Execution exec) {
