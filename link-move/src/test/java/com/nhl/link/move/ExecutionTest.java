@@ -14,7 +14,7 @@ public class ExecutionTest {
 
     @Test
     public void testToString() {
-        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class));
+        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class), null);
         assertEquals("{\"id\":1,\"extractor\":\"l.n\",\"parameters\":{\"a\":5}," +
                 "\"stats\":{\"batches\":0,\"created\":0,\"deleted\":0,\"extracted\":0," +
                 "\"startedOn\":\"" + execution.getStats().getStartedOn() + "\",\"status\":\"in progress\"," +
@@ -39,7 +39,7 @@ public class ExecutionTest {
     @Test
     public void testCreateReport() {
 
-        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class));
+        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class), null);
 
         assertEquals(Map.of(
                         "Task", "xsync:l.n",
@@ -76,7 +76,7 @@ public class ExecutionTest {
 
     @Test
     public void testAttribute() {
-        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class));
+        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class), null);
 
         assertNull(execution.getAttribute("a"));
 

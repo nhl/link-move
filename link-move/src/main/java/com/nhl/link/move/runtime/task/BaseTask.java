@@ -99,7 +99,7 @@ public abstract class BaseTask implements LmTask {
     protected Execution createExec(Map<String, ?> params, Execution parentExec) {
         // inherit the ID from parent
         long execId = parentExec != null ? parentExec.getId() : execIdGenerator.getAndIncrement();
-        return new Execution(execId, label, extractorName, params, logger);
+        return new Execution(execId, label, extractorName, params, logger, parentExec);
     }
 
     protected <S> BatchRunner<S> createBatchRunner(BatchProcessor<S> processor) {

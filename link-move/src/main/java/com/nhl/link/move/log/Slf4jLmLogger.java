@@ -22,52 +22,57 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void execStarted(Execution exec) {
-        logger.info("[{}/{}] start", exec.getId(), exec.getTaskName());
+        if (logger.isInfoEnabled()) {
+            logger.info("[{}] start", execLabel(exec));
+        }
     }
 
     @Override
     public void createExecFinished(Execution exec) {
-        ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] done time:{} batches:{} in:{} out_created:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                stats.getDuration(),
-                stats.getSegments(),
-                stats.getExtracted(),
-                stats.getCreated());
+        if (logger.isInfoEnabled()) {
+            ExecutionStats stats = exec.getStats();
+
+            logger.info("[{}] done time:{} batches:{} in:{} out_created:{}",
+                    execLabel(exec),
+                    stats.getDuration(),
+                    stats.getSegments(),
+                    stats.getExtracted(),
+                    stats.getCreated());
+        }
     }
 
     @Override
     public void createOrUpdateExecFinished(Execution exec) {
-        ExecutionStats stats = exec.getStats();
+        if (logger.isInfoEnabled()) {
+            ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] done time:{} segments:{} in:{} out_created:{} out_updated:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                stats.getDuration(),
-                stats.getSegments(),
-                stats.getExtracted(),
-                stats.getCreated(),
-                stats.getUpdated());
+            logger.info("[{}] done time:{} segments:{} in:{} out_created:{} out_updated:{}",
+                    execLabel(exec),
+                    stats.getDuration(),
+                    stats.getSegments(),
+                    stats.getExtracted(),
+                    stats.getCreated(),
+                    stats.getUpdated());
+        }
     }
 
     @Override
     public void deleteExecFinished(Execution exec) {
-        ExecutionStats stats = exec.getStats();
+        if (logger.isInfoEnabled()) {
+            ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] done time:{} segments:{} in:{} out_deleted:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                stats.getDuration(),
-                stats.getSegments(),
-                stats.getExtracted(),
-                stats.getDeleted());
+            logger.info("[{}] done time:{} segments:{} in:{} out_deleted:{}",
+                    execLabel(exec),
+                    stats.getDuration(),
+                    stats.getSegments(),
+                    stats.getExtracted(),
+                    stats.getDeleted());
+        }
     }
 
     @Override
     public void sourceKeysExecFinished(Execution exec) {
-
         if (logger.isInfoEnabled()) {
 
             Set<?> keys = (Set<?>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
@@ -75,9 +80,8 @@ public class Slf4jLmLogger implements LmLogger {
 
             ExecutionStats stats = exec.getStats();
 
-            logger.info("[{}/{}] done time:{} segments:{} in:{} out_keys:{}",
-                    exec.getId(),
-                    exec.getTaskName(),
+            logger.info("[{}] done time:{} segments:{} in:{} out_keys:{}",
+                    execLabel(exec),
                     stats.getDuration(),
                     stats.getSegments(),
                     stats.getExtracted(),
@@ -87,55 +91,69 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void segmentStarted(Execution exec) {
-        logger.debug("[{}/{}] segment:{} start", exec.getId(), exec.getTaskName(), exec.getStats().getSegments());
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}] segment:{} start", execLabel(exec), exec.getStats().getSegments());
+        }
     }
 
     @Override
     public void deleteSegmentFinished(Execution exec, int objectsProcessed, int objectsDeleted) {
-        logger.debug("[{}/{}] segment:{} done in:{} out_deleted:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                exec.getStats().getSegments(),
-                objectsProcessed,
-                objectsDeleted);
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}] segment:{} done in:{} out_deleted:{}",
+                    execLabel(exec),
+                    exec.getStats().getSegments(),
+                    objectsProcessed,
+                    objectsDeleted);
+        }
     }
 
     @Override
     public void createSegmentFinished(Execution exec, int rowsProcessed, int objectsInserted) {
-        logger.debug("[{}/{}] segment:{} done in:{} out_created:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                exec.getStats().getSegments(),
-                rowsProcessed,
-                objectsInserted);
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}] segment:{} done in:{} out_created:{}",
+                    execLabel(exec),
+                    exec.getStats().getSegments(),
+                    rowsProcessed,
+                    objectsInserted);
+        }
     }
 
     @Override
     public void createOrUpdateSegmentFinished(Execution exec, int rowsProcessed, int objectsInserted, int objectsUpdated) {
-        logger.debug("[{}/{}] segment:{} done in:{} out_created:{} out_updated:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                exec.getStats().getSegments(),
-                rowsProcessed,
-                objectsInserted,
-                objectsUpdated);
+        if (logger.isDebugEnabled()) {
+            logger.debug("[{}] segment:{} done in:{} out_created:{} out_updated:{}",
+                    execLabel(exec),
+                    exec.getStats().getSegments(),
+                    rowsProcessed,
+                    objectsInserted,
+                    objectsUpdated);
+        }
     }
 
     @Override
     public void sourceKeysSegmentFinished(Execution exec, int rowsProcessed, Set<?> keysExtracted) {
-        if (!keysExtracted.isEmpty() && logger.isTraceEnabled()) {
-            logger.trace("[{}/{}] segment:{} out_keys:{}",
-                    exec.getId(),
-                    exec.getTaskName(),
-                    exec.getStats().getSegments(),
-                    keysExtracted);
-        }
+        if (logger.isDebugEnabled()) {
 
-        logger.debug("[{}/{}] segment:{} done in:{} out_keys:{}",
-                exec.getId(),
-                exec.getTaskName(),
-                exec.getStats().getSegments(),
-                rowsProcessed,
-                keysExtracted.size());
+            String label = execLabel(exec);
+
+            if (!keysExtracted.isEmpty() && logger.isTraceEnabled()) {
+                logger.trace("[{}] segment:{} out_keys:{}",
+                        label,
+                        exec.getStats().getSegments(),
+                        keysExtracted);
+            }
+
+            logger.debug("[{}] segment:{} done in:{} out_keys:{}",
+                    label,
+                    exec.getStats().getSegments(),
+                    rowsProcessed,
+                    keysExtracted.size());
+        }
+    }
+
+    private String execLabel(Execution exec) {
+        return exec.getParentExecution() != null
+                ? exec.getId() + "/" + exec.getParentExecution().getTaskName() + "/" + exec.getTaskName()
+                : exec.getId() + "/" + exec.getTaskName();
     }
 }

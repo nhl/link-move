@@ -21,6 +21,7 @@ public class Execution {
     protected final Map<String, Object> attributes;
     protected final LmLogger logger;
     protected final ExecutionStats stats;
+    protected final Execution parentExecution;
 
     /**
      * @since 3.0
@@ -29,7 +30,9 @@ public class Execution {
             long id,
             String taskName,
             ExtractorName extractorName,
-            Map<String, ?> params, LmLogger logger) {
+            Map<String, ?> params,
+            LmLogger logger,
+            Execution parentExecution) {
 
         this.id = id;
         this.taskName = taskName;
@@ -37,6 +40,7 @@ public class Execution {
         this.parameters = params;
         this.attributes = new ConcurrentHashMap<>();
         this.logger = logger;
+        this.parentExecution = parentExecution;
         this.stats = new ExecutionStats().executionStarted();
     }
 
@@ -143,6 +147,13 @@ public class Execution {
      */
     public ExtractorName getExtractorName() {
         return extractorName;
+    }
+
+    /**
+     * @since 3.0
+     */
+    public Execution getParentExecution() {
+        return parentExecution;
     }
 
     /**
