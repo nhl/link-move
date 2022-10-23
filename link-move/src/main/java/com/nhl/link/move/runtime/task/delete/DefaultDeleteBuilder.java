@@ -111,9 +111,6 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
         return new DeleteTask(
-                // extractor is not used by the "delete" task, only key extraction subtask,
-                // so set it to null
-                null,
                 batchSize,
                 type,
                 targetFilter,

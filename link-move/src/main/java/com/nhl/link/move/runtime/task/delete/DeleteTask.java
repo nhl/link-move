@@ -7,7 +7,6 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.batch.BatchProcessor;
-import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
@@ -36,7 +35,6 @@ public class DeleteTask extends BaseTask {
     private final ITargetCayenneService targetCayenneService;
 
     public DeleteTask(
-            ExtractorName extractorName,
             int batchSize,
             Class<?> type,
             Expression targetFilter,
@@ -46,7 +44,10 @@ public class DeleteTask extends BaseTask {
             DeleteSegmentProcessor processor,
             LmLogger logger) {
 
-        super(extractorName, batchSize, tokenManager, logger);
+        // extractor is not used by the "delete" task, only by its key extraction subtask,
+        // so set it to null
+
+        super(null, batchSize, tokenManager, logger);
 
         this.type = type;
         this.targetFilter = targetFilter;
