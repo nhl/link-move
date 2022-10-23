@@ -22,7 +22,7 @@ public class CreateOrUpdateStatsListener {
 
     @AfterSourceRowsExtracted
     public void sourceRowsExtracted(Execution e, CreateOrUpdateSegment segment) {
-        e.getLogger().segmentStarted(e);
+        e.getLogger().segmentStarted();
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
@@ -36,8 +36,8 @@ public class CreateOrUpdateStatsListener {
         e.getStats().incrementCreated(created);
         e.getStats().incrementUpdated(updated);
 
-        // call the logger before incrementing the batch count, so that start and end batch numbers match
-        e.getLogger().createOrUpdateSegmentFinished(e, segment.getSourceRows().height(), created, updated);
+        // call the logger before incrementing the segment count, so that start and end segment numbers match
+        e.getLogger().createOrUpdateSegmentFinished(segment.getSourceRows().height(), created, updated);
         e.getStats().incrementSegments(1);
     }
 }

@@ -20,7 +20,7 @@ public class SourceKeysStatsListener {
 
     @AfterSourceRowsExtracted
     public void sourceRowsExtracted(Execution e, SourceKeysSegment segment) {
-        e.getLogger().segmentStarted(e);
+        e.getLogger().segmentStarted();
         e.getStats().incrementExtracted(segment.getSourceRows().height());
     }
 
@@ -30,7 +30,7 @@ public class SourceKeysStatsListener {
         Set<?> keysReported = keys != null ? keys : Collections.emptySet();
 
         // call the logger before incrementing the segment count, so that start and end segment numbers match
-        e.getLogger().sourceKeysSegmentFinished(e, segment.getSourceRows().height(), keysReported);
+        e.getLogger().sourceKeysSegmentFinished(segment.getSourceRows().height(), keysReported);
         e.getStats().incrementSegments(1);
     }
 }

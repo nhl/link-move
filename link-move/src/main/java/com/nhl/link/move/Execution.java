@@ -1,6 +1,7 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.LmExecutionLogger;
 import com.nhl.link.move.log.LmLogger;
 
 import java.util.LinkedHashMap;
@@ -19,7 +20,7 @@ public class Execution {
     protected final ExtractorName extractorName;
     protected final Map<String, ?> parameters;
     protected final Map<String, Object> attributes;
-    protected final LmLogger logger;
+    protected final LmExecutionLogger logger;
     protected final ExecutionStats stats;
     protected final Execution parentExecution;
 
@@ -39,9 +40,11 @@ public class Execution {
         this.extractorName = extractorName;
         this.parameters = params;
         this.attributes = new ConcurrentHashMap<>();
-        this.logger = logger;
         this.parentExecution = parentExecution;
         this.stats = new ExecutionStats().executionStarted();
+
+        // must initialize every other variable before initializing the logger that depends on the exec state
+        this.logger = logger.executionLogger(this);
     }
 
     /**
@@ -236,7 +239,7 @@ public class Execution {
     /**
      * @since 3.0
      */
-    public LmLogger getLogger() {
+    public LmExecutionLogger getLogger() {
         return logger;
     }
 

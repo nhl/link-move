@@ -110,7 +110,7 @@ public abstract class BaseTask implements LmTask {
      * @since 3.0
      */
     protected void onExecStarted(Execution exec) {
-        logger.execStarted(exec);
+        exec.getLogger().execStarted();
     }
 
     /**

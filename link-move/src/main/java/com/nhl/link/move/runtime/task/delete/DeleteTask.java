@@ -86,7 +86,7 @@ public class DeleteTask extends BaseTask {
 
     @Override
     protected void onExecFinished(Execution exec) {
-        logger.deleteExecFinished(exec);
+        exec.getLogger().deleteExecFinished();
     }
 
     protected ResultIterator<?> createTargetSelect() {

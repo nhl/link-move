@@ -53,7 +53,7 @@ public class CreateTask extends BaseTask {
 
     @Override
     protected void onExecFinished(Execution exec) {
-        logger.createExecFinished(exec);
+        exec.getLogger().createExecFinished();
     }
 
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {

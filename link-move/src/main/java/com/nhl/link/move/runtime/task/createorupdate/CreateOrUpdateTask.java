@@ -56,7 +56,7 @@ public class CreateOrUpdateTask extends BaseTask {
 
     @Override
     protected void onExecFinished(Execution exec) {
-        logger.createOrUpdateExecFinished(exec);
+        exec.getLogger().createOrUpdateExecFinished();
     }
 
     protected BatchProcessor<Object[]> createBatchProcessor(Execution execution, RowAttribute[] rowHeader) {
