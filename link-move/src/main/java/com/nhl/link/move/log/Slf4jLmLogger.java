@@ -22,14 +22,14 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void execStarted(Execution exec) {
-        logger.info("[{}/{}] exec", exec.getId(), exec.getTaskName());
+        logger.info("[{}/{}] start", exec.getId(), exec.getTaskName());
     }
 
     @Override
     public void createExecFinished(Execution exec) {
         ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] exec done time:{} batches:{} in:{} out_created:{}",
+        logger.info("[{}/{}] done time:{} batches:{} in:{} out_created:{}",
                 exec.getId(),
                 exec.getTaskName(),
                 stats.getDuration(),
@@ -42,7 +42,7 @@ public class Slf4jLmLogger implements LmLogger {
     public void createOrUpdateExecFinished(Execution exec) {
         ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] exec done time:{} segments:{} in:{} out_created:{} out_updated:{}",
+        logger.info("[{}/{}] done time:{} segments:{} in:{} out_created:{} out_updated:{}",
                 exec.getId(),
                 exec.getTaskName(),
                 stats.getDuration(),
@@ -56,7 +56,7 @@ public class Slf4jLmLogger implements LmLogger {
     public void deleteExecFinished(Execution exec) {
         ExecutionStats stats = exec.getStats();
 
-        logger.info("[{}/{}] exec done time:{} segments:{} in:{} out_deleted:{}",
+        logger.info("[{}/{}] done time:{} segments:{} in:{} out_deleted:{}",
                 exec.getId(),
                 exec.getTaskName(),
                 stats.getDuration(),
@@ -75,7 +75,7 @@ public class Slf4jLmLogger implements LmLogger {
 
             ExecutionStats stats = exec.getStats();
 
-            logger.info("[{}/{}] exec done time:{} segments:{} in:{} out_keys:{}",
+            logger.info("[{}/{}] done time:{} segments:{} in:{} out_keys:{}",
                     exec.getId(),
                     exec.getTaskName(),
                     stats.getDuration(),
@@ -87,7 +87,7 @@ public class Slf4jLmLogger implements LmLogger {
 
     @Override
     public void segmentStarted(Execution exec) {
-        logger.debug("[{}/{}] segment:{}", exec.getId(), exec.getTaskName(), exec.getStats().getSegments());
+        logger.debug("[{}/{}] segment:{} start", exec.getId(), exec.getTaskName(), exec.getStats().getSegments());
     }
 
     @Override
