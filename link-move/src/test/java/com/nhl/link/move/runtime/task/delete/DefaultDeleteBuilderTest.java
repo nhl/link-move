@@ -13,6 +13,7 @@ import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import org.apache.cayenne.map.DataMap;
+import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
@@ -20,6 +21,7 @@ import org.apache.cayenne.map.ObjEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,9 @@ public class DefaultDeleteBuilderTest {
 		DataMap dataMap = new DataMap();
 		DbEntity dbTargetEntity = new DbEntity("_e1");
 		dataMap.addDbEntity(dbTargetEntity);
+		DbAttribute pk = new DbAttribute("pk", Types.BIGINT, dbTargetEntity);
+		pk.setPrimaryKey(true);
+		dbTargetEntity.addAttribute(pk);
 
 		ObjAttribute matchAttribute = new ObjAttribute("abc");
 		matchAttribute.setType(Object.class.getName());
