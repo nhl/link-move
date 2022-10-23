@@ -18,19 +18,13 @@ public class ExtractSourceKeysStage {
     }
 
     public Set<Object> extractSourceKeys(Execution exec) {
-        // cache keys in the DeleteTask execution...
-        Set<Object> keys = (Set<Object>) exec.getAttribute(SOURCE_KEYS_KEY);
-        if (keys == null) {
-            keys = loadKeys(exec);
-            exec.setAttribute(SOURCE_KEYS_KEY, keys);
-        }
-
-        return keys;
+        // cache extracted source keys in the DeleteTask execution...
+        return exec.computeAttributeIfAbsent(SOURCE_KEYS_KEY, k -> loadKeys(exec));
     }
 
     @SuppressWarnings("unchecked")
-    private Set<Object> loadKeys(Execution parentExec) {
-        Execution childExec = keysSubtask.run(parentExec.getParameters(), parentExec);
+    private Set<Object> loadKeys(Execution deleteExec) {
+        Execution childExec = keysSubtask.run(deleteExec.getParameters(), deleteExec);
         Set<Object> keys = (Set<Object>) childExec.getAttribute(SourceKeysTask.RESULT_KEY);
         if (keys == null) {
             throw new LmRuntimeException("Unexpected state of keys subtask. No attribute for key: "

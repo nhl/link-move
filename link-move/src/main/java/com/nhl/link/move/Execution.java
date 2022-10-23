@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * A single execution of an {@link LmTask}. Tracks task parameters and execution statistics.
@@ -172,6 +173,9 @@ public class Execution implements AutoCloseable {
     }
 
     /**
+     * Sets a custom execution-scoped attribute. Passing a null value would remove the attribute. Attribute mechanism
+     * is used as way to communicate state between processed batches (segments), and between listeners.
+     *
      * @since 1.3
      */
     public void setAttribute(String key, Object value) {
@@ -183,6 +187,19 @@ public class Execution implements AutoCloseable {
     }
 
     /**
+     * Returns an execution-scoped attribute value. If no such attribute is previously stored, its value is created
+     * using the provided function, and cached for the future use for the given key. Attribute mechanism
+     * is used as way to communicate state between processed batches (segments), and between listeners.
+     *
+     * @since 3.0
+     */
+    public <T> T computeAttributeIfAbsent(String key, Function<String, T> valueProducer) {
+        return (T) attributes.computeIfAbsent(key, valueProducer);
+    }
+
+    /**
+     * Returns task execution parameters.
+     *
      * @since 1.3
      */
     public Map<String, ?> getParameters() {
