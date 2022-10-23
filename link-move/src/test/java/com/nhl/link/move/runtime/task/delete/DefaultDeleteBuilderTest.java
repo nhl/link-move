@@ -12,12 +12,15 @@ import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
+import org.apache.cayenne.map.DataMap;
+import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,15 +35,21 @@ public class DefaultDeleteBuilderTest {
 	@BeforeEach
 	public void before() {
 
+		DataMap dataMap = new DataMap();
+		DbEntity dbTargetEntity = new DbEntity("_e1");
+		dataMap.addDbEntity(dbTargetEntity);
+
 		ObjAttribute matchAttribute = new ObjAttribute("abc");
 		matchAttribute.setType(Object.class.getName());
 
-		ObjEntity targetEntity = new ObjEntity();
+		ObjEntity targetEntity = new ObjEntity("e1");
+		dataMap.addObjEntity(targetEntity);
+
+		targetEntity.setDbEntity(dbTargetEntity);
 		targetEntity.addAttribute(matchAttribute);
 
-		EntityResolver resolver = mock(EntityResolver.class);
-		when(resolver.getObjEntity(any(Class.class))).thenReturn(targetEntity);
-
+		EntityResolver resolver = new EntityResolver(List.of(dataMap));
+		
 		ITargetCayenneService cayenneService = mock(ITargetCayenneService.class);
 		when(cayenneService.entityResolver()).thenReturn(resolver);
 

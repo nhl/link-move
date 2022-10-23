@@ -29,15 +29,15 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
 
     @Override
     public void execStarted() {
+        logger.info("{} start", label);
+
         ExtractorName extractorName = exec.getExtractorName();
         if (extractorName != null) {
             if (extractorName.getName() != null && !ExtractorModel.DEFAULT_NAME.equals(extractorName.getName())) {
-                logger.info("{} start extractor:{}:{}", label, extractorName.getLocation(), extractorName.getName());
+                logger.info("{} extractor:{}:{}", label, extractorName.getLocation(), extractorName.getName());
             } else {
-                logger.info("{} start extractor:{}", label, extractorName.getLocation());
+                logger.info("{} extractor:{}", label, extractorName.getLocation());
             }
-        } else {
-            logger.info("{} start", label);
         }
     }
 

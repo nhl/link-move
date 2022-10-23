@@ -108,14 +108,16 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
     @Override
     public DeleteTask task() throws IllegalStateException {
 
-        if (extractorName == null) {
-            throw new IllegalStateException("Required 'sourceMatchExtractor' is not set");
-        }
+//        if (extractorName == null) {
+//            throw new IllegalStateException("Required 'sourceMatchExtractor' is not set");
+//        }
 
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
         return new DeleteTask(
-                extractorName,
+                // extractor is not used by the "delete" task, only key extraction subtask,
+                // so set it to null
+                null,
                 batchSize,
                 type,
                 targetFilter,
@@ -127,6 +129,8 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
     }
 
     private LmTask createSourceKeysSubtask(Mapper mapper) {
+
+
         return taskService.extractSourceKeys(type).sourceExtractor(extractorName).matchBy(mapper).task();
     }
 
