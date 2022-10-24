@@ -22,6 +22,9 @@ public class LocalTimeConverter extends SingleTypeConverter<LocalTime> {
     protected LocalTime convertNotNull(Object value, int scale) {
 
         switch (value.getClass().getName()) {
+            case "java.lang.String":
+                return LocalTime.parse((String) value);
+
             case "java.sql.Time":
                 java.sql.Time time = (Time) value;
                 Instant instant = Instant.ofEpochMilli(time.getTime());

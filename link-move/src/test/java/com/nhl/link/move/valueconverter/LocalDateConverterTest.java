@@ -46,4 +46,8 @@ public class LocalDateConverterTest {
         assertEquals(localDate, CONVERTER.convert(timestamp));
     }
 
+    @Test
+    public void testConvert_string() {
+        assertEquals(LocalDate.of(2017, 1, 2), CONVERTER.convert("2017-01-02"));
+    }
 }

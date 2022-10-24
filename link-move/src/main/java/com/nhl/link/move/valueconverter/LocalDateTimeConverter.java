@@ -21,25 +21,22 @@ public class LocalDateTimeConverter extends SingleTypeConverter<LocalDateTime> {
     @Override
     protected LocalDateTime convertNotNull(Object value, int scale) {
         switch (value.getClass().getName()) {
-            case "java.util.Date": {
+            case "java.lang.String":
+                return LocalDateTime.parse((String) value);
+            case "java.util.Date":
                 Date date = (Date) value;
                 return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            }
-            case "java.sql.Date": {
-                java.sql.Date date = (java.sql.Date) value;
+            case "java.sql.Date":
+                java.sql.Date sqlDate = (java.sql.Date) value;
                 // can't use java.sql.Date#toInstant()
-                return LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
-            }
-            case "java.sql.Time": {
+                return LocalDateTime.ofInstant(Instant.ofEpochMilli(sqlDate.getTime()), ZoneId.systemDefault());
+            case "java.sql.Time":
                 throw new LmRuntimeException("Will not perform lossy conversion from LocalDateTime: " + value);
-            }
-            case "java.sql.Timestamp": {
+            case "java.sql.Timestamp":
                 Timestamp timestamp = (Timestamp) value;
                 return timestamp.toLocalDateTime();
-            }
-            default: {
+            default:
                 throw new LmRuntimeException("Value can not be mapped to LocalDateTime: " + value);
-            }
         }
     }
 }

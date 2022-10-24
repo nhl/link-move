@@ -1,5 +1,6 @@
 ## Release 3.0.M1
 
+* #153 Date conversion from string
 * #195 execution stats may mismatch real changes caused by custom stage listener code
 * #199 Require Java 11
 * #200 Upgrade to Cayenne 4.2

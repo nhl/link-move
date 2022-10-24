@@ -51,4 +51,9 @@ public class LocalTimeConverterTest {
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
         assertEquals(localTime, CONVERTER.convert(timestamp));
     }
+
+    @Test
+    public void testConvert_string() {
+        assertEquals(LocalTime.of(1, 0, 1), CONVERTER.convert("01:00:01"));
+    }
 }
