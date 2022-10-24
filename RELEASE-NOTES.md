@@ -13,6 +13,7 @@
 * #208 LmExecution logging
 * #209 DeleteTask to load source keys outside the first segment
 * #210 Out-of-the-box handling of mixed-case DB column names
+* #211 Allow updating auto-increment columns
 
 ## Release 2.18
 

@@ -1,7 +1,6 @@
 package com.nhl.link.move.itest;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
@@ -11,8 +10,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import com.nhl.link.move.unit.cayenne.t.Etl5t;
 import com.nhl.link.move.unit.cayenne.t.Etl9t;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateOrUpdateIT extends LmIntegrationTest {
 
@@ -249,7 +246,9 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
                 .values(11, "b", 4)
                 .exec();
 
-        assertThrows(LmRuntimeException.class, task::run);
+        // must work, but with a warning printed in the logs
+        Execution e = task.run();
+        assertExec(2, 2, 0, 0, e);
     }
 
     @Test
