@@ -135,7 +135,7 @@ shows what is logged at each log level:
 | WARN      | Nothing                                                                       |
 | INFO      | Task start/stop with stats                                                    |
 | DEBUG     | Same as INFO, but also includes start/stop of each segment with segment stats |
-|TRACE|Same as DEBUG, but also includes 
+|TRACE|Same as DEBUG, but also includes IDs of all affected target objects (deleted, created, updated)|
 
 
 
