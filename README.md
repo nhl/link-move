@@ -122,8 +122,8 @@ An example using JDBC connector for the source data:
 ## Logging Configuration
 
 LinkMove uses Slf4J abstraction for logging, that will work with most common logging frameworks (Log4J2, Logback, etc.).
-Configuring logging levels is specific to the actual framework used in your application. Below are the important
-loggers whose levels you may tweak to achieve a desired level of detail to monitor your jobs:
+With any framework you use, you will need to configure the following log levels depending on the desired verbosity of
+your ETL tasks:
 
 ### Low verbosity
 
