@@ -40,8 +40,9 @@ public class JdbcExtractor implements Extractor {
                 select.lowerColumnNames();
                 break;
             case UPPER:
-            case DEFAULT:
                 select.upperColumnNames();
+                break;
+            case DEFAULT:
                 break;
         }
 

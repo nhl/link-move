@@ -66,4 +66,8 @@ public abstract class DerbySrcTest {
     protected Table srcEtlSub1() {
         return srcDb.getTable("etl_sub1");
     }
+
+    protected Table srcEtl12() {
+        return srcDb.getTable("etl12");
+    }
 }

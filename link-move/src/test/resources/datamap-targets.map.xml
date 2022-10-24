@@ -14,6 +14,11 @@
 		<db-attribute name="bin" type="VARBINARY" length="32"/>
 		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true"/>
 	</db-entity>
+	<db-entity name="etl12t">
+		<db-attribute name="MixedCaseId" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="StartsWithUpperCase" type="VARCHAR" length="100"/>
+		<info:property xmlns:info="http://cayenne.apache.org/schema/10/info" name="comment" value="mixed case column names"/>
+	</db-entity>
 	<db-entity name="etl1t">
 		<db-attribute name="age" type="INTEGER"/>
 		<db-attribute name="description" type="VARCHAR" length="100"/>
@@ -74,6 +79,9 @@
 	</obj-entity>
 	<obj-entity name="Etl11t" className="com.nhl.link.move.unit.cayenne.t.Etl11t" dbEntityName="etl11t">
 		<obj-attribute name="bin" type="byte[]" db-attribute-path="bin"/>
+	</obj-entity>
+	<obj-entity name="Etl12t" className="com.nhl.link.move.unit.cayenne.t.Etl12t" dbEntityName="etl12t">
+		<obj-attribute name="startsWithUpperCase" type="java.lang.String" db-attribute-path="StartsWithUpperCase"/>
 	</obj-entity>
 	<obj-entity name="Etl1t" className="com.nhl.link.move.unit.cayenne.t.Etl1t" dbEntityName="etl1t">
 		<obj-attribute name="age" type="java.lang.Integer" db-attribute-path="age"/>
@@ -144,4 +152,17 @@
 	<obj-relationship name="e5" source="Etl3t" target="Etl5t" deleteRule="Nullify" db-relationship-path="e5"/>
 	<obj-relationship name="e2s" source="Etl5t" target="Etl3t" deleteRule="Deny" db-relationship-path="e2s"/>
 	<obj-relationship name="e10" source="Etl9t" target="Etl10t" deleteRule="Nullify" db-relationship-path="e10"/>
+	<dbImport xmlns="http://cayenne.apache.org/schema/10/dbimport">
+		<tableTypes>
+			<tableType>TABLE</tableType>
+			<tableType>VIEW</tableType>
+		</tableTypes>
+		<forceDataMapCatalog>false</forceDataMapCatalog>
+		<forceDataMapSchema>false</forceDataMapSchema>
+		<namingStrategy>org.apache.cayenne.dbsync.naming.DefaultObjectNameGenerator</namingStrategy>
+		<skipPrimaryKeyLoading>false</skipPrimaryKeyLoading>
+		<skipRelationshipsLoading>false</skipRelationshipsLoading>
+		<useJava7Types>false</useJava7Types>
+		<usePrimitives>true</usePrimitives>
+	</dbImport>
 </data-map>
