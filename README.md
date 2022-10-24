@@ -122,11 +122,30 @@ An example using JDBC connector for the source data:
 ## Logging Configuration
 
 LinkMove uses Slf4J abstraction for logging, that will work with most common logging frameworks (Log4J2, Logback, etc.).
-Configuring logging levels is specific to the actual framework used in your application. Here we will show the important
+Configuring logging levels is specific to the actual framework used in your application. Below are the important
 loggers whose levels you may tweak to achieve a desired level of detail to monitor your jobs:
 
-| Verbosity | Loggers and Levels                                         | What is logged                                                                    |
-|-----------|------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| low       | `com.nhl.link.move.log = INFO`<br/>`org.apache.cayenne = WARN`  | Task executions and their stats                                                   |
-| medium    | `com.nhl.link.move.log = DEBUG`<br/>`org.apache.cayenne = WARN` | Task executions, execution segments and their stats                               |
-| high      | `com.nhl.link.move.log = TRACE`<br/>`org.apache.cayenne = INFO` | Task executions, segments, stats, affected target IDs and SQL queries and updates |
+### Low verbosity
+
+Logs task executions and their stats
+```
+com.nhl.link.move.log = INFO
+org.apache.cayenne.log = WARN
+```
+
+### Medium verbosity
+
+Logs task executions and execution segments and segment and execution stats
+```
+com.nhl.link.move.log = DEBUG
+org.apache.cayenne.log = WARN
+```
+
+### High verbosity
+
+Logs task executions, segments, segment and execution stats, all created, updated, deleted target IDs as well as SQL 
+queries and updates
+```
+com.nhl.link.move.log = TRACE
+org.apache.cayenne.log = INFO
+```
