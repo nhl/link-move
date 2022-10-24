@@ -12,6 +12,7 @@
 * #207 Tasks and Segments should not have generic types
 * #208 LmExecution logging
 * #209 DeleteTask to load source keys outside the first segment
+* #210 Out-of-the-box handling of mixed-case DB column names
 
 ## Release 2.18
 
