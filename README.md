@@ -3,9 +3,15 @@
 
 ## LinkMove
 
-LinkMove is a model-driven dynamically-configurable framework to acquire data from external sources and save it in your database. Its primary motivation is to facilitate [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) architectures. In DDD terms LinkMove is a tool to synchronize related models from different ["bounded contexts"](http://martinfowler.com/bliki/BoundedContext.html). Additionally it can be used as a general purpose ETL framework.
+LinkMove is a model-driven dynamically-configurable framework to acquire data from external sources and save it in your 
+database. Its primary motivation is to facilitate 
+[domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) architectures. In DDD terms LinkMove is a 
+tool to synchronize data between related models from different ["bounded contexts"](http://martinfowler.com/bliki/BoundedContext.html). 
+It can also be used as a general purpose ETL framework.
 
-LinkMove connects multiple data models together in a flexible way that anticipates independent changes between sources and targets. It will reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. It supports JDBC, XML, JSON, CSV sources out of the box.
+LinkMove connects data models in a flexible way that anticipates independent changes between sources and targets. It 
+will reuse your existing ORM mapping for the _target_ database, reducing configuration to just describing the _source_. 
+It supports JDBC, XML, JSON, CSV sources out of the box.
 
 ## Support
 
@@ -21,7 +27,7 @@ Add LinkMove dependency:
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move</artifactId>
-    <version>2.18</version>
+    <version>3.0.M1</version>
 </dependency>
 ```
 The core module above supports relational and XML sources. The following optional modules may be added if you need to work with other formats:
@@ -31,7 +37,7 @@ The core module above supports relational and XML sources. The following optiona
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-json</artifactId>
-    <version>2.18</version>
+    <version>3.0.M1</version>
 </dependency>
 ```
 ```XML
@@ -39,7 +45,7 @@ The core module above supports relational and XML sources. The following optiona
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-csv</artifactId>
-    <version>2.18</version>
+    <version>3.0.M1</version>
 </dependency>
 ```
 Use it:
@@ -113,4 +119,14 @@ An example using JDBC connector for the source data:
 </config>
 ```
 
+## Logging Configuration
 
+LinkMove uses Slf4J abstraction for logging, that will work with most common logging frameworks (Log4J2, Logback, etc.).
+Configuring logging levels is specific to the actual framework used in your application. Here we will show the important
+loggers whose levels you may tweak to achieve a desired level of detail to monitor your jobs:
+
+| Verbosity | Loggers and Levels                                         | What is logged                                                                    |
+|-----------|------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| low       | `com.nhl.link.move.log = INFO`<br/>`org.apache.cayenne = WARN`  | Task executions and their stats                                                   |
+| medium    | `com.nhl.link.move.log = DEBUG`<br/>`org.apache.cayenne = WARN` | Task executions, execution segments and their stats                               |
+| high      | `com.nhl.link.move.log = TRACE`<br/>`org.apache.cayenne = INFO` | Task executions, segments, stats, affected target IDs and SQL queries and updates |
