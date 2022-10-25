@@ -28,12 +28,13 @@ public class JdbcExtractor implements Extractor {
     @Override
     public RowReader getReader(Map<String, ?> parameters) {
 
-        // TODO: fetching DataRows and then converting them to Object[] is kind of expensive...
-        // maybe we can create Object[] bypassing DR, ideally by iterating a JDBC ResultSet
+        //  Fetching DataRows and then converting them to Object[], and then to a columnar DataFrame is kind of expensive.
+        //  We could use "columnQuery" instead of "dataRowQuery" to cut one step, but it won't provide us with column
+        //  names in case our model is missing an explicit "rowHeader"
 
-        SQLSelect<DataRow> select = SQLSelect
-                .dataRowQuery(sqlTemplate)
-                .params(parameters);
+        // TODO: this should use DFLib directly for maximum performance
+
+        SQLSelect<DataRow> select = SQLSelect.dataRowQuery(sqlTemplate).params(parameters);
 
         switch (capsStrategy) {
             case LOWER:

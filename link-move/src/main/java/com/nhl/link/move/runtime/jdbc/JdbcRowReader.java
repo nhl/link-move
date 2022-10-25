@@ -29,7 +29,7 @@ public class JdbcRowReader implements RowReader {
     @Override
     public Iterator<Object[]> iterator() {
 
-        return new Iterator<Object[]>() {
+        return new Iterator<>() {
 
             @Override
             public boolean hasNext() {
