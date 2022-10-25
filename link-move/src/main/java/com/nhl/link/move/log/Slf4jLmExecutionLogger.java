@@ -3,6 +3,7 @@ package com.nhl.link.move.log;
 import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
+import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
 import org.apache.cayenne.Persistent;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,15 +34,6 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
     @Override
     public void execStarted() {
         logger.info("{} start", label);
-
-        ExtractorName extractorName = exec.getExtractorName();
-        if (extractorName != null) {
-            if (extractorName.getName() != null && !ExtractorName.DEFAULT_NAME.equals(extractorName.getName())) {
-                logger.info("{} extractor:{}:{}", label, extractorName.getLocation(), extractorName.getName());
-            } else {
-                logger.info("{} extractor:{}", label, extractorName.getLocation());
-            }
-        }
     }
 
     @Override
@@ -95,6 +88,31 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
                 stats.getSegments(),
                 stats.getExtracted(),
                 keysReported.size());
+    }
+
+    @Override
+    public void extractorStarted(RowAttribute[] header, Object query) {
+        if (logger.isDebugEnabled()) {
+
+            ExtractorName extractorName = exec.getExtractorName();
+            if (extractorName != null) {
+                if (extractorName.getName() != null && !ExtractorName.DEFAULT_NAME.equals(extractorName.getName())) {
+                    logger.debug("{} extractor:{}#{}", label, extractorName.getLocation(), extractorName.getName());
+                } else {
+                    logger.debug("{} extractor:{}", label, extractorName.getLocation());
+                }
+            }
+
+            logger.debug("{} extractor_columns:[{}]", label, rowLabels(header));
+
+            if (query != null) {
+                if (exec.getParameters().isEmpty()) {
+                    logger.debug("{} extractor_query:{{}}", label, query);
+                } else {
+                    logger.debug("{} extractor_query:{{}} params:{}", label, query, paramsAsJson());
+                }
+            }
+        }
     }
 
     @Override
@@ -202,5 +220,26 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
         return singleColumnId
                 ? objects.map(p -> p.getObjectId().getIdSnapshot().values().iterator().next()).toList()
                 : objects.map(p -> p.getObjectId().getIdSnapshot()).toList();
+    }
+
+    private String rowLabels(RowAttribute[] header) {
+        StringBuilder labels = new StringBuilder();
+        for (int i = 0; i < header.length; i++) {
+            if (i > 0) {
+                labels.append(",");
+            }
+            labels.append(header[i].getSourceName());
+        }
+        return labels.toString();
+    }
+
+    private String paramsAsJson() {
+        StringBuilder params = new StringBuilder("{");
+        for (Map.Entry<String, ?> p : exec.getParameters().entrySet()) {
+            CheapJson.append(params, p.getKey(), p.getValue());
+        }
+        params.append("}");
+
+        return params.toString();
     }
 }

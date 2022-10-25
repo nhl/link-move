@@ -1,10 +1,13 @@
 package com.nhl.link.move.runtime.xml;
 
 import com.nhl.link.move.BaseRowAttribute;
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.extractor.model.MutableExtractorModel;
+import com.nhl.link.move.log.LmExecutionLogger;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -18,18 +21,20 @@ import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class XmlExtractor_NamespacesTest {
 
     private static final String xmlDocument =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-            "<doc xmlns:ns1=\"http://example.org/\">" +
-                "<ns1:e1>" +
+                    "<doc xmlns:ns1=\"http://example.org/\">" +
+                    "<ns1:e1>" +
                     "<a>x</a>" +
                     "<ns1:b>y</ns1:b>" +
                     "<c>z</c>" +
-                "</ns1:e1>" +
-            "</doc>";
+                    "</ns1:e1>" +
+                    "</doc>";
 
     @Test
     public void testXmlExtractor_Namespaces() {
@@ -88,7 +93,12 @@ public class XmlExtractor_NamespacesTest {
     }
 
     private List<Object[]> readRows(Extractor extractor) {
-        return StreamSupport.stream(extractor.getReader(Collections.emptyMap()).spliterator(), false)
-                            .collect(Collectors.toList());
+        Execution exec = mock(Execution.class);
+        when(exec.getParameters()).thenReturn(Collections.emptyMap());
+        when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
+
+        RowReader reader = extractor.getReader(exec);
+
+        return StreamSupport.stream(reader.spliterator(), false).collect(Collectors.toList());
     }
 }

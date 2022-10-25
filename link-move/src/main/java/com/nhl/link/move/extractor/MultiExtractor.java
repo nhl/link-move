@@ -1,9 +1,9 @@
 package com.nhl.link.move.extractor;
 
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowReader;
 
 import java.util.List;
-import java.util.Map;
 
 public class MultiExtractor implements Extractor {
 
@@ -14,8 +14,7 @@ public class MultiExtractor implements Extractor {
 	}
 
 	@Override
-	public RowReader getReader(Map<String, ?> parameters) {
-		return new MultiExtractorRowReader(extractors, parameters);
+	public RowReader getReader(Execution exec) {
+		return new MultiExtractorRowReader(extractors, exec);
 	}
-
 }

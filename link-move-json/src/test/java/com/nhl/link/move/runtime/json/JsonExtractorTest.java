@@ -1,10 +1,12 @@
 package com.nhl.link.move.runtime.json;
 
 import com.nhl.link.move.BaseRowAttribute;
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
+import com.nhl.link.move.log.LmExecutionLogger;
 import com.nhl.link.move.runtime.json.query.JsonQuery;
 import com.nhl.link.move.runtime.json.query.QueryCompiler;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -162,8 +164,12 @@ public class JsonExtractorTest {
 
     private List<Object[]> collectRows(JsonRowAttribute[] attributes, JsonQuery query) {
 
+        Execution exec = mock(Execution.class);
+        when(exec.getParameters()).thenReturn(Collections.emptyMap());
+        when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
+
         Extractor extractor = new JsonExtractor(jacksonService, connector, attributes, query);
-        RowReader reader = extractor.getReader(new HashMap<>());
+        RowReader reader = extractor.getReader(exec);
 
         List<Object[]> rows = new ArrayList<>();
         for (Object[] row : reader) {

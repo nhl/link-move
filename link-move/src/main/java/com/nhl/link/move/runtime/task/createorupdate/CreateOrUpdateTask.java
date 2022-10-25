@@ -67,6 +67,6 @@ public class CreateOrUpdateTask extends BaseTask {
     }
 
     protected RowReader getRowReader(Execution exec) {
-        return extractorService.getExtractor(exec.getExtractorName()).getReader(exec.getParameters());
+        return extractorService.getExtractor(exec.getExtractorName()).getReader(exec);
     }
 }

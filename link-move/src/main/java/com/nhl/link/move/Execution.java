@@ -1,6 +1,7 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.log.CheapJson;
 import com.nhl.link.move.log.LmExecutionLogger;
 import com.nhl.link.move.log.LmLogger;
 
@@ -69,54 +70,33 @@ public class Execution {
 
         StringBuilder paramsOut = new StringBuilder("{");
         for (Entry<String, ?> p : parameters.entrySet()) {
-            append(paramsOut, p.getKey(), p.getValue());
+            CheapJson.append(paramsOut, p.getKey(), p.getValue());
         }
         paramsOut.append("}");
 
         StringBuilder statsOut = new StringBuilder("{");
-        append(statsOut, "batches", stats.getSegments());
-        append(statsOut, "created", stats.getCreated());
-        append(statsOut, "deleted", stats.getDeleted());
-        append(statsOut, "duration", stats.getDuration());
-        append(statsOut, "extracted", stats.getExtracted());
-        append(statsOut, "startedOn", stats.getStartedOn());
-        append(statsOut, "status", stats.isStopped() ? "finished" : "in progress");
-        append(statsOut, "updated", stats.getUpdated());
+        CheapJson.append(statsOut, "batches", stats.getSegments());
+        CheapJson.append(statsOut, "created", stats.getCreated());
+        CheapJson.append(statsOut, "deleted", stats.getDeleted());
+        CheapJson.append(statsOut, "duration", stats.getDuration());
+        CheapJson.append(statsOut, "extracted", stats.getExtracted());
+        CheapJson.append(statsOut, "startedOn", stats.getStartedOn());
+        CheapJson.append(statsOut, "status", stats.isStopped() ? "finished" : "in progress");
+        CheapJson.append(statsOut, "updated", stats.getUpdated());
 
         statsOut.append("}");
 
         StringBuilder out = new StringBuilder("{");
-        append(out, "id", id);
-        append(out, "extractor", extractorName);
-        append(out, "parameters", paramsOut.toString(), false);
-        append(out, "stats", statsOut.toString(), false);
-        append(out, "task", taskName);
+        CheapJson.append(out, "id", id);
+        CheapJson.append(out, "extractor", extractorName);
+        CheapJson.append(out, "parameters", paramsOut.toString(), false);
+        CheapJson.append(out, "stats", statsOut.toString(), false);
+        CheapJson.append(out, "task", taskName);
 
         return out.append("}").toString();
     }
 
-    private void append(StringBuilder out, String key, Object val) {
-        append(out, key, val, !(val instanceof Number));
-    }
 
-    private void append(StringBuilder out, String key, Object val, boolean quote) {
-        if (val == null) {
-            return;
-        }
-
-        if (out.length() > 1) {
-            out.append(',');
-        }
-
-        out.append("\"").append(key).append("\":");
-
-        if (quote) {
-            out.append("\"").append(val).append("\"");
-
-        } else {
-            out.append(val);
-        }
-    }
 
     /**
      * Returns execution id. It is an incrementing number and is unique within a JVM. It is used primarily for

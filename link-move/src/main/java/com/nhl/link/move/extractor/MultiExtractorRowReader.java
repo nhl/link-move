@@ -1,16 +1,16 @@
 package com.nhl.link.move.extractor;
 
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class MultiExtractorRowReader implements RowReader {
 
-    private static final Iterator<Object[]> EMPTY_ITERATOR = new Iterator<Object[]>() {
+    private static final Iterator<Object[]> EMPTY_ITERATOR = new Iterator<>() {
 
         @Override
         public boolean hasNext() {
@@ -29,15 +29,15 @@ public class MultiExtractorRowReader implements RowReader {
     };
 
     private final List<Extractor> extractors;
-    private final Map<String, ?> parameters;
+    private final Execution exec;
 
     private int currentExtractor;
     private RowReader currentReader;
     private Iterator<Object[]> currentIterator;
 
-    public MultiExtractorRowReader(List<Extractor> extractors, Map<String, ?> parameters) {
+    public MultiExtractorRowReader(List<Extractor> extractors, Execution exec) {
         this.extractors = extractors;
-        this.parameters = parameters;
+        this.exec = exec;
 
         rewind();
     }
@@ -100,7 +100,7 @@ public class MultiExtractorRowReader implements RowReader {
                 currentReader.close();
             }
 
-            this.currentReader = extractors.get(currentExtractor++).getReader(parameters);
+            this.currentReader = extractors.get(currentExtractor++).getReader(exec);
             this.currentIterator = currentReader.iterator();
 
             // recursion: if currentIterator is empty, we need to continue until

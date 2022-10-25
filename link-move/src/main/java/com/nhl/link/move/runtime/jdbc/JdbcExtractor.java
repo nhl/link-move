@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.jdbc;
 
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.extractor.Extractor;
@@ -7,8 +8,6 @@ import org.apache.cayenne.DataRow;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.CapsStrategy;
 import org.apache.cayenne.query.SQLSelect;
-
-import java.util.Map;
 
 public class JdbcExtractor implements Extractor {
 
@@ -26,7 +25,7 @@ public class JdbcExtractor implements Extractor {
     }
 
     @Override
-    public RowReader getReader(Map<String, ?> parameters) {
+    public RowReader getReader(Execution exec) {
 
         //  Fetching DataRows and then converting them to Object[], and then to a columnar DataFrame is kind of expensive.
         //  We could use "columnQuery" instead of "dataRowQuery" to cut one step, but it won't provide us with column
@@ -34,7 +33,7 @@ public class JdbcExtractor implements Extractor {
 
         // TODO: this should use DFLib directly for maximum performance
 
-        SQLSelect<DataRow> select = SQLSelect.dataRowQuery(sqlTemplate).params(parameters);
+        SQLSelect<DataRow> select = SQLSelect.dataRowQuery(sqlTemplate).params(exec.getParameters());
 
         switch (capsStrategy) {
             case LOWER:
@@ -49,6 +48,8 @@ public class JdbcExtractor implements Extractor {
 
         DataRowIterator it = new DataRowIterator(context.iterator(select));
         RowAttribute[] rowHeader = this.rowHeader != null ? this.rowHeader : it.calculateHeader();
+
+        exec.getLogger().extractorStarted(rowHeader, sqlTemplate);
         return new JdbcRowReader(rowHeader, it);
     }
 }

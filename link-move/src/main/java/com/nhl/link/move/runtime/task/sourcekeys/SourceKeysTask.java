@@ -70,8 +70,8 @@ public class SourceKeysTask extends BaseTask {
     /**
      * Returns a RowReader obtained from a named extractor and wrapped in a read stats counter.
      */
-    protected RowReader getRowReader(Execution execution) {
-        return extractorService.getExtractor(execution.getExtractorName()).getReader(execution.getParameters());
+    protected RowReader getRowReader(Execution exec) {
+        return extractorService.getExtractor(exec.getExtractorName()).getReader(exec);
     }
 
 }

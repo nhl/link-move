@@ -1,9 +1,11 @@
 package com.nhl.link.move.runtime.csv;
 
 import com.nhl.link.move.BaseRowAttribute;
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.model.MutableExtractorModel;
+import com.nhl.link.move.log.LmExecutionLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,27 +71,36 @@ public class CsvExtractorFactoryTest {
 
     @Test
     public void testBasicIntegration() throws IOException {
-        when(connectorMock.getInputStream(anyMap()))
-                .thenReturn(new ByteArrayInputStream("r1c1,r1c2,r1c3\nr2c1,r2c2,r2c3".getBytes()));
-        RowReader reader = extractorFactory.createExtractor(connectorMock, model).getReader(Collections.emptyMap());
+        Execution exec = mock(Execution.class);
+        when(exec.getParameters()).thenReturn(Collections.emptyMap());
+        when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
+
+        when(connectorMock.getInputStream(anyMap())).thenReturn(new ByteArrayInputStream("r1c1,r1c2,r1c3\nr2c1,r2c2,r2c3".getBytes()));
+        RowReader reader = extractorFactory.createExtractor(connectorMock, model).getReader(exec);
         doCheck(reader);
     }
 
     @Test
     public void testSetDelimiter() throws IOException {
-        when(connectorMock.getInputStream(anyMap()))
-                .thenReturn(new ByteArrayInputStream("r1c1;r1c2;r1c3\nr2c1;r2c2;r2c3".getBytes()));
+        Execution exec = mock(Execution.class);
+        when(exec.getParameters()).thenReturn(Collections.emptyMap());
+        when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
+
+        when(connectorMock.getInputStream(anyMap())).thenReturn(new ByteArrayInputStream("r1c1;r1c2;r1c3\nr2c1;r2c2;r2c3".getBytes()));
         model.addProperty(CsvExtractorFactory.DELIMITER_PROPERTY, ";");
-        RowReader reader = extractorFactory.createExtractor(connectorMock, model).getReader(Collections.emptyMap());
+        RowReader reader = extractorFactory.createExtractor(connectorMock, model).getReader(exec);
         doCheck(reader);
     }
 
     @Test
     public void testSetReadFrom() throws IOException {
-        when(connectorMock.getInputStream(anyMap()))
-                .thenReturn(new ByteArrayInputStream("k1,k2,k3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3".getBytes()));
+        Execution exec = mock(Execution.class);
+        when(exec.getParameters()).thenReturn(Collections.emptyMap());
+        when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
+
+        when(connectorMock.getInputStream(anyMap())).thenReturn(new ByteArrayInputStream("k1,k2,k3\nr1c1,r1c2,r1c3\nr2c1,r2c2,r2c3".getBytes()));
         model.addProperty(CsvExtractorFactory.READ_FROM_PROPERTY, "2");
-        RowReader reader = extractorFactory.createExtractor(connectorMock, model).getReader(Collections.emptyMap());
+        RowReader reader = extractorFactory.createExtractor(connectorMock, model).getReader(exec);
         doCheck(reader);
     }
 }

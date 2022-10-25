@@ -1,6 +1,7 @@
 package com.nhl.link.move.extractor;
 
 import com.nhl.link.move.CollectionRowReader;
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.RowReader;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MultiExtractorTest {
 
@@ -64,8 +67,11 @@ public class MultiExtractorTest {
 
     protected void assertFound(MultiExtractor extractor, int expectedRows) {
 
+        Execution exec = mock(Execution.class);
+        when(exec.getParameters()).thenReturn(Collections.emptyMap());
+
         int rows = 0;
-        try (RowReader reader = extractor.getReader(Collections.emptyMap())) {
+        try (RowReader reader = extractor.getReader(exec)) {
             for (Object[] ignored : reader) {
                 rows++;
             }
