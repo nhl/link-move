@@ -1,6 +1,5 @@
 package com.nhl.link.move;
 
-import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
 
@@ -40,7 +39,7 @@ public interface SourceKeysBuilder {
      * @since 1.3
      */
     default SourceKeysBuilder sourceExtractor(String location) {
-        return sourceExtractor(ExtractorName.create(location, ExtractorModel.DEFAULT_NAME));
+        return sourceExtractor(ExtractorName.create(location, ExtractorName.DEFAULT_NAME));
     }
 
     /**

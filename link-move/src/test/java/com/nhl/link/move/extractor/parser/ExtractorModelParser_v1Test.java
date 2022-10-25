@@ -2,6 +2,7 @@ package com.nhl.link.move.extractor.parser;
 
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
@@ -27,9 +28,9 @@ public class ExtractorModelParser_v1Test extends BaseParserTest {
 
 		Collection<String> extractorNames = container.getExtractorNames();
 		assertEquals(1, extractorNames.size());
-		assertTrue(extractorNames.contains(ExtractorModel.DEFAULT_NAME));
+		assertTrue(extractorNames.contains(ExtractorName.DEFAULT_NAME));
 
-		ExtractorModel model = container.getExtractor(ExtractorModel.DEFAULT_NAME);
+		ExtractorModel model = container.getExtractor(ExtractorName.DEFAULT_NAME);
 
 		assertEquals("atype", model.getType());
 		assertTrue(model.getConnectorIds().contains("aconnector"));

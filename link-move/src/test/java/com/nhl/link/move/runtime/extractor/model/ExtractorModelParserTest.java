@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.extractor.model;
 
 import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,9 +45,9 @@ public class ExtractorModelParserTest {
 
 		assertEquals(1, container.getExtractorNames().size());
 
-		ExtractorModel model = container.getExtractor(ExtractorModel.DEFAULT_NAME);
+		ExtractorModel model = container.getExtractor(ExtractorName.DEFAULT_NAME);
 
-		assertEquals(ExtractorModel.DEFAULT_NAME, model.getName());
+		assertEquals(ExtractorName.DEFAULT_NAME, model.getName());
 		assertEquals("atype", model.getType());
 		assertTrue(model.getConnectorIds().contains("aconnector"));
 
@@ -84,7 +85,7 @@ public class ExtractorModelParserTest {
 		assertEquals(3, extractorNames.size());
 		assertTrue(extractorNames.contains("e1"));
 		assertTrue(extractorNames.contains("e2"));
-		assertTrue(extractorNames.contains(ExtractorModel.DEFAULT_NAME));
+		assertTrue(extractorNames.contains(ExtractorName.DEFAULT_NAME));
 
 		ExtractorModel m1 = container.getExtractor("e1");
 
@@ -119,8 +120,8 @@ public class ExtractorModelParserTest {
 		assertEquals("AB2", m2.getPropertyValue("a.b"));
 		assertEquals("XY2", m2.getPropertyValue("x.y"));
 
-		ExtractorModel m3 = container.getExtractor(ExtractorModel.DEFAULT_NAME);
+		ExtractorModel m3 = container.getExtractor(ExtractorName.DEFAULT_NAME);
 		assertNotNull(m3);
-		assertEquals(ExtractorModel.DEFAULT_NAME, m3.getName());
+		assertEquals(ExtractorName.DEFAULT_NAME, m3.getName());
 	}
 }

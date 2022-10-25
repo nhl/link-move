@@ -5,7 +5,7 @@ import com.nhl.link.move.annotation.AfterSourcesMapped;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.exp.property.Property;
 
@@ -43,7 +43,7 @@ public interface CreateOrUpdateBuilder {
      * @since 1.3
      */
     default CreateOrUpdateBuilder sourceExtractor(String location) {
-        return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
+        return sourceExtractor(location, ExtractorName.DEFAULT_NAME);
     }
 
     /**

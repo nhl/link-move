@@ -3,7 +3,6 @@ package com.nhl.link.move.log;
 import com.nhl.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
-import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
 import org.apache.cayenne.Persistent;
@@ -36,7 +35,7 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
 
         ExtractorName extractorName = exec.getExtractorName();
         if (extractorName != null) {
-            if (extractorName.getName() != null && !ExtractorModel.DEFAULT_NAME.equals(extractorName.getName())) {
+            if (extractorName.getName() != null && !ExtractorName.DEFAULT_NAME.equals(extractorName.getName())) {
                 logger.info("{} extractor:{}:{}", label, extractorName.getLocation(), extractorName.getName());
             } else {
                 logger.info("{} extractor:{}", label, extractorName.getLocation());

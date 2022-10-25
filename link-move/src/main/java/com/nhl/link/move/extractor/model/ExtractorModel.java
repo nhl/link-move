@@ -13,7 +13,11 @@ import java.util.Map;
  */
 public interface ExtractorModel {
 
-    String DEFAULT_NAME = "default_extractor";
+    /**
+     * @deprecated since 3.0 in favor of {@link ExtractorName#DEFAULT_NAME}
+     */
+    @Deprecated(since = "3.0")
+    String DEFAULT_NAME = ExtractorName.DEFAULT_NAME;
 
     String getName();
 

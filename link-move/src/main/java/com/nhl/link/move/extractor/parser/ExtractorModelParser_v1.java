@@ -5,8 +5,8 @@ import com.nhl.link.move.ClassNameResolver;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.extractor.model.ContainerAwareExtractorModel;
-import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.extractor.model.MutableExtractorModel;
 import com.nhl.link.move.extractor.model.MutableExtractorModelContainer;
 import org.w3c.dom.DOMException;
@@ -50,9 +50,9 @@ public class ExtractorModelParser_v1 implements DOMExtractorModelParser {
         // in v.1 there is a single extractor for the entire config, with its
         // properties placed at the second level of the XML
 
-        MutableExtractorModel extractor = new MutableExtractorModel(ExtractorModel.DEFAULT_NAME);
+        MutableExtractorModel extractor = new MutableExtractorModel(ExtractorName.DEFAULT_NAME);
         doParse(rootElement, container, extractor);
-        container.addExtractor(ExtractorModel.DEFAULT_NAME, new ContainerAwareExtractorModel(container, extractor));
+        container.addExtractor(ExtractorName.DEFAULT_NAME, new ContainerAwareExtractorModel(container, extractor));
     }
 
     protected void doParse(Element rootElement, MutableExtractorModelContainer container,

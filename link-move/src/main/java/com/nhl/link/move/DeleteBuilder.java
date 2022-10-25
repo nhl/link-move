@@ -1,6 +1,6 @@
 package com.nhl.link.move;
 
-import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import org.apache.cayenne.exp.Expression;
 
 import com.nhl.link.move.mapper.Mapper;
@@ -19,7 +19,7 @@ public interface DeleteBuilder {
     DeleteBuilder targetFilter(Expression filter);
 
     default DeleteBuilder sourceMatchExtractor(String location) {
-        return sourceMatchExtractor(location, ExtractorModel.DEFAULT_NAME);
+        return sourceMatchExtractor(location, ExtractorName.DEFAULT_NAME);
     }
 
     /**

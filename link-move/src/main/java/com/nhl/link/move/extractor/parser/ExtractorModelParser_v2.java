@@ -5,8 +5,8 @@ import com.nhl.link.move.ClassNameResolver;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.extractor.model.ContainerAwareExtractorModel;
-import com.nhl.link.move.extractor.model.ExtractorModel;
 import com.nhl.link.move.extractor.model.ExtractorModelContainer;
+import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.extractor.model.MutableExtractorModel;
 import com.nhl.link.move.extractor.model.MutableExtractorModelContainer;
 import org.w3c.dom.DOMException;
@@ -82,7 +82,7 @@ public class ExtractorModelParser_v2 implements DOMExtractorModelParser {
     protected void parseExtractor(MutableExtractorModelContainer container, Element extractorElement)
             throws DOMException {
 
-        String name = ExtractorModel.DEFAULT_NAME;
+        String name = ExtractorName.DEFAULT_NAME;
 
         // find name node to be able to create extractor
 

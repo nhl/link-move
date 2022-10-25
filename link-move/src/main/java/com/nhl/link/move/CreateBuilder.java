@@ -4,7 +4,7 @@ import com.nhl.link.move.annotation.AfterSourceRowsConverted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
-import com.nhl.link.move.extractor.model.ExtractorModel;
+import com.nhl.link.move.extractor.model.ExtractorName;
 
 /**
  * A builder of an {@link LmTask} that performs fast "create" synchronization without any source/target key matching.
@@ -37,7 +37,7 @@ public interface CreateBuilder {
      * @see #sourceExtractor(String, String)
      */
     default CreateBuilder sourceExtractor(String location) {
-        return sourceExtractor(location, ExtractorModel.DEFAULT_NAME);
+        return sourceExtractor(location, ExtractorName.DEFAULT_NAME);
     }
 
     /**

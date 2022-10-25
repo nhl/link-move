@@ -9,6 +9,11 @@ import org.apache.cayenne.util.HashCodeBuilder;
  */
 public class ExtractorName {
 
+    /**
+     * @since 3.0
+     */
+    public static final String DEFAULT_NAME = "default_extractor";
+
     private final String location;
     private final String name;
 
@@ -69,7 +74,6 @@ public class ExtractorName {
 
     @Override
     public String toString() {
-        return location + "." + name;
+        return DEFAULT_NAME.equals(name) ? location : location + "#" + name;
     }
-
 }
