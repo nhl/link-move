@@ -28,7 +28,7 @@ public class ClasspathResourceResolver implements ResourceResolver {
 
         URL resource = ClasspathResourceResolver.class.getClassLoader().getResource(name);
         if (resource == null) {
-            throw new LmRuntimeException("Extractor config not found in classpath: " + name);
+            throw new LmRuntimeException("Resource not found in classpath: " + name);
         }
 
         LOGGER.debug("Will read resource at classpath URL {}", resource);
