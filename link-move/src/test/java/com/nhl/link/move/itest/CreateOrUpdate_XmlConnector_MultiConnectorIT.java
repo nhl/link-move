@@ -14,7 +14,7 @@ public class CreateOrUpdate_XmlConnector_MultiConnectorIT extends LmIntegrationT
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/xml_to_etl1t_multiconnectors.xml")
+				.sourceExtractor("com/nhl/link/move/itest/xml/xml_to_etl1t_multiconnectors.xml")
 				.matchBy(Etl1t.NAME)
 				.task();
 

@@ -14,7 +14,7 @@ public class CreateOrUpdate_XmlConnectorIT extends LmIntegrationTest {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.createOrUpdate(Etl1t.class)
-				.sourceExtractor("com/nhl/link/move/itest/xml_to_etl1t.xml")
+				.sourceExtractor("com/nhl/link/move/itest/xml/xml_to_etl1t.xml")
 				.matchBy(Etl1t.NAME)
 				.task();
 
