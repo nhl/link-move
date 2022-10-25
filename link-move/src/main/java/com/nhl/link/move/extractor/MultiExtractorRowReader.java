@@ -60,7 +60,7 @@ public class MultiExtractorRowReader implements RowReader {
     public Iterator<Object[]> iterator() {
 
 
-        return new Iterator<Object[]>() {
+        return new Iterator<>() {
             @Override
             public boolean hasNext() {
                 return currentIterator().hasNext();

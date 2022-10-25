@@ -15,16 +15,16 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ExtractorModelService implements IExtractorModelService {
 
-    private IExtractorModelParser parser;
-    private ResourceResolver modelLoader;
-    private ConcurrentMap<String, ExtractorModelContainer> containers;
+    private final IExtractorModelParser parser;
+    private final ResourceResolver modelResolver;
+    private final ConcurrentMap<String, ExtractorModelContainer> containers;
 
     public ExtractorModelService(
-            @Inject ResourceResolver modelLoader,
+            @Inject ResourceResolver modelResolver,
             @Inject IExtractorModelParser parser) {
 
         this.parser = parser;
-        this.modelLoader = modelLoader;
+        this.modelResolver = modelResolver;
         this.containers = new ConcurrentHashMap<>();
     }
 
@@ -44,7 +44,7 @@ public class ExtractorModelService implements IExtractorModelService {
     protected ExtractorModelContainer getContainer(String location) {
 
         ExtractorModelContainer c = containers.get(location);
-        if (c == null || modelLoader.needsReload(c.getLocation(), c.getLoadedOn())) {
+        if (c == null || modelResolver.needsReload(c.getLocation(), c.getLoadedOn())) {
             c = loadContainer(location);
 
             // not worried about overriding a fresh container loaded by other
@@ -58,7 +58,7 @@ public class ExtractorModelService implements IExtractorModelService {
     }
 
     protected ExtractorModelContainer loadContainer(String location) {
-        try (Reader in = modelLoader.reader(location)) {
+        try (Reader in = modelResolver.reader(location)) {
             return parser.parse(location, in);
         } catch (IOException e) {
             throw new LmRuntimeException("Error reading extractor config XML", e);
