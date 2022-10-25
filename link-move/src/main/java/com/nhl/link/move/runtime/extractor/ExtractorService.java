@@ -8,14 +8,13 @@ import org.apache.cayenne.di.Inject;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class ExtractorService implements IExtractorService {
 
     private final IExtractorModelService modelService;
     private final IConnectorService connectorService;
-    private final ConcurrentMap<ExtractorName, Extractor> extractors;
     private final Map<String, IExtractorFactory> factories;
+    private final Map<ExtractorName, ExtractorReloader> extractorCache;
 
     public ExtractorService(
             @Inject IExtractorModelService modelService,
@@ -25,16 +24,13 @@ public class ExtractorService implements IExtractorService {
         this.factories = factories;
         this.modelService = modelService;
         this.connectorService = connectorService;
-        this.extractors = new ConcurrentHashMap<>();
+        this.extractorCache = new ConcurrentHashMap<>();
     }
 
     @Override
     public Extractor getExtractor(ExtractorName name) {
-
-        return extractors.computeIfAbsent(name, n ->
-                params -> new ExtractorReloader(modelService, connectorService, factories, name)
-                        .getOrReload()
-                        .getReader(params));
+        return extractorCache.computeIfAbsent(name, n
+                        -> new ExtractorReloader(modelService, connectorService, factories, n))
+                .getOrReload();
     }
-
 }

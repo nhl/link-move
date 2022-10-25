@@ -1,6 +1,7 @@
 ## Release 3.0.M2
 
 * #212 Consistent logging of resource resolving
+* #213 Extractor cache is broken
 
 ## Release 3.0.M1
 
