@@ -21,26 +21,26 @@ public class URLResourceResolver implements ResourceResolver {
     private final URL baseUrl;
 
     public URLResourceResolver(URL baseUrl) {
-        LOGGER.info("Extractor XML files will be located under '{}'", baseUrl);
         this.baseUrl = baseUrl;
+        LOGGER.debug("Resources will be located relative to URL {}", baseUrl);
     }
 
     @Override
-    public Reader reader(String name) {
+    public Reader reader(String location) {
 
         URL modelUrl;
         try {
-            modelUrl = new URL(baseUrl, name);
+            modelUrl = new URL(baseUrl, location);
         } catch (MalformedURLException e) {
-            throw new LmRuntimeException("Error building source URL", e);
+            throw new LmRuntimeException("Error building resource URL", e);
         }
 
-        LOGGER.info("Will extract XML from {}", modelUrl);
+        LOGGER.debug("Will read resource at URL {}", modelUrl);
 
         try {
             return new InputStreamReader(modelUrl.openStream(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new LmRuntimeException("Error reading extractor config XML from URL " + modelUrl, e);
+            throw new LmRuntimeException("Error reading resource at URL " + modelUrl, e);
         }
     }
 }

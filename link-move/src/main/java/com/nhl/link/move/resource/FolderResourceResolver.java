@@ -23,7 +23,7 @@ public class FolderResourceResolver implements ResourceResolver {
     private final File baseDir;
 
     public FolderResourceResolver(File baseDir) {
-        LOGGER.info("Extractor XML files will be located under '{}'", baseDir);
+        LOGGER.debug("Resources will be located relative to folder {}", baseDir);
         this.baseDir = baseDir;
     }
 
@@ -32,12 +32,12 @@ public class FolderResourceResolver implements ResourceResolver {
 
         File file = getFile(name);
 
-        LOGGER.info("Will extract XML from {}", file.getAbsolutePath());
+        LOGGER.debug("Will read resource at path {}", file.getAbsolutePath());
 
         try {
             return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new LmRuntimeException("Error reading extractor config XML from file " + file, e);
+            throw new LmRuntimeException("Error reading resource at path " + file.getAbsolutePath(), e);
         }
     }
 

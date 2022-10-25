@@ -1,3 +1,7 @@
+## Release 3.0.M2
+
+* #212 Consistent logging of resource resolving
+
 ## Release 3.0.M1
 
 * #153 Date conversion from string
