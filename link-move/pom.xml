@@ -13,25 +13,21 @@
     <name>Library: link-move</name>
 
     <dependencies>
-
-        <!-- required runtime dependencies -->
+        <!-- compile dependencies -->
         <dependency>
             <groupId>com.nhl.dflib</groupId>
             <artifactId>dflib</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.cayenne</groupId>
             <artifactId>cayenne-server</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
         </dependency>
 
-        <!-- unit test deps -->
+        <!-- test deps -->
         <dependency>
             <groupId>io.bootique.jdbc</groupId>
             <artifactId>bootique-jdbc-junit5-derby</artifactId>
