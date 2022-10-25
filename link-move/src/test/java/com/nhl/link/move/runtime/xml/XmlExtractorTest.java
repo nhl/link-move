@@ -31,7 +31,7 @@ public class XmlExtractorTest {
 		StreamConnector streamConnectorMock = mock(StreamConnector.class);
 		when(streamConnectorMock.getInputStream(anyMap())).thenReturn(inputStreamMock);
 		xPathExpressionMock = mock(XPathExpression.class);
-		xmlExtractor = new XmlExtractor(streamConnectorMock, new XmlRowAttribute[0], xPathExpressionMock);
+		xmlExtractor = new XmlExtractor(streamConnectorMock, new XmlRowAttribute[0], xPathExpressionMock, "");
 	}
 
 	@Test

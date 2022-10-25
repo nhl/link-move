@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
+	<type>xml</type>
+	<connectorId>/com/nhl/link/move/itest/xml/f2.xml</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>age</source>
+				<target>age</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>name</source>
+				<target>name</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.xml.xpathexpression>/docroot/element</extractor.xml.xpathexpression>
+		</properties>
+	</extractor>
+</config>

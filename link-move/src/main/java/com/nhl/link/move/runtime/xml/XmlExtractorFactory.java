@@ -46,25 +46,34 @@ public class XmlExtractorFactory implements IExtractorFactory<StreamConnector> {
     @Override
     public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
         try {
+            String expString = getXPathExpressionString(model);
             NamespaceContext namespaceContext = getNamespaceContext(model);
-            XPathExpression expression = getXPathExpression(model, namespaceContext);
-            return new XmlExtractor(connector, mapToXmlAttributes(model.getAttributes(), namespaceContext), expression);
+            XPathExpression expression = compileXPathExpression(expString, namespaceContext);
+
+            return new XmlExtractor(connector, mapToXmlAttributes(model.getAttributes(), namespaceContext), expression, expString);
         } catch (XPathExpressionException e) {
             throw new LmRuntimeException(e);
         }
     }
 
-    private XPathExpression getXPathExpression(ExtractorModel model, NamespaceContext namespaceContext) throws XPathExpressionException {
-        String expressionString = model.getPropertyValue(XPATH_EXPRESSION_PROPERTY);
-        if (expressionString == null) {
+    private String getXPathExpressionString(ExtractorModel model) {
+        String exp = model.getPropertyValue(XPATH_EXPRESSION_PROPERTY);
+        if (exp == null) {
             throw new IllegalArgumentException(format("Missing required property for key '%s'",
                     XPATH_EXPRESSION_PROPERTY));
         }
+
+        return exp;
+    }
+
+    private XPathExpression compileXPathExpression(String expString, NamespaceContext namespaceContext) throws XPathExpressionException {
+
         XPath xPath = xPathFactory.newXPath();
         if (namespaceContext != null) {
             xPath.setNamespaceContext(namespaceContext);
         }
-        return xPath.compile(expressionString);
+
+        return xPath.compile(expString);
     }
 
     private NamespaceContext getNamespaceContext(ExtractorModel model) {

@@ -3,8 +3,8 @@
 	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
 	<type>xml</type>
 	<connectorIds>
-		<connectorId>/com/nhl/link/move/itest/xml/etl1_1.xml</connectorId>
-		<connectorId>/com/nhl/link/move/itest/xml/etl1_2.xml</connectorId>
+		<connectorId>/com/nhl/link/move/itest/xml/f1.xml</connectorId>
+		<connectorId>/com/nhl/link/move/itest/xml/f2.xml</connectorId>
 	</connectorIds>
 	<extractor>
 		<attributes>
