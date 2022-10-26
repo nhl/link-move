@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
+        xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
+    <type>json</type>
+    <connectorId>etl_src_id</connectorId>
+    <extractor>
+        <attributes>
+            <attribute>
+                <type>java.lang.Integer</type>
+                <source>id</source>
+                <target>db:id</target>
+            </attribute>
+            <attribute>
+                <type>java.lang.Integer</type>
+                <source>numInt</source>
+                <target>numInt</target>
+            </attribute>
+            <attribute>
+                <type>java.lang.String</type>
+                <source>string</source>
+                <target>string</target>
+            </attribute>
+        </attributes>
+        <properties>
+            <extractor.json.path>$.root[*]</extractor.json.path>
+        </properties>
+    </extractor>
+</config>

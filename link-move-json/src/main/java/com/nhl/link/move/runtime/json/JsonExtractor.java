@@ -11,6 +11,7 @@ import com.nhl.link.move.runtime.json.query.JsonQuery;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 class JsonExtractor implements Extractor {
 
@@ -28,7 +29,9 @@ class JsonExtractor implements Extractor {
 
         this.jacksonService = jacksonService;
         this.connector = connector;
-        this.rowHeader = rowHeader;
+
+        // TODO: use JSON properties for the header if not set
+        this.rowHeader = Objects.requireNonNull(rowHeader, "An explicit 'rowHeader' is currently required to process a JSON source");
         this.query = query;
     }
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/10/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/10/modelMap https://cayenne.apache.org/schema/10/modelMap.xsd"
+	 project-version="10">
+	<property name="defaultPackage" value="com.nhl.link.move.json.unit.cayenne.t"/>
+	<property name="quoteSqlIdentifiers" value="true"/>
+	<db-entity name="etlt1">
+		<db-attribute name="id" type="BIGINT" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="num_int" type="INTEGER"/>
+		<db-attribute name="string" type="VARCHAR" length="100"/>
+	</db-entity>
+	<obj-entity name="Etlt1" className="com.nhl.link.move.json.unit.cayenne.t.Etlt1" dbEntityName="etlt1">
+		<obj-attribute name="numInt" type="java.lang.Integer" db-attribute-path="num_int"/>
+		<obj-attribute name="string" type="java.lang.String" db-attribute-path="string"/>
+	</obj-entity>
+</data-map>

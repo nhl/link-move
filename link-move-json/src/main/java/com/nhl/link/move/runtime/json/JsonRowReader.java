@@ -33,7 +33,7 @@ class JsonRowReader implements RowReader {
 
 	@Override
 	public Iterator<Object[]> iterator() {
-		return new Iterator<Object[]>() {
+		return new Iterator<>() {
 			private int i = 0;
 
 			@Override

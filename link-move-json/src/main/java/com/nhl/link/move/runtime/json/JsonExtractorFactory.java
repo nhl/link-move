@@ -52,6 +52,11 @@ public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> 
     }
 
     private JsonRowAttribute[] mapToJsonAttributes(RowAttribute[] attributes) {
+
+        if (attributes == null) {
+            return null;
+        }
+
         int len = attributes.length;
         JsonRowAttribute[] jsonAttributes = new JsonRowAttribute[len];
 
