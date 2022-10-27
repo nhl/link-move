@@ -17,6 +17,7 @@ class JsonExtractor implements Extractor {
 
     private final StreamConnector connector;
     private final JsonRowAttribute[] rowHeader;
+    private final String queryString;
     private final JsonQuery query;
 
     private final IJacksonService jacksonService;
@@ -25,6 +26,7 @@ class JsonExtractor implements Extractor {
             IJacksonService jacksonService,
             StreamConnector connector,
             JsonRowAttribute[] rowHeader,
+            String queryString,
             JsonQuery query) {
 
         this.jacksonService = jacksonService;
@@ -32,6 +34,7 @@ class JsonExtractor implements Extractor {
 
         // TODO: use JSON properties for the header if not set
         this.rowHeader = Objects.requireNonNull(rowHeader, "An explicit 'rowHeader' is currently required to process a JSON source");
+        this.queryString = queryString;
         this.query = query;
     }
 
@@ -44,7 +47,7 @@ class JsonExtractor implements Extractor {
             }
             List<JsonNodeWrapper> nodes = query.execute(source);
 
-            exec.getLogger().extractorStarted(rowHeader, query);
+            exec.getLogger().extractorStarted(rowHeader, queryString);
             return new JsonRowReader(rowHeader, source, nodes);
         } catch (Exception e) {
             throw new LmRuntimeException(e);

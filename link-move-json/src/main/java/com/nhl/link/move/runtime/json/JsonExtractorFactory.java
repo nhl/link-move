@@ -13,12 +13,12 @@ public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> 
     public static final String JSON_QUERY_PROPERTY = "extractor.json.path";
     private static final String JSON_EXTRACTOR_TYPE = "json";
 
-    private IJacksonService jacksonService;
-    private QueryCompiler compiler;
+    private final IJacksonService jacksonService;
+    private final QueryCompiler compiler;
 
     public JsonExtractorFactory() {
-        jacksonService = new JacksonService();
-        compiler = new QueryCompiler();
+        this.jacksonService = new JacksonService();
+        this.compiler = new QueryCompiler();
     }
 
     @Override
@@ -33,22 +33,25 @@ public class JsonExtractorFactory implements IExtractorFactory<StreamConnector> 
 
     @Override
     public Extractor createExtractor(StreamConnector connector, ExtractorModel model) {
+        String queryString = queryString(model);
+
         return new JsonExtractor(
                 jacksonService,
                 connector,
                 mapToJsonAttributes(model.getAttributes()),
-                getRootQuery(model));
+                queryString,
+                compiler.compile(queryString));
     }
 
-    private JsonQuery getRootQuery(ExtractorModel model) {
+    private String queryString(ExtractorModel model) {
         String query = model.getPropertyValue(JSON_QUERY_PROPERTY);
 
         // TODO: should we just use "$" for root instead of throwing?
         if (query == null) {
-            throw new IllegalArgumentException(String.format(
-                    "Missing required property for key '%s'", JSON_QUERY_PROPERTY));
+            throw new IllegalArgumentException(String.format("Missing required property for key '%s'", JSON_QUERY_PROPERTY));
         }
-        return compiler.compile(query);
+
+        return query;
     }
 
     private JsonRowAttribute[] mapToJsonAttributes(RowAttribute[] attributes) {

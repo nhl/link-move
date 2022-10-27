@@ -7,7 +7,6 @@ import com.nhl.link.move.RowReader;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.extractor.Extractor;
 import com.nhl.link.move.log.LmExecutionLogger;
-import com.nhl.link.move.runtime.json.query.JsonQuery;
 import com.nhl.link.move.runtime.json.query.QueryCompiler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,9 +88,7 @@ public class JsonExtractorTest {
                 new JsonRowAttribute(baseAttr, compiler)
         };
 
-        JsonQuery query = compiler.compile("$.store.book[*]");
-
-        List<Object[]> rows = collectRows(attributes, query);
+        List<Object[]> rows = collectRows(attributes, "$.store.book[*]");
 
         List<String> items = new ArrayList<>();
         for (Object[] row : rows) {
@@ -110,9 +107,7 @@ public class JsonExtractorTest {
                 new JsonRowAttribute(baseAttr, compiler)
         };
 
-        JsonQuery query = compiler.compile("$.store.book[*].readers[*]");
-
-        List<Object[]> rows = collectRows(attributes, query);
+        List<Object[]> rows = collectRows(attributes, "$.store.book[*].readers[*]");
 
         List<Object> items = new ArrayList<>();
         for (Object[] row : rows) {
@@ -130,9 +125,7 @@ public class JsonExtractorTest {
                 new JsonRowAttribute(baseAttr, compiler)
         };
 
-        JsonQuery query = compiler.compile("$.store.book[*].readers[*]");
-
-        List<Object[]> rows = collectRows(attributes, query);
+        List<Object[]> rows = collectRows(attributes, "$.store.book[*].readers[*]");
 
         List<String> items = new ArrayList<>();
         for (Object[] row : rows) {
@@ -150,9 +143,7 @@ public class JsonExtractorTest {
                 new JsonRowAttribute(baseAttr, compiler)
         };
 
-        JsonQuery query = compiler.compile("$.store.book[*]");
-
-        List<Object[]> rows = collectRows(attributes, query);
+        List<Object[]> rows = collectRows(attributes, "$.store.book[*]");
 
         List<String> items = new ArrayList<>();
         for (Object[] row : rows) {
@@ -162,13 +153,13 @@ public class JsonExtractorTest {
         assertEquals(Arrays.asList("red", "red", "red", "red"), items);
     }
 
-    private List<Object[]> collectRows(JsonRowAttribute[] attributes, JsonQuery query) {
+    private List<Object[]> collectRows(JsonRowAttribute[] attributes, String query) {
 
         Execution exec = mock(Execution.class);
         when(exec.getParameters()).thenReturn(Collections.emptyMap());
         when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
 
-        Extractor extractor = new JsonExtractor(jacksonService, connector, attributes, query);
+        Extractor extractor = new JsonExtractor(jacksonService, connector, attributes, query, compiler.compile(query));
         RowReader reader = extractor.getReader(exec);
 
         List<Object[]> rows = new ArrayList<>();
