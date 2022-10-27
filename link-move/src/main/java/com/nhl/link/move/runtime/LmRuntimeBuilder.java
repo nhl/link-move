@@ -134,14 +134,16 @@ public class LmRuntimeBuilder {
         return this;
     }
 
-    public <C extends Connector> LmRuntimeBuilder withConnectorFactory(Class<C> connectorType,
-                                                                       IConnectorFactory<C> factory) {
+    public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
+            Class<C> connectorType,
+            IConnectorFactory<C> factory) {
         connectorFactories.put(connectorType.getName(), factory);
         return this;
     }
 
-    public <C extends Connector> LmRuntimeBuilder withConnectorFactory(Class<C> connectorType,
-                                                                       Class<? extends IConnectorFactory<C>> factoryType) {
+    public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
+            Class<C> connectorType,
+            Class<? extends IConnectorFactory<C>> factoryType) {
         connectorFactoryTypes.put(connectorType.getName(), factoryType);
         return this;
     }
@@ -275,8 +277,8 @@ public class LmRuntimeBuilder {
             cfMap.putAll(connectorFactories);
 
             connectorFactoryTypes.forEach((n, c) -> {
-                // a bit ugly - need to bind all factory types explicitly before placing then in a map ..
-                // also must drop parameterization to be able to bind with non-specific boundaries (<? extends ...>)
+                // A bit ugly - need to bind all factory types explicitly before placing them in a map.
+                // Also, must drop parameterization to be able to bind with non-specific boundaries (<? extends ...>)
                 Class efType = c;
                 binder.bind(efType).to(efType);
 
