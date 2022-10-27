@@ -28,14 +28,7 @@ public class ConnectorService implements IConnectorService {
             throw new LmRuntimeException("Null connector id");
         }
 
-        Connector connector = connectors.computeIfAbsent(id, i -> {
-            IConnectorFactory<?> factory = factories.get(type.getName());
-            if (factory == null) {
-                throw new IllegalStateException("No factory mapped for Connector type of '" + type.getName() + "'");
-            }
-
-            return factory.createConnector(id);
-        });
+        Connector connector = connectors.computeIfAbsent(id, i -> createConnector(type, i));
 
         if (!type.isAssignableFrom(connector.getClass())) {
             throw new LmRuntimeException("Connector for id '" + id + "' is not a " + type.getName()
@@ -43,5 +36,14 @@ public class ConnectorService implements IConnectorService {
         }
 
         return (T) connector;
+    }
+
+    protected Connector createConnector(Class<? extends Connector> type, String id) {
+        IConnectorFactory<?> factory = factories.get(type.getName());
+        if (factory == null) {
+            throw new IllegalStateException("No factory mapped for Connector type of '" + type.getName() + "'");
+        }
+
+        return factory.createConnector(id);
     }
 }
