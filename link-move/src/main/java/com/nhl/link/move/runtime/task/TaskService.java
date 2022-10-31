@@ -4,6 +4,7 @@ import com.nhl.link.move.CreateBuilder;
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.DeleteAllBuilder;
 import com.nhl.link.move.SourceKeysBuilder;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -19,6 +20,7 @@ import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateTargetMerger;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
+import com.nhl.link.move.runtime.task.deleteall.DefaultDeleteAllBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
@@ -153,4 +155,15 @@ public class TaskService implements ITaskService {
                 logger);
     }
 
+    @Override
+    public DeleteAllBuilder deleteAll(Class<?> type) {
+        ObjEntity entity = lookupEntity(type);
+
+        return new DefaultDeleteAllBuilder(
+                type,
+                targetCayenneService,
+                tokenManager,
+                entity.getDbEntity(),
+                logger);
+    }
 }
