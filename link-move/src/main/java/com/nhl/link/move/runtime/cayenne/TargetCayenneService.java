@@ -3,11 +3,13 @@ package com.nhl.link.move.runtime.cayenne;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.access.DataNode;
 import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.dba.DbAdapter;
 import org.apache.cayenne.map.EntityResolver;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TargetCayenneService implements ITargetCayenneService {
 
@@ -44,5 +46,13 @@ public class TargetCayenneService implements ITargetCayenneService {
 	@Override
 	public EntityResolver entityResolver() {
 		return runtime.getChannel().getEntityResolver();
+	}
+
+	@Override
+	public Optional<DbAdapter> dbAdapter(String nodeName) {
+		return runtime.getDataDomain().getDataNodes().stream()
+				.filter(node -> node.getName().equals(nodeName))
+				.map(DataNode::getAdapter)
+				.findFirst();
 	}
 }

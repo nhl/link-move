@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.task;
 
 import com.nhl.link.move.CreateBuilder;
 import com.nhl.link.move.CreateOrUpdateBuilder;
+import com.nhl.link.move.DeleteAllBuilder;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.SourceKeysBuilder;
 
@@ -29,6 +30,13 @@ public interface ITaskService {
      * @since 1.3
      */
     DeleteBuilder delete(Class<?> type);
+
+    /**
+     * Returns a builder of target deleteAll ETL synchronization task.
+     *
+     * @since 3.0
+     */
+    DeleteAllBuilder deleteAll(Class<?> type);
 
     /**
      * @since 1.3
