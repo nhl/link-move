@@ -7,7 +7,7 @@
     </appender>
 
     <logger name="com.nhl.link.move.log" level="ALL"/>
-    <logger name="org.apache.cayenne" level="WARN"/>
+    <logger name="org.apache.cayenne" level="INFO"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
