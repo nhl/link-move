@@ -1,5 +1,6 @@
 package com.nhl.link.move.runtime.cayenne;
 
+import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.access.DataNode;
 import org.apache.cayenne.configuration.server.ServerRuntime;
@@ -9,7 +10,6 @@ import org.apache.cayenne.map.EntityResolver;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class TargetCayenneService implements ITargetCayenneService {
 
@@ -49,10 +49,13 @@ public class TargetCayenneService implements ITargetCayenneService {
     }
 
     @Override
-    public Optional<DbAdapter> dbAdapter(String nodeName) {
-        return runtime.getDataDomain().getDataNodes().stream()
-                .filter(node -> node.getName().equals(nodeName))
-                .map(DataNode::getAdapter)
-                .findFirst();
+    public DbAdapter dbAdapter(String dataMapName) {
+        for (DataNode node : runtime.getDataDomain().getDataNodes()) {
+            if (node.getDataMap(dataMapName) != null) {
+                return node.getAdapter();
+            }
+        }
+
+        throw new LmRuntimeException("Adapter not found for dataMap: " + dataMapName);
     }
 }

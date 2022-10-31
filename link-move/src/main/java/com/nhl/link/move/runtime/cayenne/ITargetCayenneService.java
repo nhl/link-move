@@ -1,13 +1,11 @@
 package com.nhl.link.move.runtime.cayenne;
 
-import java.util.Map;
-import java.util.Optional;
-
-import javax.sql.DataSource;
-
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.dba.DbAdapter;
 import org.apache.cayenne.map.EntityResolver;
+
+import javax.sql.DataSource;
+import java.util.Map;
 
 public interface ITargetCayenneService {
 
@@ -22,5 +20,8 @@ public interface ITargetCayenneService {
 
 	EntityResolver entityResolver();
 
-	Optional<DbAdapter> dbAdapter(String nodeName);
+	/**
+	 * @since 3.0
+	 */
+	DbAdapter dbAdapter(String dataMapName);
 }

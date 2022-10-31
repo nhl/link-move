@@ -9,7 +9,6 @@ import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.QueryResponse;
-import org.apache.cayenne.configuration.DataNodeDescriptor;
 import org.apache.cayenne.dba.DbAdapter;
 import org.apache.cayenne.dba.derby.DerbyAdapter;
 import org.apache.cayenne.dba.h2.H2Adapter;
@@ -21,14 +20,12 @@ import org.apache.cayenne.dba.postgres.PostgresAdapter;
 import org.apache.cayenne.dba.sqlserver.SQLServerAdapter;
 import org.apache.cayenne.dba.sybase.SybaseAdapter;
 import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.map.DataMap;
 import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.query.EJBQLQuery;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.SQLTemplate;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -121,9 +118,7 @@ public class DeleteAllTask extends BaseTask {
     }
 
     private void deleteAllData(ObjectContext context, Execution execution) {
-        DbAdapter adapter = resolveNodeName()
-                .flatMap(targetCayenneService::dbAdapter)
-                .orElseThrow(() -> new LmRuntimeException("Adapter not found for dataMap: " + dbEntity.getDataMap().getName()));
+        DbAdapter adapter = targetCayenneService.dbAdapter(dbEntity.getDataMap().getName());
 
         SQLTemplate query = new SQLTemplate(dbEntity.getDataMap(), "DELETE FROM $tableName", false);
         query.setParams(Map.of("tableName", adapter.getQuotingStrategy().quotedFullyQualifiedName(dbEntity)));
@@ -136,19 +131,6 @@ public class DeleteAllTask extends BaseTask {
 
         long deletedCount = prefetchedOverallCount.orElse((long) result.firstUpdateCount()[0]);
         incrementTaskResult(deletedCount, execution.getStats());
-    }
-
-    private Optional<String> resolveNodeName() {
-        Collection<DataNodeDescriptor> allNodeDescriptors = dbEntity.getDataMap().getDataChannelDescriptor().getNodeDescriptors();
-
-        return allNodeDescriptors.stream()
-                .filter(descriptor -> containsDataMap(descriptor, dbEntity.getDataMap()))
-                .map(DataNodeDescriptor::getName)
-                .findFirst();
-    }
-
-    private boolean containsDataMap(DataNodeDescriptor ds, DataMap dataMap) {
-        return ds.getDataMapNames().contains(dataMap.getName());
     }
 
     /**
