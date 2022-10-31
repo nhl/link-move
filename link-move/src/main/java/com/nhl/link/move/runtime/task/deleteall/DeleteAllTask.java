@@ -80,7 +80,7 @@ public class DeleteAllTask extends BaseTask {
 
     @Override
     protected String createLabel() {
-        return "deleteAll";
+        return "delete-all";
     }
 
     @Override
