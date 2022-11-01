@@ -32,7 +32,13 @@ public class MutableExtractorModel implements ExtractorModel {
     @Override
     public Collection<String> getPropertyValues(String propertyName) {
         Collection<String> values = properties.get(propertyName);
-        return values != null ? values : Collections.emptyList();
+
+        // returning an immutable collection. While this class has "Mutable" in its name, mutation should happen
+        // via special methods, and "getPropertyValues" (defined in the ExtractorModel interface) should
+        // not allow to change properties implicitly
+        return values != null
+                ? Collections.unmodifiableCollection(values)
+                : Collections.emptyList();
     }
 
     @Override
