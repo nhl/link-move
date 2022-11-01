@@ -3,7 +3,6 @@ package com.nhl.link.move.extractor.model;
 import com.nhl.link.move.RowAttribute;
 
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * An {@link ExtractorModel} decorator that allows a model to inherit some
@@ -41,12 +40,6 @@ public class ContainerAwareExtractorModel implements ExtractorModel {
 	@Override
 	public Collection<String> getConnectorIds() {
 		return delegate.getConnectorIds().isEmpty() ? parent.getConnectorIds() : delegate.getConnectorIds();
-	}
-
-	@Deprecated
-	@Override
-	public Map<String, String> getProperties() {
-		return delegate.getProperties();
 	}
 
 	@Override

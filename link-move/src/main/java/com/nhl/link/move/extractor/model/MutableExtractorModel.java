@@ -29,18 +29,6 @@ public class MutableExtractorModel implements ExtractorModel {
         this.properties = new HashMap<>();
     }
 
-    @Deprecated
-    @Override
-    public Map<String, String> getProperties() {
-        Map<String, String> singleValueProperties = new HashMap<>();
-
-        for (String key : properties.keySet()) {
-            singleValueProperties.put(key, getPropertyValue(key));
-        }
-
-        return singleValueProperties;
-    }
-
     @Override
     public Collection<String> getPropertyValues(String propertyName) {
         Collection<String> values = properties.get(propertyName);

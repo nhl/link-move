@@ -4,7 +4,6 @@ import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.extractor.Extractor;
 
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * A model of a single {@link Extractor}.
@@ -28,13 +27,6 @@ public interface ExtractorModel {
      * @since 2.2
      */
     Collection<String> getConnectorIds();
-
-    /**
-     * @deprecated since 2.9 as we switched to multi-value properties. Use {@link #getPropertyValue(String)} or
-     * {@link #getPropertyValues(String)} instead.
-     */
-    @Deprecated
-    Map<String, String> getProperties();
 
     /**
      * @since 2.9
