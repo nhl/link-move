@@ -4,7 +4,7 @@
 
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-parent</artifactId>
-    <version>3.0.M2-SNAPSHOT</version>
+    <version>3.0.M2</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -59,7 +59,7 @@
         <connection>scm:git:https://github.com/nhl/link-move</connection>
         <developerConnection>scm:git:ssh://git@github.com/nhl/link-move</developerConnection>
         <url>https://github.com/nhl/link-move</url>
-        <tag>HEAD</tag>
+        <tag>link-move-parent-3.0.M2</tag>
     </scm>
 
     <distributionManagement>
