@@ -1,6 +1,7 @@
 ## Release 3.0.M2
 
 * #177 MutableExtractorModel.getProperties() should respond unmodifiable hash map since 2.9
+* #180 DeleteAllTask
 * #212 Consistent logging of resource resolving
 * #213 Extractor cache is broken
 * #214 Debug extractor on each execution
