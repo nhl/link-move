@@ -2,12 +2,13 @@ package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.RowAttribute;
 import com.nhl.dflib.DataFrame;
+import com.nhl.link.move.runtime.task.common.DataSegment;
 import org.apache.cayenne.ObjectContext;
 
 /**
  * @since 2.6
  */
-public class CreateSegment {
+public class CreateSegment implements DataSegment {
 
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String TARGET_CREATED_COLUMN = "$lm_target_created";

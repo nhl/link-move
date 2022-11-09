@@ -5,6 +5,10 @@ import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
+import com.nhl.link.move.runtime.task.create.CreateSegment;
+import com.nhl.link.move.runtime.task.create.CreateStage;
+
+import java.util.function.BiConsumer;
 
 /**
  * A builder of an {@link LmTask} that performs fast "create" synchronization without any source/target key matching.
@@ -62,7 +66,11 @@ public interface CreateBuilder {
      *
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
+     *
+     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.CreateBuilder#stage}
      */
+    @Deprecated(since = "3.0")
     CreateBuilder stageListener(Object listener);
 
+    CreateBuilder stage(CreateStage stageType, BiConsumer<Execution, CreateSegment> callback);
 }

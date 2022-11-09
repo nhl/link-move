@@ -18,6 +18,7 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
+import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.exp.property.Property;
 
@@ -26,7 +27,7 @@ import java.lang.annotation.Annotation;
 /**
  * A builder of an ETL task that matches source data with target data based on a certain unique attribute on both sides.
  */
-public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder> implements CreateOrUpdateBuilder {
+public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder, CreateOrUpdateSegment, CreateOrUpdateStage> implements CreateOrUpdateBuilder {
 
     private final Class<?> type;
     private final CreateOrUpdateTargetMerger merger;
@@ -62,8 +63,13 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
         this.rowConverter = rowConverter;
         this.mapperBuilder = mapperBuilder;
 
-        // always add stats listener
-        stageListener(CreateOrUpdateStatsListener.instance());
+        setupStatsCallbacks();
+    }
+
+    protected void setupStatsCallbacks() {
+        StatsIncrementor incrementor = StatsIncrementor.instance();
+        stage(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, incrementor::sourceRowsExtracted);
+        stage(CreateOrUpdateStage.COMMIT_TARGET, incrementor::targetsCommitted);
     }
 
     @Override
@@ -145,6 +151,6 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
                 new CreateOrUpdateTargetMapper(type, mapper),
                 merger,
                 fkResolver,
-                getListeners());
+                getCallbackExecutor());
     }
 }

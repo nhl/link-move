@@ -2,6 +2,10 @@ package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
+import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysSegment;
+import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysStage;
+
+import java.util.function.BiConsumer;
 
 /**
  * A builder of an {@link LmTask} that extracts all the keys from the source
@@ -65,7 +69,11 @@ public interface SourceKeysBuilder {
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
      * @since 3.0
+     *
+     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.SourceKeysBuilder#stage}
      */
+    @Deprecated(since = "3.0")
     SourceKeysBuilder stageListener(Object listener);
 
+    SourceKeysBuilder stage(SourceKeysStage stageType, BiConsumer<Execution, SourceKeysSegment> callback);
 }

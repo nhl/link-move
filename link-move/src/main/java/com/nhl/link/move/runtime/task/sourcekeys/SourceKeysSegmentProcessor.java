@@ -1,14 +1,9 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterSourceKeysCollected;
-import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
-import com.nhl.link.move.runtime.task.StageListener;
+import com.nhl.link.move.runtime.task.common.CallbackExecutor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,21 +11,21 @@ import java.util.Set;
  */
 public class SourceKeysSegmentProcessor {
 
-    private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
+    private final CallbackExecutor<SourceKeysStage, SourceKeysSegment> callbackExecutor;
     private final RowConverter rowConverter;
     private final SourceKeysCollector mapper;
 
     public SourceKeysSegmentProcessor(
             RowConverter rowConverter,
             SourceKeysCollector mapper,
-            Map<Class<? extends Annotation>, List<StageListener>> listeners) {
+            CallbackExecutor<SourceKeysStage, SourceKeysSegment> callbackExecutor) {
         this.rowConverter = rowConverter;
         this.mapper = mapper;
-        this.listeners = listeners;
+        this.callbackExecutor = callbackExecutor;
     }
 
     public void process(Execution exec, SourceKeysSegment segment) {
-        notifyListeners(AfterSourceRowsExtracted.class, exec, segment);
+        callbackExecutor.executeCallbacks(SourceKeysStage.EXTRACT_SOURCE_ROWS, exec, segment);
 
         convertSrc(segment);
         collectSourceKeys(exec, segment);
@@ -45,15 +40,7 @@ public class SourceKeysSegmentProcessor {
         @SuppressWarnings("unchecked")
         Set<Object> keys = (Set<Object>) exec.getAttribute(SourceKeysTask.RESULT_KEY);
         mapper.collectSourceKeys(keys, segment.getSources());
-        notifyListeners(AfterSourceKeysCollected.class, exec, segment);
-    }
 
-    private void notifyListeners(Class<? extends Annotation> type, Execution exec, SourceKeysSegment segment) {
-        List<StageListener> listenersOfType = listeners.get(type);
-        if (listenersOfType != null) {
-            for (StageListener l : listenersOfType) {
-                l.afterStageFinished(exec, segment);
-            }
-        }
+        callbackExecutor.executeCallbacks(SourceKeysStage.COLLECT_SOURCE_KEYS, exec, segment);
     }
 }

@@ -1,10 +1,13 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
-import org.apache.cayenne.exp.Expression;
-
 import com.nhl.link.move.mapper.Mapper;
+import com.nhl.link.move.runtime.task.delete.DeleteSegment;
+import com.nhl.link.move.runtime.task.delete.DeleteStage;
+import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
+
+import java.util.function.BiConsumer;
 
 /**
  * since 1.3
@@ -42,5 +45,11 @@ public interface DeleteBuilder {
 
     DeleteBuilder batchSize(int batchSize);
 
+    /**
+     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.DeleteBuilder#stage}
+     */
+    @Deprecated(since = "3.0")
     DeleteBuilder stageListener(Object listener);
+
+    DeleteBuilder stage(DeleteStage stageType, BiConsumer<Execution, DeleteSegment> callback);
 }

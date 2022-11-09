@@ -1,6 +1,10 @@
 package com.nhl.link.move.runtime.task;
 
+import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmRuntimeException;
+import com.nhl.link.move.runtime.task.common.CallbackExecutor;
+import com.nhl.link.move.runtime.task.common.DataSegment;
+import com.nhl.link.move.runtime.task.common.TaskStageType;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
@@ -8,30 +12,43 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * @since 1.3
  */
-public class ListenersBuilder {
+public class ListenersBuilder<T extends DataSegment, S extends TaskStageType> {
 
 	private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
 
 	private final Class<? extends Annotation>[] annotations;
 	private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
+	private final Map<S, List<BiConsumer<Execution, T>>> callbacks;
 
 	@SafeVarargs
 	public ListenersBuilder(Class<? extends Annotation>... annotations) {
+		this.callbacks = new HashMap<>();
 		this.listeners = new HashMap<>();
 		this.annotations = annotations;
 	}
 
-	public Map<Class<? extends Annotation>, List<StageListener>> getListeners() {
-		return listeners;
+	public CallbackExecutor<S, T> getCallbackExecutor() {
+		return new CallbackExecutor<>(listeners, callbacks);
 	}
 
-	public ListenersBuilder addListener(Object listener) {
+	public void addStageCallback(S stageType, BiConsumer<Execution, T> callback) {
+        List<BiConsumer<Execution, T>> stageCallbacks = callbacks.computeIfAbsent(stageType, k -> new LinkedList<>());
+        stageCallbacks.add(callback);
+	}
+
+	/**
+	 * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.ListenersBuilder#addStageCallback}
+	 */
+	@Deprecated
+	public ListenersBuilder<T, S> addListener(Object listener) {
 
 		try {
 			doStageListener(listener);
@@ -68,5 +85,10 @@ public class ListenersBuilder {
 				}
 			}
 		}
+	}
+
+	//visible for testing
+	Map<Class<? extends Annotation>, List<StageListener>> getListeners() {
+		return Map.copyOf(listeners);
 	}
 }

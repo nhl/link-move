@@ -1,11 +1,12 @@
 package com.nhl.link.move.runtime.task.delete;
 
 import com.nhl.dflib.DataFrame;
+import com.nhl.link.move.runtime.task.common.DataSegment;
 import org.apache.cayenne.ObjectContext;
 
 import java.util.Set;
 
-public class DeleteSegment {
+public class DeleteSegment implements DataSegment {
 
 	public static final String TARGET_COLUMN = "$lm_target";
 	public static final String KEY_COLUMN = "$lm_key";

@@ -3,7 +3,6 @@ package com.nhl.link.move.runtime.task.delete;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
@@ -14,6 +13,7 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
+import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
@@ -23,7 +23,7 @@ import java.lang.annotation.Annotation;
 /**
  * @since 1.3
  */
-public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> implements DeleteBuilder {
+public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, DeleteSegment, DeleteStage> implements DeleteBuilder {
 
     private final ITaskService taskService;
     private final ITokenManager tokenManager;
@@ -51,15 +51,19 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
         this.type = type;
         this.mapperBuilder = mapperBuilder;
 
-        // always add stats listener
-        stageListener(DeleteStatsListener.instance());
+        setupStatsCallbacks();
+    }
+
+    protected void setupStatsCallbacks() {
+        StatsIncrementor incrementor = StatsIncrementor.instance();
+        stage(DeleteStage.EXTRACT_TARGET, incrementor::targetsExtracted);
+        stage(DeleteStage.COMMIT_TARGET, incrementor::targetsCommitted);
     }
 
     @Override
     protected Class<? extends Annotation>[] supportedListenerAnnotations() {
         return new Class[]{
                 AfterTargetsExtracted.class,
-                AfterSourceRowsExtracted.class,
                 AfterTargetsMapped.class,
                 AfterMissingTargetsFiltered.class,
                 AfterTargetsCommitted.class
@@ -130,6 +134,6 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder> 
                 new TargetMapper(mapper),
                 new MissingTargetsFilterStage(),
                 new DeleteTargetStage(),
-                getListeners());
+                getCallbackExecutor());
     }
 }

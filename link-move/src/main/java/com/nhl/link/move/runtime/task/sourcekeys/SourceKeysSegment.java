@@ -2,11 +2,12 @@ package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.RowAttribute;
 import com.nhl.dflib.DataFrame;
+import com.nhl.link.move.runtime.task.common.DataSegment;
 
 /**
  * @since 1.3
  */
-public class SourceKeysSegment {
+public class SourceKeysSegment implements DataSegment {
 
     private final RowAttribute[] sourceRowsHeader;
 

@@ -11,6 +11,7 @@ import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
+import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
@@ -20,7 +21,7 @@ import java.lang.annotation.Annotation;
 /**
  * @since 1.3
  */
-public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysBuilder> implements SourceKeysBuilder {
+public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysBuilder, SourceKeysSegment, SourceKeysStage> implements SourceKeysBuilder {
 
     private final IExtractorService extractorService;
     private final ITokenManager tokenManager;
@@ -47,8 +48,13 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysB
         this.targetEntity = targetEntity;
         this.valueConverterFactory = valueConverterFactory;
 
-        // always add stats listener
-        stageListener(SourceKeysStatsListener.instance());
+        setupStatsCallbacks();
+    }
+
+    protected void setupStatsCallbacks() {
+        StatsIncrementor incrementor = StatsIncrementor.instance();
+        stage(SourceKeysStage.EXTRACT_SOURCE_ROWS, incrementor::sourceRowsExtracted);
+        stage(SourceKeysStage.COLLECT_SOURCE_KEYS, incrementor::sourceKeysCollected);
     }
 
     @Override
@@ -70,7 +76,7 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysB
         Mapper mapper = mapperBuilder.build();
         SourceKeysCollector sourceMapper = new SourceKeysCollector(mapper);
         RowConverter converter = new RowConverter(targetEntity, valueConverterFactory);
-        return new SourceKeysSegmentProcessor(converter, sourceMapper, getListeners());
+        return new SourceKeysSegmentProcessor(converter, sourceMapper, getCallbackExecutor());
     }
 
     @Override

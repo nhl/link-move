@@ -13,11 +13,14 @@ import java.lang.annotation.Target;
  * source keys.
  * 
  * @since 1.3
+ *
+ * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.BaseTaskBuilder#stage}
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@Deprecated(since = "3.0")
 public @interface AfterTargetsMatched {
 
 }

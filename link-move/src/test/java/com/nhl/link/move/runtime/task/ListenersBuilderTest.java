@@ -11,12 +11,16 @@ import com.nhl.link.move.annotation.AfterTargetsExtracted;
 import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsMatched;
 import com.nhl.link.move.annotation.AfterTargetsMerged;
+import com.nhl.link.move.runtime.task.common.CallbackExecutor;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateStage;
 import com.nhl.link.move.runtime.task.createorupdate.MockCreateOrUpdateListener;
 import com.nhl.link.move.runtime.task.delete.DeleteSegment;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Matchers;
+import org.mockito.Mockito;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -24,17 +28,21 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ListenersBuilderTest {
 
-    private ListenersBuilder builder;
+    private ListenersBuilder<CreateOrUpdateSegment, CreateOrUpdateStage> builder;
     private MockCreateOrUpdateListener listener;
+    private Execution execution = Mockito.mock(Execution.class);
+    private CreateOrUpdateSegment segment = Mockito.mock(CreateOrUpdateSegment.class);
 
     @BeforeEach
     public void before() {
         this.listener = new MockCreateOrUpdateListener();
-        this.builder = new ListenersBuilder(
+        this.builder = new ListenersBuilder<CreateOrUpdateSegment, CreateOrUpdateStage>(
                 AfterSourceRowsExtracted.class,
                 AfterSourceRowsConverted.class,
                 AfterSourcesMapped.class,
@@ -45,89 +53,93 @@ public class ListenersBuilderTest {
 
         assertEquals(7, builder.getListeners().size());
     }
-
-    private Execution execMatcher() {
-        return Matchers.any(Execution.class);
-    }
-
-    private CreateOrUpdateSegment segmentMatcher() {
-        return Matchers.any(CreateOrUpdateSegment.class);
-    }
-
-    private void invoke(Class<? extends Annotation> callbackType) {
-        builder.getListeners().get(callbackType).forEach(l ->
-                l.afterStageFinished(mock(Execution.class), mock(CreateOrUpdateSegment.class)));
+    
+    @AfterEach
+    public void afterEach() {
+        Mockito.verifyNoMoreInteractions(execution, segment);
+        listener.verifyNoMoreInteractions();
+        Mockito.reset(execution, segment);
     }
 
     @Test
     public void testAfterSourceRowsExtracted() {
-        assertEquals(1, builder.getListeners().get(AfterSourceRowsExtracted.class).size());
-
-        listener.verify(0).afterSourceRowsExtracted(execMatcher(), segmentMatcher());
-        invoke(AfterSourceRowsExtracted.class);
-        listener.verify(1).afterSourceRowsExtracted(execMatcher(), segmentMatcher());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
+        
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, execution, segment);
+        
+        listener.verify(1).afterSourceRowsExtracted(Matchers.eq(execution), Matchers.eq(segment));
     }
 
     @Test
     public void testAfterSourceRowsConverted() {
-        assertEquals(1, builder.getListeners().get(AfterSourceRowsConverted.class).size());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
 
-        listener.verify(0).afterSourceRowsConverted(execMatcher(), segmentMatcher());
-        invoke(AfterSourceRowsConverted.class);
-        listener.verify(1).afterSourceRowsConverted(execMatcher(), segmentMatcher());
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.CONVERT_SOURCE_ROWS, execution, segment);
+
+        listener.verify(1).afterSourceRowsConverted(eq(execution), eq(segment));
     }
 
     @Test
     public void testAfterTargetMatched() {
-        assertEquals(2, builder.getListeners().get(AfterTargetsMatched.class).size());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
 
-        listener.verify(0).afterTargetMatched(execMatcher(), segmentMatcher());
-        listener.verify(0).afterTargetMatched2(execMatcher(), segmentMatcher());
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.MATCH_TARGET, execution, segment);
 
-        invoke(AfterTargetsMatched.class);
-        listener.verify(1).afterTargetMatched(execMatcher(), segmentMatcher());
-        listener.verify(1).afterTargetMatched2(execMatcher(), segmentMatcher());
+        listener.verify(1).afterTargetMatched(eq(execution), eq(segment));
+        listener.verify(1).afterTargetMatched2(eq(execution), eq(segment));
     }
 
     @Test
     public void testAfterTargetsMerged() {
-        assertEquals(1, builder.getListeners().get(AfterTargetsMerged.class).size());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
 
-        listener.verify(0).afterTargetMerged(execMatcher(), segmentMatcher());
-        invoke(AfterTargetsMerged.class);
-        listener.verify(1).afterTargetMerged(execMatcher(), segmentMatcher());
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.MERGE_TARGET, execution, segment);
+        
+        listener.verify(1).afterTargetMerged(eq(execution), eq(segment));
     }
 
     @Test
     public void testAfterTargetsCommitted() {
-        assertEquals(1, builder.getListeners().get(AfterTargetsCommitted.class).size());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
 
-        listener.verify(0).afterTargetCommited(execMatcher(), segmentMatcher());
-        invoke(AfterTargetsCommitted.class);
-        listener.verify(1).afterTargetCommited(execMatcher(), segmentMatcher());
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.COMMIT_TARGET, execution, segment);
+
+        listener.verify(1).afterTargetCommited(eq(execution), eq(segment));
     }
 
     @Test
     public void testAfterSourcesMapped() {
-        assertEquals(1, builder.getListeners().get(AfterSourcesMapped.class).size());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
 
-        listener.verify(0).afterSourceMapped(execMatcher(), segmentMatcher());
-        invoke(AfterSourcesMapped.class);
-        listener.verify(1).afterSourceMapped(execMatcher(), segmentMatcher());
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.MAP_SOURCE, execution, segment);
+
+        listener.verify(1).afterSourceMapped(eq(execution), eq(segment));
     }
 
     @Test
     public void testAfterFksResolve() {
-        assertEquals(1, builder.getListeners().get(AfterFksResolved.class).size());
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
 
-        listener.verify(0).afterFksResolved(execMatcher(), segmentMatcher());
-        invoke(AfterFksResolved.class);
-        listener.verify(1).afterFksResolved(execMatcher(), segmentMatcher());
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.RESOLVE_FK_VALUES, execution, segment);
+
+        listener.verify(1).afterFksResolved(eq(execution), eq(segment));
+    }
+
+    @Test
+    public void testListenerWithCallback() {
+        MockCreateOrUpdateCallback extractSourceRowsCallback = Mockito.mock(MockCreateOrUpdateCallback.class);
+
+        builder.addStageCallback(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, extractSourceRowsCallback);
+        CallbackExecutor<CreateOrUpdateStage, CreateOrUpdateSegment> callbackExecutor = builder.getCallbackExecutor();
+
+        callbackExecutor.executeCallbacks(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, execution, segment);
+
+        verify(extractSourceRowsCallback, times(1)).accept(execution, segment);
+        listener.verify(1).afterSourceRowsExtracted(Matchers.eq(execution), Matchers.eq(segment));
     }
 
     @Test
     public void testAddListener() {
-
         ListenersBuilder listenersBuilder = new ListenersBuilder(
                 AfterTargetsExtracted.class,
                 AfterSourceRowsExtracted.class,

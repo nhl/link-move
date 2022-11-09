@@ -4,13 +4,15 @@ import com.nhl.link.move.DeleteAllBuilder;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
+import com.nhl.link.move.runtime.task.common.DataSegment;
+import com.nhl.link.move.runtime.task.common.TaskStageType;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.map.DbEntity;
 
 import java.lang.annotation.Annotation;
 
-public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBuilder> implements DeleteAllBuilder {
+public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBuilder, DefaultDeleteAllBuilder.NoDataSegment, DefaultDeleteAllBuilder.EmptyStageType> implements DeleteAllBuilder {
 
     private final ITokenManager tokenManager;
     private final ITargetCayenneService targetCayenneService;
@@ -62,5 +64,16 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
                 dbEntity,
                 skipExecutionStats,
                 logger);
+    }
+
+    public static final class NoDataSegment implements DataSegment { }
+
+    public enum EmptyStageType implements TaskStageType {
+        ;
+
+        @Override
+        public Class<? extends Annotation> getLegacyAnnotation() {
+            return null;
+        }
     }
 }

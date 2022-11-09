@@ -12,10 +12,13 @@ import java.lang.annotation.Target;
  * be called after objects are committed to the target date store.
  *
  * @since 2.0
+ *
+ * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.BaseTaskBuilder#stage}
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@Deprecated(since = "3.0")
 public @interface AfterTargetsCommitted {
 }

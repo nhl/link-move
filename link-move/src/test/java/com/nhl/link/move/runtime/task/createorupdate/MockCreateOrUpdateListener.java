@@ -14,6 +14,10 @@ public class MockCreateOrUpdateListener {
 		return Mockito.verify(mockDelegate, Mockito.times(times));
 	}
 
+	public void verifyNoMoreInteractions() {
+		Mockito.verifyNoMoreInteractions(mockDelegate);
+	}
+
 	@AfterSourceRowsExtracted
 	public void afterSourceRowsExtracted(Execution execution, CreateOrUpdateSegment segment) {
 		mockDelegate.afterSourceRowsExtracted(execution, segment);

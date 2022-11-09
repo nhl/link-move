@@ -1,36 +1,28 @@
 package com.nhl.link.move.runtime.task.delete;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsExtracted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.runtime.task.StageListener;
-
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
+import com.nhl.link.move.runtime.task.common.CallbackExecutor;
 
 public class DeleteSegmentProcessor {
 
     private final TargetMapper targetMapper;
     private final MissingTargetsFilterStage missingTargetsFilter;
     private final DeleteTargetStage deleter;
-    private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
+    private final CallbackExecutor<DeleteStage, DeleteSegment> callbackExecutor;
 
     public DeleteSegmentProcessor(
             TargetMapper targetMapper,
             MissingTargetsFilterStage missingTargetsFilter,
             DeleteTargetStage deleter,
-            Map<Class<? extends Annotation>, List<StageListener>> listeners) {
+            CallbackExecutor<DeleteStage, DeleteSegment> callbackExecutor) {
         this.targetMapper = targetMapper;
         this.missingTargetsFilter = missingTargetsFilter;
         this.deleter = deleter;
-        this.listeners = listeners;
+        this.callbackExecutor = callbackExecutor;
     }
 
     public void process(Execution exec, DeleteSegment segment) {
-        notifyListeners(AfterTargetsExtracted.class, exec, segment);
+        callbackExecutor.executeCallbacks(DeleteStage.EXTRACT_TARGET, exec, segment);
 
         mapTarget(exec, segment);
         filterMissingTargets(exec, segment);
@@ -40,7 +32,7 @@ public class DeleteSegmentProcessor {
 
     private void mapTarget(Execution exec, DeleteSegment segment) {
         segment.setMappedTargets(targetMapper.map(segment.getTargets()));
-        notifyListeners(AfterTargetsMapped.class, exec, segment);
+        callbackExecutor.executeCallbacks(DeleteStage.MAP_TARGET, exec, segment);
     }
 
     private void filterMissingTargets(Execution exec, DeleteSegment segment) {
@@ -48,7 +40,7 @@ public class DeleteSegmentProcessor {
                 segment.getMappedTargets(),
                 segment.getSourceKeys())
         );
-        notifyListeners(AfterMissingTargetsFiltered.class, exec, segment);
+        callbackExecutor.executeCallbacks(DeleteStage.FILTER_MISSING_TARGETS, exec, segment);
     }
 
     private void deleteTarget(DeleteSegment segment) {
@@ -57,15 +49,6 @@ public class DeleteSegmentProcessor {
 
     private void commitTarget(Execution exec, DeleteSegment segment) {
         segment.getContext().commitChanges();
-        notifyListeners(AfterTargetsCommitted.class, exec, segment);
-    }
-
-    private void notifyListeners(Class<? extends Annotation> type, Execution exec, DeleteSegment segment) {
-        List<StageListener> listenersOfType = listeners.get(type);
-        if (listenersOfType != null) {
-            for (StageListener l : listenersOfType) {
-                l.afterStageFinished(exec, segment);
-            }
-        }
+        callbackExecutor.executeCallbacks(DeleteStage.COMMIT_TARGET, exec, segment);
     }
 }

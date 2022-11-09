@@ -9,11 +9,14 @@ import java.lang.annotation.Target;
 
 /**
  * @since 3.0
+ *
+ * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.BaseTaskBuilder#stage}
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@Deprecated(since = "3.0")
 public @interface AfterSourceKeysCollected {
 
 }

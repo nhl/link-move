@@ -7,7 +7,11 @@ import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.annotation.AfterTargetsCommitted;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
+import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateStage;
 import org.apache.cayenne.exp.property.Property;
+
+import java.util.function.BiConsumer;
 
 /**
  * A builder of an {@link LmTask} that performs create-or-update synchronization.
@@ -90,7 +94,11 @@ public interface CreateOrUpdateBuilder {
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
      * @since 1.3
+     *
+     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.CreateOrUpdateBuilder#stage}
      */
+    @Deprecated(since = "3.0")
     CreateOrUpdateBuilder stageListener(Object listener);
 
+    CreateOrUpdateBuilder stage(CreateOrUpdateStage stageType, BiConsumer<Execution, CreateOrUpdateSegment> callback);
 }

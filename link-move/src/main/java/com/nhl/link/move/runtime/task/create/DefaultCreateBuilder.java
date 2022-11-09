@@ -14,6 +14,7 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
+import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.token.ITokenManager;
 
@@ -22,7 +23,7 @@ import java.lang.annotation.Annotation;
 /**
  * @since 2.6
  */
-public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder> implements CreateBuilder {
+public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder, CreateSegment, CreateStage> implements CreateBuilder {
 
     private final CreateTargetMapper mapper;
     private final CreateTargetMerger merger;
@@ -53,8 +54,13 @@ public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder> 
         this.targetCayenneService = targetCayenneService;
         this.rowConverter = rowConverter;
 
-        // always add stats listener
-        stageListener(CreateStatsListener.instance());
+        setupStatsCallbacks();
+    }
+
+    protected void setupStatsCallbacks() {
+        StatsIncrementor incrementor = StatsIncrementor.instance();
+        stage(CreateStage.EXTRACT_SOURCE_ROWS, incrementor::sourceRowsExtracted);
+        stage(CreateStage.COMMIT_TARGET, incrementor::targetsCommitted);
     }
 
     @Override
@@ -96,6 +102,6 @@ public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder> 
                 mapper,
                 merger,
                 fkResolver,
-                getListeners());
+                getCallbackExecutor());
     }
 }

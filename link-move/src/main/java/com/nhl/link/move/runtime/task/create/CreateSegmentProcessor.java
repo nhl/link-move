@@ -1,19 +1,9 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.Execution;
-import com.nhl.link.move.annotation.AfterFksResolved;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
-import com.nhl.link.move.runtime.task.StageListener;
+import com.nhl.link.move.runtime.task.common.CallbackExecutor;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @since 2.6
@@ -21,7 +11,7 @@ import java.util.Map;
 public class CreateSegmentProcessor {
 
     private final RowConverter rowConverter;
-    private final Map<Class<? extends Annotation>, List<StageListener>> listeners;
+    private final CallbackExecutor<CreateStage, CreateSegment> callbackExecutor;
     private final CreateTargetMapper mapper;
     private final CreateTargetMerger merger;
     private final FkResolver fkResolver;
@@ -31,17 +21,17 @@ public class CreateSegmentProcessor {
             CreateTargetMapper mapper,
             CreateTargetMerger merger,
             FkResolver fkResolver,
-            Map<Class<? extends Annotation>, List<StageListener>> listeners) {
+            CallbackExecutor<CreateStage, CreateSegment> callbackExecutor) {
 
         this.rowConverter = rowConverter;
-        this.listeners = listeners;
+        this.callbackExecutor = callbackExecutor;
         this.mapper = mapper;
         this.merger = merger;
         this.fkResolver = fkResolver;
     }
 
     public void process(Execution exec, CreateSegment segment) {
-        notifyListeners(AfterSourceRowsExtracted.class, exec, segment);
+        callbackExecutor.executeCallbacks(CreateStage.EXTRACT_SOURCE_ROWS, exec, segment);
         convertSrc(exec, segment);
         mapToTarget(exec, segment);
         resolveFks(exec, segment);
@@ -51,35 +41,26 @@ public class CreateSegmentProcessor {
 
     private void convertSrc(Execution exec, CreateSegment segment) {
         segment.setSources(rowConverter.convert(segment.getSourceRowsHeader(), segment.getSourceRows()));
-        notifyListeners(AfterSourceRowsConverted.class, exec, segment);
+        callbackExecutor.executeCallbacks(CreateStage.CONVERT_SOURCE_ROWS, exec, segment);
     }
 
     private void mapToTarget(Execution exec, CreateSegment segment) {
         segment.setMapped(mapper.map(segment.getContext(), segment.getSources()));
-        notifyListeners(AfterTargetsMapped.class, exec, segment);
+        callbackExecutor.executeCallbacks(CreateStage.MAP_TARGET, exec, segment);
     }
 
     private void resolveFks(Execution exec, CreateSegment segment) {
         segment.setFksResolved(fkResolver.resolveFks(segment.getContext(), segment.getMapped()));
-        notifyListeners(AfterFksResolved.class, exec, segment);
+        callbackExecutor.executeCallbacks(CreateStage.RESOLVE_FK_VALUES, exec, segment);
     }
 
     private void mergeToTarget(Execution exec, CreateSegment segment) {
         segment.setMerged(merger.merge(segment.getFksResolved()));
-        notifyListeners(AfterTargetsMerged.class, exec, segment);
+        callbackExecutor.executeCallbacks(CreateStage.MERGE_TARGET, exec, segment);
     }
 
     private void commitTarget(Execution exec, CreateSegment segment) {
         segment.getContext().commitChanges();
-        notifyListeners(AfterTargetsCommitted.class, exec, segment);
-    }
-
-    private void notifyListeners(Class<? extends Annotation> type, Execution exec, CreateSegment segment) {
-        List<StageListener> listenersOfType = listeners.get(type);
-        if (listenersOfType != null) {
-            for (StageListener l : listenersOfType) {
-                l.afterStageFinished(exec, segment);
-            }
-        }
+        callbackExecutor.executeCallbacks(CreateStage.COMMIT_TARGET, exec, segment);
     }
 }
