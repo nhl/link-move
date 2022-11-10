@@ -1,7 +1,7 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
-import com.nhl.link.move.log.CheapJson;
+import com.nhl.link.move.log.LoggableJson;
 import com.nhl.link.move.log.LmExecutionLogger;
 import com.nhl.link.move.log.LmLogger;
 
@@ -70,28 +70,28 @@ public class Execution {
 
         StringBuilder paramsOut = new StringBuilder("{");
         for (Entry<String, ?> p : parameters.entrySet()) {
-            CheapJson.append(paramsOut, p.getKey(), p.getValue());
+            LoggableJson.append(paramsOut, p.getKey(), p.getValue());
         }
         paramsOut.append("}");
 
         StringBuilder statsOut = new StringBuilder("{");
-        CheapJson.append(statsOut, "batches", stats.getSegments());
-        CheapJson.append(statsOut, "created", stats.getCreated());
-        CheapJson.append(statsOut, "deleted", stats.getDeleted());
-        CheapJson.append(statsOut, "duration", stats.getDuration());
-        CheapJson.append(statsOut, "extracted", stats.getExtracted());
-        CheapJson.append(statsOut, "startedOn", stats.getStartedOn());
-        CheapJson.append(statsOut, "status", stats.isStopped() ? "finished" : "in progress");
-        CheapJson.append(statsOut, "updated", stats.getUpdated());
+        LoggableJson.append(statsOut, "batches", stats.getSegments());
+        LoggableJson.append(statsOut, "created", stats.getCreated());
+        LoggableJson.append(statsOut, "deleted", stats.getDeleted());
+        LoggableJson.append(statsOut, "duration", stats.getDuration());
+        LoggableJson.append(statsOut, "extracted", stats.getExtracted());
+        LoggableJson.append(statsOut, "startedOn", stats.getStartedOn());
+        LoggableJson.append(statsOut, "status", stats.isStopped() ? "finished" : "in progress");
+        LoggableJson.append(statsOut, "updated", stats.getUpdated());
 
         statsOut.append("}");
 
         StringBuilder out = new StringBuilder("{");
-        CheapJson.append(out, "id", id);
-        CheapJson.append(out, "extractor", extractorName);
-        CheapJson.append(out, "parameters", paramsOut.toString(), false);
-        CheapJson.append(out, "stats", statsOut.toString(), false);
-        CheapJson.append(out, "task", taskName);
+        LoggableJson.append(out, "id", id);
+        LoggableJson.append(out, "extractor", extractorName);
+        LoggableJson.append(out, "parameters", paramsOut.toString(), false);
+        LoggableJson.append(out, "stats", statsOut.toString(), false);
+        LoggableJson.append(out, "task", taskName);
 
         return out.append("}").toString();
     }

@@ -1,9 +1,9 @@
 package com.nhl.link.move.log;
 
 /**
- * A utility class for simplified JSON generation used for logging. Don't try it to use for real JSON serialization.
+ * A utility class for fast simplified JSON generation used for logging. Don't try it to use for real JSON serialization.
  */
-public class CheapJson {
+public class LoggableJson {
 
     public static void append(StringBuilder out, String key, Object val) {
         append(out, key, val, !(val instanceof Number));

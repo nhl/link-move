@@ -245,7 +245,7 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
     private String paramsAsJson() {
         StringBuilder params = new StringBuilder("{");
         for (Map.Entry<String, ?> p : exec.getParameters().entrySet()) {
-            CheapJson.append(params, p.getKey(), p.getValue());
+            LoggableJson.append(params, p.getKey(), p.getValue());
         }
         params.append("}");
 
