@@ -65,7 +65,7 @@ public class DeleteTask extends BaseTask {
     protected void doRun(Execution exec) {
 
 
-        try (ResultIterator data = createTargetSelect()) {
+        try (ResultIterator data = createTargetSelect(exec)) {
 
             // do not preload the keys if there are no target objects
             Set<Object> keys = data.hasNextRow() ? loadKeys(exec) : Collections.emptySet();
@@ -90,7 +90,9 @@ public class DeleteTask extends BaseTask {
         exec.getLogger().deleteExecFinished();
     }
 
-    protected ResultIterator<?> createTargetSelect() {
+    protected ResultIterator<?> createTargetSelect(Execution exec) {
+        exec.getLogger().targetFilterApplied(targetFilter);
+
         ObjectSelect<?> query = ObjectSelect.query(type).where(targetFilter);
         return targetCayenneService.newContext().iterator(query);
     }

@@ -1,3 +1,7 @@
+## Release 3.0.M3
+
+* #218 Logger: support for logging delete tasks target filter
+
 ## Release 3.0.M2
 
 * #177 MutableExtractorModel.getProperties() should respond unmodifiable hash map since 2.9

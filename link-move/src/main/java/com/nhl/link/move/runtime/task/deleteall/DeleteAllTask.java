@@ -101,7 +101,10 @@ public class DeleteAllTask extends BaseTask {
         exec.getLogger().deleteExecFinished();
     }
 
-    private void deleteWithExpression(ObjectContext context, Execution execution) {
+    private void deleteWithExpression(ObjectContext context, Execution exec) {
+
+        exec.getLogger().targetFilterApplied(targetFilter);
+
         StringBuilder queryBuilder = new StringBuilder("DELETE FROM " + type.getName() + " e WHERE ");
 
         try {
@@ -114,7 +117,7 @@ public class DeleteAllTask extends BaseTask {
 
         QueryResponse result = context.performGenericQuery(delete);
 
-        incrementTaskResult(result.firstUpdateCount()[0], execution.getStats());
+        incrementTaskResult(result.firstUpdateCount()[0], exec.getStats());
     }
 
     private void deleteAllData(ObjectContext context, Execution execution) {

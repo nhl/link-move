@@ -116,6 +116,15 @@ public class Slf4jLmExecutionLogger implements LmExecutionLogger {
     }
 
     @Override
+    public void targetFilterApplied(Object filter) {
+        if (logger.isDebugEnabled()) {
+            if (filter != null) {
+                logger.debug("{} target_filter:{{}}", label, filter);
+            }
+        }
+    }
+
+    @Override
     public void segmentStarted() {
         logger.debug("{} segment:{} start", label, exec.getStats().getSegments());
     }

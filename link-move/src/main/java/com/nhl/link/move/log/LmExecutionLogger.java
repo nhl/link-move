@@ -23,6 +23,8 @@ public interface LmExecutionLogger {
 
     void extractorStarted(RowAttribute[] header, Object query);
 
+    void targetFilterApplied(Object filter);
+
     void segmentStarted();
 
     void deleteSegmentFinished(int objectsProcessed, Series<? extends Persistent> objectsDeleted);
