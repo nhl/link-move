@@ -1,5 +1,6 @@
 ## Release 3.0.M3
 
+* #197 Lambda-based callbacks
 * #218 Logger: support for logging delete tasks target filter
 
 ## Release 3.0.M2
