@@ -39,6 +39,9 @@ public class ListenersBuilder<T extends DataSegment, S extends TaskStageType> {
 		return new CallbackExecutor<>(listeners, callbacks);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void addStageCallback(S stageType, BiConsumer<Execution, T> callback) {
         List<BiConsumer<Execution, T>> stageCallbacks = callbacks.computeIfAbsent(stageType, k -> new LinkedList<>());
         stageCallbacks.add(callback);

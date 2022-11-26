@@ -66,11 +66,15 @@ public interface CreateBuilder {
      *
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
-     *
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.CreateBuilder#stage}
      */
     @Deprecated(since = "3.0")
     CreateBuilder stageListener(Object listener);
 
+    /**
+     * Adds a callback invoked for each processed segment after the specified stage in the "create" processing pipeline.
+     *
+     * @since 3.0
+     */
     CreateBuilder stage(CreateStage stageType, BiConsumer<Execution, CreateSegment> callback);
 }

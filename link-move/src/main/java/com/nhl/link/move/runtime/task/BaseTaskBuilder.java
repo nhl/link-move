@@ -41,6 +41,9 @@ public abstract class BaseTaskBuilder<T extends BaseTaskBuilder<T, S, U>, S exte
         return (T) this;
     }
 
+    /**
+     * @since 3.0
+     */
     public T stage(U stageType, BiConsumer<Execution, S> callback) {
         stageListenersBuilder.addStageCallback(stageType, callback);
         return (T) this;

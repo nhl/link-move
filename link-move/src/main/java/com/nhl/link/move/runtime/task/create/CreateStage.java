@@ -10,6 +10,9 @@ import com.nhl.link.move.runtime.task.common.TaskStageType;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * @since 3.0
+ */
 public enum CreateStage implements TaskStageType {
     EXTRACT_SOURCE_ROWS(AfterSourceRowsExtracted.class),
     CONVERT_SOURCE_ROWS(AfterSourceRowsConverted.class),

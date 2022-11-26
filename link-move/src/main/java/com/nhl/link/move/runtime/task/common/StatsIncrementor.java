@@ -14,6 +14,9 @@ import org.apache.cayenne.Persistent;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * @since 3.0
+ */
 public class StatsIncrementor {
     private static final StatsIncrementor instance = new StatsIncrementor();
 

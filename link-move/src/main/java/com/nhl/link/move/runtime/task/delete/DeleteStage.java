@@ -8,6 +8,9 @@ import com.nhl.link.move.runtime.task.common.TaskStageType;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * @since 3.0
+ */
 public enum DeleteStage implements TaskStageType {
     EXTRACT_TARGET(AfterTargetsExtracted.class),
     MAP_TARGET(AfterTargetsMapped.class),

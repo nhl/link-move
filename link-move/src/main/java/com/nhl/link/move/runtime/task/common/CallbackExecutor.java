@@ -10,6 +10,8 @@ import java.util.function.BiConsumer;
 
 /**
  * Stores and executes lambda-based callbacks together with deprecated annotated job callbacks (listeners)
+ *
+ * @since 3.0
  */
 public class CallbackExecutor<T extends TaskStageType, D extends DataSegment> {
     private final Map<Class<? extends Annotation>, List<StageListener>> listeners;

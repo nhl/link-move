@@ -75,5 +75,11 @@ public interface SourceKeysBuilder {
     @Deprecated(since = "3.0")
     SourceKeysBuilder stageListener(Object listener);
 
+    /**
+     * Adds a callback invoked for each processed segment after the specified stage in the "source keys" extraction
+     * pipeline.
+     *
+     * @since 3.0
+     */
     SourceKeysBuilder stage(SourceKeysStage stageType, BiConsumer<Execution, SourceKeysSegment> callback);
 }

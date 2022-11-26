@@ -100,5 +100,11 @@ public interface CreateOrUpdateBuilder {
     @Deprecated(since = "3.0")
     CreateOrUpdateBuilder stageListener(Object listener);
 
+    /**
+     * Adds a callback invoked for each processed segment after the specified stage in the "create-or-update" processing
+     * pipeline.
+     *
+     * @since 3.0
+     */
     CreateOrUpdateBuilder stage(CreateOrUpdateStage stageType, BiConsumer<Execution, CreateOrUpdateSegment> callback);
 }

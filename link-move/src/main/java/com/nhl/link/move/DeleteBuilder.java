@@ -51,5 +51,10 @@ public interface DeleteBuilder {
     @Deprecated(since = "3.0")
     DeleteBuilder stageListener(Object listener);
 
+    /**
+     * Adds a callback invoked for each processed segment after the specified stage in the "delete" processing pipeline.
+     *
+     * @since 3.0
+     */
     DeleteBuilder stage(DeleteStage stageType, BiConsumer<Execution, DeleteSegment> callback);
 }
