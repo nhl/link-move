@@ -15,3 +15,10 @@ Now that LinkMove is using DataFrames as its internal data representation format
 make little sense and don't really help in their configuration and use. So the generic parameters were removed. This
 will result in compilation errors in listeners that accept segments as method parameters. Listeners must update their 
 method signatures, removing <T>.
+
+### JdbcExtractor: column names are no longer converted to uppercase by default [#210](https://github.com/nhl/link-move/issues/210)
+Since we started to support mixed result column names in SQL, there's no more implicit conversion of the JDBC result 
+labels to uppercase. If you were not using an explicit `<extractor.jdbc.sqltemplate.caps/>` property in your JDBC 
+extractor files, you may see errors like `JdbcRowReader Key is missing in the source 'SOME_COLUMN' ... ignoring`, and 
+ultimately get null values in those columns. If your DB and extractors are affected, make sure to set this extractor 
+property. E.g. `<extractor.jdbc.sqltemplate.caps>UPPER</extractor.jdbc.sqltemplate.caps>`
