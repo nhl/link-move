@@ -30,7 +30,7 @@ public class SafeMapKeyMapper implements Mapper {
 
 	@Override
 	public Expression expressionForKey(Object key) {
-		key = keyAdapter.fromMapKey(key);
-		return delegate.expressionForKey(key);
+		Object safeKey = keyAdapter.fromMapKey(key);
+		return delegate.expressionForKey(safeKey);
 	}
 }

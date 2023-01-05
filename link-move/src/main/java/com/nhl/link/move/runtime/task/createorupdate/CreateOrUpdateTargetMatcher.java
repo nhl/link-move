@@ -9,7 +9,6 @@ import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.query.ObjectSelect;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ public class CreateOrUpdateTargetMatcher {
 
     private final Class<?> type;
     private final Mapper mapper;
-    private Index index;
+    private final Index index;
 
     public CreateOrUpdateTargetMatcher(Class<?> type, Mapper mapper) {
         this.type = type;
@@ -33,18 +32,14 @@ public class CreateOrUpdateTargetMatcher {
 
         Map<Object, Expression> expressions = new LinkedHashMap<>();
 
-        df.forEach(r -> expressions.computeIfAbsent(r.get(CreateOrUpdateSegment.KEY_COLUMN),
-                key -> mapper.expressionForKey(key)));
+        df.forEach(r -> expressions.computeIfAbsent(r.get(CreateOrUpdateSegment.KEY_COLUMN), mapper::expressionForKey));
 
         // no keys (?)
         if (expressions.isEmpty()) {
-            return toDataFrame(Collections.emptyList());
+            return DataFrame.empty(index);
         } else {
-            return toDataFrame(ObjectSelect.query(type).where(ExpressionFactory.or(expressions.values())).select(context));
+            List<?> objects = ObjectSelect.query(type).where(ExpressionFactory.or(expressions.values())).select(context);
+            return DataFrame.byColumn(index).of(Series.ofIterable(objects));
         }
-    }
-
-    private DataFrame toDataFrame(List<?> data) {
-        return DataFrame.byColumn(index).of(Series.ofIterable(data));
     }
 }
