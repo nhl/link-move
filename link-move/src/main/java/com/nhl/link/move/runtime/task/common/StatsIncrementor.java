@@ -59,7 +59,7 @@ public class StatsIncrementor {
     }
 
     public void targetsCommitted(Execution e, CreateOrUpdateSegment segment) {
-        BooleanSeries createdMask = segment.getMerged().getColumnAsBoolean(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+        BooleanSeries createdMask = segment.getMerged().getColumnAsBool(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
 
         Series<? extends Persistent> createdOrUpdated = segment.getMerged().getColumn(CreateOrUpdateSegment.TARGET_COLUMN);
         Series<? extends Persistent> created = createdOrUpdated.select(createdMask);

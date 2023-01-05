@@ -3,10 +3,8 @@ package com.nhl.link.move.runtime.task.common;
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Index;
 import com.nhl.dflib.Series;
-import com.nhl.dflib.accumulator.ObjectAccumulator;
-import com.nhl.dflib.row.RowBuilder;
+import com.nhl.dflib.builder.ObjectAccum;
 import com.nhl.dflib.row.RowProxy;
-import com.nhl.dflib.series.ObjectSeries;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.Cayenne;
@@ -16,7 +14,11 @@ import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.query.ObjectSelect;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handler of resolve-fk processor stage.
@@ -69,12 +71,12 @@ public class FkResolver {
             Series<?> fkColumn = df.getColumn(path);
             Map<Object, Object> fks = e.getValue();
 
-            ObjectAccumulator seriesBuilder = new ObjectAccumulator(df.height());
+            ObjectAccum<Object> accum = new ObjectAccum<>(df.height());
 
             // TODO: do we care if an FK is invalid (i.e. "get" returns null) ? For now quietly setting the
             //  relationship to null.
-            fkColumn.map(fk -> fk != null ? fks.get(fk) : null).forEach(seriesBuilder::add);
-            df = df.dropColumns(path).addColumn(path, seriesBuilder.toSeries());
+            fkColumn.map(fk -> fk != null ? fks.get(fk) : null).forEach(accum::push);
+            df = df.dropColumns(path).addColumn(path, accum.toSeries());
         }
 
         return df;

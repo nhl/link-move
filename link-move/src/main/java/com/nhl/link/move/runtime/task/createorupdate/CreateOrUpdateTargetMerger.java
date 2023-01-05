@@ -3,7 +3,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 import com.nhl.dflib.BooleanSeries;
 import com.nhl.dflib.DataFrame;
 import com.nhl.dflib.Series;
-import com.nhl.dflib.accumulator.BooleanAccumulator;
+import com.nhl.dflib.builder.BoolAccum;
 import com.nhl.link.move.runtime.task.common.ProcessorUtil;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
@@ -23,10 +23,10 @@ public class CreateOrUpdateTargetMerger {
 
         Series<?> targets = df.getColumn(CreateOrUpdateSegment.TARGET_COLUMN);
         int len = targets.size();
-        BooleanAccumulator changed = new BooleanAccumulator(len);
+        BoolAccum changed = new BoolAccum(len);
 
-        BooleanSeries created = df.getColumnAsBoolean(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
-        created.forEach(changed::add);
+        BooleanSeries created = df.getColumnAsBool(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+        created.forEach(changed::push);
 
         for (String label : ProcessorUtil.dataColumns(df)) {
 
@@ -37,7 +37,7 @@ public class CreateOrUpdateTargetMerger {
                 Object target = targets.get(i);
                 Object v = values.get(i);
                 if (writer.willWrite(target, v)) {
-                    changed.set(i, true);
+                    changed.replace(i, true);
                     writer.write(target, v);
                 }
             }

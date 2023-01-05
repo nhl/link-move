@@ -38,7 +38,7 @@ public abstract class BaseTask implements LmTask {
      * @since 3.0
      */
     protected static DataFrame srcRowsAsDataFrame(RowAttribute[] rowHeader, List<Object[]> rows) {
-        return DataFrame.newFrame(toIndex(rowHeader)).objectsToRows(rows, r -> r);
+        return DataFrame.byArrayRow(toIndex(rowHeader)).ofIterable(rows);
     }
 
     protected static Index toIndex(RowAttribute[] rowHeader) {

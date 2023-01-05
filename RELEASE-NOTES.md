@@ -1,3 +1,7 @@
+## Release 3.0.M4
+
+* #219 Upgrade Cayenne to 4.2.RC2 and DFLib to 0.17 
+
 ## Release 3.0.M3
 
 * #197 Lambda-based callbacks

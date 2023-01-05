@@ -45,6 +45,6 @@ public class CreateOrUpdateTargetMatcher {
     }
 
     private DataFrame toDataFrame(List<?> data) {
-        return DataFrame.newFrame(index).columns(Series.forData(data));
+        return DataFrame.byColumn(index).of(Series.ofIterable(data));
     }
 }
