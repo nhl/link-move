@@ -9,8 +9,9 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * A rather primitive connector that reads data from a URL. It can be used to resolve public URLs or filesystem locations.
- * Anything more complex (e.g. locations requiring authentication) won't work with it.
+ * A rather simple connector that reads data from a URL. It can be used with data sources that are accessible via
+ * public URLs or filesystem locations. Anything more complex (e.g. locations requiring token authentication) can not
+ * be handled by this connector.
  *
  * @since 3.0
  */
