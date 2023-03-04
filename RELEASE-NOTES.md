@@ -2,7 +2,7 @@
 
 * #219 Upgrade Cayenne to 4.2.RC2 and DFLib to 0.17 
 * #220 Improve design for URI connector
-* #222 Track connectors by type and then by ID
+* #222 Allow multiple connector factories for a given connector type
 
 ## Release 3.0.M3
 
