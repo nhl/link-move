@@ -1,6 +1,7 @@
 ## Release 3.0.M5
 
 * #223 Deprecate remaining "with" prefixes in the LmRuntimeBuilder
+* #224 Upgrade to Jackson 2.14.2
 
 ## Release 3.0.M4
 
