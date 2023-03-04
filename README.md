@@ -56,8 +56,8 @@ DataSource srcDS = // define how you'd connect to data source
 ServerRuntime targetRuntime = // Cayenne setup for data target .. targets are mapped in Cayenne 
 File rootDir = .. // this is a parent dir of XML descriptors
 
-LmRuntime lm = LmRuntimeBuilder()
-          .withConnector("myconnector", new DataSourceConnector(srcDS))
+LmRuntime lm = LmRuntime.builder()
+          .connector(JdbcConnector.class, "myconnector", new DataSourceConnector(srcDS))
           .withTargetRuntime(targetRuntime)
           .extractorModelsRoot(rootDir)
           .build();

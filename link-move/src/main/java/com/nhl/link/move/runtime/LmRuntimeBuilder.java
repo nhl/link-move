@@ -93,6 +93,11 @@ public class LmRuntimeBuilder {
     private ServerRuntime targetRuntime;
     private final Collection<LinkEtlAdapter> adapters;
 
+    /**
+     * @deprecated use {@link LmRuntime#builder()}
+     */
+    // TODO: make protected in 4.0
+    @Deprecated(since = "3.0")
     public LmRuntimeBuilder() {
         this.connectorFactories = new HashSet<>();
         this.connectorFactoryTypes = new HashSet<>();

@@ -8,6 +8,13 @@ import com.nhl.link.move.runtime.task.ITaskService;
 public interface LmRuntime {
 
 	/**
+	 * @since 3.0
+	 */
+	static LmRuntimeBuilder builder() {
+		return new LmRuntimeBuilder();
+	}
+
+	/**
 	 * @since 2.1
      */
 	<T> T service(Class<T> serviceType);

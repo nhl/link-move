@@ -2,6 +2,7 @@ package com.nhl.link.move.itest;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
+import com.nhl.link.move.runtime.LmRuntime;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
@@ -12,8 +13,10 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 
 	@Override
 	protected LmRuntimeBuilder testRuntimeBuilder() {
-		// override connector logic defined in super to make source and target the same DB
-		return new LmRuntimeBuilder().connectorFromTarget().withTargetRuntime(targetCayenne.getRuntime());
+		return LmRuntime.builder()
+				// override connector logic defined in super to make source and target the same DB
+				.connectorFromTarget()
+				.withTargetRuntime(targetCayenne.getRuntime());
 	}
 
 	@Test
