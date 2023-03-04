@@ -2,25 +2,17 @@ package com.nhl.link.move.runtime.connect;
 
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.Connector;
-import org.apache.cayenne.di.Inject;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class ConnectorService implements IConnectorService {
 
-    private final ConcurrentMap<String, Connector> connectors;
-    private final Map<String, IConnectorFactory> factories;
+    private final Map<Class<? extends Connector>, IConnectorFactory<?>> factories;
 
-    public ConnectorService(
-            @Inject Map<String, IConnectorFactory> factories,
-            @Inject Map<String, Connector> connectors) {
+    public ConnectorService(Map<Class<? extends Connector>, IConnectorFactory<?>> factories) {
         this.factories = factories;
-        this.connectors = new ConcurrentHashMap<>(connectors);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends Connector> T getConnector(Class<T> type, String id) {
 
@@ -28,22 +20,12 @@ public class ConnectorService implements IConnectorService {
             throw new LmRuntimeException("Null connector id");
         }
 
-        Connector connector = connectors.computeIfAbsent(id, i -> createConnector(type, i));
-
-        if (!type.isAssignableFrom(connector.getClass())) {
-            throw new LmRuntimeException("Connector for id '" + id + "' is not a " + type.getName()
-                    + ". The actual type is " + connector.getClass().getName());
-        }
-
-        return (T) connector;
-    }
-
-    protected Connector createConnector(Class<? extends Connector> type, String id) {
-        IConnectorFactory<?> factory = factories.get(type.getName());
+        IConnectorFactory<T> factory = (IConnectorFactory<T> ) factories.get(type);
         if (factory == null) {
-            throw new IllegalStateException("No factory mapped for Connector type of '" + type.getName() + "'");
+            throw new IllegalStateException("No factory exists for Connector type of '" + type.getName() + "'");
         }
 
-        return factory.createConnector(id);
+        return factory.createConnector(id)
+                .orElseThrow(() -> new LmRuntimeException("Can't create connector for type '" + type.getName() + "' and id '" + id + "'"));
     }
 }

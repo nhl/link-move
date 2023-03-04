@@ -1,6 +1,7 @@
 ## Release 3.0.M4
 
 * #219 Upgrade Cayenne to 4.2.RC2 and DFLib to 0.17 
+* #222 Track connectors by type and then by ID
 
 ## Release 3.0.M3
 

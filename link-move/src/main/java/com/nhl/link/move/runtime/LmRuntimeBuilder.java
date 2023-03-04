@@ -14,7 +14,8 @@ import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.move.runtime.cayenne.TargetConnectorFactory;
-import com.nhl.link.move.runtime.connect.ConnectorService;
+import com.nhl.link.move.runtime.connect.ConnectorInstanceFactory;
+import com.nhl.link.move.runtime.connect.ConnectorServiceProvider;
 import com.nhl.link.move.runtime.connect.IConnectorFactory;
 import com.nhl.link.move.runtime.connect.IConnectorService;
 import com.nhl.link.move.runtime.extractor.ExtractorService;
@@ -22,7 +23,6 @@ import com.nhl.link.move.runtime.extractor.IExtractorFactory;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.extractor.model.ExtractorModelService;
 import com.nhl.link.move.runtime.extractor.model.IExtractorModelService;
-import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcExtractorFactory;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.key.KeyAdapterFactory;
@@ -32,11 +32,24 @@ import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.TaskService;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.runtime.token.InMemoryTokenManager;
-import com.nhl.link.move.valueconverter.*;
+import com.nhl.link.move.valueconverter.BigDecimalConverter;
+import com.nhl.link.move.valueconverter.BooleanConverter;
+import com.nhl.link.move.valueconverter.IntegerConverter;
+import com.nhl.link.move.valueconverter.LocalDateConverter;
+import com.nhl.link.move.valueconverter.LocalDateTimeConverter;
+import com.nhl.link.move.valueconverter.LocalTimeConverter;
+import com.nhl.link.move.valueconverter.LongConverter;
+import com.nhl.link.move.valueconverter.StringConverter;
+import com.nhl.link.move.valueconverter.ValueConverter;
+import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
 import org.apache.cayenne.configuration.server.ServerRuntime;
-import org.apache.cayenne.di.*;
+import org.apache.cayenne.di.Binder;
+import org.apache.cayenne.di.DIBootstrap;
+import org.apache.cayenne.di.Injector;
+import org.apache.cayenne.di.ListBuilder;
+import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +60,14 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -58,9 +78,9 @@ public class LmRuntimeBuilder {
     public static final String START_TOKEN_VAR = "startToken";
     public static final String END_TOKEN_VAR = "endToken";
     private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
-    private final Map<String, Connector> connectors;
-    private final Map<String, IConnectorFactory> connectorFactories;
-    private final Map<String, Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
+
+    private final Set<IConnectorFactory> connectorFactories;
+    private final Set<Class<? extends IConnectorFactory<? extends Connector>>> connectorFactoryTypes;
 
     private final Map<String, IExtractorFactory> extractorFactories;
     private final Map<String, Class<? extends IExtractorFactory<?>>> extractorFactoryTypes;
@@ -74,9 +94,8 @@ public class LmRuntimeBuilder {
     private final Collection<LinkEtlAdapter> adapters;
 
     public LmRuntimeBuilder() {
-        this.connectors = new HashMap<>();
-        this.connectorFactories = new HashMap<>();
-        this.connectorFactoryTypes = new HashMap<>();
+        this.connectorFactories = new HashSet<>();
+        this.connectorFactoryTypes = new HashSet<>();
         this.extractorFactories = new HashMap<>();
         this.extractorFactoryTypes = new HashMap<>();
         this.valueConverters = createDefaultValueConverters();
@@ -129,23 +148,58 @@ public class LmRuntimeBuilder {
         return this;
     }
 
-    public LmRuntimeBuilder withConnector(String id, Connector connector) {
-        connectors.put(id, connector);
-        return this;
+    /**
+     * @since 3.0
+     */
+    public <C extends Connector> LmRuntimeBuilder connector(
+            Class<C> connectorType,
+            String id,
+            C connector) {
+        return connectorFactory(new ConnectorInstanceFactory(connectorType, id, connector));
     }
 
+    /**
+     * @deprecated in favor of {@link #connectorFactory(IConnectorFactory)}
+     */
+    @Deprecated(since = "3.0")
     public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
             Class<C> connectorType,
             IConnectorFactory<C> factory) {
-        connectorFactories.put(connectorType.getName(), factory);
+        return connectorFactory(factory);
+    }
+
+    /**
+     * @since 3.0
+     */
+    public <C extends Connector> LmRuntimeBuilder connectorFactory(IConnectorFactory<C> factory) {
+        connectorFactories.add(factory);
         return this;
     }
 
+    /**
+     * @deprecated in favor of {@link #connectorFactory(Class)}
+     */
+    @Deprecated(since = "3.0")
     public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
             Class<C> connectorType,
             Class<? extends IConnectorFactory<C>> factoryType) {
-        connectorFactoryTypes.put(connectorType.getName(), factoryType);
+        return connectorFactory(factoryType);
+    }
+
+    /**
+     * @since 3.0
+     */
+    public <C extends Connector> LmRuntimeBuilder connectorFactory(Class<? extends IConnectorFactory<C>> factoryType) {
+        connectorFactoryTypes.add(factoryType);
         return this;
+    }
+
+    /**
+     * @deprecated in favor of {@link #connectorFromTarget()}
+     */
+    @Deprecated(since = "3.0")
+    public LmRuntimeBuilder withConnectorFromTarget() {
+        return connectorFromTarget();
     }
 
     /**
@@ -160,9 +214,8 @@ public class LmRuntimeBuilder {
      *
      * @since 1.1
      */
-    public LmRuntimeBuilder withConnectorFromTarget() {
-        connectorFactoryTypes.put(JdbcConnector.class.getName(), TargetConnectorFactory.class);
-        return this;
+    public LmRuntimeBuilder connectorFromTarget() {
+        return connectorFactory(TargetConnectorFactory.class);
     }
 
     /**
@@ -244,7 +297,6 @@ public class LmRuntimeBuilder {
         @Override
         public void configure(Binder binder) {
 
-            bindConnectors(binder);
             bindConnectorFactories(binder);
             bindExtractorFactories(binder);
             bindValueConverters(binder);
@@ -254,7 +306,7 @@ public class LmRuntimeBuilder {
             binder.bind(ResourceResolver.class).toInstance(extractorResolverFactory.get());
             binder.bind(ValueConverterFactory.class).to(ValueConverterFactory.class);
             binder.bind(IExtractorService.class).to(ExtractorService.class);
-            binder.bind(IConnectorService.class).to(ConnectorService.class);
+            binder.bind(IConnectorService.class).toProvider(ConnectorServiceProvider.class);
             binder.bind(ITaskService.class).to(TaskService.class);
             binder.bind(ITokenManager.class).toInstance(tokenManager);
             binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
@@ -267,22 +319,18 @@ public class LmRuntimeBuilder {
             bindAdapters(binder);
         }
 
-        private void bindConnectors(Binder binder) {
-            binder.bindMap(Connector.class).putAll(connectors);
-        }
-
         private void bindConnectorFactories(Binder binder) {
-            MapBuilder<IConnectorFactory> cfMap = binder.bindMap(IConnectorFactory.class);
+            ListBuilder<IConnectorFactory> cfs = binder.bindList(IConnectorFactory.class);
 
-            cfMap.putAll(connectorFactories);
+            cfs.addAll(connectorFactories);
 
-            connectorFactoryTypes.forEach((n, c) -> {
+            connectorFactoryTypes.forEach(c -> {
                 // A bit ugly - need to bind all factory types explicitly before placing them in a map.
                 // Also, must drop parameterization to be able to bind with non-specific boundaries (<? extends ...>)
                 Class efType = c;
                 binder.bind(efType).to(efType);
 
-                cfMap.put(n, c);
+                cfs.add(c);
             });
         }
 
@@ -293,7 +341,7 @@ public class LmRuntimeBuilder {
             efMap.putAll(extractorFactories);
             extractorFactoryTypes.forEach((n, c) -> {
 
-                // a bit ugly - need to bind all factory types explicitly before placing then in a map ..
+                // A bit ugly - need to bind all factory types explicitly before placing then in a map.
                 // also must drop parameterization to be able to bind with non-specific boundaries (<? extends ...>)
                 Class efType = c;
                 binder.bind(efType).to(efType);

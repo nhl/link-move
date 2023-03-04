@@ -13,7 +13,7 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 	@Override
 	protected LmRuntimeBuilder testRuntimeBuilder() {
 		// override connector logic defined in super to make source and target the same DB
-		return new LmRuntimeBuilder().withConnectorFromTarget().withTargetRuntime(targetCayenne.getRuntime());
+		return new LmRuntimeBuilder().connectorFromTarget().withTargetRuntime(targetCayenne.getRuntime());
 	}
 
 	@Test

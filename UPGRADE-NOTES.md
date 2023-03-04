@@ -1,6 +1,14 @@
 _This document contains upgrade notes for LinkMove 3.x and newer. Older versions are documented in
 [UPGRADE-NOTES-1-2](./UPGRADE-NOTES-1-to-2.md)._
 
+## Upgrading to 3.0.M4
+
+### Tracking Connectors by type [#222](https://github.com/nhl/link-move/issues/222)
+* `LmRuntimeBuilder.withConnector(id, connector)` no longer makes sense and is replaced with 
+`LmRuntimeBuilder.connector(connectorType, id, connector)`.
+* `IConnectorFactory` interface is altered to provide extra metadata about the factory and to allow factory composition
+* `IConnectorFactory` factories are now injected as a List, not a Map.
+
 ## Upgrading to 3.0.M1
 
 ### Switch to Java 11 [#199](https://github.com/nhl/link-move/issues/199)

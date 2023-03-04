@@ -22,8 +22,13 @@ public abstract class LmJsonIntegrationTest extends DerbyTargetTest {
 
         return new LmRuntimeBuilder()
                 .withTargetRuntime(targetCayenne.getRuntime())
-                .withConnector(connectorId, new URIConnector(uri))
-                .withConnectorFactory(StreamConnector.class, new URIConnectorFactory());
+
+                // here we separate URI within the connector from connectorId
+                .connector(StreamConnector.class, connectorId, new URIConnector(uri))
+
+                // here we will use connectorId as a URI
+                // TODO: this pattern should be deprecated and removed!!
+                .connectorFactory(new URIConnectorFactory());
     }
 
     protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {
