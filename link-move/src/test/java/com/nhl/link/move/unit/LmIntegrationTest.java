@@ -27,7 +27,7 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
     protected LmRuntimeBuilder testRuntimeBuilder() {
         JdbcConnector c = new DataSourceConnector("derbysrc", srcDb.getDataSource());
         return LmRuntime.builder()
-                .withTargetRuntime(targetCayenne.getRuntime())
+                .targetRuntime(targetCayenne.getRuntime())
                 .connector(JdbcConnector.class, "derbysrc", c);
     }
 

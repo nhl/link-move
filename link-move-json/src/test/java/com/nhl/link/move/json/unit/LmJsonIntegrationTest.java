@@ -15,7 +15,7 @@ public abstract class LmJsonIntegrationTest extends DerbyTargetTest {
     }
 
     protected LmRuntimeBuilder testRuntimeBuilder() {
-        return LmRuntime.builder().withTargetRuntime(targetCayenne.getRuntime());
+        return LmRuntime.builder().targetRuntime(targetCayenne.getRuntime());
     }
 
     protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {

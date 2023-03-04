@@ -137,9 +137,19 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * Sets a target Cayenne runtime for this ETL stack.
+     * @deprecated in favor of {@link #targetRuntime(ServerRuntime)}
      */
+    @Deprecated(since = "3.0")
     public LmRuntimeBuilder withTargetRuntime(ServerRuntime targetRuntime) {
+        return targetRuntime(targetRuntime);
+    }
+
+    /**
+     * Sets a target Cayenne runtime for this ETL stack.
+     *
+     * @since 3.0
+     */
+    public LmRuntimeBuilder targetRuntime(ServerRuntime targetRuntime) {
         this.targetRuntime = targetRuntime;
         return this;
     }
@@ -224,13 +234,30 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * Adds an extra factory to the map of extractor factories. Note that
-     * {@link JdbcExtractorFactory} is loaded by default and does not have to be
-     * configured explicitly.
+     * @deprecated in favor of {@link #extractorFactory(String, Class)}
      */
+    @Deprecated(since = "3.0")
     public LmRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
+        return extractorFactory(extractorType, factoryType);
+    }
+
+    /**
+     * Adds an extra factory to the map of extractor factories. Note that {@link JdbcExtractorFactory} is loaded by
+     * default and does not have to be configured explicitly.
+     *
+     * @since 3.0
+     */
+    public LmRuntimeBuilder extractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
         extractorFactoryTypes.put(extractorType, factoryType);
         return this;
+    }
+
+    /**
+     * @deprecated in favor of {@link #extractorFactory(String, IExtractorFactory)} 
+     */
+    @Deprecated(since = "3.0")
+    public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory<?> factory) {
+        return extractorFactory(extractorType, factory);
     }
 
     /**
@@ -238,7 +265,7 @@ public class LmRuntimeBuilder {
      * {@link JdbcExtractorFactory} is loaded by default and does not have to be
      * configured explicitly.
      */
-    public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory<?> factory) {
+    public LmRuntimeBuilder extractorFactory(String extractorType, IExtractorFactory<?> factory) {
         extractorFactories.put(extractorType, factory);
         return this;
     }

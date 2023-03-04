@@ -1,3 +1,7 @@
+## Release 3.0.M5
+
+* #223 Deprecate remaining "with" prefixes in the LmRuntimeBuilder
+
 ## Release 3.0.M4
 
 * #219 Upgrade Cayenne to 4.2.RC2 and DFLib to 0.17 
