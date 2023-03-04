@@ -58,7 +58,7 @@ File rootDir = .. // this is a parent dir of XML descriptors
 
 LmRuntime lm = LmRuntime.builder()
           .connector(JdbcConnector.class, "myconnector", new DataSourceConnector(srcDS))
-          .withTargetRuntime(targetRuntime)
+          .targetRuntime(targetRuntime)
           .extractorModelsRoot(rootDir)
           .build();
 
