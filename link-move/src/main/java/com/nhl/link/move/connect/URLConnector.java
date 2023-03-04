@@ -9,6 +9,9 @@ import java.net.URL;
 import java.util.Map;
 
 /**
+ * A rather primitive connector that reads data from a URL. It can be used to resolve public URLs or filesystem locations.
+ * Anything more complex (e.g. locations requiring authentication) won't work with it.
+ *
  * @since 3.0
  */
 public class URLConnector implements StreamConnector {
