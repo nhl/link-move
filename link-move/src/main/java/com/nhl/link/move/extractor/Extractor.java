@@ -4,8 +4,7 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.RowReader;
 
 /**
- * Defines a service responsible that streams data from the task source. It is based on some internal query template
- * and a set of parameters passed by the caller.
+ * A unified abstraction that allows to stream data row-by-row from a variety of data sources.
  */
 public interface Extractor {
 
