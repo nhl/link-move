@@ -3,6 +3,8 @@ package com.nhl.link.move.runtime.connect;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.connect.URIConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,9 +13,13 @@ import java.util.Optional;
 
 /**
  * @since 1.4
+ * @deprecated as the factory treats "connectorId" as a URI, and this pattern is strongly discouraged. Instead, the
+ * "connectorId" should be a symbolic name resolvable outside LinkMove.
  */
-// TODO: deprecate this factory. We should not treat connector IDs as meaningful URLs
+@Deprecated(since = "3.0")
 public class URIConnectorFactory implements IConnectorFactory<StreamConnector> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(URIConnectorFactory.class);
 
     @Override
     public Class<StreamConnector> getConnectorType() {
@@ -22,6 +28,8 @@ public class URIConnectorFactory implements IConnectorFactory<StreamConnector> {
 
     @Override
     public Optional<URIConnector> createConnector(String id) {
+        LOGGER.warn("*** URIConnectorFactory is deprecated. Treating connector ID as a URL is discouraged. Connector ID: {}", id);
+
         URI uri = toUri(id);
         return Optional.ofNullable(uri)
                 .map(this::checkAbsolute)

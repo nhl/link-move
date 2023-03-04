@@ -8,6 +8,9 @@ _This document contains upgrade notes for LinkMove 3.x and newer. Older versions
 `LmRuntimeBuilder.connector(connectorType, id, connector)`.
 * `IConnectorFactory` interface is altered to provide extra metadata about the factory and to allow factory composition
 * `IConnectorFactory` factories are now injected as a List, not a Map.
+* `URIConnectorFactory`is deprecated, as the factory treats "connectorId" as a URI,  and this pattern is strongly 
+discouraged. Instead, "connectorId" should be a symbolic name resolvable outside LinkMove. Also, `URIConnector` is
+deprecated in favor of `URLConnector`.
 
 ## Upgrading to 3.0.M1
 

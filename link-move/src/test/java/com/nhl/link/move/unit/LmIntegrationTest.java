@@ -3,7 +3,6 @@ package com.nhl.link.move.unit;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.runtime.LmRuntime;
 import com.nhl.link.move.runtime.LmRuntimeBuilder;
-import com.nhl.link.move.runtime.connect.URIConnectorFactory;
 import com.nhl.link.move.runtime.jdbc.DataSourceConnector;
 import com.nhl.link.move.runtime.jdbc.JdbcConnector;
 import org.junit.jupiter.api.AfterEach;
@@ -29,8 +28,7 @@ public abstract class LmIntegrationTest extends DerbySrcTargetTest {
         JdbcConnector c = new DataSourceConnector("derbysrc", srcDb.getDataSource());
         return new LmRuntimeBuilder()
                 .withTargetRuntime(targetCayenne.getRuntime())
-                .connector(JdbcConnector.class, "derbysrc", c)
-                .connectorFactory(new URIConnectorFactory());
+                .connector(JdbcConnector.class, "derbysrc", c);
     }
 
     protected void assertExec(int extracted, int created, int updated, int deleted, Execution exec) {

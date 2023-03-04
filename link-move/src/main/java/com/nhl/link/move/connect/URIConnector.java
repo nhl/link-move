@@ -2,33 +2,25 @@ package com.nhl.link.move.connect;
 
 import com.nhl.link.move.LmRuntimeException;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Map;
 
 /**
- * @since 1.4
+ * @deprecated in favor of {@link URLConnector}.
  */
-public class URIConnector implements StreamConnector {
-
-    private final URI uri;
+@Deprecated(since = "3.0")
+public class URIConnector extends URLConnector {
 
     public URIConnector(URI uri) {
-        this.uri = uri;
+        super(toURL(uri));
     }
 
-    @Override
-    public InputStream getInputStream(Map<String, ?> parameters) throws IOException {
-        URL url;
-
+    private static URL toURL(URI uri) {
         try {
-            url = uri.toURL();
-        } catch (IllegalArgumentException e) {
+            return uri.toURL();
+        } catch (MalformedURLException e) {
             throw new LmRuntimeException("Error converting URI to URL: " + uri, e);
         }
-
-        return url.openStream();
     }
 }
