@@ -75,8 +75,11 @@ import java.util.function.Supplier;
  */
 public class LmRuntimeBuilder {
 
+    @Deprecated(since = "3.0")
     public static final String START_TOKEN_VAR = "startToken";
+    @Deprecated(since = "3.0")
     public static final String END_TOKEN_VAR = "endToken";
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
 
     private final Set<IConnectorFactory> connectorFactories;
@@ -253,7 +256,7 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @deprecated in favor of {@link #extractorFactory(String, IExtractorFactory)} 
+     * @deprecated in favor of {@link #extractorFactory(String, IExtractorFactory)}
      */
     @Deprecated(since = "3.0")
     public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory<?> factory) {
