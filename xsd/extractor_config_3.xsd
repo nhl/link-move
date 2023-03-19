@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://linkmove.io/xsd/extractor_config_2.xsd"
-        xmlns:tns="http://linkmove.io/xsd/extractor_config_2.xsd" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd"
+        xmlns:tns="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd" elementFormDefault="qualified">
 
     <annotation>
         <documentation xml:lang="en">
-            THIS SCHEMA IS DEPRECATED IN LinkMove 3.0 IN FAVOR OF extractor_config_3.xsd
-            THAT ALIGNS THE NAMESPACE WITH THE CURRENT SCHEMA LOCATION.
-            LinkMove Extractor config schema. Provides a structured way to
-            configure an arbitrary extractor.
+            LinkMove Extractor config schema. Provides a structured way to configure an
+            arbitrary extractor.
         </documentation>
     </annotation>
 
-    <element name="config" type="tns:ConfigType" />
+    <element name="config" type="tns:ConfigType"/>
 
     <complexType name="ConfigType">
 
@@ -37,7 +36,7 @@
                 <element name="connectorIds" type="tns:ConnectorIdsType"/>
             </choice>
 
-            <element name="extractor" type="tns:ExtractorType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="extractor" type="tns:ExtractorType" minOccurs="0" maxOccurs="unbounded"/>
 
         </sequence>
     </complexType>
@@ -80,7 +79,7 @@
                 </annotation>
                 <complexType>
                     <sequence>
-                        <element name="attribute" type="tns:AttributeType" minOccurs="0" maxOccurs="unbounded" />
+                        <element name="attribute" type="tns:AttributeType" minOccurs="0" maxOccurs="unbounded"/>
                     </sequence>
                 </complexType>
             </element>
@@ -98,7 +97,8 @@
                             <annotation>
                                 <documentation source="description">
                                     Each property tag name becomes a property name. Often Extractors are using
-                                    naming conventions, structuring property names like this: "extractor.jdbc.sqltemplate".
+                                    naming conventions, structuring property names like this:
+                                    "extractor.jdbc.sqltemplate".
                                     Here the first part is a
                                     fixed prefix ("extractor"), second is Extractor type ("jdbc"),
                                     third - property name understood by the given
@@ -114,9 +114,9 @@
 
     <complexType name="AttributeType">
         <sequence>
-            <element name="type" type="string" minOccurs="1" maxOccurs="1" />
-            <element name="source" type="string" minOccurs="0" maxOccurs="1" />
-            <element name="target" type="string" minOccurs="0" maxOccurs="1" />
+            <element name="type" type="string" minOccurs="1" maxOccurs="1"/>
+            <element name="source" type="string" minOccurs="0" maxOccurs="1"/>
+            <element name="target" type="string" minOccurs="0" maxOccurs="1"/>
         </sequence>
     </complexType>
 
@@ -131,7 +131,8 @@
             <documentation source="description">
                 Defines a symbolic ID of the connector used by the extractor. Connector must
                 be
-                compatible with Extractor type specified above. ExtractorModelContainer's connectorId is inherited (and can be
+                compatible with Extractor type specified above. ExtractorModelContainer's connectorId is inherited (and
+                can be
                 overridden) by extractors.
             </documentation>
         </annotation>
