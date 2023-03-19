@@ -27,7 +27,7 @@ Add LinkMove dependency:
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move</artifactId>
-    <version>3.0.M4</version>
+    <version>3.0.M5</version>
 </dependency>
 ```
 The core module above supports relational and XML sources. The following optional modules may be added if you need to work with other formats:
@@ -37,7 +37,7 @@ The core module above supports relational and XML sources. The following optiona
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-json</artifactId>
-    <version>3.0.M4</version>
+    <version>3.0.M5</version>
 </dependency>
 ```
 ```XML
@@ -45,7 +45,7 @@ The core module above supports relational and XML sources. The following optiona
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-csv</artifactId>
-    <version>3.0.M4</version>
+    <version>3.0.M5</version>
 </dependency>
 ```
 Use it:
