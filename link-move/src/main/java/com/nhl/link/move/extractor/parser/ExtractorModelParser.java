@@ -35,6 +35,7 @@ public class ExtractorModelParser implements IExtractorModelParser {
         Map<String, DOMExtractorModelParser> parsersByNS = new HashMap<>();
         parsersByNS.put(ExtractorModelParser_v1.NS, new ExtractorModelParser_v1());
         parsersByNS.put(ExtractorModelParser_v2.NS, new ExtractorModelParser_v2());
+        parsersByNS.put(ExtractorModelParser_v3.NS, new ExtractorModelParser_v3());
 
         this.parser = new VersionedExtractorModelParser(parsersByNS, NO_NS_PARSER_NS);
     }

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://linkmove.io/xsd/extractor_config_2.xsd"
-	xmlns="http://linkmove.io/xsd/extractor_config_2.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd https://nhl.github.io/link-move/xsd/extractor_config_3.xsd"
+		xmlns="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd">
+
 	<type>jdbc</type>
 	<connectorId>derbysrc</connectorId>
 

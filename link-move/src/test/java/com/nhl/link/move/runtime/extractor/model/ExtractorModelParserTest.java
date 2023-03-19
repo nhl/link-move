@@ -7,6 +7,8 @@ import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -72,12 +74,13 @@ public class ExtractorModelParserTest {
 		assertEquals("XY", model.getPropertyValue("x.y"));
 	}
 
-	@Test
-	public void testLoad_v2() {
+	@ParameterizedTest
+	@ValueSource(strings = {"extractor_v2.xml", "extractor_v3.xml"})
+	public void testLoad_v2_v3(String extractor) {
 
-        ExtractorModelContainer container = parse("extractor_v2.xml");
+        ExtractorModelContainer container = parse(extractor);
 		assertNotNull(container);
-		assertEquals("extractor_v2.xml", container.getLocation());
+		assertEquals(extractor, container.getLocation());
 		assertEquals("atype", container.getType());
 		assertTrue(container.getConnectorIds().contains("aconnector"));
 

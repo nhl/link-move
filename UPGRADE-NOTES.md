@@ -1,6 +1,22 @@
 _This document contains upgrade notes for LinkMove 3.x and newer. Older versions are documented in
 [UPGRADE-NOTES-1-2](./UPGRADE-NOTES-1-to-2.md)._
 
+## Upgrading to 3.0.M5
+
+### Extractor Schema v3 [#221](https://github.com/nhl/link-move/issues/221) A new v3 of the extractor 
+XML schema is published. It is identical for v2. The main reason for update is that we are no longer 
+hosting linkmove.io website. So the namespace and location of the schema were updated to reflect the 
+new web address at https://nhl.github.io/link-move/ . You can keep using v2 without any changes, but
+we'd recommend an upgrade to v3 wne practical to reduce confusion:
+
+```xml
+<config 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd https://nhl.github.io/link-move/xsd/extractor_config_3.xsd"
+    xmlns="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd">
+</config>
+```
+
 ## Upgrading to 3.0.M4
 
 ### Tracking Connectors by type [#222](https://github.com/nhl/link-move/issues/222)

@@ -3,32 +3,49 @@
 		xsi:schemaLocation="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd https://nhl.github.io/link-move/xsd/extractor_config_3.xsd"
 		xmlns="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd">
 
-	<type>jdbc</type>
-	<connectorId>derbysrc</connectorId>
+	<type>atype</type>
+	<connectorId>aconnector</connectorId>
+
 	<extractor>
+
+		<name>e1</name>
 		<attributes>
 			<attribute>
 				<type>java.lang.String</type>
-				<source>full_name</source>
-				<target>fullName</target>
-			</attribute>
-			<attribute>
-				<type>java.lang.String</type>
-				<source>sex</source>
-				<target>sex</target>
+				<source>a1</source>
+				<target>a_1</target>
 			</attribute>
 			<attribute>
 				<type>java.lang.Integer</type>
-				<source>id</source>
-				<target>db:id</target>
+				<source>a2</source>
+				<target>a_2</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>a2</source>
 			</attribute>
 		</attributes>
+
 		<properties>
-			<extractor.jdbc.sqltemplate>
-			<![CDATA[SELECT "full_name", "sex", "id" FROM "etl7"
-			]]>
-			</extractor.jdbc.sqltemplate>
-			<extractor.jdbc.sqltemplate.caps>lower</extractor.jdbc.sqltemplate.caps>
+			<a.b>AB1</a.b>
+			<x.y>XY1</x.y>
 		</properties>
 	</extractor>
+
+	<extractor>
+
+		<name>e2</name>
+		<type>atype2</type>
+		<connectorId>aconnector2</connectorId>
+
+		<properties>
+			<a.b>AB2</a.b>
+			<x.y>XY2</x.y>
+		</properties>
+	</extractor>
+
+	<extractor>
+		<!-- default name -->
+	</extractor>
+
 </config>

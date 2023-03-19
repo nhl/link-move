@@ -1,5 +1,6 @@
 ## Release 3.0.M5
 
+* #221 Extractor Schema v3 - new namespace and location
 * #223 Deprecate remaining "with" prefixes in the LmRuntimeBuilder
 * #224 Upgrade to Jackson 2.14.2
 
