@@ -3,6 +3,7 @@
 * #221 Extractor Schema v3 - new namespace and location
 * #223 Deprecate remaining "with" prefixes in the LmRuntimeBuilder
 * #224 Upgrade to Jackson 2.14.2
+* #225 Upgrade slf4j to 2.0.7
 
 ## Release 3.0.M4
 
