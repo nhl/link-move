@@ -74,7 +74,7 @@ Execution e = task.run();
 
 ## Extractor XML Format
 
-Extractor XML format is described by a formal schema: http://linkmove.io/xsd/extractor_config_2.xsd
+Extractor XML format is described by a formal schema: https://nhl.github.io/link-move/xsd/extractor_config_3.xsd
 
 An example using JDBC connector for the source data:
 
