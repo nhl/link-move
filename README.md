@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/nhl/link-move.svg?branch=master)](https://travis-ci.org/nhl/link-move)
+[![Build Status](https://github.com/nhl/link-move/workflows/build%20test%20deploy/badge.svg)](https://github.com/nhl/link-move/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nhl.link.move/link-move/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nhl.link.move/link-move/)
 
 ## LinkMove
