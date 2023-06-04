@@ -4,6 +4,7 @@
 * #223 Deprecate remaining "with" prefixes in the LmRuntimeBuilder
 * #224 Upgrade to Jackson 2.14.2
 * #225 Upgrade slf4j to 2.0.7
+* #226 Upgrade to Cayenne 4.2 GA
 
 ## Release 3.0.M4
 
