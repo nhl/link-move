@@ -7,6 +7,7 @@ import org.apache.cayenne.map.DbJoin;
 import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.AttributeProperty;
+import org.apache.cayenne.reflect.ClassDescriptor;
 import org.apache.cayenne.reflect.ToOneProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,16 @@ public class TargetPropertyWriterFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetPropertyWriterFactory.class);
 
     private final Class<?> type;
-    private final ObjEntity entity;
+    private final ClassDescriptor classDescriptor;
     private final Map<String, TargetPropertyWriter> writers = new ConcurrentHashMap<>();
 
-    public TargetPropertyWriterFactory(Class<?> type, ObjEntity entity) {
+    public TargetPropertyWriterFactory(ClassDescriptor classDescriptor) {
+        this(null, classDescriptor);
+    }
+
+    public TargetPropertyWriterFactory(Class<?> type, ClassDescriptor classDescriptor) {
         this.type = type;
-        this.entity = entity;
+        this.classDescriptor = classDescriptor;
     }
 
     private static String getSetterName(String propertyName) {
@@ -45,7 +50,7 @@ public class TargetPropertyWriterFactory {
     // TODO: this and other protected methods are called by another class - TargetPropertyWriterService... Refactor..
     protected void initPkWriter(DbAttribute pkAttribute) {
 
-        if (!entity.getDbEntity().equals(pkAttribute.getEntity())) {
+        if (!getEntity().getDbEntity().equals(pkAttribute.getEntity())) {
             throw new LmRuntimeException("Attribute belongs to different entity: " + pkAttribute.getName());
         }
 
@@ -58,7 +63,7 @@ public class TargetPropertyWriterFactory {
 
     protected void initWriter(AttributeProperty property) {
 
-        if (!entity.equals(property.getAttribute().getEntity())) {
+        if (!getEntity().equals(property.getAttribute().getEntity())) {
             throw new LmRuntimeException("Property belongs to a different entity: " + property.getName());
         }
 
@@ -71,7 +76,7 @@ public class TargetPropertyWriterFactory {
 
     protected void initWriter(ToOneProperty property) {
 
-        if (!entity.equals(property.getRelationship().getSourceEntity())) {
+        if (!getEntity().equals(property.getRelationship().getSourceEntity())) {
             throw new LmRuntimeException("Property belongs to a different entity: " + property.getName());
         }
 
@@ -98,8 +103,8 @@ public class TargetPropertyWriterFactory {
         );
     }
 
-    public TargetPropertyWriter getOrCreateWriter(String property) {
-        return getOrCreateWriter(property, property, () -> NULL_WRITER);
+    public TargetPropertyWriter getOrCreateWriter(String propertyName) {
+        return getOrCreateWriter(propertyName, propertyName, () -> NULL_WRITER);
     }
 
     public TargetPropertyWriter getOrCreateWriter(
@@ -113,7 +118,7 @@ public class TargetPropertyWriterFactory {
     private TargetPropertyWriter createWriter(String propertyName, Supplier<TargetPropertyWriter> defaultWriterSupplier) {
 
         // TODO: setter lookup does not check for the value type. E.g. a setter for to-one relationship will not
-        // work properly if the value is presented as an FK (e.g. an "int" or a "long").
+        //       work properly if the value is presented as an FK (e.g. an "int" or a "long").
         Method setter = getSetter(propertyName);
 
         if (setter != null) {
@@ -128,8 +133,14 @@ public class TargetPropertyWriterFactory {
         return Objects.requireNonNull(defaultWriterSupplier.get(), () -> "Null property writer for " + propertyName);
     }
 
-    private Method getSetter(String propertyName) {
+    protected ObjEntity getEntity() {
+        return classDescriptor.getEntity();
+    }
 
+    private Method getSetter(String propertyName) {
+        if (type == null) {
+            return null;
+        }
         Method setter = null;
         String setterName = getSetterName(propertyName);
         for (Method m : type.getDeclaredMethods()) {

@@ -63,7 +63,6 @@ public class TaskService implements ITaskService {
 
     @Override
     public CreateBuilder create(Class<?> type) {
-
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
         CreateTargetMerger merger = new CreateTargetMerger(writerService.getWriterFactory(type));
@@ -82,8 +81,26 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public CreateOrUpdateBuilder createOrUpdate(Class<?> type) {
+    public CreateBuilder create(String objEntityName) {
+        ObjEntity entity = lookupEntity(objEntityName);
+        TargetEntity targetEntity = targetEntityMap.get(entity);
+        CreateTargetMerger merger = new CreateTargetMerger(writerService.getWriterFactory(objEntityName));
+        FkResolver fkResolver = new FkResolver(targetEntity);
+        RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
 
+        return new DefaultCreateBuilder(
+                new CreateTargetMapper(objEntityName),
+                merger,
+                fkResolver,
+                rowConverter,
+                targetCayenneService,
+                extractorService,
+                tokenManager,
+                logger);
+    }
+
+    @Override
+    public CreateOrUpdateBuilder createOrUpdate(Class<?> type) {
         ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
@@ -103,46 +120,30 @@ public class TaskService implements ITaskService {
                 logger);
     }
 
-    protected ObjEntity lookupEntity(Class<?> type) {
-        ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
-        if (entity == null) {
-            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
-        }
-        return entity;
-    }
-
     @Override
-    public SourceKeysBuilder extractSourceKeys(Class<?> type) {
-        ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(type);
-        return new DefaultSourceKeysBuilder(
-                targetEntityMap.get(targetEntity),
+    public CreateOrUpdateBuilder createOrUpdate(String objEntityName) {
+        ObjEntity entity = lookupEntity(objEntityName);
+        TargetEntity targetEntity = targetEntityMap.get(entity);
+        MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
+        RowConverter rowConverter = new RowConverter(targetEntity, valueConverterFactory);
+        CreateOrUpdateTargetMerger merger = new CreateOrUpdateTargetMerger(writerService.getWriterFactory(objEntityName));
+        FkResolver fkResolver = new FkResolver(targetEntity);
+
+        return new DefaultCreateOrUpdateBuilder(
+                objEntityName,
+                merger,
+                fkResolver,
+                rowConverter,
+                targetCayenneService,
                 extractorService,
                 tokenManager,
-                keyAdapterFactory,
-                valueConverterFactory,
-                logger);
-    }
-
-    @Override
-    public SourceKeysBuilder extractSourceKeys(String targetEntityName) {
-        ObjEntity targetEntity = targetCayenneService.entityResolver().getObjEntity(targetEntityName);
-        return new DefaultSourceKeysBuilder(
-                targetEntityMap.get(targetEntity),
-                extractorService,
-                tokenManager,
-                keyAdapterFactory,
-                valueConverterFactory,
+                mapperBuilder,
                 logger);
     }
 
     @Override
     public DeleteBuilder delete(Class<?> type) {
-
-        ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
-        if (entity == null) {
-            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
-        }
-
+        ObjEntity entity = lookupEntity(type);
         TargetEntity targetEntity = targetEntityMap.get(entity);
         MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
 
@@ -156,14 +157,81 @@ public class TaskService implements ITaskService {
     }
 
     @Override
+    public DeleteBuilder delete(String objEntityName) {
+        ObjEntity entity = lookupEntity(objEntityName);
+        TargetEntity targetEntity = targetEntityMap.get(entity);
+        MapperBuilder mapperBuilder = new MapperBuilder(entity, targetEntity, keyAdapterFactory);
+
+        return new DefaultDeleteBuilder(
+                entity.getDbEntityName(),
+                targetCayenneService,
+                tokenManager,
+                this,
+                mapperBuilder,
+                logger);
+    }
+
+    @Override
     public DeleteAllBuilder deleteAll(Class<?> type) {
         ObjEntity entity = lookupEntity(type);
 
         return new DefaultDeleteAllBuilder(
-                type,
                 targetCayenneService,
                 tokenManager,
                 entity.getDbEntity(),
                 logger);
+    }
+
+    @Override
+    public DeleteAllBuilder deleteAll(String objEntityName) {
+        ObjEntity entity = lookupEntity(objEntityName);
+
+        return new DefaultDeleteAllBuilder(
+                targetCayenneService,
+                tokenManager,
+                entity.getDbEntity(),
+                logger);
+    }
+
+    @Override
+    public SourceKeysBuilder extractSourceKeys(Class<?> type) {
+        ObjEntity targetEntity = lookupEntity(type);
+
+        return new DefaultSourceKeysBuilder(
+                targetEntityMap.get(targetEntity),
+                extractorService,
+                tokenManager,
+                keyAdapterFactory,
+                valueConverterFactory,
+                logger);
+    }
+
+    @Override
+    public SourceKeysBuilder extractSourceKeys(String objEntityName) {
+        ObjEntity targetEntity = lookupEntity(objEntityName);
+
+        return new DefaultSourceKeysBuilder(
+                targetEntityMap.get(targetEntity),
+                extractorService,
+                tokenManager,
+                keyAdapterFactory,
+                valueConverterFactory,
+                logger);
+    }
+
+    protected ObjEntity lookupEntity(Class<?> type) {
+        ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(type);
+        if (entity == null) {
+            throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
+        }
+        return entity;
+    }
+
+    protected ObjEntity lookupEntity(String objEntityName) {
+        ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(objEntityName);
+        if (entity == null) {
+            throw new LmRuntimeException("ObjEntity " + objEntityName + " was not found in Cayenne");
+        }
+        return entity;
     }
 }
