@@ -31,9 +31,9 @@ public class CreateOrUpdateIT extends LmJsonIntegrationTest {
         Execution e1 = task.run();
         assertExec(3, 3, 0, 0, e1);
         etlt1().matcher().assertMatches(3);
-        etlt1().matcher().eq("id", 12).eq("num_int", 24).eq("string", "s").assertOneMatch();
-        etlt1().matcher().eq("id", 15).eq("num_int", 11).eq("string", "x").assertOneMatch();
-        etlt1().matcher().eq("id", -1).eq("num_int", 4).eq("string", "a").assertOneMatch();
+        etlt1().matcher().eq("id", 12).andEq("num_int", 24).andEq("string", "s").assertOneMatch();
+        etlt1().matcher().eq("id", 15).andEq("num_int", 11).andEq("string", "x").assertOneMatch();
+        etlt1().matcher().eq("id", -1).andEq("num_int", 4).andEq("string", "a").assertOneMatch();
     }
 
     @Test
@@ -52,8 +52,8 @@ public class CreateOrUpdateIT extends LmJsonIntegrationTest {
         Execution e1 = task.run();
         assertExec(3, 2, 1, 0, e1);
         etlt1().matcher().assertMatches(4);
-        etlt1().matcher().eq("id", 12).eq("num_int", 24).eq("string", "s").assertOneMatch();
-        etlt1().matcher().eq("id", 15).eq("num_int", 11).eq("string", "x").assertOneMatch();
-        etlt1().matcher().eq("id", -1).eq("num_int", 4).eq("string", "a").assertOneMatch();
+        etlt1().matcher().eq("id", 12).andEq("num_int", 24).andEq("string", "s").assertOneMatch();
+        etlt1().matcher().eq("id", 15).andEq("num_int", 11).andEq("string", "x").assertOneMatch();
+        etlt1().matcher().eq("id", -1).andEq("num_int", 4).andEq("string", "a").assertOneMatch();
     }
 }

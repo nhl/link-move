@@ -31,8 +31,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl6t().matcher().assertMatches(2);
-        etl6t().matcher().eq("name", "a").eq("id", 45).assertOneMatch();
-        etl6t().matcher().eq("name", "b").eq("id", 11).assertOneMatch();
+        etl6t().matcher().eq("name", "a").andEq("id", 45).assertOneMatch();
+        etl6t().matcher().eq("name", "b").andEq("id", 11).assertOneMatch();
 
         srcEtl6().insertColumns("id", "name").values(31, "c").exec();
         srcEtl6().update().set("name", "d").where("id", 45).exec();
@@ -40,15 +40,15 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(3, 1, 1, 0, e2);
         etl6t().matcher().assertMatches(3);
-        etl6t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
-        etl6t().matcher().eq("name", "c").eq("id", 31).assertOneMatch();
+        etl6t().matcher().eq("name", "d").andEq("id", 45).assertOneMatch();
+        etl6t().matcher().eq("name", "c").andEq("id", 31).assertOneMatch();
 
         srcEtl6().delete().where("id", 45).exec();
 
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
         etl6t().matcher().assertMatches(3);
-        etl6t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
+        etl6t().matcher().eq("name", "d").andEq("id", 45).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -94,8 +94,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
 
-        etl4t().matcher().eq("id", 1).eq("c_boolean", true).assertOneMatch();
-        etl4t().matcher().eq("id", 2).eq("c_boolean", false).assertOneMatch();
+        etl4t().matcher().eq("id", 1).andEq("c_boolean", true).assertOneMatch();
+        etl4t().matcher().eq("id", 2).andEq("c_boolean", false).assertOneMatch();
     }
 
     @Test
@@ -118,8 +118,8 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 0, 2, 0, e1);
 
-        etl4t().matcher().eq("id", 1).eq("c_enum", "str1").assertOneMatch();
-        etl4t().matcher().eq("id", 2).eq("c_enum", "str3").assertOneMatch();
+        etl4t().matcher().eq("id", 1).andEq("c_enum", "str1").assertOneMatch();
+        etl4t().matcher().eq("id", 2).andEq("c_enum", "str3").assertOneMatch();
     }
 
     @Test
@@ -178,7 +178,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         assertExec(1, 1, 0, 0, e1);
 
         etl4t().matcher()
-                .eq("id", 1).eq("c_date", "2020-01-02").eq("c_time", "08:01:03").eq("c_timestamp", "2020-03-04 09:01:04")
+                .eq("id", 1).eq("c_date", "2020-01-02").andEq("c_time", "08:01:03").andEq("c_timestamp", "2020-03-04 09:01:04")
                 .assertOneMatch();
     }
 }

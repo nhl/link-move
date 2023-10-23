@@ -25,7 +25,7 @@ public class CreateOrUpdateTargetMerger {
         int len = targets.size();
         BoolAccum changed = new BoolAccum(len);
 
-        BooleanSeries created = df.getColumnAsBool(CreateOrUpdateSegment.TARGET_CREATED_COLUMN);
+        BooleanSeries created = df.getColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN).castAsBool();
         created.forEach(changed::push);
 
         for (String label : ProcessorUtil.dataColumns(df)) {

@@ -1,3 +1,7 @@
+## Release 3.0.M6
+
+* #229 Upgrade to DFLib 0.18
+
 ## Release 3.0.M5
 
 * #221 Extractor Schema v3 - new namespace and location
