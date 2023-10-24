@@ -1,6 +1,7 @@
 ## Release 3.0.M6
 
 * #229 Upgrade to DFLib 0.18
+* #230 Upgrade Jackson to 2.14.3
 
 ## Release 3.0.M5
 
