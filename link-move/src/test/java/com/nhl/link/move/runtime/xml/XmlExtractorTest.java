@@ -6,8 +6,6 @@ import com.nhl.link.move.connect.StreamConnector;
 import com.nhl.link.move.log.LmExecutionLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
-import org.xml.sax.InputSource;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -16,7 +14,6 @@ import java.io.InputStream;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 public class XmlExtractorTest {
@@ -41,12 +38,7 @@ public class XmlExtractorTest {
 		when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
 
 		RowReader reader = xmlExtractor.getReader(exec);
-		verify(xPathExpressionMock).evaluate(argThat(new ArgumentMatcher<>() {
-			@Override
-			public boolean matches(Object argument) {
-				return ((InputSource) argument).getByteStream() == inputStreamMock;
-			}
-		}), eq(XPathConstants.NODESET));
+		verify(xPathExpressionMock).evaluate(argThat(a -> a.getByteStream() == inputStreamMock), eq(XPathConstants.NODESET));
 		assertNotNull(reader);
 	}
 }

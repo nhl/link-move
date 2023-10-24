@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,18 +39,22 @@ public class ExtractorReloaderTest {
 		IExtractorModelService mockModelService = mock(IExtractorModelService.class);
 		when(mockModelService.get(name)).thenReturn(mockModel);
 
+		Connector connector = mock(Connector.class);
+
 		IConnectorService connectorService = mock(IConnectorService.class);
+		when(connectorService.getConnector(any(Class.class), any(String.class))).thenReturn(connector);
 
 		this.mockExtractor1 = mock(Extractor.class);
 		this.mockExtractor2 = mock(Extractor.class);
 
 		@SuppressWarnings("unchecked")
-		IExtractorFactory<Connector> mockExtractorFactory = mock(IExtractorFactory.class);
-		when(mockExtractorFactory.createExtractor(any(Connector.class), any(ExtractorModel.class)))
+		IExtractorFactory<Connector> factory = mock(IExtractorFactory.class);
+		when(factory.getConnectorType()).thenReturn(Connector.class);
+		when(factory.createExtractor(any(Connector.class), any(ExtractorModel.class)))
 				.thenReturn(mockExtractor1, mockExtractor2);
 
 		Map<String, IExtractorFactory> mockFactories = new HashMap<>();
-		mockFactories.put(mockModel.getType(), mockExtractorFactory);
+		mockFactories.put(mockModel.getType(), factory);
 
 		this.reloader = new ExtractorReloader(mockModelService, connectorService, mockFactories, name);
 	}
