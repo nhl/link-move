@@ -1,3 +1,7 @@
+## Release 3.0.M7
+
+* #232 Attempt at semantic versioning
+
 ## Release 3.0.M6
 
 * #229 Upgrade to DFLib 0.18
