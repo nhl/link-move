@@ -1,7 +1,6 @@
 package com.nhl.link.move.runtime;
 
 import com.nhl.link.move.resource.ResourceResolver;
-import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.task.ITaskService;
 import org.apache.cayenne.CayenneDataObject;
 import org.apache.cayenne.DataChannel;
@@ -84,12 +83,19 @@ public class LmRuntimeBuilderTest {
     @Test
     public void testAdapter() {
 
-        LinkEtlAdapter adapter = mock(LinkEtlAdapter.class);
-        LmRuntimeBuilder builder = LmRuntime.builder().targetRuntime(cayenneRuntime).adapter(adapter);
+        LmAdapter a1 = mock(LmAdapter.class);
+        LmAdapter a2 = mock(LmAdapter.class);
 
-        verifyZeroInteractions(adapter);
+        LmRuntimeBuilder builder = LmRuntime.builder()
+                .targetRuntime(cayenneRuntime)
+                .adapter(a1)
+                .adapter(a2);
+
+        verifyZeroInteractions(a1);
+        verifyZeroInteractions(a2);
         builder.build();
-        verify(adapter).contributeToRuntime(any(Binder.class));
+        verify(a1).configure(any(Binder.class));
+        verify(a2).configure(any(Binder.class));
     }
 
 }

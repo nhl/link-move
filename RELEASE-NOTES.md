@@ -2,6 +2,7 @@
 
 * #229 Upgrade to DFLib 0.18
 * #230 Upgrade Jackson to 2.14.3
+* #231 Rename LinkEtlAdapter to LmAdapter
 
 ## Release 3.0.M5
 

@@ -1,14 +1,18 @@
 package com.nhl.link.move.runtime.adapter;
 
+import com.nhl.link.move.runtime.LmAdapter;
 import org.apache.cayenne.di.Binder;
 
 /**
- * @since 1.1
+ * @deprecated in favor of {@link LmAdapter}
  */
-public interface LinkEtlAdapter {
+@Deprecated(since = "3.0", forRemoval = true)
+public interface LinkEtlAdapter extends LmAdapter {
 
-	/**
-	 * Registers new and/or overrides existing DI services in the ETL runtime.
-	 */
-	void contributeToRuntime(Binder binder);
+    void contributeToRuntime(Binder binder);
+
+    @Override
+    default void configure(Binder binder) {
+        contributeToRuntime(binder);
+    }
 }

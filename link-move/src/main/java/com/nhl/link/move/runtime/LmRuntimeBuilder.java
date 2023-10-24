@@ -10,7 +10,6 @@ import com.nhl.link.move.resource.ClasspathResourceResolver;
 import com.nhl.link.move.resource.FolderResourceResolver;
 import com.nhl.link.move.resource.ResourceResolver;
 import com.nhl.link.move.resource.URLResourceResolver;
-import com.nhl.link.move.runtime.adapter.LinkEtlAdapter;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.cayenne.TargetCayenneService;
 import com.nhl.link.move.runtime.cayenne.TargetConnectorFactory;
@@ -94,7 +93,7 @@ public class LmRuntimeBuilder {
     @Deprecated(since = "3.0")
     private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
-    private final Collection<LinkEtlAdapter> adapters;
+    private final Collection<LmAdapter> adapters;
 
     /**
      * @deprecated use {@link LmRuntime#builder()}
@@ -134,7 +133,7 @@ public class LmRuntimeBuilder {
      *
      * @since 1.1
      */
-    public LmRuntimeBuilder adapter(LinkEtlAdapter adapter) {
+    public LmRuntimeBuilder adapter(LmAdapter adapter) {
         this.adapters.add(adapter);
         return this;
     }
@@ -395,7 +394,7 @@ public class LmRuntimeBuilder {
         }
 
         private void bindAdapters(Binder binder) {
-            adapters.forEach(a -> a.contributeToRuntime(binder));
+            adapters.forEach(a -> a.configure(binder));
         }
     }
 
