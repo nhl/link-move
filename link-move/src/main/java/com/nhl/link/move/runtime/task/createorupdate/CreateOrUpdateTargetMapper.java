@@ -5,18 +5,29 @@ import com.nhl.dflib.Hasher;
 import com.nhl.dflib.builder.BoolAccum;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.access.DataContext;
 
 /**
  * @since 2.6
  */
 public class CreateOrUpdateTargetMapper {
 
-    private Class<?> type;
-    private Mapper mapper;
+    private final Class<?> type;
+    private final String objEntityName;
+    private final Mapper mapper;
 
     public CreateOrUpdateTargetMapper(Class<?> type, Mapper mapper) {
+        this(type, null ,mapper);
+    }
+
+    public CreateOrUpdateTargetMapper(String objEntityName, Mapper mapper) {
+        this(null, objEntityName, mapper);
+    }
+
+    protected CreateOrUpdateTargetMapper(Class<?> type, String objEntityName, Mapper mapper) {
         this.mapper = mapper;
         this.type = type;
+        this.objEntityName = objEntityName;
     }
 
     public DataFrame map(
@@ -45,6 +56,9 @@ public class CreateOrUpdateTargetMapper {
         // Note that "context.newObject" is an impure function. Though we don't see its undesired side effects on
         // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
 
-        return v != null ? v : context.newObject(type);
+        if (v != null) {
+            return v;
+        }
+        return type != null ? context.newObject(type) : ((DataContext) context).newObject(objEntityName);
     }
 }

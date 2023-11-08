@@ -19,11 +19,21 @@ import java.util.Map;
 public class CreateOrUpdateTargetMatcher {
 
     private final Class<?> type;
+    private final String objEntityName;
     private final Mapper mapper;
     private final Index index;
 
     public CreateOrUpdateTargetMatcher(Class<?> type, Mapper mapper) {
+        this(type, null, mapper);
+    }
+
+    public CreateOrUpdateTargetMatcher(String objEntityName, Mapper mapper) {
+        this(null, objEntityName, mapper);
+    }
+
+    protected CreateOrUpdateTargetMatcher(Class<?> type, String objEntityName, Mapper mapper) {
         this.type = type;
+        this.objEntityName = objEntityName;
         this.mapper = mapper;
         this.index = Index.forLabels(CreateOrUpdateSegment.TARGET_COLUMN);
     }
@@ -38,7 +48,10 @@ public class CreateOrUpdateTargetMatcher {
         if (expressions.isEmpty()) {
             return DataFrame.empty(index);
         } else {
-            List<?> objects = ObjectSelect.query(type).where(ExpressionFactory.or(expressions.values())).select(context);
+            List<?> objects =
+                    (type != null ? ObjectSelect.query(type) : ObjectSelect.query(Object.class, objEntityName))
+                    .where(ExpressionFactory.or(expressions.values()))
+                    .select(context);
             return DataFrame.byColumn(index).of(Series.ofIterable(objects));
         }
     }

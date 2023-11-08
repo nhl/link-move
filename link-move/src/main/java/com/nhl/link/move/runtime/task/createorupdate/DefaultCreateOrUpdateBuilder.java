@@ -30,6 +30,7 @@ import java.lang.annotation.Annotation;
 public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateOrUpdateBuilder, CreateOrUpdateSegment, CreateOrUpdateStage> implements CreateOrUpdateBuilder {
 
     private final Class<?> type;
+    private final String objEntityName;
     private final CreateOrUpdateTargetMerger merger;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
@@ -51,10 +52,40 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
             ITokenManager tokenManager,
             MapperBuilder mapperBuilder,
             LmLogger logger) {
+        this(type, null, merger, fkResolver, rowConverter, targetCayenneService, extractorService,
+             tokenManager, mapperBuilder, logger);
+    }
+
+    public DefaultCreateOrUpdateBuilder(
+            String objEntityName,
+            CreateOrUpdateTargetMerger merger,
+            FkResolver fkResolver,
+            RowConverter rowConverter,
+            ITargetCayenneService targetCayenneService,
+            IExtractorService extractorService,
+            ITokenManager tokenManager,
+            MapperBuilder mapperBuilder,
+            LmLogger logger) {
+        this(null, objEntityName, merger, fkResolver, rowConverter, targetCayenneService, extractorService,
+             tokenManager, mapperBuilder, logger);
+    }
+
+    protected DefaultCreateOrUpdateBuilder(
+            Class<?> type,
+            String objEntityName,
+            CreateOrUpdateTargetMerger merger,
+            FkResolver fkResolver,
+            RowConverter rowConverter,
+            ITargetCayenneService targetCayenneService,
+            IExtractorService extractorService,
+            ITokenManager tokenManager,
+            MapperBuilder mapperBuilder,
+            LmLogger logger) {
 
         super(logger);
 
         this.type = type;
+        this.objEntityName = objEntityName;
         this.merger = merger;
         this.fkResolver = fkResolver;
         this.targetCayenneService = targetCayenneService;
@@ -141,14 +172,28 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
     }
 
     private CreateOrUpdateSegmentProcessor createProcessor() {
-
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
+        return type != null ? createProcessor(type, mapper) : createProcessor(objEntityName, mapper);
+    }
+
+    private CreateOrUpdateSegmentProcessor createProcessor(Class<?> type, Mapper mapper) {
         return new CreateOrUpdateSegmentProcessor(
                 rowConverter,
                 new SourceMapper(mapper),
                 new CreateOrUpdateTargetMatcher(type, mapper),
                 new CreateOrUpdateTargetMapper(type, mapper),
+                merger,
+                fkResolver,
+                getCallbackExecutor());
+    }
+
+    private CreateOrUpdateSegmentProcessor createProcessor(String objEntityName, Mapper mapper) {
+        return new CreateOrUpdateSegmentProcessor(
+                rowConverter,
+                new SourceMapper(mapper),
+                new CreateOrUpdateTargetMatcher(objEntityName, mapper),
+                new CreateOrUpdateTargetMapper(objEntityName, mapper),
                 merger,
                 fkResolver,
                 getCallbackExecutor());
