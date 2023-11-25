@@ -1,4 +1,4 @@
-## Release 3.0.M7
+## Release 3.0.0-M7
 
 * #232 Attempt at semantic versioning
 
