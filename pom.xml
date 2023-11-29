@@ -52,7 +52,7 @@
         <dflib.version>0.18</dflib.version>
         <junit5.version>5.9.1</junit5.version>
         <bootique.version>3.0.M1</bootique.version>
-        <logback.version>1.4.5</logback.version>
+        <logback.version>1.4.12</logback.version>
         <mockito.version>3.9.0</mockito.version>
     </properties>
 
