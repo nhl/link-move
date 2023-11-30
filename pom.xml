@@ -51,7 +51,7 @@
         <commons.csv.version>1.3</commons.csv.version>
         <dflib.version>0.18</dflib.version>
         <junit5.version>5.9.1</junit5.version>
-        <bootique.version>3.0.M1</bootique.version>
+        <bootique.version>3.0.M2</bootique.version>
         <logback.version>1.4.13</logback.version>
         <mockito.version>3.9.0</mockito.version>
     </properties>
