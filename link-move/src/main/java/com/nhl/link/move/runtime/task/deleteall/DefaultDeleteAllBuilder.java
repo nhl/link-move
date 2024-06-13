@@ -19,14 +19,12 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
 
     private final ITokenManager tokenManager;
     private final ITargetCayenneService targetCayenneService;
-    private final Class<?> type;
     private final DbEntity dbEntity;
 
     private Expression targetFilter;
     private boolean skipExecutionStats = false;
 
     public DefaultDeleteAllBuilder(
-            Class<?> type,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
             DbEntity dbEntity,
@@ -36,7 +34,6 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
 
         this.tokenManager = tokenManager;
         this.targetCayenneService = targetCayenneService;
-        this.type = type;
 
         this.dbEntity = dbEntity;
     }
@@ -60,8 +57,7 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
 
     @Override
     public DeleteAllTask task() throws IllegalStateException {
-        return new DeleteAllTask(type,
-                targetFilter,
+        return new DeleteAllTask(targetFilter,
                 targetCayenneService,
                 tokenManager,
                 dbEntity,

@@ -6,4 +6,5 @@ package com.nhl.link.move.writer;
 public interface ITargetPropertyWriterService {
 
     TargetPropertyWriterFactory getWriterFactory(Class<?> type);
+    TargetPropertyWriterFactory getWriterFactory(String objEntityName);
 }

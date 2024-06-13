@@ -53,14 +53,12 @@ public class DeleteAllTask extends BaseTask {
             SybaseAdapter.class
     );
 
-    private final Class<?> type;
     private final Expression targetFilter;
     private final DbEntity dbEntity;
     private final boolean skipExecutionStats;
     private final ITargetCayenneService targetCayenneService;
 
     public DeleteAllTask(
-            Class<?> type,
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
             ITokenManager tokenManager,
@@ -71,7 +69,6 @@ public class DeleteAllTask extends BaseTask {
         //"deleteAll" task doesn't use extractor and doesn't support batches
         super(null, 0, tokenManager, logger);
 
-        this.type = type;
         this.targetFilter = targetFilter;
         this.targetCayenneService = targetCayenneService;
         this.dbEntity = dbEntity;
@@ -105,7 +102,7 @@ public class DeleteAllTask extends BaseTask {
 
         exec.getLogger().targetFilterApplied(targetFilter);
 
-        StringBuilder queryBuilder = new StringBuilder("DELETE FROM " + type.getName() + " e WHERE ");
+        StringBuilder queryBuilder = new StringBuilder("DELETE FROM " + dbEntity.getName() + " e WHERE ");
 
         try {
             targetFilter.appendAsEJBQL(queryBuilder, "e");
@@ -141,7 +138,7 @@ public class DeleteAllTask extends BaseTask {
      */
     private Optional<Long> prefetchCountIfRequired(DbAdapter adapter, ObjectContext context) {
         if (!skipExecutionStats && TRUNCATE_AWARE_ADAPTERS.contains(adapter.getClass())) {
-            return Optional.of(ObjectSelect.query(type).count().select(context).get(0));
+            return Optional.of(ObjectSelect.dbQuery(dbEntity.getName()).count().select(context).get(0));
         } else {
             return Optional.empty();
         }
