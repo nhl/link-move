@@ -22,6 +22,7 @@ public class BooleanConverterTest {
     @Test
     public void testConvert_Short() {
         assertEquals(true, CONVERTER.convert((short) 1));
+        assertEquals(false, CONVERTER.convert((short) 0));
     }
 
     @Test
@@ -32,6 +33,7 @@ public class BooleanConverterTest {
     @Test
     public void testConvert_Long() {
         assertEquals(true, CONVERTER.convert((long) 1));
+        assertEquals(false, CONVERTER.convert((long) 0));
     }
 
     @Test
