@@ -13,7 +13,6 @@ import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
 import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.Persistent;
 import org.apache.cayenne.ResultIterator;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.query.ObjectSelect;
@@ -29,6 +28,7 @@ import java.util.Set;
 public class DeleteTask extends BaseTask {
 
     private final Class<?> type;
+    private final String dbEntityName;
     private final Expression targetFilter;
     private final LmTask sourceKeysSubtask;
     private final DeleteSegmentProcessor processor;
@@ -43,6 +43,33 @@ public class DeleteTask extends BaseTask {
             LmTask sourceKeysSubtask,
             DeleteSegmentProcessor processor,
             LmLogger logger) {
+        this(batchSize, type, null, targetFilter, targetCayenneService, tokenManager, sourceKeysSubtask,
+             processor, logger);
+    }
+
+    public DeleteTask(
+            int batchSize,
+            String dbEntityName,
+            Expression targetFilter,
+            ITargetCayenneService targetCayenneService,
+            ITokenManager tokenManager,
+            LmTask sourceKeysSubtask,
+            DeleteSegmentProcessor processor,
+            LmLogger logger) {
+        this(batchSize, null, dbEntityName, targetFilter, targetCayenneService, tokenManager, sourceKeysSubtask,
+             processor, logger);
+    }
+
+    protected DeleteTask(
+            int batchSize,
+            Class<?> type,
+            String dbEntityName,
+            Expression targetFilter,
+            ITargetCayenneService targetCayenneService,
+            ITokenManager tokenManager,
+            LmTask sourceKeysSubtask,
+            DeleteSegmentProcessor processor,
+            LmLogger logger) {
 
         // extractor is not used by the "delete" task, only by its key extraction subtask,
         // so set it to null
@@ -50,6 +77,7 @@ public class DeleteTask extends BaseTask {
         super(null, batchSize, tokenManager, logger);
 
         this.type = type;
+        this.dbEntityName = dbEntityName;
         this.targetFilter = targetFilter;
         this.targetCayenneService = targetCayenneService;
         this.sourceKeysSubtask = sourceKeysSubtask;
@@ -69,7 +97,7 @@ public class DeleteTask extends BaseTask {
 
             // do not preload the keys if there are no target objects
             Set<Object> keys = data.hasNextRow() ? loadKeys(exec) : Collections.emptySet();
-            BatchProcessor<? extends Persistent> batchProcessor = createBatchProcessor(exec, keys);
+            BatchProcessor<?> batchProcessor = createBatchProcessor(exec, keys);
             createBatchRunner(batchProcessor).run(data);
         }
     }
@@ -93,18 +121,18 @@ public class DeleteTask extends BaseTask {
     protected ResultIterator<?> createTargetSelect(Execution exec) {
         exec.getLogger().targetFilterApplied(targetFilter);
 
-        ObjectSelect<?> query = ObjectSelect.query(type).where(targetFilter);
+        ObjectSelect<?> query = (type != null ? ObjectSelect.query(type): ObjectSelect.dbQuery(dbEntityName))
+                .where(targetFilter);
         return targetCayenneService.newContext().iterator(query);
     }
 
-    protected BatchProcessor<? extends Persistent> createBatchProcessor(Execution exec, Set<Object> keys) {
-
+    protected BatchProcessor<?> createBatchProcessor(Execution exec, Set<Object> keys) {
+        ObjectContext context = targetCayenneService.newContext();
         Index columns = Index.forLabels(DeleteSegment.TARGET_COLUMN);
 
         return rows -> {
 
             // executing in the select context
-            ObjectContext context = rows.get(0).getObjectContext();
             DeleteSegment segment = new DeleteSegment(context)
                     .setTargets(DataFrame.byColumn(columns).of(Series.ofIterable(rows)))
                     .setSourceKeys(keys);

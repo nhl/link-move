@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 public class TargetPropertyWriterService implements ITargetPropertyWriterService {
 
     private final ITargetCayenneService targetCayenneService;
-    private final ConcurrentMap<Class<?>, TargetPropertyWriterFactory> writerFactories;
+    private final ConcurrentMap<Object, TargetPropertyWriterFactory> writerFactories;
 
     public TargetPropertyWriterService(@Inject ITargetCayenneService targetCayenneService) {
         this.targetCayenneService = targetCayenneService;
@@ -28,7 +28,12 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
 
     @Override
     public TargetPropertyWriterFactory getWriterFactory(Class<?> type) {
-        return writerFactories.computeIfAbsent(type, this::createWriterFactory);
+        return writerFactories.computeIfAbsent(type, t -> createWriterFactory(((Class<?>) t)));
+    }
+
+    @Override
+    public TargetPropertyWriterFactory getWriterFactory(String objEntityName) {
+        return writerFactories.computeIfAbsent(objEntityName, name -> createWriterFactory(((String) name)));
     }
 
     private <T> TargetPropertyWriterFactory createWriterFactory(Class<T> type) {
@@ -38,12 +43,31 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
             throw new LmRuntimeException("Java class " + type.getName() + " is not mapped in Cayenne");
         }
 
-        TargetPropertyWriterFactory writerFactory = new TargetPropertyWriterFactory(type, entity);
         ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
+        TargetPropertyWriterFactory writerFactory = new TargetPropertyWriterFactory(type, descriptor);
+        prepareWriterFactory(entity, descriptor, writerFactory);
 
+        return writerFactory;
+    }
+
+    private TargetPropertyWriterFactory createWriterFactory(String objEntityName) {
+
+        ObjEntity entity = targetCayenneService.entityResolver().getObjEntity(objEntityName);
+        if (entity == null) {
+            throw new LmRuntimeException("ObjEntity " + objEntityName + " was not found in Cayenne");
+        }
+
+        ClassDescriptor descriptor = targetCayenneService.entityResolver().getClassDescriptor(entity.getName());
+        TargetPropertyWriterFactory writerFactory = new TargetPropertyWriterFactory(descriptor);
+        prepareWriterFactory(entity, descriptor, writerFactory);
+
+        return writerFactory;
+    }
+
+    private static void prepareWriterFactory(ObjEntity entity, ClassDescriptor descriptor,
+                                             TargetPropertyWriterFactory writerFactory) {
         // precompile all possible obj: and db: invariants
         // TODO: should we normalize the source map instead of doing this?
-
         descriptor.visitProperties(new PropertyVisitor() {
 
             @Override
@@ -68,7 +92,5 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
         });
 
         entity.getDbEntity().getPrimaryKeys().forEach(writerFactory::initPkWriter);
-
-        return writerFactory;
     }
 }

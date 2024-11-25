@@ -29,6 +29,7 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
     private final ITokenManager tokenManager;
     private final ITargetCayenneService targetCayenneService;
     private final Class<?> type;
+    private final String dbEntityName;
     private final MapperBuilder mapperBuilder;
 
     private Expression targetFilter;
@@ -42,6 +43,27 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
             ITaskService taskService,
             MapperBuilder mapperBuilder,
             LmLogger logger) {
+        this(type, null, targetCayenneService, tokenManager, taskService, mapperBuilder, logger);
+    }
+
+    public DefaultDeleteBuilder(
+            String dbEntityName,
+            ITargetCayenneService targetCayenneService,
+            ITokenManager tokenManager,
+            ITaskService taskService,
+            MapperBuilder mapperBuilder,
+            LmLogger logger) {
+        this(null, dbEntityName, targetCayenneService, tokenManager, taskService, mapperBuilder, logger);
+    }
+
+    protected DefaultDeleteBuilder(
+            Class<?> type,
+            String dbEntityName,
+            ITargetCayenneService targetCayenneService,
+            ITokenManager tokenManager,
+            ITaskService taskService,
+            MapperBuilder mapperBuilder,
+            LmLogger logger) {
 
         super(logger);
 
@@ -49,6 +71,7 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
         this.taskService = taskService;
         this.targetCayenneService = targetCayenneService;
         this.type = type;
+        this.dbEntityName = dbEntityName;
         this.mapperBuilder = mapperBuilder;
 
         setupStatsCallbacks();
@@ -111,12 +134,27 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
 
     @Override
     public DeleteTask task() throws IllegalStateException {
-
         Mapper mapper = this.mapper != null ? this.mapper : mapperBuilder.build();
 
+        return type != null ? createTask(type, mapper) : createTask(dbEntityName, mapper);
+    }
+
+    protected DeleteTask createTask(Class<?> type, Mapper mapper) throws IllegalStateException {
         return new DeleteTask(
                 batchSize,
                 type,
+                targetFilter,
+                targetCayenneService,
+                tokenManager,
+                createSourceKeysSubtask(mapper),
+                createProcessor(mapper),
+                logger);
+    }
+
+    protected DeleteTask createTask(String dbEntityName, Mapper mapper) throws IllegalStateException {
+        return new DeleteTask(
+                batchSize,
+                dbEntityName,
                 targetFilter,
                 targetCayenneService,
                 tokenManager,
