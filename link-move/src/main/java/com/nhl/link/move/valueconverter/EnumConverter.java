@@ -7,7 +7,7 @@ import com.nhl.link.move.LmRuntimeException;
  */
 public class EnumConverter<T extends Enum<T>> extends SingleTypeConverter<T> {
 
-    private Class<T> enumType;
+    private final Class<T> enumType;
 
     public EnumConverter(Class<T> enumType) {
         this.enumType = enumType;

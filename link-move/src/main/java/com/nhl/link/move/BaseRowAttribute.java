@@ -6,10 +6,10 @@ package com.nhl.link.move;
  */
 public class BaseRowAttribute implements RowAttribute {
 
-    private Class<?> type;
-    private String sourceName;
-    private String targetPath;
-    private int ordinal;
+    private final Class<?> type;
+    private final String sourceName;
+    private final String targetPath;
+    private final int ordinal;
 
     public BaseRowAttribute(Class<?> type, String sourceName, String targetName, int ordinal) {
         this.type = type;
@@ -50,9 +50,6 @@ public class BaseRowAttribute implements RowAttribute {
 
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("{sourceName:").append(sourceName).append(",targetName:").append(targetPath).append(",ordinal:")
-                .append(ordinal).append("}");
-        return buffer.toString();
+        return "{sourceName:" + sourceName + ",targetName:" + targetPath + ",ordinal:" + ordinal + "}";
     }
 }

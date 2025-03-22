@@ -1,11 +1,10 @@
 package com.nhl.link.move;
 
 import com.nhl.link.move.extractor.model.ExtractorName;
-import com.nhl.link.move.log.LoggableJson;
 import com.nhl.link.move.log.LmExecutionLogger;
 import com.nhl.link.move.log.LmLogger;
+import com.nhl.link.move.log.LoggableJson;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;

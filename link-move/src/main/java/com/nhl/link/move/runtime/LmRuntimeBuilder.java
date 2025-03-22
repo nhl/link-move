@@ -220,7 +220,7 @@ public class LmRuntimeBuilder {
 
         Objects.requireNonNull(rootDir);
         if (!rootDir.isDirectory()) {
-            LOGGER.warn("Extractor models root is not a valid directory: " + rootDir);
+            LOGGER.warn("Extractor models root is not a valid directory: {}", rootDir);
         }
 
         this.extractorResolverFactory = () -> new FolderResourceResolver(rootDir);

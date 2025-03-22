@@ -27,11 +27,11 @@ public class IntegerConverter extends SingleTypeConverter<Integer> {
                 return Integer.valueOf(value.toString());
 
             case "java.lang.Long":
-                Long longValue = (Long) value;
+                long longValue = (Long) value;
                 if (longValue < Integer.MIN_VALUE || longValue > Integer.MAX_VALUE) {
                     throw new LmRuntimeException("Value is too large for java.lang.Integer: " + longValue);
                 }
-                return longValue.intValue(); // safely truncate the value
+                return (int) longValue; // safely truncate the value
 
             case "java.math.BigInteger":
                 BigInteger bigInteger = (BigInteger) value;

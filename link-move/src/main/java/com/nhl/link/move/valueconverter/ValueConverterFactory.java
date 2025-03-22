@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class ValueConverterFactory {
 
-    private Map<String, ValueConverter> converters;
-    private ValueConverter noConverter;
+    private final Map<String, ValueConverter> converters;
+    private final ValueConverter noConverter;
 
     public ValueConverterFactory(@Inject Map<String, ValueConverter> converters) {
         this.converters = converters;

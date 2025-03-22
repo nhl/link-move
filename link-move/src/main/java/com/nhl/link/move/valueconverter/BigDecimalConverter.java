@@ -35,11 +35,11 @@ public class BigDecimalConverter extends SingleTypeConverter<BigDecimal> {
             case "java.lang.Short":
             case "java.lang.Integer":
             case "java.lang.Long":
-                return BigDecimal.valueOf(Long.valueOf(value.toString()));
+                return BigDecimal.valueOf(Long.parseLong(value.toString()));
 
             case "java.lang.Float":
             case "java.lang.Double":
-                return BigDecimal.valueOf(Double.valueOf(value.toString()));
+                return BigDecimal.valueOf(Double.parseDouble(value.toString()));
 
             case "java.math.BigInteger":
                 BigInteger bi = (BigInteger) value;

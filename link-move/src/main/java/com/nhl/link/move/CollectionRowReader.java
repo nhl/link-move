@@ -9,27 +9,27 @@ import java.util.Iterator;
  */
 public class CollectionRowReader implements RowReader {
 
-	private RowAttribute[] rowHeader;
-	private Collection<Object[]> rows;
+    private final RowAttribute[] rowHeader;
+    private final Collection<Object[]> rows;
 
-	public CollectionRowReader(RowAttribute[] rowHeader, Collection<Object[]> rows) {
-		this.rowHeader = rowHeader;
-		this.rows = rows;
-	}
+    public CollectionRowReader(RowAttribute[] rowHeader, Collection<Object[]> rows) {
+        this.rowHeader = rowHeader;
+        this.rows = rows;
+    }
 
-	@Override
-	public void close() {
-		// do nothing - the are no connections to handle..
-	}
+    @Override
+    public void close() {
+        // do nothing - there are no connections to handle
+    }
 
-	@Override
-	public RowAttribute[] getHeader() {
-		return rowHeader;
-	}
+    @Override
+    public RowAttribute[] getHeader() {
+        return rowHeader;
+    }
 
-	@Override
-	public Iterator<Object[]> iterator() {
-		return rows.iterator();
-	}
+    @Override
+    public Iterator<Object[]> iterator() {
+        return rows.iterator();
+    }
 
 }

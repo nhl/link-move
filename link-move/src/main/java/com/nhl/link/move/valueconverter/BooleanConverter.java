@@ -23,7 +23,7 @@ public class BooleanConverter extends SingleTypeConverter<Boolean> {
             case "java.lang.Short":
             case "java.lang.Integer":
             case "java.lang.Long":
-                Long number = Long.valueOf(value.toString());
+                long number = Long.parseLong(value.toString());
                 if (number == 0) {
                     return Boolean.FALSE;
                 } else if (number == 1) {
