@@ -11,6 +11,7 @@ import java.lang.annotation.Annotation;
 /**
  * @since 3.0.0
  */
+@Deprecated(since = "3.0.0", forRemoval = true)
 public enum DeleteStage implements TaskStageType {
     EXTRACT_TARGET(AfterTargetsExtracted.class),
     MAP_TARGET(AfterTargetsMapped.class),
