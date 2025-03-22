@@ -6,7 +6,6 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.QueryResponse;
 import org.apache.cayenne.dba.DbAdapter;
@@ -63,13 +62,12 @@ public class DeleteAllTask extends BaseTask {
             Class<?> type,
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
-            ITokenManager tokenManager,
             DbEntity dbEntity,
             boolean skipExecutionStats,
             LmLogger logger) {
 
         //"deleteAll" task doesn't use extractor and doesn't support batches
-        super(null, 0, tokenManager, logger);
+        super(null, 0, logger);
 
         this.type = type;
         this.targetFilter = targetFilter;

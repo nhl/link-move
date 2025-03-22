@@ -35,25 +35,4 @@ public interface LmTask {
      * @since 3.0.0
      */
     Execution run(Map<String, ?> params, Execution parentExec);
-
-    /**
-     * @deprecated as we are no longer planning to support {@link SyncToken}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    default Execution run(SyncToken token) {
-        return run(token, Collections.emptyMap());
-    }
-
-    /**
-     * Executes the task with a map of parameters returning {@link Execution}
-     * object that can be used by the caller to analyze the results. Currently
-     * all task implementations are synchronous, so this method returns only on
-     * task completion.
-     *
-     * @since 1.3
-     * @deprecated as we are no longer planning to support {@link SyncToken}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    Execution run(SyncToken token, Map<String, ?> params);
-
 }

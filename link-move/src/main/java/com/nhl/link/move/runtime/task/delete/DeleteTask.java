@@ -1,8 +1,5 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import org.dflib.DataFrame;
-import org.dflib.Index;
-import org.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
@@ -11,12 +8,14 @@ import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysTask;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.Persistent;
 import org.apache.cayenne.ResultIterator;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.query.ObjectSelect;
+import org.dflib.DataFrame;
+import org.dflib.Index;
+import org.dflib.Series;
 
 import java.util.Collections;
 import java.util.Set;
@@ -39,7 +38,6 @@ public class DeleteTask extends BaseTask {
             Class<?> type,
             Expression targetFilter,
             ITargetCayenneService targetCayenneService,
-            ITokenManager tokenManager,
             LmTask sourceKeysSubtask,
             DeleteSegmentProcessor processor,
             LmLogger logger) {
@@ -47,7 +45,7 @@ public class DeleteTask extends BaseTask {
         // extractor is not used by the "delete" task, only by its key extraction subtask,
         // so set it to null
 
-        super(null, batchSize, tokenManager, logger);
+        super(null, batchSize, logger);
 
         this.type = type;
         this.targetFilter = targetFilter;

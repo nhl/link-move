@@ -16,7 +16,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import com.nhl.link.move.runtime.token.ITokenManager;
 
 import java.lang.annotation.Annotation;
 
@@ -28,7 +27,6 @@ public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder, 
     private final CreateTargetMapper mapper;
     private final CreateTargetMerger merger;
     private final FkResolver fkResolver;
-    private final ITokenManager tokenManager;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
     private final RowConverter rowConverter;
@@ -42,14 +40,12 @@ public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder, 
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
-            ITokenManager tokenManager,
             LmLogger logger) {
 
         super(logger);
         this.mapper = mapper;
         this.merger = merger;
         this.fkResolver = fkResolver;
-        this.tokenManager = tokenManager;
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
         this.rowConverter = rowConverter;
@@ -91,7 +87,6 @@ public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder, 
                 batchSize,
                 targetCayenneService,
                 extractorService,
-                tokenManager,
                 createProcessor(),
                 logger);
     }

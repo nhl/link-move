@@ -6,7 +6,6 @@ import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.key.IKeyAdapterFactory;
 import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
@@ -36,7 +35,6 @@ public class TaskServiceTest {
 		when(cayenneService.entityResolver()).thenReturn(resolver);
 
 		IExtractorService extractorService = mock(IExtractorService.class);
-		ITokenManager tokenManager = mock(ITokenManager.class);
 		IKeyAdapterFactory keyAdapterFactory = mock(IKeyAdapterFactory.class);
 
 		TargetEntityMap mockPathNormalizer = mock(TargetEntityMap.class);
@@ -45,7 +43,6 @@ public class TaskServiceTest {
 		taskService = new TaskService(
 				extractorService,
 				cayenneService,
-				tokenManager,
 				keyAdapterFactory,
 				mockPathNormalizer,
 				writerService,

@@ -13,7 +13,6 @@ import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 
 import java.lang.annotation.Annotation;
@@ -24,7 +23,6 @@ import java.lang.annotation.Annotation;
 public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysBuilder, SourceKeysSegment, SourceKeysStage> implements SourceKeysBuilder {
 
     private final IExtractorService extractorService;
-    private final ITokenManager tokenManager;
     private final SourceMapperBuilder mapperBuilder;
 
     private final TargetEntity targetEntity;
@@ -35,7 +33,6 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysB
     public DefaultSourceKeysBuilder(
             TargetEntity targetEntity,
             IExtractorService extractorService,
-            ITokenManager tokenManager,
             IKeyAdapterFactory keyAdapterFactory,
             ValueConverterFactory valueConverterFactory,
             LmLogger logger) {
@@ -43,7 +40,6 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysB
         super(logger);
 
         this.extractorService = extractorService;
-        this.tokenManager = tokenManager;
         this.mapperBuilder = new SourceMapperBuilder(targetEntity, keyAdapterFactory);
         this.targetEntity = targetEntity;
         this.valueConverterFactory = valueConverterFactory;
@@ -69,7 +65,7 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysB
             throw new IllegalStateException("Required 'extractorName' is not set");
         }
 
-        return new SourceKeysTask(sourceExtractorName, batchSize, extractorService, tokenManager, createProcessor(), logger);
+        return new SourceKeysTask(sourceExtractorName, batchSize, extractorService, createProcessor(), logger);
     }
 
     private SourceKeysSegmentProcessor createProcessor() {

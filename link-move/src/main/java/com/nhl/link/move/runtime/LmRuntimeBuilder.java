@@ -1,6 +1,5 @@
 package com.nhl.link.move.runtime;
 
-import com.nhl.link.move.SyncToken;
 import com.nhl.link.move.connect.Connector;
 import com.nhl.link.move.extractor.parser.ExtractorModelParser;
 import com.nhl.link.move.extractor.parser.IExtractorModelParser;
@@ -29,8 +28,6 @@ import com.nhl.link.move.runtime.targetmodel.DefaultTargetEntityMap;
 import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.TaskService;
-import com.nhl.link.move.runtime.token.ITokenManager;
-import com.nhl.link.move.runtime.token.InMemoryTokenManager;
 import com.nhl.link.move.valueconverter.BigDecimalConverter;
 import com.nhl.link.move.valueconverter.BooleanConverter;
 import com.nhl.link.move.valueconverter.IntegerConverter;
@@ -90,8 +87,6 @@ public class LmRuntimeBuilder {
     private final Map<String, ValueConverter> valueConverters;
     private Supplier<ResourceResolver> extractorResolverFactory;
 
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
     private final Collection<LmAdapter> adapters;
 
@@ -153,15 +148,6 @@ public class LmRuntimeBuilder {
      */
     public LmRuntimeBuilder targetRuntime(ServerRuntime targetRuntime) {
         this.targetRuntime = targetRuntime;
-        return this;
-    }
-
-    /**
-     * @deprecated as we are no longer planning to support {@link SyncToken}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public LmRuntimeBuilder withTokenManager(ITokenManager tokenManager) {
-        this.tokenManager = tokenManager;
         return this;
     }
 
@@ -318,10 +304,6 @@ public class LmRuntimeBuilder {
             throw new IllegalStateException("Required Cayenne 'targetRuntime' is not set");
         }
 
-        if (tokenManager == null) {
-            tokenManager = new InMemoryTokenManager();
-        }
-
         Injector injector = DIBootstrap.createInjector(new LmRuntimeModule());
         return new DefaultLmRuntime(injector);
     }
@@ -342,7 +324,6 @@ public class LmRuntimeBuilder {
             binder.bind(IExtractorService.class).to(ExtractorService.class);
             binder.bind(IConnectorService.class).toProvider(ConnectorServiceProvider.class);
             binder.bind(ITaskService.class).to(TaskService.class);
-            binder.bind(ITokenManager.class).toInstance(tokenManager);
             binder.bind(IKeyAdapterFactory.class).to(KeyAdapterFactory.class);
             binder.bind(TargetEntityMap.class).to(DefaultTargetEntityMap.class);
             binder.bind(ITargetPropertyWriterService.class).to(TargetPropertyWriterService.class);

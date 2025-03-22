@@ -14,7 +14,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
 
@@ -26,7 +25,6 @@ import java.lang.annotation.Annotation;
 public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, DeleteSegment, DeleteStage> implements DeleteBuilder {
 
     private final ITaskService taskService;
-    private final ITokenManager tokenManager;
     private final ITargetCayenneService targetCayenneService;
     private final Class<?> type;
     private final MapperBuilder mapperBuilder;
@@ -38,14 +36,12 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
     public DefaultDeleteBuilder(
             Class<?> type,
             ITargetCayenneService targetCayenneService,
-            ITokenManager tokenManager,
             ITaskService taskService,
             MapperBuilder mapperBuilder,
             LmLogger logger) {
 
         super(logger);
 
-        this.tokenManager = tokenManager;
         this.taskService = taskService;
         this.targetCayenneService = targetCayenneService;
         this.type = type;
@@ -119,7 +115,6 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
                 type,
                 targetFilter,
                 targetCayenneService,
-                tokenManager,
                 createSourceKeysSubtask(mapper),
                 createProcessor(mapper),
                 logger);

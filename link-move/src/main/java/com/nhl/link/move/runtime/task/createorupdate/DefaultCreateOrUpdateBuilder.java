@@ -19,7 +19,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.exp.property.Property;
 
 import java.lang.annotation.Annotation;
@@ -33,7 +32,6 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
     private final CreateOrUpdateTargetMerger merger;
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
-    private final ITokenManager tokenManager;
     private final RowConverter rowConverter;
     private final MapperBuilder mapperBuilder;
     private final FkResolver fkResolver;
@@ -48,7 +46,6 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
             RowConverter rowConverter,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
-            ITokenManager tokenManager,
             MapperBuilder mapperBuilder,
             LmLogger logger) {
 
@@ -59,7 +56,6 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
         this.fkResolver = fkResolver;
         this.targetCayenneService = targetCayenneService;
         this.extractorService = extractorService;
-        this.tokenManager = tokenManager;
         this.rowConverter = rowConverter;
         this.mapperBuilder = mapperBuilder;
 
@@ -135,7 +131,6 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
                 batchSize,
                 targetCayenneService,
                 extractorService,
-                tokenManager,
                 createProcessor(),
                 logger);
     }

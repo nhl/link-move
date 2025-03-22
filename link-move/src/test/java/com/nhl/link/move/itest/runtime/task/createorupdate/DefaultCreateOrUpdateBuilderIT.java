@@ -8,7 +8,6 @@ import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateTargetMerger;
 import com.nhl.link.move.runtime.task.createorupdate.DefaultCreateOrUpdateBuilder;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.DerbySrcTargetTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,6 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
                 mock(RowConverter.class),
                 new TargetCayenneService(targetCayenne.getRuntime()),
                 mock(IExtractorService.class),
-                mock(ITokenManager.class),
                 mock(MapperBuilder.class),
                 mock(LmLogger.class));
     }

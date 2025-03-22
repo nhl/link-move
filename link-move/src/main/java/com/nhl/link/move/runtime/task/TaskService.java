@@ -2,9 +2,9 @@ package com.nhl.link.move.runtime.task;
 
 import com.nhl.link.move.CreateBuilder;
 import com.nhl.link.move.CreateOrUpdateBuilder;
+import com.nhl.link.move.DeleteAllBuilder;
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmRuntimeException;
-import com.nhl.link.move.DeleteAllBuilder;
 import com.nhl.link.move.SourceKeysBuilder;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -22,7 +22,6 @@ import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.runtime.task.delete.DefaultDeleteBuilder;
 import com.nhl.link.move.runtime.task.deleteall.DefaultDeleteAllBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import org.apache.cayenne.di.Inject;
@@ -33,7 +32,6 @@ public class TaskService implements ITaskService {
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
 
-    private final ITokenManager tokenManager;
     private final IKeyAdapterFactory keyAdapterFactory;
     private final TargetEntityMap targetEntityMap;
     private final ITargetPropertyWriterService writerService;
@@ -43,7 +41,6 @@ public class TaskService implements ITaskService {
     public TaskService(
             @Inject IExtractorService extractorService,
             @Inject ITargetCayenneService targetCayenneService,
-            @Inject ITokenManager tokenManager,
             @Inject IKeyAdapterFactory keyAdapterFactory,
             @Inject TargetEntityMap targetEntityMap,
             @Inject ITargetPropertyWriterService writerService,
@@ -52,7 +49,6 @@ public class TaskService implements ITaskService {
 
         this.extractorService = extractorService;
         this.targetCayenneService = targetCayenneService;
-        this.tokenManager = tokenManager;
         this.keyAdapterFactory = keyAdapterFactory;
         this.targetEntityMap = targetEntityMap;
         this.writerService = writerService;
@@ -76,7 +72,6 @@ public class TaskService implements ITaskService {
                 rowConverter,
                 targetCayenneService,
                 extractorService,
-                tokenManager,
                 logger);
     }
 
@@ -97,7 +92,6 @@ public class TaskService implements ITaskService {
                 rowConverter,
                 targetCayenneService,
                 extractorService,
-                tokenManager,
                 mapperBuilder,
                 logger);
     }
@@ -116,7 +110,6 @@ public class TaskService implements ITaskService {
         return new DefaultSourceKeysBuilder(
                 targetEntityMap.get(targetEntity),
                 extractorService,
-                tokenManager,
                 keyAdapterFactory,
                 valueConverterFactory,
                 logger);
@@ -128,7 +121,6 @@ public class TaskService implements ITaskService {
         return new DefaultSourceKeysBuilder(
                 targetEntityMap.get(targetEntity),
                 extractorService,
-                tokenManager,
                 keyAdapterFactory,
                 valueConverterFactory,
                 logger);
@@ -148,7 +140,6 @@ public class TaskService implements ITaskService {
         return new DefaultDeleteBuilder(
                 type,
                 targetCayenneService,
-                tokenManager,
                 this,
                 mapperBuilder,
                 logger);
@@ -161,7 +152,6 @@ public class TaskService implements ITaskService {
         return new DefaultDeleteAllBuilder(
                 type,
                 targetCayenneService,
-                tokenManager,
                 entity.getDbEntity(),
                 logger);
     }

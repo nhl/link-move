@@ -9,7 +9,6 @@ import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import org.apache.cayenne.ObjectContext;
 
 /**
@@ -29,11 +28,10 @@ public class CreateOrUpdateTask extends BaseTask {
             int batchSize,
             ITargetCayenneService targetCayenneService,
             IExtractorService extractorService,
-            ITokenManager tokenManager,
             CreateOrUpdateSegmentProcessor processor,
             LmLogger logger) {
 
-        super(extractorName, batchSize, tokenManager, logger);
+        super(extractorName, batchSize, logger);
 
         this.targetCayenneService = targetCayenneService;
         this.extractorService = extractorService;

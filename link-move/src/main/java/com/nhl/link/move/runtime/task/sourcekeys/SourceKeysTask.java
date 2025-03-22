@@ -9,7 +9,6 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.extractor.IExtractorService;
 import com.nhl.link.move.runtime.task.BaseTask;
-import com.nhl.link.move.runtime.token.ITokenManager;
 
 import java.util.HashSet;
 
@@ -30,11 +29,10 @@ public class SourceKeysTask extends BaseTask {
             ExtractorName sourceExtractorName,
             int batchSize,
             IExtractorService extractorService,
-            ITokenManager tokenManager,
             SourceKeysSegmentProcessor processor,
             LmLogger logger) {
 
-        super(sourceExtractorName, batchSize, tokenManager, logger);
+        super(sourceExtractorName, batchSize, logger);
 
         this.extractorService = extractorService;
         this.processor = processor;

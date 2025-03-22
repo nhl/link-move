@@ -9,7 +9,6 @@ import com.nhl.link.move.runtime.targetmodel.TargetEntityMap;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.sourcekeys.DefaultSourceKeysBuilder;
-import com.nhl.link.move.runtime.token.ITokenManager;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import org.apache.cayenne.map.DataMap;
@@ -71,7 +70,6 @@ public class DefaultDeleteBuilderTest {
 						new DefaultSourceKeysBuilder(
                                 mockTargetEntity,
 								mock(IExtractorService.class),
-								mock(ITokenManager.class),
 								keyAdapterFactory,
                                 mock(ValueConverterFactory.class),
 								mock(LmLogger.class)));
@@ -80,7 +78,6 @@ public class DefaultDeleteBuilderTest {
 
 		this.builder = new DefaultDeleteBuilder(Etl1t.class,
 				cayenneService,
-				mock(ITokenManager.class),
 				taskService,
                 mapperBuilder,
 				mock(LmLogger.class));
