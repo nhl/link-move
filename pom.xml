@@ -43,7 +43,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>11</maven.compiler.release>
 
-        <!-- Custom properties (mostly framework versions) -->
+        <!-- Framework versions -->
         <slf4j.version>2.0.7</slf4j.version>
         <cayenne.version>4.2</cayenne.version>
         <jackson.version>2.14.3</jackson.version>
@@ -54,6 +54,17 @@
         <bootique.version>3.0-M6</bootique.version>
         <logback.version>1.4.13</logback.version>
         <mockito.version>3.9.0</mockito.version>
+
+        <!-- Plugin Versions -->
+        <compiler.plugin.version>3.14.0</compiler.plugin.version>
+        <javadoc.plugin.version>3.11.2</javadoc.plugin.version>
+        <deploy.plugin.version>3.1.4</deploy.plugin.version>
+        <source.plugin.version>3.3.1</source.plugin.version>
+        <release.plugin.version>3.1.1</release.plugin.version>
+        <surefire.plugin.version>3.5.2</surefire.plugin.version>
+        <failsafe.plugin.version>3.5.2</failsafe.plugin.version>
+        <nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
+        <gpg.plugin.version>3.2.7</gpg.plugin.version>
     </properties>
 
     <scm>
@@ -161,12 +172,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>${compiler.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>${javadoc.plugin.version}</version>
                     <configuration>
                         <additionalOptions>
                             <additionalOption>-Xdoclint:none</additionalOption>
@@ -176,29 +187,27 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>${deploy.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.1</version>
+                    <version>${source.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>${release.plugin.version}</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                     </configuration>
                 </plugin>
-
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>${surefire.plugin.version}</version>
                 </plugin>
-
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>${failsafe.plugin.version}</version>
                     <executions>
                         <execution>
                             <id>integration-test</id>
@@ -212,7 +221,7 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.8</version>
+                    <version>${nexus.staging.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -245,7 +254,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>${gpg.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
