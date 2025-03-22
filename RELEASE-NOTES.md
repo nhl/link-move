@@ -2,6 +2,10 @@
 
 * #239 Remove APIs deprecated in 3.0.0 
 
+## Release 3.0.0
+
+* #240 Deprecate StageListener and TaskStageType
+
 ## Release 3.0.0-RC1
 
 * #232 Attempt at semantic versioning
