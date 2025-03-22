@@ -34,7 +34,7 @@ public abstract class BaseTask implements LmTask {
     private final int batchSize;
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     protected static DataFrame srcRowsAsDataFrame(RowAttribute[] rowHeader, List<Object[]> rows) {
         return DataFrame.byArrayRow(toIndex(rowHeader)).ofIterable(rows);
@@ -106,19 +106,19 @@ public abstract class BaseTask implements LmTask {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     protected void onExecStarted(Execution exec) {
         exec.getLogger().execStarted();
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     protected abstract void doRun(Execution exec);
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     protected abstract void onExecFinished(Execution exec);
 

@@ -37,7 +37,7 @@ import java.util.Set;
  * - using truncate, if database supports truncate queries.
  * - if database doesn't support truncate queries then it deletes with delete all query
  *
- * @since 3.0
+ * @since 3.0.0
  */
 public class DeleteAllTask extends BaseTask {
 

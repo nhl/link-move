@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public class ConnectorInstanceFactory<C extends Connector> implements IConnectorFactory<C> {
 

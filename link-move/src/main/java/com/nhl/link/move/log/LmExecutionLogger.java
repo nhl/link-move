@@ -7,7 +7,7 @@ import org.dflib.Series;
 import java.util.Set;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public interface LmExecutionLogger {
 

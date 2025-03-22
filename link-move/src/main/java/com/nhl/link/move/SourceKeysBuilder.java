@@ -23,7 +23,7 @@ public interface SourceKeysBuilder {
     /**
      * Defines the location and name of the source data extractor.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     SourceKeysBuilder sourceExtractor(ExtractorName extractorName);
 
@@ -68,7 +68,7 @@ public interface SourceKeysBuilder {
      *
      * @param listener an annotated object that will receive events as the task proceeds.
      * @return this builder instance
-     * @since 3.0
+     * @since 3.0.0
      *
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.SourceKeysBuilder#stage}
      */
@@ -79,7 +79,7 @@ public interface SourceKeysBuilder {
      * Adds a callback invoked for each processed segment after the specified stage in the "source keys" extraction
      * pipeline.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     SourceKeysBuilder stage(SourceKeysStage stageType, BiConsumer<Execution, SourceKeysSegment> callback);
 }

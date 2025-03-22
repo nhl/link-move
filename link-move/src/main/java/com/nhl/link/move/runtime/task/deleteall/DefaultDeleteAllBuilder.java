@@ -13,7 +13,7 @@ import org.apache.cayenne.map.DbEntity;
 import java.lang.annotation.Annotation;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBuilder, DefaultDeleteAllBuilder.NoDataSegment, DefaultDeleteAllBuilder.EmptyStageType> implements DeleteAllBuilder {
 

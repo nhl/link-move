@@ -9,7 +9,7 @@ import com.nhl.link.move.RowReader;
 public interface Extractor {
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     RowReader getReader(Execution exec);
 }

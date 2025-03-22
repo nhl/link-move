@@ -13,7 +13,7 @@ import java.util.Map;
  * public URLs or filesystem locations. Anything more complex (e.g. locations requiring token authentication) can not
  * be handled by this connector.
  *
- * @since 3.0
+ * @since 3.0.0
  */
 public class URLConnector implements StreamConnector {
 

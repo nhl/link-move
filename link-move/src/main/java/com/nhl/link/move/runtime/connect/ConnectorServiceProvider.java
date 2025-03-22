@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public class ConnectorServiceProvider implements Provider<IConnectorService> {
 

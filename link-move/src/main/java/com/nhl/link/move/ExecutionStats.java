@@ -33,7 +33,7 @@ public class ExecutionStats {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public Duration getDuration() {
         return stoppedOn != null ? Duration.between(startedOn, stoppedOn) : null;
@@ -56,21 +56,21 @@ public class ExecutionStats {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public LocalDateTime getStartedOn() {
         return startedOn;
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public LocalDateTime getStoppedOn() {
         return stoppedOn;
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public int getSegments() {
         return segments;

@@ -8,7 +8,7 @@ import com.nhl.link.move.runtime.task.ITaskService;
 public interface LmRuntime {
 
 	/**
-	 * @since 3.0
+	 * @since 3.0.0
 	 */
 	static LmRuntimeBuilder builder() {
 		return new LmRuntimeBuilder();

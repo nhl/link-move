@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public class Slf4jLmLogger implements LmLogger {
 

@@ -31,7 +31,7 @@ public interface DeleteBuilder {
      * @param location extractor configuration location, relative to some root known to LinkMove.
      * @param name     extractor name within configuration.
      * @return this builder instance
-     * @since 3.0
+     * @since 3.0.0
      */
     DeleteBuilder sourceMatchExtractor(String location, String name);
 
@@ -54,7 +54,7 @@ public interface DeleteBuilder {
     /**
      * Adds a callback invoked for each processed segment after the specified stage in the "delete" processing pipeline.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     DeleteBuilder stage(DeleteStage stageType, BiConsumer<Execution, DeleteSegment> callback);
 }

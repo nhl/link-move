@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface IConnectorFactory<C extends Connector> {
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     Class<C> getConnectorType();
 
@@ -24,7 +24,7 @@ public interface IConnectorFactory<C extends Connector> {
      * Creates a connector for a given symbolic ID. If an ID is not recognized, an empty Optional is returned. If a
      * connector can not be created, {@link LmRuntimeException} is thrown.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     Optional<? extends C> createConnector(String id) throws LmRuntimeException;
 }

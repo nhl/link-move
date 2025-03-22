@@ -13,7 +13,7 @@ import com.nhl.link.move.runtime.task.common.TaskStageType;
 import java.lang.annotation.Annotation;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public enum CreateOrUpdateStage implements TaskStageType {
     EXTRACT_SOURCE_ROWS(AfterSourceRowsExtracted.class),
