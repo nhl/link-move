@@ -44,7 +44,7 @@
         <maven.compiler.release>11</maven.compiler.release>
 
         <!-- Framework versions -->
-        <slf4j.version>2.0.7</slf4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
         <cayenne.version>4.2.2</cayenne.version>
         <jackson.version>2.15.4</jackson.version>
         <jackson.databind.version>2.15.4</jackson.databind.version>

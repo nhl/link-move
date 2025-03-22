@@ -4,6 +4,7 @@
 * #234 Upgrade DFLib to 1.2
 * #235 Upgrade Jackson to 2.15.4
 * #236 Upgrade Cayenne to 4.2.2
+* #237 Upgrade SLF4J to 2.0.17
 
 ## Release 3.0.M6
 
