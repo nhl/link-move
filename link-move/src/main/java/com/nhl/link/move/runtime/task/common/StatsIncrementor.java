@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.task.common;
 
-import com.nhl.dflib.BooleanSeries;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Series;
+import org.dflib.BooleanSeries;
+import org.dflib.DataFrame;
+import org.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.runtime.task.create.CreateSegment;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;

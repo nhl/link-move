@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.create;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Series;
+import org.dflib.DataFrame;
+import org.dflib.Series;
 import com.nhl.link.move.runtime.task.common.ProcessorUtil;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;

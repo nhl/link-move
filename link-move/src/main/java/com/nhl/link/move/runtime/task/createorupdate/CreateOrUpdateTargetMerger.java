@@ -1,9 +1,9 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.dflib.BooleanSeries;
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Series;
-import com.nhl.dflib.builder.BoolAccum;
+import org.dflib.BooleanSeries;
+import org.dflib.DataFrame;
+import org.dflib.Series;
+import org.dflib.builder.BoolAccum;
 import com.nhl.link.move.runtime.task.common.ProcessorUtil;
 import com.nhl.link.move.writer.TargetPropertyWriter;
 import com.nhl.link.move.writer.TargetPropertyWriterFactory;
@@ -43,6 +43,6 @@ public class CreateOrUpdateTargetMerger {
             }
         }
 
-        return df.selectRows(changed.toSeries());
+        return df.rows(changed.toSeries()).select();
     }
 }

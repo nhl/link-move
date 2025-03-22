@@ -1,8 +1,8 @@
 package com.nhl.link.move.mapper;
 
-import com.nhl.dflib.Index;
-import com.nhl.dflib.row.RowBuilder;
-import com.nhl.dflib.row.RowProxy;
+import org.dflib.Index;
+import org.dflib.row.RowBuilder;
+import org.dflib.row.RowProxy;
 
 public class TestRowProxy implements RowProxy {
 
@@ -31,6 +31,46 @@ public class TestRowProxy implements RowProxy {
 
     @Override
     public void copyRange(RowBuilder to, int fromOffset, int toOffset, int len) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public int getInt(int i) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public int getInt(String s) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public long getLong(int i) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public long getLong(String s) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public double getDouble(int i) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public double getDouble(String s) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public boolean getBool(int i) {
+        throw new UnsupportedOperationException("not needed in a test");
+    }
+
+    @Override
+    public boolean getBool(String s) {
         throw new UnsupportedOperationException("not needed in a test");
     }
 }

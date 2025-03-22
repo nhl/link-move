@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.RowAttribute;
-import com.nhl.dflib.DataFrame;
+import org.dflib.DataFrame;
 import com.nhl.link.move.runtime.task.common.DataSegment;
 
 /**

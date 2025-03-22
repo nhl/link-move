@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
+import org.dflib.DataFrame;
+import org.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.RowAttribute;
@@ -48,7 +48,7 @@ public abstract class BaseTask implements LmTask {
             columns[i] = rowHeader[i].getSourceName();
         }
 
-        return Index.forLabels(columns);
+        return Index.of(columns);
     }
 
     public BaseTask(ExtractorName extractorName, int batchSize, ITokenManager tokenManager, LmLogger logger) {

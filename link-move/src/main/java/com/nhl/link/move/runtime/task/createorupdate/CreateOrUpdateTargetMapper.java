@@ -1,18 +1,19 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Hasher;
-import com.nhl.dflib.builder.BoolAccum;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
+import org.dflib.DataFrame;
+import org.dflib.Hasher;
+
+import static org.dflib.Exp.*;
 
 /**
  * @since 2.6
  */
 public class CreateOrUpdateTargetMapper {
 
-    private Class<?> type;
-    private Mapper mapper;
+    private final Class<?> type;
+    private final Mapper mapper;
 
     public CreateOrUpdateTargetMapper(Class<?> type, Mapper mapper) {
         this.mapper = mapper;
@@ -27,24 +28,19 @@ public class CreateOrUpdateTargetMapper {
         Hasher lkm = r -> r.get(CreateOrUpdateSegment.KEY_COLUMN);
         Hasher rkm = r -> mapper.keyForTarget(r.get(CreateOrUpdateSegment.TARGET_COLUMN));
 
-        DataFrame df = sources.leftJoin().on(lkm, rkm).with(targets);
+        DataFrame df = sources.leftJoin(targets).on(lkm, rkm).select();
 
-        BoolAccum createdColumn = new BoolAccum(df.height());
-        df.forEach(r -> createdColumn.push(isCreated(r.get(CreateOrUpdateSegment.TARGET_COLUMN))));
+        return df
+                .colsAppend(CreateOrUpdateSegment.TARGET_CREATED_COLUMN).merge($col(CreateOrUpdateSegment.TARGET_COLUMN).isNull())
 
-        return df.addColumn(CreateOrUpdateSegment.TARGET_CREATED_COLUMN, createdColumn.toSeries())
-                .convertColumn(CreateOrUpdateSegment.TARGET_COLUMN, r -> createIfMissing(r, context));
+                .cols(CreateOrUpdateSegment.TARGET_COLUMN).merge(ifExp(
+                        $bool(CreateOrUpdateSegment.TARGET_CREATED_COLUMN),
+                        $val(type).mapVal(context::newObject),
+                        $col(CreateOrUpdateSegment.TARGET_COLUMN)
+                ));
     }
 
     private boolean isCreated(Object v) {
         return v == null;
-    }
-
-    private Object createIfMissing(Object v, ObjectContext context) {
-
-        // Note that "context.newObject" is an impure function. Though we don't see its undesired side effects on
-        // multiple iterations due to DataFrame "materialized" feature that transparently caches the results..
-
-        return v != null ? v : context.newObject(type);
     }
 }

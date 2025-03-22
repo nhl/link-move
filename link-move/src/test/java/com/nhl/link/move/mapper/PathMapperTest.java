@@ -1,6 +1,6 @@
 package com.nhl.link.move.mapper;
 
-import com.nhl.dflib.Index;
+import org.dflib.Index;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.DataObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,18 +22,18 @@ public class PathMapperTest {
 
     @Test
     public void testKeyForSource() {
-        assertEquals("ABC", mapper.keyForSource(new TestRowProxy(Index.forLabels("a", "abc"), "A", "ABC")));
+        assertEquals("ABC", mapper.keyForSource(new TestRowProxy(Index.of("a", "abc"), "A", "ABC")));
     }
 
     @Test
     public void testKeyForSource_NullKey() {
-        assertEquals(null, mapper.keyForSource(new TestRowProxy(Index.forLabels("a", "abc"), "A", null)));
+        assertEquals(null, mapper.keyForSource(new TestRowProxy(Index.of("a", "abc"), "A", null)));
     }
 
     @Test
     public void testKeyForSource_MissingKey() {
         assertThrows(LmRuntimeException.class,
-                () -> mapper.keyForSource(new TestRowProxy(Index.forLabels("a"), "A")));
+                () -> mapper.keyForSource(new TestRowProxy(Index.of("a"), "A")));
     }
 
     @Test

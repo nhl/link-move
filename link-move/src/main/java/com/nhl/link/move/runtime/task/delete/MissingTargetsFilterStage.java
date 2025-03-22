@@ -1,9 +1,10 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Exp;
+import org.dflib.DataFrame;
 
 import java.util.Set;
+
+import static org.dflib.Exp.$col;
 
 /**
  * @since 1.3
@@ -14,7 +15,8 @@ public class MissingTargetsFilterStage {
             DataFrame mappedTargets,
             Set<Object> sourceKeys) {
 
-        return mappedTargets.selectRows(
-                Exp.$col(DeleteSegment.KEY_COLUMN).mapConditionVal(v -> !sourceKeys.contains(v)));
+        return mappedTargets
+                .rows($col(DeleteSegment.KEY_COLUMN).mapBoolVal(v -> !sourceKeys.contains(v)))
+                .select();
     }
 }

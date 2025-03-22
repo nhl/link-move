@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
-import com.nhl.dflib.Series;
+import org.dflib.DataFrame;
+import org.dflib.Index;
+import org.dflib.Series;
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.exp.Expression;
@@ -25,7 +25,7 @@ public class CreateOrUpdateTargetMatcher {
     public CreateOrUpdateTargetMatcher(Class<?> type, Mapper mapper) {
         this.type = type;
         this.mapper = mapper;
-        this.index = Index.forLabels(CreateOrUpdateSegment.TARGET_COLUMN);
+        this.index = Index.of(CreateOrUpdateSegment.TARGET_COLUMN);
     }
 
     public DataFrame match(ObjectContext context, DataFrame df) {

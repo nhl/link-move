@@ -1,10 +1,5 @@
 package com.nhl.link.move.runtime.task.common;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
-import com.nhl.dflib.Series;
-import com.nhl.dflib.builder.ObjectAccum;
-import com.nhl.dflib.row.RowProxy;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.Cayenne;
@@ -13,12 +8,17 @@ import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.ExpressionFactory;
 import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.query.ObjectSelect;
+import org.dflib.DataFrame;
+import org.dflib.Index;
+import org.dflib.row.RowProxy;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static org.dflib.Exp.$col;
 
 /**
  * Handler of resolve-fk processor stage.
@@ -68,15 +68,12 @@ public class FkResolver {
         for (Map.Entry<TargetAttribute, Map<Object, Object>> e : related.entrySet()) {
 
             String path = e.getKey().getNormalizedPath();
-            Series<?> fkColumn = df.getColumn(path);
             Map<Object, Object> fks = e.getValue();
 
-            ObjectAccum<Object> accum = new ObjectAccum<>(df.height());
-
-            // TODO: do we care if an FK is invalid (i.e. "get" returns null) ? For now quietly setting the
-            //  relationship to null.
-            fkColumn.map(fk -> fk != null ? fks.get(fk) : null).forEach(accum::push);
-            df = df.dropColumns(path).addColumn(path, accum.toSeries());
+            // TODO: do we care if an FK is invalid (i.e. "get" returns null) ?
+            //  For now quietly setting the relationship to null.
+            df = df
+                    .cols(path).merge($col(path).mapVal(fk -> fk != null ? fks.get(fk) : null));
         }
 
         return df;

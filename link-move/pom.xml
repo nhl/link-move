@@ -15,7 +15,7 @@
     <dependencies>
         <!-- compile dependencies -->
         <dependency>
-            <groupId>com.nhl.dflib</groupId>
+            <groupId>org.dflib</groupId>
             <artifactId>dflib</artifactId>
         </dependency>
         <dependency>

@@ -1,6 +1,6 @@
 package com.nhl.link.move.mapper;
 
-import com.nhl.dflib.row.RowProxy;
+import org.dflib.row.RowProxy;
 import org.apache.cayenne.exp.Expression;
 
 /**

@@ -1,6 +1,6 @@
 package com.nhl.link.move.log;
 
-import com.nhl.dflib.Series;
+import org.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
 import com.nhl.link.move.RowAttribute;

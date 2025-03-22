@@ -1,8 +1,8 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
-import com.nhl.dflib.Series;
+import org.dflib.DataFrame;
+import org.dflib.Index;
+import org.dflib.Series;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.LmTask;
@@ -99,7 +99,7 @@ public class DeleteTask extends BaseTask {
 
     protected BatchProcessor<? extends Persistent> createBatchProcessor(Execution exec, Set<Object> keys) {
 
-        Index columns = Index.forLabels(DeleteSegment.TARGET_COLUMN);
+        Index columns = Index.of(DeleteSegment.TARGET_COLUMN);
 
         return rows -> {
 

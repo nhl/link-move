@@ -1,14 +1,15 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.dflib.DataFrame;
+import org.dflib.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
+import org.dflib.Exp;
 
 /**
  * @since 1.3
  */
 public class TargetMapper {
 
-    private Mapper mapper;
+    private final Mapper mapper;
 
     public TargetMapper(Mapper mapper) {
         this.mapper = mapper;
@@ -18,8 +19,8 @@ public class TargetMapper {
 
         // TODO: report dupes?
 
-        return df.addColumn(
-                DeleteSegment.KEY_COLUMN,
-                r -> mapper.keyForTarget(r.get(DeleteSegment.TARGET_COLUMN)));
+        return df
+                .colsAppend(DeleteSegment.KEY_COLUMN)
+                .merge(Exp.$col(DeleteSegment.TARGET_COLUMN).mapVal(mapper::keyForTarget));
     }
 }

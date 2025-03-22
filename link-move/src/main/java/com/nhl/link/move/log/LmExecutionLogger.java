@@ -1,8 +1,8 @@
 package com.nhl.link.move.log;
 
-import com.nhl.dflib.Series;
 import com.nhl.link.move.RowAttribute;
 import org.apache.cayenne.Persistent;
+import org.dflib.Series;
 
 import java.util.Set;
 

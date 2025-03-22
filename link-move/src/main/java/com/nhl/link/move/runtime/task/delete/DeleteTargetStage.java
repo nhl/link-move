@@ -1,7 +1,7 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Series;
+import org.dflib.DataFrame;
+import org.dflib.Series;
 import org.apache.cayenne.ObjectContext;
 
 /**

@@ -1,7 +1,5 @@
 package com.nhl.link.move.itest;
 
-import com.nhl.dflib.DataFrameBuilder;
-import com.nhl.dflib.Index;
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
@@ -11,6 +9,8 @@ import com.nhl.link.move.runtime.task.delete.DeleteStage;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl6t;
+import org.dflib.DataFrame;
+import org.dflib.Index;
 import org.junit.jupiter.api.Test;
 
 public class DeleteIT extends LmIntegrationTest {
@@ -140,7 +140,7 @@ public class DeleteIT extends LmIntegrationTest {
 				.sourceMatchExtractor("com/nhl/link/move/itest/etl6_to_etl6t_byid.xml")
 				.stage(DeleteStage.FILTER_MISSING_TARGETS, (execution, segment) -> {
 					Index index = segment.getMissingTargets().getColumnsIndex();
-					segment.setMissingTargets(DataFrameBuilder.builder(index).empty());
+					segment.setMissingTargets(DataFrame.empty(index));
 				})
 				.task();
 
@@ -154,13 +154,12 @@ public class DeleteIT extends LmIntegrationTest {
 		etl6t().matcher().assertMatches(2);
 	}
 
-
 	public static class CustomDeleteSetListener {
 
 		@AfterMissingTargetsFiltered
 		public void afterMissingTargetsFiltered(Execution exec, DeleteSegment segment) {
 			Index index = segment.getMissingTargets().getColumnsIndex();
-			segment.setMissingTargets(DataFrameBuilder.builder(index).empty());
+			segment.setMissingTargets(DataFrame.empty(index));
 		}
 	}
 }

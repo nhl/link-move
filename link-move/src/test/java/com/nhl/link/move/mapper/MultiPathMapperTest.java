@@ -1,6 +1,6 @@
 package com.nhl.link.move.mapper;
 
-import com.nhl.dflib.Index;
+import org.dflib.Index;
 import org.apache.cayenne.DataObject;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
@@ -50,7 +50,7 @@ public class MultiPathMapperTest {
 		source.put("b", 5);
 		source.put("c", 6);
 
-		Object key = mapper.keyForSource(new TestRowProxy(Index.forLabels("a", "b", "c"), "a1", 5, 6));
+		Object key = mapper.keyForSource(new TestRowProxy(Index.of("a", "b", "c"), "a1", 5, 6));
 		assertTrue(key instanceof Map);
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })

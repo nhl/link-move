@@ -1,9 +1,9 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.dflib.DataFrame;
-import com.nhl.dflib.Index;
-import com.nhl.dflib.row.RowBuilder;
-import com.nhl.dflib.row.RowProxy;
+import org.dflib.DataFrame;
+import org.dflib.Index;
+import org.dflib.row.RowBuilder;
+import org.dflib.row.RowProxy;
 import com.nhl.link.move.RowAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
@@ -27,12 +27,12 @@ public class RowConverter {
     }
 
     public DataFrame convert(RowAttribute[] rowHeader, DataFrame df) {
-        return df.map(
-                convertColumns(rowHeader, df.getColumnsIndex()),
-                (f, t) -> convert(rowHeader, f, t));
+        return df
+                .cols(convertedColumnNames(rowHeader, df.getColumnsIndex()))
+                .select((f, t) -> convert(rowHeader, f, t));
     }
 
-    private Index convertColumns(RowAttribute[] rowHeader, Index columns) {
+    private Index convertedColumnNames(RowAttribute[] rowHeader, Index columns) {
 
         int w = columns.size();
         String[] names = new String[w];
@@ -44,7 +44,7 @@ public class RowConverter {
             names[i] = attribute.map(TargetAttribute::getNormalizedPath).orElse(targetPath);
         }
 
-        return Index.forLabels(names);
+        return Index.of(names);
     }
 
     private void convert(RowAttribute[] rowHeader, RowProxy from, RowBuilder to) {

@@ -1,6 +1,6 @@
 package com.nhl.link.move.runtime.task.createorupdate;
 
-import com.nhl.dflib.DataFrame;
+import org.dflib.DataFrame;
 import com.nhl.link.move.mapper.Mapper;
 
 /**
@@ -8,13 +8,15 @@ import com.nhl.link.move.mapper.Mapper;
  */
 public class SourceMapper {
 
-	private Mapper mapper;
+    private Mapper mapper;
 
-	public SourceMapper(Mapper mapper) {
-		this.mapper = mapper;
-	}
+    public SourceMapper(Mapper mapper) {
+        this.mapper = mapper;
+    }
 
-	public DataFrame map(DataFrame df) {
-		return df.addColumn(CreateOrUpdateSegment.KEY_COLUMN, mapper::keyForSource);
-	}
+    public DataFrame map(DataFrame df) {
+        return df
+                .colsAppend(CreateOrUpdateSegment.KEY_COLUMN)
+                .merge(mapper::keyForSource);
+    }
 }
