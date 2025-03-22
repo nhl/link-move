@@ -31,6 +31,11 @@
 
         <!-- test dependencies -->
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.bootique.jdbc</groupId>
             <artifactId>bootique-jdbc-junit5-derby</artifactId>
             <scope>test</scope>
