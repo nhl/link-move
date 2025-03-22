@@ -71,11 +71,6 @@ import java.util.function.Supplier;
  */
 public class LmRuntimeBuilder {
 
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public static final String START_TOKEN_VAR = "startToken";
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public static final String END_TOKEN_VAR = "endToken";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
 
     private final Set<IConnectorFactory> connectorFactories;
