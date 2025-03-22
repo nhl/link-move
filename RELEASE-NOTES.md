@@ -1,4 +1,4 @@
-## Release 3.0.0-M7
+## Release 3.0.0-RC1
 
 * #232 Attempt at semantic versioning
 * #234 Upgrade DFLib to 1.2
