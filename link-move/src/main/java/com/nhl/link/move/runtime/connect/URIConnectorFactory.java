@@ -16,7 +16,7 @@ import java.util.Optional;
  * @deprecated as the factory treats "connectorId" as a URI, and this pattern is strongly discouraged. Instead, the
  * "connectorId" should be a symbolic name resolvable outside LinkMove.
  */
-@Deprecated(since = "3.0")
+@Deprecated(since = "3.0.0", forRemoval = true)
 public class URIConnectorFactory implements IConnectorFactory<StreamConnector> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URIConnectorFactory.class);

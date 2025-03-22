@@ -5,7 +5,7 @@ import com.nhl.link.move.SyncToken;
 /**
  * @deprecated as we are no longer planning to support {@link SyncToken}
  */
-@Deprecated(since = "3.0")
+@Deprecated(since = "3.0.0", forRemoval = true)
 public interface ITokenManager {
 
     /**

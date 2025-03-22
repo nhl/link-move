@@ -33,7 +33,6 @@ public class TaskService implements ITaskService {
     private final IExtractorService extractorService;
     private final ITargetCayenneService targetCayenneService;
 
-    @Deprecated(since = "3.0")
     private final ITokenManager tokenManager;
     private final IKeyAdapterFactory keyAdapterFactory;
     private final TargetEntityMap targetEntityMap;

@@ -50,7 +50,7 @@ public class ListenersBuilder<T extends DataSegment, S extends TaskStageType> {
 	/**
 	 * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.ListenersBuilder#addStageCallback}
 	 */
-	@Deprecated
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public ListenersBuilder<T, S> addListener(Object listener) {
 
 		try {

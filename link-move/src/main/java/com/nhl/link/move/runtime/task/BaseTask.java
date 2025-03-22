@@ -28,7 +28,6 @@ public abstract class BaseTask implements LmTask {
 
     protected final LmLogger logger;
 
-    @Deprecated(since = "3.0")
     private final ITokenManager tokenManager;
     private final String label;
     private final ExtractorName extractorName;
@@ -123,7 +122,7 @@ public abstract class BaseTask implements LmTask {
      */
     protected abstract void onExecFinished(Execution exec);
 
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     protected Map<String, Object> mergeParams(SyncToken token, Map<String, ?> params) {
         Objects.requireNonNull(token);
 

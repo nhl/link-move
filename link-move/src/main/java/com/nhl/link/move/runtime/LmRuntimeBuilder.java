@@ -74,9 +74,9 @@ import java.util.function.Supplier;
  */
 public class LmRuntimeBuilder {
 
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public static final String START_TOKEN_VAR = "startToken";
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public static final String END_TOKEN_VAR = "endToken";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LmRuntimeBuilder.class);
@@ -90,7 +90,7 @@ public class LmRuntimeBuilder {
     private final Map<String, ValueConverter> valueConverters;
     private Supplier<ResourceResolver> extractorResolverFactory;
 
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     private ITokenManager tokenManager;
     private ServerRuntime targetRuntime;
     private final Collection<LmAdapter> adapters;
@@ -99,7 +99,7 @@ public class LmRuntimeBuilder {
      * @deprecated use {@link LmRuntime#builder()}
      */
     // TODO: make protected in 4.0
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public LmRuntimeBuilder() {
         this.connectorFactories = new HashSet<>();
         this.connectorFactoryTypes = new HashSet<>();
@@ -141,7 +141,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated in favor of {@link #targetRuntime(ServerRuntime)}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public LmRuntimeBuilder withTargetRuntime(ServerRuntime targetRuntime) {
         return targetRuntime(targetRuntime);
     }
@@ -159,7 +159,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated as we are no longer planning to support {@link SyncToken}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public LmRuntimeBuilder withTokenManager(ITokenManager tokenManager) {
         this.tokenManager = tokenManager;
         return this;
@@ -178,7 +178,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated in favor of {@link #connectorFactory(IConnectorFactory)}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
             Class<C> connectorType,
             IConnectorFactory<C> factory) {
@@ -196,7 +196,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated in favor of {@link #connectorFactory(Class)}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
             Class<C> connectorType,
             Class<? extends IConnectorFactory<C>> factoryType) {
@@ -214,7 +214,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated in favor of {@link #connectorFromTarget()}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public LmRuntimeBuilder withConnectorFromTarget() {
         return connectorFromTarget();
     }
@@ -238,7 +238,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated in favor of {@link #extractorFactory(String, Class)}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public LmRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
         return extractorFactory(extractorType, factoryType);
     }
@@ -257,7 +257,7 @@ public class LmRuntimeBuilder {
     /**
      * @deprecated in favor of {@link #extractorFactory(String, IExtractorFactory)}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory<?> factory) {
         return extractorFactory(extractorType, factory);
     }

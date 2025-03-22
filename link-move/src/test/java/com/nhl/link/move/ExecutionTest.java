@@ -35,7 +35,7 @@ public class ExecutionTest {
                 "\"updated\":3},\"task\":\"xsync\"}", execution.toString());
     }
 
-    @Deprecated(since = "3.0")
+    @Deprecated
     @Test
     public void testCreateReport() {
 

@@ -5,7 +5,7 @@ package com.nhl.link.move;
  * synchronization stopped the last time. This can be a timestamp, a number or
  * any other way to identify a position in the data set to start a new sync.
  */
-@Deprecated(since = "3.0")
+@Deprecated(since = "3.0.0", forRemoval = true)
 public abstract class SyncToken {
 
     public static SyncToken nullToken(String name) {

@@ -48,7 +48,7 @@ public interface DeleteBuilder {
     /**
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.DeleteBuilder#stage}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     DeleteBuilder stageListener(Object listener);
 
     /**

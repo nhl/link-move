@@ -97,7 +97,7 @@ public interface CreateOrUpdateBuilder {
      *
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.CreateOrUpdateBuilder#stage}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     CreateOrUpdateBuilder stageListener(Object listener);
 
     /**

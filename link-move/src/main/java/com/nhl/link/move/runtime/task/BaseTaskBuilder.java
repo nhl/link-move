@@ -29,13 +29,13 @@ public abstract class BaseTaskBuilder<T extends BaseTaskBuilder<T, S, U>, S exte
         this.stageListenersBuilder = new ListenersBuilder<>(supportedListenerAnnotations());
     }
 
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     protected abstract Class<? extends Annotation>[] supportedListenerAnnotations();
 
     /**
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.BaseTaskBuilder#stage}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public T stageListener(Object listener) {
         stageListenersBuilder.addListener(listener);
         return (T) this;

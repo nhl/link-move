@@ -39,7 +39,7 @@ public interface LmTask {
     /**
      * @deprecated as we are no longer planning to support {@link SyncToken}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     default Execution run(SyncToken token) {
         return run(token, Collections.emptyMap());
     }
@@ -53,7 +53,7 @@ public interface LmTask {
      * @since 1.3
      * @deprecated as we are no longer planning to support {@link SyncToken}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     Execution run(SyncToken token, Map<String, ?> params);
 
 }

@@ -19,6 +19,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Deprecated(since = "3.0")
+@Deprecated(since = "3.0.0", forRemoval = true)
 public @interface AfterTargetsCommitted {
 }

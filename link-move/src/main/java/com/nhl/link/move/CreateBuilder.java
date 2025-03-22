@@ -68,7 +68,7 @@ public interface CreateBuilder {
      * @return this builder instance
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.CreateBuilder#stage}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     CreateBuilder stageListener(Object listener);
 
     /**

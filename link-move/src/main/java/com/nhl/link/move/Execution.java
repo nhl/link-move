@@ -51,7 +51,7 @@ public class Execution {
     /**
      * @deprecated in favor of {@link #stop()}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public void close() {
         stop();
     }
@@ -113,7 +113,7 @@ public class Execution {
      * @deprecated since 3.0 {@link #getExtractorName()} and {@link #getTaskName()} are used instead to identify the
      * execution.
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public String getName() {
         return taskName + ":" + extractorName;
     }
@@ -146,7 +146,7 @@ public class Execution {
      * {@link com.nhl.link.move.log.LmLogger}, so this API is no longer useful. The closest approximation
      * of the "report" is a {@link #toString()} method.
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     public Map<String, Object> createReport() {
 
         // keep order of insertion consistent so that the report is easily printable

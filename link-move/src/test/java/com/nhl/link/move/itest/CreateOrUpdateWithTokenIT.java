@@ -8,7 +8,7 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import org.junit.jupiter.api.Test;
 
-@Deprecated(since = "3.0")
+@Deprecated
 public class CreateOrUpdateWithTokenIT extends LmIntegrationTest {
 
 	@Test

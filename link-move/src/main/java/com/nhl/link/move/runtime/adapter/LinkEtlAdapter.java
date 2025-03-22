@@ -6,7 +6,7 @@ import org.apache.cayenne.di.Binder;
 /**
  * @deprecated in favor of {@link LmAdapter}
  */
-@Deprecated(since = "3.0", forRemoval = true)
+@Deprecated(since = "3.0.0", forRemoval = true)
 public interface LinkEtlAdapter extends LmAdapter {
 
     void contributeToRuntime(Binder binder);

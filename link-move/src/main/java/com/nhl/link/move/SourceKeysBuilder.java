@@ -72,7 +72,7 @@ public interface SourceKeysBuilder {
      *
      * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.SourceKeysBuilder#stage}
      */
-    @Deprecated(since = "3.0")
+    @Deprecated(since = "3.0.0", forRemoval = true)
     SourceKeysBuilder stageListener(Object listener);
 
     /**

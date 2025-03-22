@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * @deprecated in favor of {@link URLConnector}.
  */
-@Deprecated(since = "3.0")
+@Deprecated(since = "3.0.0", forRemoval = true)
 public class URIConnector extends URLConnector {
 
     public URIConnector(URI uri) {
