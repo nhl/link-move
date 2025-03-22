@@ -1,6 +1,15 @@
 _This document contains upgrade notes for LinkMove 3.x and newer. Older versions are documented in
 [UPGRADE-NOTES-1-2](./UPGRADE-NOTES-1-to-2.md)._
 
+## Upgrading to 3.0.0-RC1
+
+### Upgrade to DFLib 1.2 [#234](https://github.com/nhl/link-move/issues/234)
+This upgrade to the latest stable DFLib may result in compile errors if custom LinkMove callbacks are using `DataFrame`
+APIs directly. The first thing you may notice is package relocation (you will need to replace `import com.nhl.dflib.*` 
+with `import org.dflib.*`), but `DataFrame` API itself was also significantly reworked. Please check the latest `1.x`
+[DFLib documentation](https://dflib.org/dflib/docs/1.x/) to figure out how to perform your tasks with the new API 
+or send a note to the [DFLib support forum](https://github.com/dflib/dflib/discussions).
+
 ## Upgrading to 3.0.M5
 
 ### Extractor Schema v3 [#221](https://github.com/nhl/link-move/issues/221) A new v3 of the extractor 
