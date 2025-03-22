@@ -5,7 +5,7 @@ import org.apache.cayenne.di.Binder;
 /**
  * A callback interface that allows users to customize LinkMove DI stack during LM runtime bootstrap.
  *
- * @since 3.0
+ * @since 3.0.0
  */
 public interface LmAdapter {
 

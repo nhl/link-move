@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public class CachingConnectorFactory<C extends Connector> implements IConnectorFactory<C> {
 

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * target data store are extracted. This happens in {@link com.nhl.link.move.runtime.task.delete.DeleteTask} that
  * starts by extracting data from target.
  * 
- * @since 3.0
+ * @since 3.0.0
  *
  * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.runtime.task.BaseTaskBuilder#stage}
  */

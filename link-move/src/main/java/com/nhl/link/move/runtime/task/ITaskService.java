@@ -34,7 +34,7 @@ public interface ITaskService {
     /**
      * Returns a builder of target deleteAll ETL synchronization task.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     DeleteAllBuilder deleteAll(Class<?> type);
 

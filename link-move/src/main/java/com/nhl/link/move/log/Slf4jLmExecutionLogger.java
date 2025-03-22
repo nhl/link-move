@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @since 3.0
+ * @since 3.0.0
  */
 public class Slf4jLmExecutionLogger implements LmExecutionLogger {
 

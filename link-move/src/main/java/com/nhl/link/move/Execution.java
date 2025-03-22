@@ -26,7 +26,7 @@ public class Execution {
     protected final Execution parentExecution;
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public Execution(
             long id,
@@ -102,7 +102,7 @@ public class Execution {
      * Returns execution id. It is an incrementing number and is unique within a JVM. It is used primarily for
      * logging, so there's no goal to keep it globally unique.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     public long getId() {
         return id;
@@ -119,21 +119,21 @@ public class Execution {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public String getTaskName() {
         return taskName;
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public ExtractorName getExtractorName() {
         return extractorName;
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public Execution getParentExecution() {
         return parentExecution;
@@ -201,7 +201,7 @@ public class Execution {
      * using the provided function, and cached for the future use for the given key. Attribute mechanism
      * is used as way to communicate state between processed batches (segments), and between listeners.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     public <T> T computeAttributeIfAbsent(String key, Function<String, T> valueProducer) {
         return (T) attributes.computeIfAbsent(key, valueProducer);
@@ -217,7 +217,7 @@ public class Execution {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public LmExecutionLogger getLogger() {
         return logger;

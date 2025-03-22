@@ -10,7 +10,7 @@ import org.apache.cayenne.util.HashCodeBuilder;
 public class ExtractorName {
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public static final String DEFAULT_NAME = "default_extractor";
 

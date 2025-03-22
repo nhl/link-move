@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * A parser of {@link ExtractorModelContainer} XML for schema version 2.
  *
- * @since 3.0.M5
+ * @since 3.0.0
  */
 public class ExtractorModelParser_v3 implements DOMExtractorModelParser {
 

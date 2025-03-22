@@ -149,7 +149,7 @@ public class LmRuntimeBuilder {
     /**
      * Sets a target Cayenne runtime for this ETL stack.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     public LmRuntimeBuilder targetRuntime(ServerRuntime targetRuntime) {
         this.targetRuntime = targetRuntime;
@@ -166,7 +166,7 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public <C extends Connector> LmRuntimeBuilder connector(
             Class<C> connectorType,
@@ -186,7 +186,7 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public <C extends Connector> LmRuntimeBuilder connectorFactory(IConnectorFactory<C> factory) {
         connectorFactories.add(factory);
@@ -204,7 +204,7 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @since 3.0
+     * @since 3.0.0
      */
     public <C extends Connector> LmRuntimeBuilder connectorFactory(Class<? extends IConnectorFactory<C>> factoryType) {
         connectorFactoryTypes.add(factoryType);
@@ -247,7 +247,7 @@ public class LmRuntimeBuilder {
      * Adds an extra factory to the map of extractor factories. Note that {@link JdbcExtractorFactory} is loaded by
      * default and does not have to be configured explicitly.
      *
-     * @since 3.0
+     * @since 3.0.0
      */
     public LmRuntimeBuilder extractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
         extractorFactoryTypes.put(extractorType, factoryType);

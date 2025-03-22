@@ -21,7 +21,7 @@ public interface ITargetCayenneService {
 	EntityResolver entityResolver();
 
 	/**
-	 * @since 3.0
+	 * @since 3.0.0
 	 */
 	DbAdapter dbAdapter(String dataMapName);
 }
