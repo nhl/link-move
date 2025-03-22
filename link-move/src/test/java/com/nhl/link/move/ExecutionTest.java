@@ -35,45 +35,6 @@ public class ExecutionTest {
                 "\"updated\":3},\"task\":\"xsync\"}", execution.toString());
     }
 
-    @Deprecated
-    @Test
-    public void testCreateReport() {
-
-        Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of("a", 5), mock(LmLogger.class), null);
-
-        assertEquals(Map.of(
-                        "Task", "xsync:l#n",
-                        "Parameter[a]", 5,
-                        "Status", "in progress",
-                        "Started on", execution.getStats().getStartedOn(),
-                        "Extracted", 0L,
-                        "Created", 0L,
-                        "Updated", 0L,
-                        "Deleted", 0L
-                ),
-                execution.createReport());
-
-        execution.getStats().incrementCreated(5);
-        execution.getStats().incrementDeleted(4);
-        execution.getStats().incrementExtracted(55);
-        execution.getStats().incrementUpdated(3);
-
-        execution.stop();
-
-        assertEquals(Map.of(
-                        "Task", "xsync:l#n",
-                        "Parameter[a]", 5,
-                        "Status", "finished",
-                        "Started on", execution.getStats().getStartedOn(),
-                        "Duration", execution.getStats().getDuration(),
-                        "Extracted", 55L,
-                        "Created", 5L,
-                        "Updated", 3L,
-                        "Deleted", 4L
-                ),
-                execution.createReport());
-    }
-
     @Test
     public void testAttribute() {
         Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class), null);

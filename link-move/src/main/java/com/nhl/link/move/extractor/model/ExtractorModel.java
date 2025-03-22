@@ -12,12 +12,6 @@ import java.util.Collection;
  */
 public interface ExtractorModel {
 
-    /**
-     * @deprecated since 3.0 in favor of {@link ExtractorName#DEFAULT_NAME}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    String DEFAULT_NAME = ExtractorName.DEFAULT_NAME;
-
     String getName();
 
     String getType();

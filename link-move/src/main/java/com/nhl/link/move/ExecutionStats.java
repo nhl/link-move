@@ -76,22 +76,6 @@ public class ExecutionStats {
         return segments;
     }
 
-    /**
-     * @deprecated since 3.0 in favor of {@link #getStartedOn()}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public long getStarted() {
-        return startedOn != null ? startedOn.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
-    }
-
-    /**
-     * @deprecated since 3.0 in favor of {@link #getStoppedOn()}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public long getFinished() {
-        return stoppedOn != null ? stoppedOn.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
-    }
-
     public void incrementSegments(int count) {
         this.segments += count;
     }

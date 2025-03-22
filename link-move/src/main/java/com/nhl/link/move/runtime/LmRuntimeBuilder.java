@@ -90,12 +90,7 @@ public class LmRuntimeBuilder {
     private ServerRuntime targetRuntime;
     private final Collection<LmAdapter> adapters;
 
-    /**
-     * @deprecated use {@link LmRuntime#builder()}
-     */
-    // TODO: make protected in 4.0
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public LmRuntimeBuilder() {
+    protected LmRuntimeBuilder() {
         this.connectorFactories = new HashSet<>();
         this.connectorFactoryTypes = new HashSet<>();
         this.extractorFactories = new HashMap<>();
@@ -134,14 +129,6 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @deprecated in favor of {@link #targetRuntime(ServerRuntime)}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public LmRuntimeBuilder withTargetRuntime(ServerRuntime targetRuntime) {
-        return targetRuntime(targetRuntime);
-    }
-
-    /**
      * Sets a target Cayenne runtime for this ETL stack.
      *
      * @since 3.0.0
@@ -162,16 +149,6 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @deprecated in favor of {@link #connectorFactory(IConnectorFactory)}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
-            Class<C> connectorType,
-            IConnectorFactory<C> factory) {
-        return connectorFactory(factory);
-    }
-
-    /**
      * @since 3.0.0
      */
     public <C extends Connector> LmRuntimeBuilder connectorFactory(IConnectorFactory<C> factory) {
@@ -180,29 +157,11 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @deprecated in favor of {@link #connectorFactory(Class)}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public <C extends Connector> LmRuntimeBuilder withConnectorFactory(
-            Class<C> connectorType,
-            Class<? extends IConnectorFactory<C>> factoryType) {
-        return connectorFactory(factoryType);
-    }
-
-    /**
      * @since 3.0.0
      */
     public <C extends Connector> LmRuntimeBuilder connectorFactory(Class<? extends IConnectorFactory<C>> factoryType) {
         connectorFactoryTypes.add(factoryType);
         return this;
-    }
-
-    /**
-     * @deprecated in favor of {@link #connectorFromTarget()}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public LmRuntimeBuilder withConnectorFromTarget() {
-        return connectorFromTarget();
     }
 
     /**
@@ -222,14 +181,6 @@ public class LmRuntimeBuilder {
     }
 
     /**
-     * @deprecated in favor of {@link #extractorFactory(String, Class)}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public LmRuntimeBuilder withExtractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
-        return extractorFactory(extractorType, factoryType);
-    }
-
-    /**
      * Adds an extra factory to the map of extractor factories. Note that {@link JdbcExtractorFactory} is loaded by
      * default and does not have to be configured explicitly.
      *
@@ -238,14 +189,6 @@ public class LmRuntimeBuilder {
     public LmRuntimeBuilder extractorFactory(String extractorType, Class<? extends IExtractorFactory<?>> factoryType) {
         extractorFactoryTypes.put(extractorType, factoryType);
         return this;
-    }
-
-    /**
-     * @deprecated in favor of {@link #extractorFactory(String, IExtractorFactory)}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    public LmRuntimeBuilder withExtractorFactory(String extractorType, IExtractorFactory<?> factory) {
-        return extractorFactory(extractorType, factory);
     }
 
     /**
