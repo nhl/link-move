@@ -13,7 +13,6 @@ import java.lang.annotation.Annotation;
 /**
  * @since 3.0.0
  */
-@Deprecated(since = "3.0.0", forRemoval = true)
 public enum CreateStage implements TaskStageType {
     EXTRACT_SOURCE_ROWS(AfterSourceRowsExtracted.class),
     CONVERT_SOURCE_ROWS(AfterSourceRowsConverted.class),
@@ -29,6 +28,7 @@ public enum CreateStage implements TaskStageType {
         this.legacyAnnotation = legacyAnnotation;
     }
 
+    @Deprecated(since = "3.0.0", forRemoval = true)
     @Override
     public Class<? extends Annotation> getLegacyAnnotation() {
         return legacyAnnotation;
