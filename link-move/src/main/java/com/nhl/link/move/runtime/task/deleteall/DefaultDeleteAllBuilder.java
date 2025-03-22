@@ -71,10 +71,10 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
 
     public static final class NoDataSegment implements DataSegment { }
 
-    @Deprecated(since = "3.0.0", forRemoval = true)
     public enum EmptyStageType implements TaskStageType {
         ;
 
+        @Deprecated(since = "3.0.0", forRemoval = true)
         @Override
         public Class<? extends Annotation> getLegacyAnnotation() {
             return null;

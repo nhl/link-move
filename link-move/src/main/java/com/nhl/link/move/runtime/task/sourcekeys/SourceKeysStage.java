@@ -9,7 +9,6 @@ import java.lang.annotation.Annotation;
 /**
  * @since 3.0.0
  */
-@Deprecated(since = "3.0.0", forRemoval = true)
 public enum SourceKeysStage implements TaskStageType {
     EXTRACT_SOURCE_ROWS(AfterSourceRowsExtracted.class),
     COLLECT_SOURCE_KEYS(AfterSourceKeysCollected.class);
@@ -20,6 +19,7 @@ public enum SourceKeysStage implements TaskStageType {
         this.legacyAnnotation = legacyAnnotation;
     }
 
+    @Deprecated(since = "3.0.0", forRemoval = true)
     @Override
     public Class<? extends Annotation> getLegacyAnnotation() {
         return legacyAnnotation;
