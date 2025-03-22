@@ -3,6 +3,7 @@
 * #232 Attempt at semantic versioning
 * #234 Upgrade DFLib to 1.2
 * #235 Upgrade Jackson to 2.15.4
+* #236 Upgrade Cayenne to 4.2.2
 
 ## Release 3.0.M6
 
