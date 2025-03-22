@@ -2,14 +2,6 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.CreateOrUpdateBuilder;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.annotation.AfterFksResolved;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
-import com.nhl.link.move.annotation.AfterSourcesMapped;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMatched;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.mapper.Mapper;
@@ -20,8 +12,6 @@ import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import org.apache.cayenne.exp.property.Property;
-
-import java.lang.annotation.Annotation;
 
 /**
  * A builder of an ETL task that matches source data with target data based on a certain unique attribute on both sides.
@@ -66,18 +56,6 @@ public class DefaultCreateOrUpdateBuilder extends BaseTaskBuilder<DefaultCreateO
         StatsIncrementor incrementor = StatsIncrementor.instance();
         stage(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, incrementor::sourceRowsExtracted);
         stage(CreateOrUpdateStage.COMMIT_TARGET, incrementor::targetsCommitted);
-    }
-
-    @Override
-    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
-        return new Class[]{AfterSourceRowsExtracted.class,
-                AfterSourceRowsConverted.class,
-                AfterSourcesMapped.class,
-                AfterTargetsMatched.class,
-                AfterTargetsMapped.class,
-                AfterFksResolved.class,
-                AfterTargetsMerged.class,
-                AfterTargetsCommitted.class};
     }
 
     @Override

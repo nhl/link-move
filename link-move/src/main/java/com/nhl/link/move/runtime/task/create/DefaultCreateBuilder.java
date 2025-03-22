@@ -2,12 +2,6 @@ package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.CreateBuilder;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.annotation.AfterFksResolved;
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
@@ -16,8 +10,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.FkResolver;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @since 2.6
@@ -57,17 +49,6 @@ public class DefaultCreateBuilder extends BaseTaskBuilder<DefaultCreateBuilder, 
         StatsIncrementor incrementor = StatsIncrementor.instance();
         stage(CreateStage.EXTRACT_SOURCE_ROWS, incrementor::sourceRowsExtracted);
         stage(CreateStage.COMMIT_TARGET, incrementor::targetsCommitted);
-    }
-
-    @Override
-    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
-        return new Class[]{
-                AfterSourceRowsExtracted.class,
-                AfterSourceRowsConverted.class,
-                AfterTargetsMapped.class,
-                AfterFksResolved.class,
-                AfterTargetsMerged.class,
-                AfterTargetsCommitted.class};
     }
 
     @Override

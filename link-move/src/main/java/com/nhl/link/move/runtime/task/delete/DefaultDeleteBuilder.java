@@ -2,10 +2,6 @@ package com.nhl.link.move.runtime.task.delete;
 
 import com.nhl.link.move.DeleteBuilder;
 import com.nhl.link.move.LmTask;
-import com.nhl.link.move.annotation.AfterMissingTargetsFiltered;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsExtracted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.mapper.Mapper;
@@ -16,8 +12,6 @@ import com.nhl.link.move.runtime.task.MapperBuilder;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @since 1.3
@@ -54,16 +48,6 @@ public class DefaultDeleteBuilder extends BaseTaskBuilder<DefaultDeleteBuilder, 
         StatsIncrementor incrementor = StatsIncrementor.instance();
         stage(DeleteStage.EXTRACT_TARGET, incrementor::targetsExtracted);
         stage(DeleteStage.COMMIT_TARGET, incrementor::targetsCommitted);
-    }
-
-    @Override
-    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
-        return new Class[]{
-                AfterTargetsExtracted.class,
-                AfterTargetsMapped.class,
-                AfterMissingTargetsFiltered.class,
-                AfterTargetsCommitted.class
-        };
     }
 
     @Override

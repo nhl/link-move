@@ -38,11 +38,6 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
     }
 
     @Override
-    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
-        return new Class[0];
-    }
-
-    @Override
     public DefaultDeleteAllBuilder targetFilter(Expression filter) {
         this.targetFilter = filter;
         return this;
@@ -67,12 +62,5 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
     public static final class NoDataSegment implements DataSegment { }
 
     public enum EmptyStageType implements TaskStageType {
-        ;
-
-        @Deprecated(since = "3.0.0", forRemoval = true)
-        @Override
-        public Class<? extends Annotation> getLegacyAnnotation() {
-            return null;
-        }
     }
 }

@@ -46,12 +46,6 @@ public interface DeleteBuilder {
     DeleteBuilder batchSize(int batchSize);
 
     /**
-     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.DeleteBuilder#stage}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    DeleteBuilder stageListener(Object listener);
-
-    /**
      * Adds a callback invoked for each processed segment after the specified stage in the "delete" processing pipeline.
      *
      * @since 3.0.0

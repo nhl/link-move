@@ -1,9 +1,5 @@
 package com.nhl.link.move;
 
-import com.nhl.link.move.annotation.AfterSourceRowsConverted;
-import com.nhl.link.move.annotation.AfterTargetsCommitted;
-import com.nhl.link.move.annotation.AfterTargetsMapped;
-import com.nhl.link.move.annotation.AfterTargetsMerged;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.task.create.CreateSegment;
 import com.nhl.link.move.runtime.task.create.CreateStage;
@@ -52,24 +48,6 @@ public interface CreateBuilder {
      * @return this builder instance
      */
     CreateBuilder batchSize(int batchSize);
-
-    /**
-     * Adds a listener of transformation stages of batch segments. It should have methods annotated with
-     * {@link com.nhl.link.move.annotation.AfterSourceRowsExtracted}, {@link AfterSourceRowsConverted},
-     * {@link AfterTargetsMapped}, {@link AfterTargetsMerged}, {@link AfterTargetsCommitted}, etc. Annotated method
-     * signature should be as follows:
-     *
-     * <pre>
-     * @AfterXyz
-     * public void method(Execution e, CreateOrUpdateSegment<T> s) {}
-     * </pre>
-     *
-     * @param listener an annotated object that will receive events as the task proceeds.
-     * @return this builder instance
-     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.CreateBuilder#stage}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    CreateBuilder stageListener(Object listener);
 
     /**
      * Adds a callback invoked for each processed segment after the specified stage in the "create" processing pipeline.

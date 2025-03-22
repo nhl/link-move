@@ -57,25 +57,6 @@ public interface SourceKeysBuilder {
     SourceKeysBuilder matchBy(String... columns);
 
     /**
-     * Adds a listener of transformation stages of batch segments. It should have methods annotated with
-     * {@link com.nhl.link.move.annotation.AfterSourceRowsExtracted}. Annotated method
-     * signature should be as follows:
-     *
-     * <pre>
-     * @AfterSourceRowsExtracted
-     * public void method(Execution e, CreateOrUpdateSegment<T> s) {}
-     * </pre>
-     *
-     * @param listener an annotated object that will receive events as the task proceeds.
-     * @return this builder instance
-     * @since 3.0.0
-     *
-     * @deprecated use lambda-based callbacks instead, @see {@link com.nhl.link.move.SourceKeysBuilder#stage}
-     */
-    @Deprecated(since = "3.0.0", forRemoval = true)
-    SourceKeysBuilder stageListener(Object listener);
-
-    /**
      * Adds a callback invoked for each processed segment after the specified stage in the "source keys" extraction
      * pipeline.
      *

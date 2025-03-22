@@ -2,8 +2,6 @@ package com.nhl.link.move.runtime.task.sourcekeys;
 
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.SourceKeysBuilder;
-import com.nhl.link.move.annotation.AfterSourceKeysCollected;
-import com.nhl.link.move.annotation.AfterSourceRowsExtracted;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.mapper.Mapper;
@@ -14,8 +12,6 @@ import com.nhl.link.move.runtime.task.BaseTaskBuilder;
 import com.nhl.link.move.runtime.task.common.StatsIncrementor;
 import com.nhl.link.move.runtime.task.createorupdate.RowConverter;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @since 1.3
@@ -51,11 +47,6 @@ public class DefaultSourceKeysBuilder extends BaseTaskBuilder<DefaultSourceKeysB
         StatsIncrementor incrementor = StatsIncrementor.instance();
         stage(SourceKeysStage.EXTRACT_SOURCE_ROWS, incrementor::sourceRowsExtracted);
         stage(SourceKeysStage.COLLECT_SOURCE_KEYS, incrementor::sourceKeysCollected);
-    }
-
-    @Override
-    protected Class<? extends Annotation>[] supportedListenerAnnotations() {
-        return new Class[]{AfterSourceRowsExtracted.class, AfterSourceKeysCollected.class};
     }
 
     @Override
