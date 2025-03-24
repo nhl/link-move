@@ -1,4 +1,4 @@
-## Release 4.0.0-RC1
+## Release 4.0.0-M1
 
 * #239 Remove APIs deprecated in 3.0.0 
 
