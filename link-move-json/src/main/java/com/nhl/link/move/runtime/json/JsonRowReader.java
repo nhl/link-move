@@ -6,6 +6,7 @@ import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.RowReader;
 import com.nhl.link.move.runtime.json.query.JsonNodeWrapper;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -86,7 +87,7 @@ class JsonRowReader implements RowReader {
                 return node.asText();
             case BOOLEAN:
                 return node.asBoolean();
-            case NUMBER: {
+            case NUMBER:
                 NumericNode numericNode = (NumericNode) node;
                 switch (numericNode.numberType()) {
                     case INT: {
@@ -109,7 +110,19 @@ class JsonRowReader implements RowReader {
                     }
                     // intentionally fall through
                 }
-            }
+            case BINARY:
+
+                // Doesn't look like we'll ever hit this condition, as we are decoding values without imposing
+                // a type at the Jackson level (type conversion happens downstream in LinkMove). We can't even
+                // build a test for it.
+
+                // Why does "binaryValue()" throw whereas other value extraction methods do not?
+
+                try {
+                    return node.binaryValue();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             case NULL:
             case MISSING:
                 return null;
