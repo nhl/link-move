@@ -19,10 +19,9 @@ public class StringConverter extends SingleTypeConverter<String> {
             case "java.lang.Short":
             case "java.lang.Integer":
             case "java.lang.Long":
-            case "java.math.BigInteger": {
+            case "java.math.BigInteger":
                 return value.toString();
-            }
-            case "java.lang.Float": {
+            case "java.lang.Float":
                 Float f = (Float) value;
                 if (f.isInfinite() || f.isNaN()) {
                     throw new LmRuntimeException("Cannot map a NaN/Infinity to String: " + value);
@@ -32,8 +31,7 @@ public class StringConverter extends SingleTypeConverter<String> {
                             "Cannot map floating point number with non-zero fractional part to String: " + value);
                 }
                 return Long.toString(f.longValue());
-            }
-            case "java.lang.Double": {
+            case "java.lang.Double":
                 Double d = (Double) value;
                 if (d.isInfinite() || d.isNaN()) {
                     throw new LmRuntimeException("Cannot map a NaN/Infinity to String: " + value);
@@ -43,8 +41,7 @@ public class StringConverter extends SingleTypeConverter<String> {
                             "Cannot map floating point number with non-zero fractional part to String: " + value);
                 }
                 return Long.toString(d.longValue());
-            }
-            case "java.math.BigDecimal": {
+            case "java.math.BigDecimal":
                 BigDecimal d = (BigDecimal) value;
                 try {
                     return d.toBigIntegerExact().toString();
@@ -52,10 +49,9 @@ public class StringConverter extends SingleTypeConverter<String> {
                     throw new LmRuntimeException(
                             "Cannot map java.math.BigDecimal with non-zero fractional part to String: " + value);
                 }
-            }
-            default: {
+
+            default:
                 throw new LmRuntimeException("Value can not be mapped to String: " + value);
-            }
         }
     }
 }
