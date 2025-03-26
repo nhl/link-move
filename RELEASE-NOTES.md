@@ -1,3 +1,7 @@
+## Release 3.0.0-RC4
+
+* #242 JsonExtractor - exception processing explicit null nodes
+
 ## Release 3.0.0-RC3
 
 * #240 Deprecate StageListener and TaskStageType

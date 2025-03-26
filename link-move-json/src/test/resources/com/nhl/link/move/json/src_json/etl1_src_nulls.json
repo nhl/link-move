@@ -1,0 +1,17 @@
+{
+  "root": [
+    {
+      "id": 12,
+      "numInt": 24,
+      "string": "s"
+    },
+    {
+      "id": 15,
+      "numInt": null,
+      "string": null
+    },
+    {
+      "id": -1
+    }
+  ]
+}
