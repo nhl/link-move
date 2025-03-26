@@ -110,6 +110,8 @@ class JsonRowReader implements RowReader {
                     // intentionally fall through
                 }
             }
+            case NULL:
+                return null;
             default:
                 return node;
         }

@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 ## Release 4.0.0-M1
 
 * #239 Remove APIs deprecated in 3.0.0 
+
+## Release 3.0.0-RC4
+
+* #242 JsonExtractor - exception processing explicit null nodes
 
 ## Release 3.0.0-RC3
 
