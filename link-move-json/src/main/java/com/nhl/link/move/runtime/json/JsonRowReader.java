@@ -111,6 +111,7 @@ class JsonRowReader implements RowReader {
                 }
             }
             case NULL:
+            case MISSING:
                 return null;
             default:
                 return node;
