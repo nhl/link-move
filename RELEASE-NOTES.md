@@ -6,6 +6,7 @@
 ## Release 3.0.0-RC4
 
 * #242 JsonExtractor - exception processing explicit null nodes
+* #243 JsonExtractor - recognize binary notes
 
 ## Release 3.0.0-RC3
 
