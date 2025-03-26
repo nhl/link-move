@@ -42,9 +42,9 @@ public class StringConverter extends SingleTypeConverter<String> {
                 }
                 return Long.toString(d.longValue());
             case "java.math.BigDecimal":
-                BigDecimal d = (BigDecimal) value;
+                BigDecimal bd = (BigDecimal) value;
                 try {
-                    return d.toBigIntegerExact().toString();
+                    return bd.toBigIntegerExact().toString();
                 } catch (ArithmeticException e) {
                     throw new LmRuntimeException(
                             "Cannot map java.math.BigDecimal with non-zero fractional part to String: " + value);
