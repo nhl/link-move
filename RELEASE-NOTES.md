@@ -1,4 +1,4 @@
-## Release 3.0.0-RC2
+## Release 3.0.0-RC3
 
 * #240 Deprecate StageListener and TaskStageType
 * #241 Mapping JSON arrays as attributes
