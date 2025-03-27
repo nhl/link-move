@@ -1,7 +1,7 @@
-<<<<<<< HEAD
 ## Release 4.0.0-M1
 
 * #239 Remove APIs deprecated in 3.0.0 
+* #244 Simplify StringConverter
 
 ## Release 3.0.0-RC4
 
