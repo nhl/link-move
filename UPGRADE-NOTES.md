@@ -1,6 +1,19 @@
 _This document contains upgrade notes for LinkMove 3.x and newer. Older versions are documented in
 [UPGRADE-NOTES-1-2](./UPGRADE-NOTES-1-to-2.md)._
 
+## Upgrading to 4.0.0-M1
+
+### `StringConverter` behavior [#244](https://github.com/nhl/link-move/issues/244). The existing `StringConverter` 
+had a lot of very specific logic baked into it:
+* only allowed whole numbers and threw on fractional decimals
+* threw on NaN and Infinity numbers
+* only did conversion for a small set of known classes (numbers and such), and wouldn't take any arbitrary class
+
+This behavior has changed to apply a simple `toString(..)` to the source object, making it very generic and 
+predictable. In the unlikely event that your code relied on those exceptions for data quality, you will need 
+to apply custom data validation checks after `EXTRACT_SOURCE_ROWS` stage.
+
+
 ## Upgrading to 3.0.0-RC1
 
 ### Upgrade to DFLib 1.2 [#234](https://github.com/nhl/link-move/issues/234)
