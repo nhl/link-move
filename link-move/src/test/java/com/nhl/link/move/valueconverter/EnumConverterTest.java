@@ -13,9 +13,9 @@ public class EnumConverterTest {
 
         EnumConverter<Enum1> converter = new EnumConverter<>(Enum1.class);
 
-        assertEquals(Enum1.one, converter.convert("one"));
-        assertEquals(Enum1.three, converter.convert("three"));
-        assertEquals(Enum1.minus_one, converter.convert("minus_one"));
+        assertEquals(Enum1.one, converter.convert("one", -1));
+        assertEquals(Enum1.three, converter.convert("three", -1));
+        assertEquals(Enum1.minus_one, converter.convert("minus_one", -1));
     }
 
     @Test
@@ -23,15 +23,15 @@ public class EnumConverterTest {
 
         EnumConverter<Enum2> converter = new EnumConverter<>(Enum2.class);
 
-        assertEquals(Enum2.a, converter.convert("a"));
-        assertEquals(Enum2.b, converter.convert("b"));
-        assertEquals(Enum2.c, converter.convert("c"));
+        assertEquals(Enum2.a, converter.convert("a", -1));
+        assertEquals(Enum2.b, converter.convert("b", -1));
+        assertEquals(Enum2.c, converter.convert("c", -1));
     }
 
     @Test
     public void testConvert_E1_InvalidString() {
         EnumConverter<Enum1> converter = new EnumConverter<>(Enum1.class);
-        assertThrows(LmRuntimeException.class, () -> converter.convert("x"));
+        assertThrows(LmRuntimeException.class, () -> converter.convert("x", -1));
     }
 
     enum Enum1 {

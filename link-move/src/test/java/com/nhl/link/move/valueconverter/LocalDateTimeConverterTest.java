@@ -23,7 +23,7 @@ public class LocalDateTimeConverterTest {
         Instant now = Instant.now();
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime().truncatedTo(ChronoUnit.MILLIS);
         Date date = new Date(now.toEpochMilli());
-        assertEquals(localDateTime, CONVERTER.convert(date));
+        assertEquals(localDateTime, CONVERTER.convert(date, -1));
     }
 
     @Test
@@ -31,12 +31,12 @@ public class LocalDateTimeConverterTest {
         Instant now = Instant.now();
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime().truncatedTo(ChronoUnit.MILLIS);
         java.sql.Date date = new java.sql.Date(now.toEpochMilli());
-        assertEquals(localDateTime, CONVERTER.convert(date));
+        assertEquals(localDateTime, CONVERTER.convert(date, -1));
     }
 
     @Test
     public void testConvert_sqlTime() {
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(new Time(Instant.now().toEpochMilli())));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(new Time(Instant.now().toEpochMilli()), -1));
     }
 
     @Test
@@ -44,11 +44,11 @@ public class LocalDateTimeConverterTest {
         Instant now = Instant.now();
         LocalDateTime localDateTime = now.atZone(ZoneId.systemDefault()).toLocalDateTime().truncatedTo(ChronoUnit.MILLIS);
         Timestamp timestamp = new Timestamp(now.toEpochMilli());
-        assertEquals(localDateTime, CONVERTER.convert(timestamp));
+        assertEquals(localDateTime, CONVERTER.convert(timestamp, -1));
     }
 
     @Test
     public void testConvert_string() {
-        assertEquals(LocalDateTime.of(2017, 1, 2, 1, 0, 1), CONVERTER.convert("2017-01-02T01:00:01"));
+        assertEquals(LocalDateTime.of(2017, 1, 2, 1, 0, 1), CONVERTER.convert("2017-01-02T01:00:01", -1));
     }
 }

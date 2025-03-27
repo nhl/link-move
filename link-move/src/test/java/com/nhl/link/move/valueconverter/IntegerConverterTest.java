@@ -14,85 +14,85 @@ public class IntegerConverterTest {
 
     @Test
     public void testConvert_Null() {
-        assertNull(CONVERTER.convert(null));
+        assertNull(CONVERTER.convert(null, -1));
     }
 
     @Test
     public void testConvert_EmptyString() {
-        assertNull(CONVERTER.convert(""));
+        assertNull(CONVERTER.convert("", -1));
     }
 
     @Test
     public void testConvert_String() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert("1"));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert("1", -1));
     }
 
     @Test
     public void testConvert_Byte() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert((byte) 1));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert((byte) 1, -1));
     }
 
     @Test
     public void testConvert_Short() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert((short) 1));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert((short) 1, -1));
     }
 
     @Test
     public void testConvert_Integer() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert(1));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert(1, -1));
     }
 
     @Test
     public void testConvert_Long() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert((long) 1));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert((long) 1, -1));
     }
 
     @Test
     public void testConvert_Long_TooLarge1() {
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Long.valueOf(Integer.MAX_VALUE) + 1));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Long.valueOf(Integer.MAX_VALUE) + 1, -1));
     }
 
     @Test
     public void testConvert_Long_TooLarge2() {
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Long.valueOf(Integer.MIN_VALUE) - 1));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(Long.valueOf(Integer.MIN_VALUE) - 1, -1));
     }
 
     @Test
     public void testConvert_BigInteger() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert(BigInteger.ONE));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert(BigInteger.ONE, -1));
     }
 
     @Test
     public void testConvert_BigInteger_TooLarge1() {
         BigInteger x = BigInteger.valueOf(Integer.MAX_VALUE).add(BigInteger.ONE);
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x, -1));
     }
 
     @Test
     public void testConvert_BigInteger_TooLarge2() {
         BigInteger x = BigInteger.valueOf(Integer.MIN_VALUE).subtract(BigInteger.ONE);
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x, -1));
     }
 
     @Test
     public void testConvert_BigDecimal() {
-        assertEquals(Integer.valueOf(1), CONVERTER.convert(BigDecimal.ONE));
+        assertEquals(Integer.valueOf(1), CONVERTER.convert(BigDecimal.ONE, -1));
     }
 
     @Test
     public void testConvert_BigDecimal_TooLarge1() {
         BigDecimal x = BigDecimal.valueOf(Integer.MAX_VALUE).add(BigDecimal.ONE);
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x, -1));
     }
 
     @Test
     public void testConvert_BigDecimal_TooLarge2() {
         BigDecimal x = BigDecimal.valueOf(Integer.MIN_VALUE).subtract(BigDecimal.ONE);
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(x, -1));
     }
 
     @Test
     public void testConvert_BigDecimal_NonZeroFractionalPart() {
-        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(BigDecimal.valueOf(1.1)));
+        assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(BigDecimal.valueOf(1.1), -1));
     }
 }
