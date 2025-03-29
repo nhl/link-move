@@ -9,5 +9,10 @@ public enum DeleteStage implements TaskStageType {
     EXTRACT_TARGET,
     MAP_TARGET,
     FILTER_MISSING_TARGETS,
+
+    /**
+     * @since 4.0.0
+     */
+    DELETE_TARGET,
     COMMIT_TARGET
 }

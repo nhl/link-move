@@ -26,7 +26,7 @@ public class DeleteSegmentProcessor {
 
         mapTarget(exec, segment);
         filterMissingTargets(exec, segment);
-        deleteTarget(segment);
+        deleteTarget(exec, segment);
         commitTarget(exec, segment);
     }
 
@@ -43,8 +43,13 @@ public class DeleteSegmentProcessor {
         callbackExecutor.executeCallbacks(DeleteStage.FILTER_MISSING_TARGETS, exec, segment);
     }
 
-    private void deleteTarget(DeleteSegment segment) {
+    private void deleteTarget(Execution exec, DeleteSegment segment) {
         deleter.delete(segment.getContext(), segment.getMissingTargets());
+
+        // copy without a change. This will help any callbacks to locate data for a given stage
+        segment.setDeletedTargets(segment.getMissingTargets());
+
+        callbackExecutor.executeCallbacks(DeleteStage.DELETE_TARGET, exec, segment);
     }
 
     private void commitTarget(Execution exec, DeleteSegment segment) {
