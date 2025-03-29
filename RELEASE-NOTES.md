@@ -2,6 +2,7 @@
 
 * #239 Remove APIs deprecated in 3.0.0 
 * #244 Simplify StringConverter
+* #245 Simplified stages
 * #246 Missing stage: "SourceKeysStage.CONVERT_SOURCE_ROWS"
 * #247 Missing stage: "DeleteStage.DELETE_TARGET"
 

@@ -1,42 +1,29 @@
 package com.nhl.link.move.runtime.task.delete;
 
-import org.dflib.DataFrame;
 import com.nhl.link.move.runtime.task.common.DataSegment;
 import org.apache.cayenne.ObjectContext;
+import org.dflib.DataFrame;
 
 import java.util.Set;
 
-public class DeleteSegment implements DataSegment {
+public class DeleteSegment extends DataSegment<DeleteStage> {
 
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String KEY_COLUMN = "$lm_key";
 
     private final ObjectContext context;
+    private final Set<Object> sourceKeys;
 
-    private DataFrame targets;
-    private Set<Object> sourceKeys;
-    private DataFrame mappedTargets;
-    private DataFrame missingTargets;
-    private DataFrame deletedTargets;
-
-    public DeleteSegment(ObjectContext context) {
+    /**
+     * @since 4.0.0
+     */
+    public DeleteSegment(ObjectContext context, Set<Object> sourceKeys) {
         this.context = context;
+        this.sourceKeys = sourceKeys;
     }
 
     public ObjectContext getContext() {
         return context;
-    }
-
-    public DataFrame getTargets() {
-        return targets;
-    }
-
-    /**
-     * @since 3.0.0
-     */
-    public DeleteSegment setTargets(DataFrame targets) {
-        this.targets = targets;
-        return this;
     }
 
     /**
@@ -46,29 +33,33 @@ public class DeleteSegment implements DataSegment {
         return sourceKeys;
     }
 
+    public DataFrame getTargets() {
+        return get(DeleteStage.EXTRACT_TARGET);
+    }
+
     /**
-     * @since 1.6
+     * @since 3.0.0
      */
-    public DeleteSegment setSourceKeys(Set<Object> sourceKeys) {
-        this.sourceKeys = sourceKeys;
+    public DeleteSegment setTargets(DataFrame df) {
+        set(DeleteStage.EXTRACT_TARGET, df);
         return this;
     }
 
     public DataFrame getMappedTargets() {
-        return mappedTargets;
+        return get(DeleteStage.MAP_TARGET);
     }
 
-    public DeleteSegment setMappedTargets(DataFrame mappedTargets) {
-        this.mappedTargets = mappedTargets;
+    public DeleteSegment setMappedTargets(DataFrame df) {
+        set(DeleteStage.MAP_TARGET, df);
         return this;
     }
 
     public DataFrame getMissingTargets() {
-        return missingTargets;
+        return get(DeleteStage.FILTER_MISSING_TARGETS);
     }
 
-    public DeleteSegment setMissingTargets(DataFrame missingTargets) {
-        this.missingTargets = missingTargets;
+    public DeleteSegment setMissingTargets(DataFrame df) {
+        set(DeleteStage.FILTER_MISSING_TARGETS, df);
         return this;
     }
 
@@ -76,14 +67,14 @@ public class DeleteSegment implements DataSegment {
      * @since 4.0.0
      */
     public DataFrame getDeletedTargets() {
-        return deletedTargets;
+        return get(DeleteStage.DELETE_TARGET);
     }
 
     /**
      * @since 4.0.0
      */
-    public DeleteSegment setDeletedTargets(DataFrame deletedTargets) {
-        this.deletedTargets = deletedTargets;
+    public DeleteSegment setDeletedTargets(DataFrame df) {
+        set(DeleteStage.DELETE_TARGET, df);
         return this;
     }
 }

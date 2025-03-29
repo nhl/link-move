@@ -4,8 +4,10 @@ import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysSegment;
 import com.nhl.link.move.runtime.task.sourcekeys.SourceKeysStage;
+import org.dflib.DataFrame;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * A builder of an {@link LmTask} that extracts all the keys from the source
@@ -62,5 +64,16 @@ public interface SourceKeysBuilder {
      *
      * @since 3.0.0
      */
-    SourceKeysBuilder stage(SourceKeysStage stageType, BiConsumer<Execution, SourceKeysSegment> callback);
+    SourceKeysBuilder stage(SourceKeysStage stage, BiConsumer<Execution, SourceKeysSegment> callback);
+
+    /**
+     * Adds a callback invoked for each date segment after the specified stage in the "source keys" pipeline was processed.
+     * The result of that stage is passed to the transformer argument. The value returned from the transformer overrides
+     * the previous result for the stage.
+     *
+     * @since 4.0.0
+     */
+    default SourceKeysBuilder stage(SourceKeysStage stage, Function<DataFrame, DataFrame> transformer) {
+        return stage(stage, (e, s) -> s.postProcess(stage, transformer));
+    }
 }

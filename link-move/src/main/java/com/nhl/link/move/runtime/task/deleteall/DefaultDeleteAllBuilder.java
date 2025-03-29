@@ -9,8 +9,6 @@ import com.nhl.link.move.runtime.task.common.TaskStageType;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.map.DbEntity;
 
-import java.lang.annotation.Annotation;
-
 /**
  * @since 3.0.0
  */
@@ -59,7 +57,8 @@ public class DefaultDeleteAllBuilder extends BaseTaskBuilder<DefaultDeleteAllBui
                 logger);
     }
 
-    public static final class NoDataSegment implements DataSegment { }
+    public static final class NoDataSegment extends DataSegment<EmptyStageType> {
+    }
 
     public enum EmptyStageType implements TaskStageType {
     }

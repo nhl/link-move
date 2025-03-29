@@ -5,8 +5,10 @@ import com.nhl.link.move.mapper.Mapper;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateSegment;
 import com.nhl.link.move.runtime.task.createorupdate.CreateOrUpdateStage;
 import org.apache.cayenne.exp.property.Property;
+import org.dflib.DataFrame;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * A builder of an {@link LmTask} that performs create-or-update synchronization.
@@ -87,5 +89,16 @@ public interface CreateOrUpdateBuilder {
      *
      * @since 3.0.0
      */
-    CreateOrUpdateBuilder stage(CreateOrUpdateStage stageType, BiConsumer<Execution, CreateOrUpdateSegment> callback);
+    CreateOrUpdateBuilder stage(CreateOrUpdateStage stage, BiConsumer<Execution, CreateOrUpdateSegment> callback);
+
+    /**
+     * Adds a callback invoked for each date segment after the specified stage in the "create-or-update" pipeline was processed.
+     * The result of that stage is passed to the transformer argument. The value returned from the transformer overrides
+     * the previous result for the stage.
+     *
+     * @since 4.0.0
+     */
+    default CreateOrUpdateBuilder stage(CreateOrUpdateStage stage, Function<DataFrame, DataFrame> transformer) {
+        return stage(stage, (e, s) -> s.postProcess(stage, transformer));
+    }
 }

@@ -3,8 +3,10 @@ package com.nhl.link.move;
 import com.nhl.link.move.extractor.model.ExtractorName;
 import com.nhl.link.move.runtime.task.create.CreateSegment;
 import com.nhl.link.move.runtime.task.create.CreateStage;
+import org.dflib.DataFrame;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * A builder of an {@link LmTask} that performs fast "create" synchronization without any source/target key matching.
@@ -50,9 +52,20 @@ public interface CreateBuilder {
     CreateBuilder batchSize(int batchSize);
 
     /**
-     * Adds a callback invoked for each processed segment after the specified stage in the "create" processing pipeline.
+     * Adds a callback invoked for each data segment after the specified stage in the "create" processing pipeline.
      *
      * @since 3.0.0
      */
-    CreateBuilder stage(CreateStage stageType, BiConsumer<Execution, CreateSegment> callback);
+    CreateBuilder stage(CreateStage stage, BiConsumer<Execution, CreateSegment> callback);
+
+    /**
+     * Adds a callback invoked for each date segment after the specified stage in the "create" pipeline was processed.
+     * The result of that stage is passed to the transformer argument. The value returned from the transformer overrides
+     * the previous result for the stage.
+     *
+     * @since 4.0.0
+     */
+    default CreateBuilder stage(CreateStage stage, Function<DataFrame, DataFrame> transformer) {
+        return stage(stage, (e, s) -> s.postProcess(stage, transformer));
+    }
 }

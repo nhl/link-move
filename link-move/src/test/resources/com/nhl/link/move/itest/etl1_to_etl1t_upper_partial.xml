@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd https://nhl.github.io/link-move/xsd/extractor_config_3.xsd"
+		xmlns="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd">
+
+	<type>jdbc</type>
+	<connectorId>derbysrc</connectorId>
+	<extractor>
+		<attributes>
+			<attribute>
+				<type>java.lang.Integer</type>
+				<source>AGE</source>
+				<target>age</target>
+			</attribute>
+			<attribute>
+				<type>java.lang.String</type>
+				<source>NAME</source>
+				<target>name</target>
+			</attribute>
+		</attributes>
+		<properties>
+			<extractor.jdbc.sqltemplate>
+			<![CDATA[SELECT "age", "name" FROM "etl1"
+			]]>
+			</extractor.jdbc.sqltemplate>
+			<extractor.jdbc.sqltemplate.caps>upper</extractor.jdbc.sqltemplate.caps>
+		</properties>
+	</extractor>
+</config>

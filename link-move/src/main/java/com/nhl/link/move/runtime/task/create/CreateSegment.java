@@ -1,26 +1,20 @@
 package com.nhl.link.move.runtime.task.create;
 
 import com.nhl.link.move.RowAttribute;
-import org.dflib.DataFrame;
 import com.nhl.link.move.runtime.task.common.DataSegment;
 import org.apache.cayenne.ObjectContext;
+import org.dflib.DataFrame;
 
 /**
  * @since 2.6
  */
-public class CreateSegment implements DataSegment {
+public class CreateSegment extends DataSegment<CreateStage> {
 
     public static final String TARGET_COLUMN = "$lm_target";
     public static final String TARGET_CREATED_COLUMN = "$lm_target_created";
 
     private final ObjectContext context;
     private final RowAttribute[] sourceRowsHeader;
-
-    private DataFrame sourceRows;
-    private DataFrame sources;
-    private DataFrame mapped;
-    private DataFrame fksResolved;
-    private DataFrame merged;
 
     public CreateSegment(ObjectContext context, RowAttribute[] sourceRowsHeader) {
         this.sourceRowsHeader = sourceRowsHeader;
@@ -36,41 +30,32 @@ public class CreateSegment implements DataSegment {
     }
 
     public DataFrame getSourceRows() {
-        return sourceRows;
+        return get(CreateStage.EXTRACT_SOURCE_ROWS);
     }
 
     /**
      * @since 2.17
      */
-    public CreateSegment setSourceRows(DataFrame sourceRows) {
-        this.sourceRows = sourceRows;
+    public CreateSegment setSourceRows(DataFrame df) {
+        set(CreateStage.EXTRACT_SOURCE_ROWS, df);
         return this;
     }
 
     public DataFrame getSources() {
-        return sources;
+        return get(CreateStage.CONVERT_SOURCE_ROWS);
     }
 
-    public CreateSegment setSources(DataFrame translatedSegment) {
-        this.sources = translatedSegment;
-        return this;
-    }
-
-    public DataFrame getMerged() {
-        return merged;
-    }
-
-    public CreateSegment setMerged(DataFrame merged) {
-        this.merged = merged;
+    public CreateSegment setSources(DataFrame df) {
+        set(CreateStage.CONVERT_SOURCE_ROWS, df);
         return this;
     }
 
     public DataFrame getMapped() {
-        return mapped;
+        return get(CreateStage.MAP_TARGET);
     }
 
-    public CreateSegment setMapped(DataFrame mapped) {
-        this.mapped = mapped;
+    public CreateSegment setMapped(DataFrame df) {
+        set(CreateStage.MAP_TARGET, df);
         return this;
     }
 
@@ -78,14 +63,23 @@ public class CreateSegment implements DataSegment {
      * @since 2.12
      */
     public DataFrame getFksResolved() {
-        return fksResolved;
+        return get(CreateStage.RESOLVE_FK_VALUES);
     }
 
     /**
      * @since 2.12
      */
-    public CreateSegment setFksResolved(DataFrame fksResolved) {
-        this.fksResolved = fksResolved;
+    public CreateSegment setFksResolved(DataFrame df) {
+        set(CreateStage.RESOLVE_FK_VALUES, df);
+        return this;
+    }
+
+    public DataFrame getMerged() {
+        return get(CreateStage.MERGE_TARGET);
+    }
+
+    public CreateSegment setMerged(DataFrame df) {
+        set(CreateStage.MERGE_TARGET, df);
         return this;
     }
 }

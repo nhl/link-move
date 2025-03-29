@@ -103,9 +103,8 @@ public class DeleteTask extends BaseTask {
 
             // executing in the select context
             ObjectContext context = rows.get(0).getObjectContext();
-            DeleteSegment segment = new DeleteSegment(context)
-                    .setTargets(DataFrame.byColumn(columns).of(Series.ofIterable(rows)))
-                    .setSourceKeys(keys);
+            DeleteSegment segment = new DeleteSegment(context, keys)
+                    .setTargets(DataFrame.byColumn(columns).of(Series.ofIterable(rows)));
             processor.process(exec, segment);
         };
     }

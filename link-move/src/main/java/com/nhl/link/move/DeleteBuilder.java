@@ -6,8 +6,10 @@ import com.nhl.link.move.runtime.task.delete.DeleteSegment;
 import com.nhl.link.move.runtime.task.delete.DeleteStage;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.property.Property;
+import org.dflib.DataFrame;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * since 1.3
@@ -50,5 +52,16 @@ public interface DeleteBuilder {
      *
      * @since 3.0.0
      */
-    DeleteBuilder stage(DeleteStage stageType, BiConsumer<Execution, DeleteSegment> callback);
+    DeleteBuilder stage(DeleteStage stage, BiConsumer<Execution, DeleteSegment> callback);
+
+    /**
+     * Adds a callback invoked for each date segment after the specified stage in the "delete" pipeline was processed.
+     * The result of that stage is passed to the transformer argument. The value returned from the transformer overrides
+     * the previous result for the stage.
+     *
+     * @since 4.0.0
+     */
+    default DeleteBuilder stage(DeleteStage stage, Function<DataFrame, DataFrame> transformer) {
+        return stage(stage, (e, s) -> s.postProcess(stage, transformer));
+    }
 }

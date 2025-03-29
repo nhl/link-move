@@ -9,11 +9,10 @@ import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Create_CallbacksIT extends LmIntegrationTest {
+public class Create_Stage_CallbacksIT extends LmIntegrationTest {
 
     @Test
     public void test_Callbacks() {
