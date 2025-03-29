@@ -27,12 +27,13 @@ public class SourceKeysSegmentProcessor {
     public void process(Execution exec, SourceKeysSegment segment) {
         callbackExecutor.executeCallbacks(SourceKeysStage.EXTRACT_SOURCE_ROWS, exec, segment);
 
-        convertSrc(segment);
+        convertSrc(exec, segment);
         collectSourceKeys(exec, segment);
     }
 
-    private void convertSrc(SourceKeysSegment segment) {
+    private void convertSrc(Execution exec, SourceKeysSegment segment) {
         segment.setSources(rowConverter.convert(segment.getSourceRowsHeader(), segment.getSourceRows()));
+        callbackExecutor.executeCallbacks(SourceKeysStage.CONVERT_SOURCE_ROWS, exec, segment);
     }
 
     private void collectSourceKeys(Execution exec, SourceKeysSegment segment) {
