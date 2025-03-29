@@ -21,23 +21,23 @@ public class PathMapperTest {
     }
 
     @Test
-    public void testKeyForSource() {
+    public void keyForSource() {
         assertEquals("ABC", mapper.keyForSource(new TestRowProxy(Index.of("a", "abc"), "A", "ABC")));
     }
 
     @Test
-    public void testKeyForSource_NullKey() {
+    public void keyForSource_NullKey() {
         assertEquals(null, mapper.keyForSource(new TestRowProxy(Index.of("a", "abc"), "A", null)));
     }
 
     @Test
-    public void testKeyForSource_MissingKey() {
+    public void keyForSource_MissingKey() {
         assertThrows(LmRuntimeException.class,
                 () -> mapper.keyForSource(new TestRowProxy(Index.of("a"), "A")));
     }
 
     @Test
-    public void testKeyForTarget() {
+    public void keyForTarget() {
 
         DataObject t = mock(DataObject.class);
         when(t.readProperty("abc")).thenReturn(44);
@@ -47,7 +47,7 @@ public class PathMapperTest {
     }
 
     @Test
-    public void testExpressionForKey() {
+    public void expressionForKey() {
         assertEquals("abc = \"a\"", mapper.expressionForKey("a").toString());
     }
 }

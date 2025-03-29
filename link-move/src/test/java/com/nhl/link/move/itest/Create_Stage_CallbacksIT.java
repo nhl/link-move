@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Create_Stage_CallbacksIT extends LmIntegrationTest {
 
     @Test
-    public void test_Callbacks() {
+    public void callbacks() {
 
         CreateBuilder builder = lmRuntime.service(ITaskService.class)
                 .create(Etl1t.class)

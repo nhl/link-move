@@ -15,12 +15,12 @@ public class ExtractorConfigXSDTest extends BaseSchemaTest {
 	private static final String SCHEMA = "com/nhl/link/move/xsd/extractor_config_1.xsd";
 
 	@Test
-	public void testValid() throws SAXException, IOException {
+	public void valid() throws SAXException, IOException {
 		validate("valid_extractor.xml", SCHEMA);
 	}
 
 	@Test
-	public void testIncorrectOrdering() throws SAXException, IOException {
+	public void incorrectOrdering() throws SAXException, IOException {
 
 		try {
 			validate("invalid_extractor_ordering.xml", SCHEMA);

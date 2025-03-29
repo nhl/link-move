@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class CreateOrUpdateIT extends LmIntegrationTest {
 
     @Test
-    public void test_MatchByAttribute() {
+    public void matchByAttribute() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -54,7 +54,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchByDbAttribute() {
+    public void matchByDbAttribute() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -94,7 +94,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchByDbAttribute_Binary() {
+    public void matchByDbAttribute_Binary() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl11t.class)
@@ -123,7 +123,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchByAttributes() {
+    public void matchByAttributes() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -157,7 +157,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchById() {
+    public void matchById() {
 
         LmTask task = lmRuntime.service(ITaskService.class).
                 createOrUpdate(Etl5t.class)
@@ -196,7 +196,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchById_Default() {
+    public void matchById_Default() {
 
         // not specifying "matchById" explicitly ... this should be the default
         LmTask task = lmRuntime.service(ITaskService.class)
@@ -233,7 +233,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchById_Autoincrement() {
+    public void matchById_Autoincrement() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -252,7 +252,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_ExtraSrcColumns() {
+    public void extraSrcColumns() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -273,7 +273,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchByAttribute_SyncFk() {
+    public void matchByAttribute_SyncFk() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl3t.class)
@@ -308,7 +308,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchByAttribute_SyncFk_Nulls() {
+    public void matchByAttribute_SyncFk_Nulls() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl3t.class)
@@ -346,7 +346,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchByAttribute_SyncNulls() {
+    public void matchByAttribute_SyncNulls() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -364,7 +364,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_MatchById_RelationshipOnPK() {
+    public void matchById_RelationshipOnPK() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl9t.class)

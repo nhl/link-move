@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 public class DataRowIteratorTest {
 
     @Test
-    public void testCalculateHeader() {
+    public void calculateHeader() {
 
         DataRow row = new DataRow(5);
         row.put("A1", new Object());
@@ -40,7 +40,7 @@ public class DataRowIteratorTest {
     }
 
     @Test
-    public void testCalculateHeader_NoRows() {
+    public void calculateHeader_NoRows() {
 
         ResultIterator<DataRow> rows = mock(ResultIterator.class);
         when(rows.hasNextRow()).thenReturn(false, false);

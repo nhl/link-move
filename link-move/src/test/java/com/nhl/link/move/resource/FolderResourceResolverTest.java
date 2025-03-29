@@ -28,7 +28,7 @@ public class FolderResourceResolverTest {
     }
 
     @Test
-    public void testReader() throws IOException {
+    public void reader() throws IOException {
 
         try (Reader r = resolver.reader("dummy.xml")) {
 
@@ -41,7 +41,7 @@ public class FolderResourceResolverTest {
     }
 
     @Test
-    public void testNeedsReload() {
+    public void needsReload() {
         assertFalse(resolver.needsReload("dummy.xml", System.currentTimeMillis() + 1));
         File file = new File(rootDir, "dummy.xml");
         assertTrue(resolver.needsReload("dummy.xml", file.lastModified() - 1));

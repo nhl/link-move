@@ -51,7 +51,7 @@ public class TaskServiceTest {
 	}
 
 	@Test
-	public void testDelete() {
+	public void delete() {
 		DeleteBuilder builder = taskService.delete(Etl1t.class);
 		assertNotNull(builder);
 		// TODO: anything else we can assert here?

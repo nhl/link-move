@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class DeleteAllIT extends LmIntegrationTest {
 
 	@Test
-	void test_deleteAll() {
+	void deleteAll() {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.deleteAll(Etl6t.class)
@@ -29,7 +29,7 @@ class DeleteAllIT extends LmIntegrationTest {
 	}
 
 	@Test
-	void test_deleteAll_skipExecutionStats() {
+	void deleteAll_skipExecutionStats() {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.deleteAll(Etl6t.class)
@@ -48,7 +48,7 @@ class DeleteAllIT extends LmIntegrationTest {
 	}
 
 	@Test
-	void test_deleteAll_withTargetFilter() {
+	void deleteAll_withTargetFilter() {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.deleteAll(Etl6t.class)

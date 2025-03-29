@@ -49,7 +49,7 @@ public class LmRuntimeBuilderTest {
     }
 
     @Test
-    public void testBuild_DefaultConfigLoader() {
+    public void build_DefaultConfigLoader() {
 
         LmRuntimeBuilder builder = LmRuntime.builder().targetRuntime(cayenneRuntime);
         LmRuntime runtime = builder.build();
@@ -61,14 +61,14 @@ public class LmRuntimeBuilderTest {
     }
 
     @Test
-    public void testBuild_NoTargetRuntime() {
+    public void build_NoTargetRuntime() {
         LmRuntimeBuilder builder = LmRuntime.builder()
                 .extractorResolver(mock(ResourceResolver.class));
         assertThrows(IllegalStateException.class, builder::build);
     }
 
     @Test
-    public void testBuild() {
+    public void build() {
         LmRuntimeBuilder builder = LmRuntime.builder()
                 .extractorResolver(mock(ResourceResolver.class))
                 .targetRuntime(cayenneRuntime);
@@ -81,7 +81,7 @@ public class LmRuntimeBuilderTest {
     }
 
     @Test
-    public void testAdapter() {
+    public void adapter() {
 
         LmAdapter a1 = mock(LmAdapter.class);
         LmAdapter a2 = mock(LmAdapter.class);

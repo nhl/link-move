@@ -37,7 +37,7 @@ public class XmlExtractor_NamespacesTest {
                     "</doc>";
 
     @Test
-    public void testXmlExtractor_Namespaces() {
+    public void xmlExtractor_Namespaces() {
         Extractor extractor = createExtractor("/doc/ns1:e1", Collections.singletonMap("ns1", "http://example.org/"));
 
         List<Object[]> rows = readRows(extractor);
@@ -50,7 +50,7 @@ public class XmlExtractor_NamespacesTest {
     }
 
     @Test
-    public void testXmlExtractor_Namespaces_InvalidBinding() {
+    public void xmlExtractor_Namespaces_InvalidBinding() {
         Extractor extractor = createExtractor("/doc/ns1:e1", Collections.singletonMap("ns1", "http://www.example.org"));
 
         List<Object[]> rows = readRows(extractor);
@@ -58,7 +58,7 @@ public class XmlExtractor_NamespacesTest {
     }
 
     @Test
-    public void testXmlExtractor_Namespaces_NoBindings() {
+    public void xmlExtractor_Namespaces_NoBindings() {
         assertThrows(LmRuntimeException.class, () -> createExtractor("/doc/ns1:e1", Collections.emptyMap()));
     }
 

@@ -9,14 +9,13 @@ import com.nhl.link.move.unit.cayenne.t.Etl5t;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateOrUpdate_CallbacksIT extends LmIntegrationTest {
 
     @Test
-    public void test_Listeners() {
+    public void listeners() {
 
         CreateOrUpdateBuilder builder = lmRuntime.service(ITaskService.class).
                 createOrUpdate(Etl5t.class)
@@ -33,7 +32,7 @@ public class CreateOrUpdate_CallbacksIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_Callbacks() {
+    public void callbacks() {
 
         CreateOrUpdateBuilder builder = lmRuntime.service(ITaskService.class).
                 createOrUpdate(Etl5t.class)

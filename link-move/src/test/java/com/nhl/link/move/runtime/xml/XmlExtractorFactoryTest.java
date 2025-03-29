@@ -44,17 +44,17 @@ public class XmlExtractorFactoryTest {
     }
 
     @Test
-    public void testGetConnectorType() {
+    public void getConnectorType() {
         assertEquals(StreamConnector.class, extractorFactory.getConnectorType());
     }
 
     @Test
-    public void testCreateExtractor() {
+    public void createExtractor() {
         extractorFactory.createExtractor(connectorMock, model);
     }
 
     @Test
-    public void testCreateExtractorWithEmptyXPathExpression() {
+    public void createExtractorWithEmptyXPathExpression() {
         model.clearProperties();
         assertThrows(IllegalArgumentException.class, () -> extractorFactory.createExtractor(connectorMock, model));
     }

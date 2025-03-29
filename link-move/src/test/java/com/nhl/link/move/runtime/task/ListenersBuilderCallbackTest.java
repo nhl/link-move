@@ -33,43 +33,43 @@ public class ListenersBuilderCallbackTest {
     }
 
     @Test
-    public void testAfterSourceRowsExtracted() {
+    public void afterSourceRowsExtracted() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.EXTRACT_SOURCE_ROWS, 1);
     }
 
     @Test
-    public void testAfterSourceRowsConverted() {
+    public void afterSourceRowsConverted() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.CONVERT_SOURCE_ROWS, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.CONVERT_SOURCE_ROWS, 1);
     }
 
     @Test
-    public void testAfterTargetMatched() {
+    public void afterTargetMatched() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.MATCH_TARGET, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.MATCH_TARGET, 2);
     }
 
     @Test
-    public void testAfterTargetsMerged() {
+    public void afterTargetsMerged() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.MERGE_TARGET, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.MERGE_TARGET, 1);
     }
 
     @Test
-    public void testAfterTargetsCommitted() {
+    public void afterTargetsCommitted() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.COMMIT_TARGET, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.COMMIT_TARGET, 1);
     }
 
     @Test
-    public void testAfterSourcesMapped() {
+    public void afterSourcesMapped() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.MAP_SOURCE, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.MAP_SOURCE, 1);
     }
 
     @Test
-    public void testAfterFksResolve() {
+    public void afterFksResolve() {
         builder.getCallbackExecutor().executeCallbacks(CreateOrUpdateStage.RESOLVE_FK_VALUES, execution, segment);
         callbacks.assertCalled(CreateOrUpdateStage.RESOLVE_FK_VALUES, 1);
     }

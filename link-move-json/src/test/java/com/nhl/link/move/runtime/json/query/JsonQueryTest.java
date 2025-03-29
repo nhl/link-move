@@ -38,7 +38,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_SimpleProperties_Dot() {
+    public void query_SimpleProperties_Dot() {
 
         JsonQuery query = compiler.compile("$.store.book[*].author");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -52,7 +52,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_SimpleProperties_Brackets() {
+    public void query_SimpleProperties_Brackets() {
 
         JsonQuery query = compiler.compile("$['store'][\"book\"][*]['author']");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -66,7 +66,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_SimpleProperties_RecursiveDescent() {
+    public void query_SimpleProperties_RecursiveDescent() {
 
         JsonQuery query = compiler.compile("$.store..price");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -81,7 +81,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_ArrayProperties() {
+    public void query_ArrayProperties() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -112,7 +112,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_ArrayProperties_Flattened() {
+    public void query_ArrayProperties_Flattened() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers.*");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -125,7 +125,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQueries_CompilerBehaviourImmutable() {
+    public void queries_CompilerBehaviourImmutable() {
 
         JsonQuery query;
         List<JsonNode> nodes;
@@ -168,7 +168,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_ArrayProperties_ByIndex_Brackets() {
+    public void query_ArrayProperties_ByIndex_Brackets() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers[0]");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -180,7 +180,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_ArrayProperties_Dot() {
+    public void query_ArrayProperties_Dot() {
 
         JsonQuery query = compiler.compile("$.store.book[*].readers.1");
         List<JsonNode> nodes = collectJsonNodes(query.execute(document));
@@ -191,7 +191,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript() {
+    public void query_PredicateScript() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == $.allReaders[0].name)]");
@@ -202,7 +202,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_ConstantValues() {
+    public void query_PredicateScript_ConstantValues() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Rob')]");
@@ -213,7 +213,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_ConstantValues_InverseOrder() {
+    public void query_PredicateScript_ConstantValues_InverseOrder() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?('Rob' != @.name)]");
@@ -225,7 +225,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_ConstantValues_Number() {
+    public void query_PredicateScript_ConstantValues_Number() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.age == 60)]");
@@ -236,7 +236,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_ConstantValues_Boolean() {
+    public void query_PredicateScript_ConstantValues_Boolean() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(true == true)]");
@@ -249,7 +249,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_LRAssociativity() {
+    public void query_PredicateScript_LRAssociativity() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Rob' == true)]");
@@ -260,7 +260,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_LRAssociativity2() {
+    public void query_PredicateScript_LRAssociativity2() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Bob' && @.age == 18 || @.age == 3)]");
@@ -272,7 +272,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_Precedence() {
+    public void query_PredicateScript_Precedence() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Bob' && @.age == 18 || @.name == 'John' && @.age == 3)]");
@@ -284,7 +284,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_NestedScripts() {
+    public void query_PredicateScript_NestedScripts() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?(@.name == 'Bob' && (@.age == 18 || @.age == 3))]");
@@ -295,7 +295,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_PredicateScript_NestedScripts2() {
+    public void query_PredicateScript_NestedScripts2() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[?((@.name) == 'Bob' && (@.age == 18 || @.age == 3) || @.name == $.allReaders[1].name && (60) == @.age)]");
@@ -307,7 +307,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_FilterScript() {
+    public void query_FilterScript() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[(0)]");
@@ -319,7 +319,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_FilterScript2() {
+    public void query_FilterScript2() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[*].[($.properties[0])].*");
@@ -332,7 +332,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_Functions_Regex() {
+    public void query_Functions_Regex() {
         JsonQuery query = compiler.compile(
                 "$.store.book[*].readers[*][?(@.name =~ '.ob')]");
 
@@ -343,7 +343,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_UntypedPredicate1() {
+    public void query_UntypedPredicate1() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[?(@.readers[?(@.age != 3)])]");
@@ -359,7 +359,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_UntypedPredicate2() {
+    public void query_UntypedPredicate2() {
 
         JsonQuery query = compiler.compile(
                 "$.store..readers[?(@.motto)]");
@@ -371,7 +371,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_UntypedPredicate3() {
+    public void query_UntypedPredicate3() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[?(@.readers[*].age <= 18)].readers[*]");
@@ -382,7 +382,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_UntypedPredicate4() {
+    public void query_UntypedPredicate4() {
 
         JsonQuery query = compiler.compile(
                 "$.store.book[?(@.readers[*].age == 3 || @.readers[*].age >= 18)].readers[*]");
@@ -395,7 +395,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_Script_MissingProperties1() {
+    public void query_Script_MissingProperties1() {
 
         JsonQuery query = compiler.compile("$.store.book[?(@.someProperty == 'someValue')]");
 
@@ -404,7 +404,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_Script_Parents1() {
+    public void query_Script_Parents1() {
 
         JsonQuery query = compiler.compile("$.store.book..readers#parent");
 
@@ -419,7 +419,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_Script_Parents2() {
+    public void query_Script_Parents2() {
 
         JsonQuery query = compiler.compile("$.store.book#parent#parent");
 
@@ -429,7 +429,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_Script_Parents3() {
+    public void query_Script_Parents3() {
 
         JsonQuery query = compiler.compile("$#parent");
 
@@ -438,7 +438,7 @@ public class JsonQueryTest {
     }
 
     @Test
-    public void testQuery_Script_Parents4() {
+    public void query_Script_Parents4() {
 
         JsonQuery query = compiler.compile("$..*#parent");
 

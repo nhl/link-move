@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ScannerTest {
 
     @Test
-    public void testScanning_EmptyPath() {
+    public void scanning_EmptyPath() {
         List<Token> tokens = tokenizeQuery("");
         assertEquals(0, tokens.size());
     }
 
     @Test
-    public void testScanning_Query1() {
+    public void scanning_Query1() {
         List<Token> tokens = tokenizeQuery("$.store.book[*].author");
         assertEquals(10, tokens.size());
     }

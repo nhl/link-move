@@ -35,12 +35,12 @@ public class DefaultCreateOrUpdateBuilderIT extends DerbySrcTargetTest {
     }
 
     @Test
-    public void testTask_NoExtractorName() {
+    public void task_NoExtractorName() {
         assertThrows(IllegalStateException.class, builder::task);
     }
 
     @Test
-    public void testTask_ExtractorPresent() {
+    public void task_ExtractorPresent() {
         builder.sourceExtractor("test.xml");
         assertNotNull(builder.task());
     }

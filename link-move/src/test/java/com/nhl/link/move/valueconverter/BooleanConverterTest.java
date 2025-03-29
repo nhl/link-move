@@ -10,34 +10,34 @@ public class BooleanConverterTest {
     private static final BooleanConverter CONVERTER = new BooleanConverter();
 
     @Test
-    public void testConvert_Null() {
+    public void convert_Null() {
         assertNull(CONVERTER.convert(null, -1));
     }
 
     @Test
-    public void testConvert_Byte() {
+    public void convert_Byte() {
         assertEquals(true, CONVERTER.convert((byte) 1, -1));
     }
 
     @Test
-    public void testConvert_Short() {
+    public void convert_Short() {
         assertEquals(true, CONVERTER.convert((short) 1, -1));
         assertEquals(false, CONVERTER.convert((short) 0, -1));
     }
 
     @Test
-    public void testConvert_Integer() {
+    public void convert_Integer() {
         assertEquals(true, CONVERTER.convert(1, -1));
     }
 
     @Test
-    public void testConvert_Long() {
+    public void convert_Long() {
         assertEquals(true, CONVERTER.convert((long) 1, -1));
         assertEquals(false, CONVERTER.convert((long) 0, -1));
     }
 
     @Test
-    public void testConvert_Boolean() {
+    public void convert_Boolean() {
         assertEquals(true, CONVERTER.convert(true, -1));
     }
 }

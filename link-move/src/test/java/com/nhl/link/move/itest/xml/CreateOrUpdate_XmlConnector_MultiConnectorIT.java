@@ -24,7 +24,7 @@ public class CreateOrUpdate_XmlConnector_MultiConnectorIT extends LmIntegrationT
     }
 
     @Test
-    public void testMultiConnectors_XMLSource() {
+    public void multiConnectors_XMLSource() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)

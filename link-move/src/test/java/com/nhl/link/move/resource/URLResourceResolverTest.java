@@ -28,7 +28,7 @@ public class URLResourceResolverTest {
 	}
 
 	@Test
-	public void testGetXmlSource() throws IOException {
+	public void getXmlSource() throws IOException {
 
 		try (Reader r = loader.reader("dummy.xml")) {
 
@@ -41,7 +41,7 @@ public class URLResourceResolverTest {
 	}
 
 	@Test
-	public void testGetXmlSource_NoExtension() throws IOException {
+	public void getXmlSource_NoExtension() throws IOException {
 
 		try (Reader r = loader.reader("dummy.xml")) {
 

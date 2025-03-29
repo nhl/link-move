@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 
     @Test
-    public void test_ById_IntegerToLong() {
+    public void byId_IntegerToLong() {
 
         // not specifying "matchById" explicitly ... this should be the default
         LmTask task = lmRuntime.service(ITaskService.class)
@@ -55,7 +55,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_ByAttribute_SyncFk() {
+    public void byAttribute_SyncFk() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl3t.class)
@@ -75,7 +75,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_ById_IntegerToBoolean() {
+    public void byId_IntegerToBoolean() {
 
         LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl4t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters.xml")
@@ -99,7 +99,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_ById_StringToEnum() {
+    public void byId_StringToEnum() {
 
         LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl4t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_converters.xml")
@@ -123,7 +123,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_ById_DecimalToDecimal() {
+    public void byId_DecimalToDecimal() {
 
         LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl8t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl8_to_etl8t_byid.xml").task();
@@ -149,7 +149,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
 
     @Test
     @Disabled("Until https://github.com/bootique/bootique-jdbc/issues/104 is fixed")
-    public void test_ById_DecimalToDecimal_Exception() {
+    public void byId_DecimalToDecimal_Exception() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl8t.class)
@@ -164,7 +164,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_ImplicitJavaTimeConversion() {
+    public void implicitJavaTimeConversion() {
 
         LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl4t_jt.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl4_to_etl4t_jt_implicit.xml")

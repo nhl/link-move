@@ -46,7 +46,7 @@ public class XmlRowReaderTest {
 	}
 
 	@Test
-	public void testIterator() {
+	public void iterator() {
 		Iterator<Object[]> rowIterator = xmlRowReader.iterator();
 		int i = 0;
 

@@ -23,19 +23,19 @@ public class PathMapperIT extends DerbySrcTargetTest {
     }
 
     @Test
-    public void testKeyForTarget_Obj() {
+    public void keyForTarget_Obj() {
         PathMapper mapper = new PathMapper("phoneNumber");
         assertEquals("123458", mapper.keyForTarget(testObject));
     }
 
     @Test
-    public void testKeyForTarget_Db() {
+    public void keyForTarget_Db() {
         PathMapper mapper = new PathMapper("db:phone_number");
         assertEquals("123458", mapper.keyForTarget(testObject));
     }
 
     @Test
-    public void testKeyForTarget_DbId() {
+    public void keyForTarget_DbId() {
         PathMapper mapper = new PathMapper("db:id");
         assertEquals(Cayenne.intPKForObject(testObject), mapper.keyForTarget(testObject));
     }

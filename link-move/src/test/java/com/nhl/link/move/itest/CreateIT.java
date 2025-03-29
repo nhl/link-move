@@ -4,7 +4,6 @@ import com.nhl.link.move.Execution;
 import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
-import com.nhl.link.move.unit.LmTaskTester;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class CreateIT extends LmIntegrationTest {
 
     @Test
-    public void testSync_MultiBatch() {
+    public void sync_MultiBatch() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .create(Etl1t.class)
@@ -29,16 +28,11 @@ public class CreateIT extends LmIntegrationTest {
                 .exec();
 
         Execution e1 = task.run();
-        new LmTaskTester()
-                .shouldExtract(5)
-                .shouldCreate(5)
-                .shouldUpdate(0)
-                .shouldDelete(0)
-                .test(e1);
+        assertExec(5, 5, 0, 0, e1);
     }
 
     @Test
-    public void testSync() {
+    public void sync() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .create(Etl1t.class)
@@ -51,12 +45,7 @@ public class CreateIT extends LmIntegrationTest {
                 .exec();
 
         Execution e1 = task.run();
-        new LmTaskTester()
-                .shouldExtract(2)
-                .shouldCreate(2)
-                .shouldUpdate(0)
-                .shouldDelete(0)
-                .test(e1);
+        assertExec(2, 2, 0, 0, e1);
 
         etl1t().matcher().assertMatches(2);
         etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
@@ -66,12 +55,7 @@ public class CreateIT extends LmIntegrationTest {
         srcEtl1().update().set("age", 5).where("name", "a").exec();
 
         Execution e2 = task.run();
-        new LmTaskTester()
-                .shouldExtract(3)
-                .shouldCreate(3)
-                .shouldUpdate(0)
-                .shouldDelete(0)
-                .test(e2);
+        assertExec(3, 3, 0, 0, e2);
 
         etl1t().matcher().assertMatches(5);
         etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
@@ -80,27 +64,17 @@ public class CreateIT extends LmIntegrationTest {
         srcEtl1().delete().where("name", "a").exec();
 
         Execution e3 = task.run();
-        new LmTaskTester()
-                .shouldExtract(2)
-                .shouldCreate(2)
-                .shouldUpdate(0)
-                .shouldDelete(0)
-                .test(e3);
+        assertExec(2, 2, 0, 0, e3);
 
         etl1t().matcher().assertMatches(7);
         etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
 
         Execution e4 = task.run();
-        new LmTaskTester()
-                .shouldExtract(2)
-                .shouldCreate(2)
-                .shouldUpdate(0)
-                .shouldDelete(0)
-                .test(e4);
+        assertExec(2, 2, 0, 0, e4);
     }
 
     @Test
-    public void test_SyncFk() {
+    public void syncFk() {
 
         LmTask task = lmRuntime.service(ITaskService.class).create(Etl3t.class)
                 .sourceExtractor("com/nhl/link/move/itest/etl3_to_etl3t.xml").task();

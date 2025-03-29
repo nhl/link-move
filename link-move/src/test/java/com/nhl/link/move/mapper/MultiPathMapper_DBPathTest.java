@@ -27,7 +27,7 @@ public class MultiPathMapper_DBPathTest {
 	}
 
 	@Test
-	public void testExpressionForKey() {
+	public void expressionForKey() {
 
 		Map<String, Object> key = new HashMap<>();
 		key.put("db:a", "a1");

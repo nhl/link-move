@@ -60,17 +60,17 @@ public class CsvExtractorFactoryTest {
     }
 
     @Test
-    public void testGetConnectorType() {
+    public void getConnectorType() {
         assertEquals(StreamConnector.class, extractorFactory.getConnectorType());
     }
 
     @Test
-    public void testCreateExtractor() {
+    public void createExtractor() {
         extractorFactory.createExtractor(connectorMock, model);
     }
 
     @Test
-    public void testBasicIntegration() throws IOException {
+    public void basicIntegration() throws IOException {
         Execution exec = mock(Execution.class);
         when(exec.getParameters()).thenReturn(Collections.emptyMap());
         when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
@@ -81,7 +81,7 @@ public class CsvExtractorFactoryTest {
     }
 
     @Test
-    public void testSetDelimiter() throws IOException {
+    public void setDelimiter() throws IOException {
         Execution exec = mock(Execution.class);
         when(exec.getParameters()).thenReturn(Collections.emptyMap());
         when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));
@@ -93,7 +93,7 @@ public class CsvExtractorFactoryTest {
     }
 
     @Test
-    public void testSetReadFrom() throws IOException {
+    public void setReadFrom() throws IOException {
         Execution exec = mock(Execution.class);
         when(exec.getParameters()).thenReturn(Collections.emptyMap());
         when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));

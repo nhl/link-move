@@ -23,19 +23,19 @@ public class LocalTimeConverterTest {
     private static final LocalTimeConverter CONVERTER = new LocalTimeConverter();
 
     @Test
-    public void testConvert_utilDate() {
+    public void convert_utilDate() {
         Date datetime = new Date();
         LocalTime localTime = LocalDateTime.ofInstant(datetime.toInstant(), ZoneId.systemDefault()).toLocalTime();
         assertEquals(localTime, CONVERTER.convert(datetime, -1));
     }
 
     @Test
-    public void testConvert_sqlDate() {
+    public void convert_sqlDate() {
         assertThrows(LmRuntimeException.class, () -> CONVERTER.convert(new java.sql.Date(Instant.now().toEpochMilli()), -1));
     }
 
     @Test
-    public void testConvert_sqlTime() {
+    public void convert_sqlTime() {
         LocalTime localTime = LocalTime.now().truncatedTo(ChronoUnit.MILLIS);
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
         calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
@@ -44,7 +44,7 @@ public class LocalTimeConverterTest {
     }
 
     @Test
-    public void testConvert_sqlTimestamp() {
+    public void convert_sqlTimestamp() {
         LocalTime localTime = LocalTime.now().truncatedTo(ChronoUnit.MILLIS);
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
         calendar.add(Calendar.MILLISECOND, localTime.get(ChronoField.MILLI_OF_DAY));
@@ -53,7 +53,7 @@ public class LocalTimeConverterTest {
     }
 
     @Test
-    public void testConvert_string() {
+    public void convert_string() {
         assertEquals(LocalTime.of(1, 0, 1), CONVERTER.convert("01:00:01", -1));
     }
 }

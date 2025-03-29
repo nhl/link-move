@@ -9,13 +9,13 @@ import static org.mockito.Mockito.mock;
 public class TargetPropertyWriterFactoryTest {
 
     @Test
-    public void testGetOrCreateWriter_Null() {
+    public void getOrCreateWriter_Null() {
         TargetPropertyWriterFactory factory = new TargetPropertyWriterFactory(C1.class, mock(ObjEntity.class));
         assertThrows(NullPointerException.class, () -> factory.getOrCreateWriter("dummy", "dbDummy", () -> null));
     }
 
     @Test
-    public void testGetOrCreateWriter_Default() {
+    public void getOrCreateWriter_Default() {
         TargetPropertyWriter expected = (t, v) -> {};
 
         TargetPropertyWriterFactory factory = new TargetPropertyWriterFactory(C1.class, mock(ObjEntity.class));
@@ -24,7 +24,7 @@ public class TargetPropertyWriterFactoryTest {
     }
 
     @Test
-    public void testGetOrCreateWriter_Setter() {
+    public void getOrCreateWriter_Setter() {
         TargetPropertyWriter defaultWriter = (t, v) -> {};
 
         TargetPropertyWriterFactory factory = new TargetPropertyWriterFactory(C1.class, mock(ObjEntity.class));

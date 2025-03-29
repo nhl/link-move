@@ -28,7 +28,7 @@ public class ChainConnectorFactoryTest {
     }
 
     @Test
-    public void testCreateConnector() {
+    public void createConnector() {
         assertSame(connectorA, connectorFactory.createConnector("a").get());
         assertSame(connectorB, connectorFactory.createConnector("b").get());
         assertSame(connectorA, connectorFactory.createConnector("a").get());

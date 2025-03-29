@@ -45,7 +45,7 @@ public class TargetCayenneServiceTest {
 	}
 
 	@Test
-	public void testDataSources() {
+	public void dataSources() {
 		Map<String, DataSource> dss = cayenneService.dataSources();
 		assertEquals(2, dss.size());
 		assertSame(ds1, dss.get("dn1"));

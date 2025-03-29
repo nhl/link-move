@@ -15,7 +15,7 @@ public class ExtractorModelParser_v3Test extends BaseParserTest {
 	final ExtractorModelParser_v3 parser = new ExtractorModelParser_v3();
 
 	@Test
-	public void testParse() {
+	public void parse() {
 
 		Element xmlRoot = getXmlRoot("extractor_v3.xml");
 

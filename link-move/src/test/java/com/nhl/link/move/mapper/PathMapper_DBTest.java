@@ -16,7 +16,7 @@ public class PathMapper_DBTest {
 	}
 
 	@Test
-	public void testExpressionForKey() {
+	public void expressionForKey() {
 		assertEquals(ExpressionFactory.exp("db:abc = \"a\""), mapper.expressionForKey("a"));
 	}
 }

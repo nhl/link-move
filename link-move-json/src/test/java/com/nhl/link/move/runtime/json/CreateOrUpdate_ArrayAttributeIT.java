@@ -29,7 +29,7 @@ public class CreateOrUpdate_ArrayAttributeIT extends LmJsonIntegrationTest {
     }
 
     @Test
-    public void testCreateOrUpdate() {
+    public void createOrUpdate() {
 
         etlt1().insertColumns("id", "num_int", "string")
                 .values(15, 12, null)

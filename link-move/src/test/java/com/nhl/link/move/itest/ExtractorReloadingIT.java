@@ -48,7 +48,7 @@ public class ExtractorReloadingIT extends LmIntegrationTest {
     }
 
     @Test
-    public void testReload() throws InterruptedException {
+    public void reload() throws InterruptedException {
 
         initExtractor("com/nhl/link/move/itest/etl1_to_etl1t_v1.xml");
 

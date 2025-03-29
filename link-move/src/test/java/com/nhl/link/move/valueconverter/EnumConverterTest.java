@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class EnumConverterTest {
 
     @Test
-    public void testConvert_E1() {
+    public void convert_E1() {
 
         EnumConverter<Enum1> converter = new EnumConverter<>(Enum1.class);
 
@@ -19,7 +19,7 @@ public class EnumConverterTest {
     }
 
     @Test
-    public void testConvert_E2() {
+    public void convert_E2() {
 
         EnumConverter<Enum2> converter = new EnumConverter<>(Enum2.class);
 
@@ -29,7 +29,7 @@ public class EnumConverterTest {
     }
 
     @Test
-    public void testConvert_E1_InvalidString() {
+    public void convert_E1_InvalidString() {
         EnumConverter<Enum1> converter = new EnumConverter<>(Enum1.class);
         assertThrows(LmRuntimeException.class, () -> converter.convert("x", -1));
     }

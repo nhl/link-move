@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 public class CachingConnectorFactoryTest {
 
     @Test
-    public void testCreateConnector() {
+    public void createConnector() {
 
         Connector[] connectors1 = new Connector[]{mock(Connector.class), mock(Connector.class)};
         Connector[] connectors2 = new Connector[]{mock(Connector.class), mock(Connector.class)};

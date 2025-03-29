@@ -37,7 +37,7 @@ public class ExtractorModelParserTest {
     }
 
 	@Test
-	public void testLoad_v1() {
+	public void load_v1() {
 
 		ExtractorModelContainer container = parse("extractor_v1.xml");
 		assertNotNull(container);
@@ -76,7 +76,7 @@ public class ExtractorModelParserTest {
 
 	@ParameterizedTest
 	@ValueSource(strings = {"extractor_v2.xml", "extractor_v3.xml"})
-	public void testLoad_v2_v3(String extractor) {
+	public void load_v2_v3(String extractor) {
 
         ExtractorModelContainer container = parse(extractor);
 		assertNotNull(container);

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ByteArrayKeyAdapterTest {
 	
 	@Test
-	public void testToFrom() {
+	public void toFrom() {
 		ByteArrayKeyAdapter builder = new ByteArrayKeyAdapter();
 
 		byte[] b1 = new byte[] { 1, 2 };

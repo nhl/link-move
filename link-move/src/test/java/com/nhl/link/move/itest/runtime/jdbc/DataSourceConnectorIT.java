@@ -31,7 +31,7 @@ public class DataSourceConnectorIT extends DerbySrcTest {
     }
 
     @Test
-    public void testSharedContext() {
+    public void sharedContext() {
         ObjectContext context = connector.sharedContext();
         assertNotNull(context);
 
@@ -40,7 +40,7 @@ public class DataSourceConnectorIT extends DerbySrcTest {
     }
 
     @Test
-    public void testCayenneJava8Support() {
+    public void cayenneJava8Support() {
         ObjectContext context = connector.sharedContext();
 
         ValueObjectTypeRegistry typeRegistry = context.getEntityResolver().getValueObjectTypeRegistry();

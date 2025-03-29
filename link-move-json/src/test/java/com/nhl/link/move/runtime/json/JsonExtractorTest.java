@@ -81,7 +81,7 @@ public class JsonExtractorTest {
     }
 
     @Test
-    public void testJsonExtractor_SimpleAttributes() {
+    public void jsonExtractor_SimpleAttributes() {
 
         RowAttribute baseAttr = new BaseRowAttribute(String.class, "title", "title", 0);
         JsonRowAttribute[] attributes = new JsonRowAttribute[]{
@@ -100,7 +100,7 @@ public class JsonExtractorTest {
     }
 
     @Test
-    public void testJsonExtractor_QueryAttributes_Local() {
+    public void jsonExtractor_QueryAttributes_Local() {
 
         RowAttribute baseAttr = new BaseRowAttribute(String.class, "@.details.age", "age", 0);
         JsonRowAttribute[] attributes = new JsonRowAttribute[]{
@@ -118,7 +118,7 @@ public class JsonExtractorTest {
     }
 
     @Test
-    public void testJsonExtractor_QueryAttributes_Root() {
+    public void jsonExtractor_QueryAttributes_Root() {
 
         RowAttribute baseAttr = new BaseRowAttribute(String.class, "$.store.bicycle.color", "constantAttr", 0);
         JsonRowAttribute[] attributes = new JsonRowAttribute[]{
@@ -136,7 +136,7 @@ public class JsonExtractorTest {
     }
 
     @Test
-    public void testJsonExtractor_QueryAttributes_Parent() {
+    public void jsonExtractor_QueryAttributes_Parent() {
 
         RowAttribute baseAttr = new BaseRowAttribute(String.class, "@#parent#parent.bicycle.color", "constantAttr", 0);
         JsonRowAttribute[] attributes = new JsonRowAttribute[]{

@@ -15,97 +15,97 @@ public class QueryCompilerTest {
     }
 
     @Test
-    public void testCompile_Empty() {
+    public void compile_Empty() {
         assertThrows(Exception.class, () -> compiler.compile(""));
     }
 
     @Test
-    public void testCompile_Query1() {
+    public void compile_Query1() {
         compiler.compile("$.store.book[*].author");
     }
 
     @Test
-    public void testCompile_Query2() {
+    public void compile_Query2() {
         assertThrows(Exception.class, () -> compiler.compile("$.store.book['*].author"));
     }
 
     @Test
-    public void testCompile_Query3() {
+    public void compile_Query3() {
         assertThrows(Exception.class, () -> compiler.compile("$.store.boo k[*].author"));
     }
 
     @Test
-    public void testCompile_Query4() {
+    public void compile_Query4() {
         assertThrows(Exception.class, () -> compiler.compile("$store.book[*].author"));
     }
 
     @Test
-    public void testCompile_Query5() {
+    public void compile_Query5() {
         compiler.compile("@.store.book[*].author");
     }
 
     @Test
-    public void testCompile_Query6() {
+    public void compile_Query6() {
         assertThrows(Exception.class, () -> compiler.compile("$.store.\"book\"[*].author"));
     }
 
     @Test
-    public void testCompile_Query7() {
+    public void compile_Query7() {
         compiler.compile("$.store.book[*][\"author\"]");
     }
 
     @Test
-    public void testCompile_Query8() {
+    public void compile_Query8() {
         assertThrows(Exception.class, () -> compiler.compile("$.store.[book][*].author"));
     }
 
     @Test
-    public void testCompile_Query9() {
+    public void compile_Query9() {
         compiler.compile("$.store.book[*].readers[1]");
     }
 
     @Test
-    public void testCompile_Query10() {
+    public void compile_Query10() {
         compiler.compile("$.store.book[*].readers.1");
     }
 
     @Test
-    public void testCompile_Query11() {
+    public void compile_Query11() {
         assertThrows(Exception.class, () -> compiler.compile("$.store.book[*.readers.1"));
     }
 
     @Test
-    public void testCompile_Query12() {
+    public void compile_Query12() {
         assertThrows(Exception.class, () -> compiler.compile("$...store"));
     }
 
     @Test
-    public void testCompile_Query13() {
+    public void compile_Query13() {
         compiler.compile("$..[('store')].book");
     }
 
     @Test
-    public void testCompile_Query14() {
+    public void compile_Query14() {
         assertThrows(Exception.class, () -> compiler.compile("$..[('store')].book)"));
     }
 
     @Test
-    public void testCompile_Query15() {
+    public void compile_Query15() {
         assertThrows(Exception.class, () -> compiler.compile("$.store..readers[?(@.name == 'Bob' &&)]"));
     }
 
     @Test
-    public void testCompile_Query16() {
+    public void compile_Query16() {
         assertThrows(Exception.class, () -> compiler.compile("$.store..readers[?(@.name == 'Bob' @.age == 60)]"));
     }
 
     @Test
-    public void testCompile_Query17() {
+    public void compile_Query17() {
         assertThrows(Exception.class, () -> compiler.compile("$.store..readers[?( == 'Bob' && @.age == 60)]"));
     }
 
     @Test
-    public void testCompile_Query18() {
+    public void compile_Query18() {
         assertThrows(Exception.class, () -> compiler.compile("$.store..readers[?(@.name == 'Bob' && (@.age == 60)]"));
     }
 }

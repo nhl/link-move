@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 class CallbackExecutorTest {
 
     @Test
-    public void testExecuteLambdaCallback() {
+    public void executeLambdaCallback() {
         CreateOrUpdateStage expectedStage = CreateOrUpdateStage.MATCH_TARGET;
         CreateOrUpdateStage unexpectedStage = CreateOrUpdateStage.COMMIT_TARGET;
         BiConsumer<Execution, CreateOrUpdateSegment> callback1 = (exec, segment) -> exec.getStats().incrementUpdated(1);

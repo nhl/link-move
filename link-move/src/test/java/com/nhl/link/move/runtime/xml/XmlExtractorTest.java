@@ -32,7 +32,7 @@ public class XmlExtractorTest {
 	}
 
 	@Test
-	public void testGetReader() throws Exception {
+	public void getReader() throws Exception {
 		Execution exec = mock(Execution.class);
 		when(exec.getParameters()).thenReturn(Collections.emptyMap());
 		when(exec.getLogger()).thenReturn(mock(LmExecutionLogger.class));

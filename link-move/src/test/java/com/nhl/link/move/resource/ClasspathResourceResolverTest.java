@@ -19,7 +19,7 @@ public class ClasspathResourceResolverTest {
 	}
 
 	@Test
-	public void testReader_WithExtension() throws IOException {
+	public void reader_WithExtension() throws IOException {
 
 		try (Reader r = loader.reader("com/nhl/link/move/resource/dummy.xml")) {
 
@@ -33,7 +33,7 @@ public class ClasspathResourceResolverTest {
 	}
 
 	@Test
-	public void testReader_Invalid() {
+	public void reader_Invalid() {
 		assertThrows(LmRuntimeException.class, () -> loader.reader("no-such-resource.xml"));
 	}
 }

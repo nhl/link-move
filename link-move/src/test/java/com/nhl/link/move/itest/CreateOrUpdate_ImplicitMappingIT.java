@@ -11,16 +11,16 @@ import org.junit.jupiter.api.Test;
 public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 
 	@Test
-	public void test_ByDbAttribute() {
-		test_MatchByKey("db:name");
+	public void byDbAttribute() {
+		matchByKey("db:name");
 	}
 
 	@Test
-	public void test_ByObjAttribute() {
-		test_MatchByKey("name");
+	public void byObjAttribute() {
+		matchByKey("name");
 	}
 
-	private void test_MatchByKey(String key) {
+	private void matchByKey(String key) {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.createOrUpdate(Etl1t.class)
@@ -60,7 +60,7 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 	}
 
 	@Test
-	public void test_ById() {
+	public void byId() {
 
 		LmTask task = lmRuntime.service(ITaskService.class).createOrUpdate(Etl5t.class)
 				.sourceExtractor("com/nhl/link/move/itest/etl5_to_etl5t_byid_implicit.xml")

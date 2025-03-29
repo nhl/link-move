@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
 
     @Test
-    public void test_Subclass_MatchBySubKey() {
+    public void subclass_MatchBySubKey() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(TiSub1.class)
@@ -55,7 +55,7 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_Subclass_MatchBySuperKey() {
+    public void subclass_MatchBySuperKey() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(TiSub1.class)

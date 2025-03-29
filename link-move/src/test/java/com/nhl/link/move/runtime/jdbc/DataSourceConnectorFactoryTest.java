@@ -24,13 +24,13 @@ public class DataSourceConnectorFactoryTest {
 	}
 
 	@Test
-	public void testConnectorDataSource() {
+	public void connectorDataSource() {
 		assertSame(ds1, factory.connectorDataSource("ds1").get());
 		assertSame(ds2, factory.connectorDataSource("ds2").get());
 	}
 
 	@Test
-	public void testConnectorDataSource_Missing() {
+	public void connectorDataSource_Missing() {
 		assertFalse(factory.connectorDataSource("ds3").isPresent());
 	}
 

@@ -60,7 +60,7 @@ public class ExtractorReloaderTest {
 	}
 
 	@Test
-	public void testGetDelegate() {
+	public void getDelegate() {
 
 		Extractor d1 = reloader.getOrReload();
 		assertSame(mockExtractor1, d1);

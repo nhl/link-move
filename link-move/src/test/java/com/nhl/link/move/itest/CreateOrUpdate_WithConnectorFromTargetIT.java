@@ -20,7 +20,7 @@ public class CreateOrUpdate_WithConnectorFromTargetIT extends LmIntegrationTest 
 	}
 
 	@Test
-	public void test_ByAttribute() {
+	public void byAttribute() {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.createOrUpdate(Etl2t.class)

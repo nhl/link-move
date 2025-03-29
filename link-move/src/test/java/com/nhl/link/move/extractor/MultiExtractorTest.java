@@ -18,13 +18,13 @@ import static org.mockito.Mockito.when;
 public class MultiExtractorTest {
 
     @Test
-    public void testGetReader_Empty() {
+    public void getReader_Empty() {
         MultiExtractor e = new MultiExtractor(Collections.emptyList());
         assertFound(e, 0);
     }
 
     @Test
-    public void testGetReader_One() {
+    public void getReader_One() {
         int[] closeCounter = new int[1];
 
         List<Extractor> extractors = new ArrayList<>();
@@ -36,7 +36,7 @@ public class MultiExtractorTest {
     }
 
     @Test
-    public void testGetReader_Many() {
+    public void getReader_Many() {
 
         int[] closeCounter = new int[1];
 
@@ -51,7 +51,7 @@ public class MultiExtractorTest {
     }
 
     @Test
-    public void testGetReader_Many_FirstEmpty() {
+    public void getReader_Many_FirstEmpty() {
 
         int[] closeCounter = new int[1];
 

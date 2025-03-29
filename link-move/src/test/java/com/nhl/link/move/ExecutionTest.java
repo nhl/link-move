@@ -36,7 +36,7 @@ public class ExecutionTest {
     }
 
     @Test
-    public void testAttribute() {
+    public void attribute() {
         Execution execution = new Execution(1, "xsync", ExtractorName.create("l", "n"), Map.of(), mock(LmLogger.class), null);
 
         assertNull(execution.getAttribute("a"));

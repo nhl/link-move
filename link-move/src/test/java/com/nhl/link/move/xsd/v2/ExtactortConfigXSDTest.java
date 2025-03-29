@@ -15,27 +15,27 @@ public class ExtactortConfigXSDTest extends BaseSchemaTest {
 	private static final String SCHEMA = "com/nhl/link/move/xsd/extractor_config_2.xsd";
 
 	@Test
-	public void testValid() throws SAXException, IOException {
+	public void valid() throws SAXException, IOException {
 		validate("valid_extractor.xml", SCHEMA);
 	}
 
 	@Test
-	public void testValid_AttributeNoSource() throws SAXException, IOException {
+	public void valid_AttributeNoSource() throws SAXException, IOException {
 		validate("valid_extractor_attribute_no_source.xml", SCHEMA);
 	}
 
 	@Test
-	public void testValid_AttributeNoTarget() throws SAXException, IOException {
+	public void valid_AttributeNoTarget() throws SAXException, IOException {
 		validate("valid_extractor_attribute_no_target.xml", SCHEMA);
 	}
 
 	@Test
-	public void testValid_AttributeNoSourceOrTarget() throws SAXException, IOException {
+	public void valid_AttributeNoSourceOrTarget() throws SAXException, IOException {
 		validate("valid_extractor_attribute_no_source_or_target.xml", SCHEMA);
 	}
 
 	@Test
-	public void testIncorrectOrdering() throws SAXException, IOException {
+	public void incorrectOrdering() throws SAXException, IOException {
 
 		try {
 			validate("invalid_extractor_ordering.xml", SCHEMA);

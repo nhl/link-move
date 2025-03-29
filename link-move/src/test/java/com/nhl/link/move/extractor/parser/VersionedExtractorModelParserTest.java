@@ -33,7 +33,7 @@ public class VersionedExtractorModelParserTest extends BaseParserTest {
 	}
 
 	@Test
-	public void testParse_NoXSD() {
+	public void parse_NoXSD() {
 
 		Element xmlRoot = getXmlRoot("extractor_v1_no_xsd.xml");
 
@@ -44,7 +44,7 @@ public class VersionedExtractorModelParserTest extends BaseParserTest {
 	}
 
 	@Test
-	public void testParse_NS1_XSD() {
+	public void parse_NS1_XSD() {
 
 		Element xmlRoot = getXmlRoot("extractor_dummy_ns1_xsd.xml");
 
@@ -55,7 +55,7 @@ public class VersionedExtractorModelParserTest extends BaseParserTest {
 	}
 
 	@Test
-	public void testParse_NS2_XSD() {
+	public void parse_NS2_XSD() {
 
 		Element xmlRoot = getXmlRoot("extractor_dummy_ns2_xsd.xml");
 

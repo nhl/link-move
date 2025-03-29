@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class Delete_Stage_ProcessorIT extends LmIntegrationTest {
 
     @Test
-    public void test_CustomDeleteSet() {
+    public void customDeleteSet() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .delete(Etl6t.class)

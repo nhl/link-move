@@ -39,21 +39,21 @@ public class MapperBuilderTest {
 	}
 
 	@Test
-	public void testCreateMapper_ByPropreties_Single() {
+	public void createMapper_ByPropreties_Single() {
 		Mapper mapper = builder.matchBy(PropertyFactory.createString("a", String.class)).createMapper();
 		assertNotNull(mapper);
 		assertTrue(mapper instanceof PathMapper);
 	}
 
 	@Test
-	public void testCreateMapper_ByPropreties_Multi() {
+	public void createMapper_ByPropreties_Multi() {
 		Mapper mapper = builder.matchBy(PropertyFactory.createString("a", String.class), PropertyFactory.createString("b", String.class)).createMapper();
 		assertNotNull(mapper);
 		assertTrue(mapper instanceof MultiPathMapper);
 	}
 
 	@Test
-	public void testMatchBy_Additivity() {
+	public void matchBy_Additivity() {
 		Map<String, Mapper> mappers = builder.matchBy(PropertyFactory.createString("a", String.class), PropertyFactory.createString("b", String.class))
 				.matchBy("c").createPathMappers();
 		assertEquals(3, mappers.size());
@@ -63,7 +63,7 @@ public class MapperBuilderTest {
 	}
 
 	@Test
-	public void testMatchBy_Duplicates() {
+	public void matchBy_Duplicates() {
 		Map<String, Mapper> mappers = builder.matchBy("a", "b", "b").matchBy("a").createPathMappers();
 		assertEquals(2, mappers.size());
 		assertTrue(mappers.containsKey("db:a"));

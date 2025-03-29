@@ -84,7 +84,7 @@ public class DefaultDeleteBuilderTest {
 	}
 
 	@Test
-	public void testTask_NoExtractorName() {
+	public void task_NoExtractorName() {
 		assertThrows(IllegalStateException.class, () -> builder.task());
 	}
 

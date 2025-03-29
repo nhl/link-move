@@ -17,9 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SourceKeysIT extends LmIntegrationTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void test_ByAttribute() {
+	public void byAttribute() {
 
 		LmTask task = lmRuntime.service(ITaskService.class)
 				.extractSourceKeys(Etl1t.class)

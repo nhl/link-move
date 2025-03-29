@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class BatchRunnerTest {
 
 	@Test
-	public void testRun_Empty() {
+	public void run_Empty() {
 
 		List<Object> empty = new ArrayList<Object>();
 
@@ -20,7 +20,7 @@ public class BatchRunnerTest {
 	}
 
 	@Test
-	public void testRun_SingleSmallBatch() {
+	public void run_SingleSmallBatch() {
 
 		List<String> list = Arrays.asList("o1", "o2");
 		final int[] batches = new int[1];
@@ -38,7 +38,7 @@ public class BatchRunnerTest {
 	}
 
 	@Test
-	public void testRun_SingleExactBatch() {
+	public void run_SingleExactBatch() {
 
 		List<String> list = Arrays.asList("o1", "o2", "o3", "o4", "o5");
 		final int[] batches = new int[1];
@@ -56,7 +56,7 @@ public class BatchRunnerTest {
 	}
 
 	@Test
-	public void testRun_TwoInexactBatches() {
+	public void run_TwoInexactBatches() {
 
 		List<String> list = Arrays.asList("o1", "o2", "o3", "o4", "o5", "o6");
 		final int[] batches = new int[1];

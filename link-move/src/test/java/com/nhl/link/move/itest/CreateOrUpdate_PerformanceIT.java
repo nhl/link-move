@@ -36,7 +36,7 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_SyncFk_QueryCounts() {
+    public void syncFk_QueryCounts() {
 
         LmTask task = lmRuntime
                 .service(ITaskService.class)

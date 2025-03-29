@@ -32,7 +32,7 @@ public class MultiPathMapperTest {
 	}
 
 	@Test
-	public void testExpressionForKey() {
+	public void expressionForKey() {
 
 		Map<String, Object> key = new HashMap<>();
 		key.put("a", "a1");
@@ -43,7 +43,7 @@ public class MultiPathMapperTest {
 	}
 
 	@Test
-	public void testKeyForSource() {
+	public void keyForSource() {
 
 		Map<String, Object> source = new HashMap<>();
 		source.put("a", "a1");
@@ -61,7 +61,7 @@ public class MultiPathMapperTest {
 	}
 
 	@Test
-	public void testKeyForTarget() {
+	public void keyForTarget() {
 
 		DataObject target = mock(DataObject.class);
 		when(target.readNestedProperty("a")).thenReturn("a1");

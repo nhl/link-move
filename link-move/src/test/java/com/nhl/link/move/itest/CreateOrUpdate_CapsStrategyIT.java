@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class CreateOrUpdate_CapsStrategyIT extends LmIntegrationTest {
 
     @Test
-    public void test_CapsLower() {
+    public void capsLower() {
 
         LmTask task = lmRuntime.service(ITaskService.class)
                 .createOrUpdate(Etl1t.class)
@@ -32,7 +32,7 @@ public class CreateOrUpdate_CapsStrategyIT extends LmIntegrationTest {
     }
 
     @Test
-    public void test_DefaultCaps_MixedCase() {
+    public void defaultCaps_MixedCase() {
 
         LmTask task = lmRuntime.service(ITaskService.class).
                 createOrUpdate(Etl12t.class)
