@@ -17,8 +17,8 @@ It supports JDBC, XML, JSON, CSV sources out of the box.
 
 There are two options:
 
-* Open an issue on GitHub with a label of "help wanted" or "question" (or "bug" if you think you found a bug).
-* Post your question on the [LinkMove forum](https://groups.google.com/forum/?#!forum/linkmove-user).
+* Post your question on the [GitHub Discussions](https://github.com/nhl/link-move/discussions)
+* If you think you encountered a bug, open a [GitHub issue](https://github.com/nhl/link-move/issues)
 
 ## Getting Started
 
