@@ -2,7 +2,7 @@
 
 * #239 Remove APIs deprecated in 3.0.0 
 * #244 Simplify StringConverter
-* #246 Missing stage definition and callback for "SourceKeysStage.CONVERT_SOURCE_ROWS"
+* #246 Missing stage: "SourceKeysStage.CONVERT_SOURCE_ROWS"
 
 ## Release 3.0.0-RC4
 
