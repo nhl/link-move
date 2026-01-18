@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/nhl/link-move/workflows/build%20test%20deploy/badge.svg)](https://github.com/nhl/link-move/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.nhl.link.move/link-move/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nhl.link.move/link-move/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.nhl.link.move/link-move.svg?colorB=brightgreen)](https://search.maven.org/artifact/com.nhl.link.move/link-move)
 
 ## LinkMove
 
@@ -27,7 +27,7 @@ Add LinkMove dependency:
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move</artifactId>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 The core module above supports relational and XML sources. The following optional modules may be added if you need to work with other formats:
@@ -37,7 +37,7 @@ The core module above supports relational and XML sources. The following optiona
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-json</artifactId>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 ```XML
@@ -45,7 +45,7 @@ The core module above supports relational and XML sources. The following optiona
 <dependency>
     <groupId>com.nhl.link.move</groupId>
     <artifactId>link-move-csv</artifactId>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 Use it:
