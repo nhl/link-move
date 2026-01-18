@@ -90,7 +90,7 @@
     <repositories>
         <repository>
             <id>linkmove-snapshots</id>
-            <url>http://maven.objectstyle.org/nexus/content/repositories/linkrest-snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
