@@ -34,6 +34,6 @@ public class CreateOrUpdate_XmlConnectorIT extends LmIntegrationTest {
         assertExec(1, 1, 0, 0, e1);
 
         etl1t().matcher().assertOneMatch();
-        etl1t().matcher().eq("name", "zzz").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "zzz").andEq("age", 3).assertOneMatch();
     }
 }

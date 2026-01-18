@@ -48,8 +48,8 @@ public class CreateIT extends LmIntegrationTest {
         assertExec(2, 2, 0, 0, e1);
 
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
-        etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").andEq("age", null).assertOneMatch();
 
         srcEtl1().insertColumns("name").values("c").exec();
         srcEtl1().update().set("age", 5).where("name", "a").exec();
@@ -58,8 +58,8 @@ public class CreateIT extends LmIntegrationTest {
         assertExec(3, 3, 0, 0, e2);
 
         etl1t().matcher().assertMatches(5);
-        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
-        etl1t().matcher().eq("name", "c").eq("age", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "c").andEq("age", null).assertOneMatch();
 
         srcEtl1().delete().where("name", "a").exec();
 
@@ -67,7 +67,7 @@ public class CreateIT extends LmIntegrationTest {
         assertExec(2, 2, 0, 0, e3);
 
         etl1t().matcher().assertMatches(7);
-        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 5).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 2, 0, 0, e4);
@@ -108,9 +108,9 @@ public class CreateIT extends LmIntegrationTest {
         assertExec(2, 2, 0, 0, e1);
 
         etl3t().matcher().assertMatches(2);
-        etl3t().matcher().eq("e2_id", 58).eq("e5_id", 17).eq("name", "3Name1").eq("phone_number", "3PHONE1")
+        etl3t().matcher().eq("e2_id", 58).andEq("e5_id", 17).andEq("name", "3Name1").andEq("phone_number", "3PHONE1")
                 .assertOneMatch();
-        etl3t().matcher().eq("e2_id", 34).eq("e5_id", 17).eq("name", "3Name2").eq("phone_number", "3PHONE2")
+        etl3t().matcher().eq("e2_id", 34).andEq("e5_id", 17).andEq("name", "3Name2").andEq("phone_number", "3PHONE2")
                 .assertOneMatch();
     }
 }

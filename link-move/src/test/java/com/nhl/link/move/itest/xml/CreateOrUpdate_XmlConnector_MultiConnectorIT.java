@@ -36,8 +36,8 @@ public class CreateOrUpdate_XmlConnector_MultiConnectorIT extends LmIntegrationT
         assertExec(3, 3, 0, 0, e1);
 
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("name", "xxx").eq("age", 1).assertOneMatch();
-        etl1t().matcher().eq("name", "yyy").eq("age", 2).assertOneMatch();
-        etl1t().matcher().eq("name", "zzz").eq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "xxx").andEq("age", 1).assertOneMatch();
+        etl1t().matcher().eq("name", "yyy").andEq("age", 2).assertOneMatch();
+        etl1t().matcher().eq("name", "zzz").andEq("age", 3).assertOneMatch();
     }
 }

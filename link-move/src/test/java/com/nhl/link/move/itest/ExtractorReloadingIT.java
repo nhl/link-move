@@ -66,8 +66,8 @@ public class ExtractorReloadingIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("name", "a").eq("age", 3).eq("description", null).assertOneMatch();
-        etl1t().matcher().eq("name", "b").eq("age", null).eq("description", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 3).andEq("description", null).assertOneMatch();
+        etl1t().matcher().eq("name", "b").andEq("age", null).andEq("description", null).assertOneMatch();
 
         // sleep to make sure extractor file name timestamp change is detectable
         Thread.sleep(1000);
@@ -76,7 +76,7 @@ public class ExtractorReloadingIT extends LmIntegrationTest {
         Execution e2 = task.run();
         assertExec(2, 0, 2, 0, e2);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("name", "a").eq("age", 3).eq("description", "d1").assertOneMatch();
-        etl1t().matcher().eq("name", "b").eq("age", null).eq("description", "d2").assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 3).andEq("description", "d1").assertOneMatch();
+        etl1t().matcher().eq("name", "b").andEq("age", null).andEq("description", "d2").assertOneMatch();
     }
 }

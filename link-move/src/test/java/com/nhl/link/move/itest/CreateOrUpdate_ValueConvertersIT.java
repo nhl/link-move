@@ -178,7 +178,7 @@ public class CreateOrUpdate_ValueConvertersIT extends LmIntegrationTest {
         assertExec(1, 1, 0, 0, e1);
 
         etl4t().matcher()
-                .eq("id", 1).eq("c_date", "2020-01-02").andEq("c_time", "08:01:03").andEq("c_timestamp", "2020-03-04 09:01:04")
+                .eq("id", 1).andEq("c_date", "2020-01-02").andEq("c_time", "08:01:03").andEq("c_timestamp", "2020-03-04 09:01:04")
                 .assertOneMatch();
     }
 }

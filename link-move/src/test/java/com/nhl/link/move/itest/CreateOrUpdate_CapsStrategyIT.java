@@ -27,8 +27,8 @@ public class CreateOrUpdate_CapsStrategyIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         etl1t().matcher().assertMatches(2);
-        etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
-        etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 3).assertOneMatch();
+        etl1t().matcher().eq("name", "b").andEq("age", null).assertOneMatch();
     }
 
     @Test
