@@ -30,7 +30,7 @@ public abstract class DerbyTargetTest {
             .autoLoadModules()
             .module(targetDb.moduleWithTestDataSource("target_db"))
             .module(targetCayenne.moduleWithTestHooks())
-            .module(b -> CayenneModule.extend(b).addProject("com/nhl/link/move/json/cayenne-targets.xml"))
+            .module(b -> CayenneModule.extend(b).addLocation("classpath:com/nhl/link/move/json/cayenne-targets.xml"))
             .createRuntime();
 
     protected Table etlt1() {

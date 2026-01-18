@@ -53,7 +53,7 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
             .autoLoadModules()
             .module(targetDb.moduleWithTestDataSource("target_db"))
             .module(targetCayenne.moduleWithTestHooks())
-            .module(b -> CayenneModule.extend(b).addProject("cayenne-linketl-tests-targets.xml"))
+            .module(b -> CayenneModule.extend(b).addLocation("classpath:cayenne-linketl-tests-targets.xml"))
             .createRuntime();
 
     protected Table etl1t() {
