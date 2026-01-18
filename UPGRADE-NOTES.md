@@ -3,6 +3,10 @@ _This document contains upgrade notes for LinkMove 3.x and newer. Older versions
 
 ## Upgrading to 4.0.0-M1
 
+### Java 21 is required [#251](https://github.com/nhl/link-move/issues/251)
+The minimum version of Java required to run LinkMove is Java 21
+
+
 ### `StringConverter` behavior [#244](https://github.com/nhl/link-move/issues/244). The existing `StringConverter` 
 had a lot of very specific logic baked into it:
 * only allowed whole numbers and threw on fractional decimals
