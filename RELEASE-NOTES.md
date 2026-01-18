@@ -1,6 +1,7 @@
 ## Release 3.0.0
 
 * #249 Upgrade to Cayenne 4.2.3
+* #250 Upgarde Jackson to 2.19.4 #250
 
 ## Release 3.0.0-RC4
 

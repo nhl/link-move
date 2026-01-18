@@ -36,8 +36,8 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		Execution e1 = task.run();
 		assertExec(2, 2, 0, 0, e1);
 		etl1t().matcher().assertMatches(2);
-		etl1t().matcher().eq("name", "a").eq("age", 3).assertOneMatch();
-		etl1t().matcher().eq("name", "b").eq("age", null).assertOneMatch();
+		etl1t().matcher().eq("name", "a").andEq("age", 3).assertOneMatch();
+		etl1t().matcher().eq("name", "b").andEq("age", null).assertOneMatch();
 
 		srcEtl1().insertColumns("name").values("c").exec();
 		srcEtl1().update().set("age", 5).where("name", "a").exec();
@@ -45,15 +45,15 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		Execution e2 = task.run();
 		assertExec(3, 1, 1, 0, e2);
 		etl1t().matcher().assertMatches(3);
-		etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
-		etl1t().matcher().eq("name", "c").eq("age", null).assertOneMatch();
+		etl1t().matcher().eq("name", "a").andEq("age", 5).assertOneMatch();
+		etl1t().matcher().eq("name", "c").andEq("age", null).assertOneMatch();
 
 		srcEtl1().delete().where("name", "a").exec();
 
 		Execution e3 = task.run();
 		assertExec(2, 0, 0, 0, e3);
 		etl1t().matcher().assertMatches(3);
-		etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
+		etl1t().matcher().eq("name", "a").andEq("age", 5).assertOneMatch();
 
 		Execution e4 = task.run();
 		assertExec(2, 0, 0, 0, e4);
@@ -73,8 +73,8 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		assertExec(2, 2, 0, 0, e1);
 
 		etl5t().matcher().assertMatches(2);
-		etl5t().matcher().eq("name", "a").eq("id", 45).assertOneMatch();
-		etl5t().matcher().eq("name", "b").eq("id", 11).assertOneMatch();
+		etl5t().matcher().eq("name", "a").andEq("id", 45).assertOneMatch();
+		etl5t().matcher().eq("name", "b").andEq("id", 11).assertOneMatch();
 
 		srcEtl5().insertColumns("id", "name").values(31, "c").exec();
 		srcEtl5().update().set("name", "d").where("id", 45).exec();
@@ -82,15 +82,15 @@ public class CreateOrUpdate_ImplicitMappingIT extends LmIntegrationTest {
 		Execution e2 = task.run();
 		assertExec(3, 1, 1, 0, e2);
 		etl5t().matcher().assertMatches(3);
-		etl5t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
-		etl5t().matcher().eq("name", "c").eq("id", 31).assertOneMatch();
+		etl5t().matcher().eq("name", "d").andEq("id", 45).assertOneMatch();
+		etl5t().matcher().eq("name", "c").andEq("id", 31).assertOneMatch();
 
 		srcEtl5().delete().where("id", 45).exec();
 
 		Execution e3 = task.run();
 		assertExec(2, 0, 0, 0, e3);
 		etl5t().matcher().assertMatches(3);
-		etl5t().matcher().eq("name", "d").eq("id", 45).assertOneMatch();
+		etl5t().matcher().eq("name", "d").andEq("id", 45).assertOneMatch();
 
 		Execution e4 = task.run();
 		assertExec(2, 0, 0, 0, e4);

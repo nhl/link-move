@@ -29,8 +29,8 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         tiSuper().matcher().eq("type", "sub1").assertMatches(2);
 
         tiSub1().matcher().assertMatches(2);
-        tiSub1().matcher().eq("sub_key", "a").eq("subp1", "p1").assertOneMatch();
-        tiSub1().matcher().eq("sub_key", "b").eq("subp1", "p2").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "a").andEq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "b").andEq("subp1", "p2").assertOneMatch();
 
         srcEtlSub1().insertColumns("s_key", "s_subp1").values("c", null).exec();
         tiSub1().update().set("subp1", "p3").where("subp1", "p1").exec();
@@ -41,9 +41,9 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         tiSuper().matcher().eq("type", "sub1").assertMatches(3);
 
         tiSub1().matcher().assertMatches(3);
-        tiSub1().matcher().eq("sub_key", "a").eq("subp1", "p1").assertOneMatch();
-        tiSub1().matcher().eq("sub_key", "b").eq("subp1", "p2").assertOneMatch();
-        tiSub1().matcher().eq("sub_key", "c").eq("subp1", null).assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "a").andEq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "b").andEq("subp1", "p2").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", "c").andEq("subp1", null).assertOneMatch();
 
         srcEtlSub1().delete().where("s_key", "a").exec();
 
@@ -71,12 +71,12 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(2, 2, 0, 0, e1);
         tiSuper().matcher().assertMatches(2);
-        tiSuper().matcher().eq("type", "sub1").eq("super_key", "a").assertOneMatch();
-        tiSuper().matcher().eq("type", "sub1").eq("super_key", "b").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").andEq("super_key", "a").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").andEq("super_key", "b").assertOneMatch();
 
         tiSub1().matcher().assertMatches(2);
-        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p1").assertOneMatch();
-        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p2").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).andEq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).andEq("subp1", "p2").assertOneMatch();
 
         srcEtlSub1().insertColumns("s_key", "s_subp1").values("c", null).exec();
         tiSub1().update().set("subp1", "p3").where("subp1", "p1").exec();
@@ -85,13 +85,13 @@ public class CreateOrUpdate_InheritanceIT extends LmIntegrationTest {
         assertExec(3, 1, 1, 0, e2);
 
         tiSuper().matcher().assertMatches(3);
-        tiSuper().matcher().eq("type", "sub1").eq("super_key", "a").assertOneMatch();
-        tiSuper().matcher().eq("type", "sub1").eq("super_key", "b").assertOneMatch();
-        tiSuper().matcher().eq("type", "sub1").eq("super_key", "c").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").andEq("super_key", "a").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").andEq("super_key", "b").assertOneMatch();
+        tiSuper().matcher().eq("type", "sub1").andEq("super_key", "c").assertOneMatch();
 
         tiSub1().matcher().assertMatches(2);
-        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p1").assertOneMatch();
-        tiSub1().matcher().eq("sub_key", null).eq("subp1", "p2").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).andEq("subp1", "p1").assertOneMatch();
+        tiSub1().matcher().eq("sub_key", null).andEq("subp1", "p2").assertOneMatch();
 
         srcEtlSub1().delete().where("s_key", "a").exec();
 

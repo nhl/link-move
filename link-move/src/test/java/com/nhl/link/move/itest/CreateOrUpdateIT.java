@@ -87,7 +87,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e3 = task.run();
         assertExec(2, 0, 0, 0, e3);
         etl1t().matcher().assertMatches(3);
-        etl1t().matcher().eq("name", "a").eq("age", 5).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", 5).assertOneMatch();
 
         Execution e4 = task.run();
         assertExec(2, 0, 0, 0, e4);
@@ -360,7 +360,7 @@ public class CreateOrUpdateIT extends LmIntegrationTest {
         Execution e1 = task.run();
         assertExec(1, 0, 1, 0, e1);
         etl1t().matcher().assertOneMatch();
-        etl1t().matcher().eq("name", "a").eq("age", null).assertOneMatch();
+        etl1t().matcher().eq("name", "a").andEq("age", null).assertOneMatch();
     }
 
     @Test
