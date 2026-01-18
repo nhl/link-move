@@ -2,7 +2,7 @@ name: 'build test deploy'
 
 on:
   push:
-    branches: [ 3.0.x ]
+    branches: [ 3.x ]
 
 jobs:
   build:
