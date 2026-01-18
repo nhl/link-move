@@ -41,7 +41,7 @@
         <!-- standard Maven properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
 
         <!-- Framework versions -->
         <slf4j.version>2.0.17</slf4j.version>
@@ -50,8 +50,8 @@
         <jackson.databind.version>2.19.4</jackson.databind.version>
         <commons.csv.version>1.11.0</commons.csv.version>
         <dflib.version>1.2.0</dflib.version>
-        <junit5.version>5.12.1</junit5.version>
-        <bootique.version>3.0-SNAPSHOT</bootique.version>
+        <junit5.version>5.14.1</junit5.version>
+        <bootique.version>4.0-M2</bootique.version>
         <mockito.version>3.9.0</mockito.version>
 
         <!-- Plugin Versions -->
@@ -85,32 +85,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <!-- Temporarily need bootique 3.0-SNAPSHOT access -->
-    <repositories>
-        <repository>
-            <id>bootique-snapshots</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <!-- Main artifact repo -->
-        <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
     
     <dependencyManagement>
         <dependencies>

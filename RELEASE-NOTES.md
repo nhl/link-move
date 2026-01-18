@@ -5,6 +5,7 @@
 * #245 Simplified stages
 * #246 Missing stage: "SourceKeysStage.CONVERT_SOURCE_ROWS"
 * #247 Missing stage: "DeleteStage.DELETE_TARGET"
+* #251 Make Java 21 the minimal requirement
 
 ## Release 3.0.0
 

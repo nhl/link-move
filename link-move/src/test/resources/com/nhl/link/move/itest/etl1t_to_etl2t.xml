@@ -4,7 +4,7 @@
         xmlns="https://nhl.github.io/link-move/xsd/extractor_config_3.xsd">
 
     <type>jdbc</type>
-    <connectorId>linketl-tests-targets</connectorId>
+    <connectorId>target_db</connectorId>
 
     <extractor>
         <properties>
