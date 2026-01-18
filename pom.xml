@@ -51,7 +51,7 @@
         <commons.csv.version>1.11.0</commons.csv.version>
         <dflib.version>1.2.0</dflib.version>
         <junit5.version>5.12.1</junit5.version>
-        <bootique.version>3.0-SNAPSHOT</bootique.version>
+        <bootique.version>3.0-RC1</bootique.version>
         <mockito.version>3.9.0</mockito.version>
 
         <!-- Plugin Versions -->
@@ -79,32 +79,6 @@
             <name>Sonatype Central Portal Repository</name>
         </repository>
     </distributionManagement>
-
-    <!-- Temporarily need bootique 3.0-SNAPSHOT access -->
-    <repositories>
-        <repository>
-            <id>bootique-snapshots</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <!-- Main artifact repo -->
-        <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
     
     <dependencyManagement>
         <dependencies>
@@ -168,6 +142,22 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.databind.version}</version>
+            </dependency>
+            <!-- TODO: the next three Jackson dependencies are only needed until we can upgrade to Bootique > 3.0-RC1 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
