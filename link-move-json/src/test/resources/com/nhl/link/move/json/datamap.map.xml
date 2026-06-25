@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<data-map xmlns="http://cayenne.apache.org/schema/10/modelMap"
+<data-map xmlns="http://cayenne.apache.org/schema/12/modelMap"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://cayenne.apache.org/schema/10/modelMap https://cayenne.apache.org/schema/10/modelMap.xsd"
-	 project-version="10">
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/12/modelMap https://cayenne.apache.org/schema/12/modelMap.xsd"
+	 project-version="12">
 	<property name="defaultPackage" value="com.nhl.link.move.json.unit.cayenne.t"/>
 	<property name="quoteSqlIdentifiers" value="true"/>
 	<db-entity name="etlt1">

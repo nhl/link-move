@@ -6,13 +6,16 @@ import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.cayenne.BaseDataObject;
+import org.apache.cayenne.PersistentObject;
 import org.apache.cayenne.exp.property.BaseProperty;
 import org.apache.cayenne.exp.property.DateProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
 import org.apache.cayenne.exp.property.NumericProperty;
 import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.SelfProperty;
 import org.apache.cayenne.exp.property.StringProperty;
 
+import com.nhl.link.move.unit.cayenne.t.Etl4t;
 import com.nhl.link.move.unit.cayenne.t.TEnum1;
 
 /**
@@ -21,10 +24,13 @@ import com.nhl.link.move.unit.cayenne.t.TEnum1;
  * since it may be overwritten next time code is regenerated.
  * If you need to make any customizations, please use subclass.
  */
-public abstract class _Etl4t extends BaseDataObject {
+public abstract class _Etl4t extends PersistentObject {
 
     private static final long serialVersionUID = 1L;
 
+    public static final SelfProperty<Etl4t> SELF = PropertyFactory.createSelf(Etl4t.class);
+
+    public static final NumericIdProperty<Integer> ID_PK_PROPERTY = PropertyFactory.createNumericId("id", "Etl4t", Integer.class);
     public static final String ID_PK_COLUMN = "id";
 
     public static final BaseProperty<Boolean> C_BOOLEAN = PropertyFactory.createBase("cBoolean", Boolean.class);

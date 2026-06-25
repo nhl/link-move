@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.apache.cayenne.exp.property.NumericIdProperty;
 import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.SelfProperty;
 import org.apache.cayenne.exp.property.StringProperty;
 
+import com.nhl.link.move.unit.cayenne.ti.TiSub1;
 import com.nhl.link.move.unit.cayenne.ti.TiSuper;
 
 /**
@@ -19,6 +22,9 @@ public abstract class _TiSub1 extends TiSuper {
 
     private static final long serialVersionUID = 1L;
 
+    public static final SelfProperty<TiSub1> SELF = PropertyFactory.createSelf(TiSub1.class);
+
+    public static final NumericIdProperty<Integer> ID_PK_PROPERTY = PropertyFactory.createNumericId("id", "TiSub1", Integer.class);
     public static final String ID_PK_COLUMN = "id";
 
     public static final StringProperty<String> SUB_KEY = PropertyFactory.createString("subKey", String.class);
