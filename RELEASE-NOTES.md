@@ -8,6 +8,7 @@
 * #251 Make Java 21 the minimal requirement
 * #253 Upgrade to Jackson 2.21.1
 * #254 Upgrade to Jackson 2.22.0
+* #255 Upgrade to Cayenne 5.x
 
 ## Release 3.0.0
 
