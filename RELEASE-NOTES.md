@@ -9,6 +9,7 @@
 * #253 Upgrade to Jackson 2.21.1
 * #254 Upgrade to Jackson 2.22.0
 * #255 Upgrade to Cayenne 5.x
+* #256 Upgrade to DFLib 1.3.0
 
 ## Release 3.0.0
 

@@ -49,7 +49,7 @@
         <jackson.annotations.version>2.22</jackson.annotations.version>
         <jackson.databind.version>2.22.0</jackson.databind.version>
         <commons.csv.version>1.11.0</commons.csv.version>
-        <dflib.version>1.2.0</dflib.version>
+        <dflib.version>1.3.0</dflib.version>
         <junit5.version>5.14.1</junit5.version>
         <bootique.version>4.0-M3</bootique.version>
         <mockito.version>3.9.0</mockito.version>
