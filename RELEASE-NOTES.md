@@ -7,6 +7,7 @@
 * #247 Missing stage: "DeleteStage.DELETE_TARGET"
 * #251 Make Java 21 the minimal requirement
 * #253 Upgrade to Jackson 2.21.1
+* #254 Upgrade to Jackson 2.22.0
 
 ## Release 3.0.0
 
