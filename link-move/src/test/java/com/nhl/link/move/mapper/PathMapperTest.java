@@ -3,6 +3,7 @@ package com.nhl.link.move.mapper;
 import org.dflib.Index;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.DataObject;
+import org.apache.cayenne.exp.path.CayennePath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +42,7 @@ public class PathMapperTest {
 
         DataObject t = mock(DataObject.class);
         when(t.readProperty("abc")).thenReturn(44);
-        when(t.readNestedProperty("abc")).thenReturn(44);
+        when(t.readNestedProperty(CayennePath.of("abc"))).thenReturn(44);
 
         assertEquals(44, mapper.keyForTarget(t));
     }

@@ -40,13 +40,13 @@ import com.nhl.link.move.valueconverter.ValueConverter;
 import com.nhl.link.move.valueconverter.ValueConverterFactory;
 import com.nhl.link.move.writer.ITargetPropertyWriterService;
 import com.nhl.link.move.writer.TargetPropertyWriterService;
-import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.di.DIBootstrap;
 import org.apache.cayenne.di.Injector;
 import org.apache.cayenne.di.ListBuilder;
 import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
+import org.apache.cayenne.runtime.CayenneRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +82,7 @@ public class LmRuntimeBuilder {
     private final Map<String, ValueConverter> valueConverters;
     private Supplier<ResourceResolver> extractorResolverFactory;
 
-    private ServerRuntime targetRuntime;
+    private CayenneRuntime targetRuntime;
     private final Collection<LmAdapter> adapters;
 
     protected LmRuntimeBuilder() {
@@ -126,9 +126,9 @@ public class LmRuntimeBuilder {
     /**
      * Sets a target Cayenne runtime for this ETL stack.
      *
-     * @since 3.0.0
+     * @since 4.0.0
      */
-    public LmRuntimeBuilder targetRuntime(ServerRuntime targetRuntime) {
+    public LmRuntimeBuilder targetRuntime(CayenneRuntime targetRuntime) {
         this.targetRuntime = targetRuntime;
         return this;
     }

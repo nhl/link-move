@@ -2,14 +2,14 @@ package com.nhl.link.move.runtime;
 
 import com.nhl.link.move.resource.ResourceResolver;
 import com.nhl.link.move.runtime.task.ITaskService;
-import org.apache.cayenne.CayenneDataObject;
 import org.apache.cayenne.DataChannel;
-import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.PersistentObject;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.ClassDescriptor;
+import org.apache.cayenne.runtime.CayenneRuntime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 public class LmRuntimeBuilderTest {
 
-    private ServerRuntime cayenneRuntime;
+    private CayenneRuntime cayenneRuntime;
 
     @BeforeEach
     public void before() {
@@ -44,7 +44,7 @@ public class LmRuntimeBuilderTest {
         DataChannel channel = mock(DataChannel.class);
         when(channel.getEntityResolver()).thenReturn(resolver);
 
-        this.cayenneRuntime = mock(ServerRuntime.class);
+        this.cayenneRuntime = mock(CayenneRuntime.class);
         when(cayenneRuntime.getChannel()).thenReturn(channel);
     }
 
@@ -57,7 +57,7 @@ public class LmRuntimeBuilderTest {
         assertNotNull(runtime);
         ITaskService taskService = runtime.service(ITaskService.class);
         assertNotNull(taskService);
-        assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
+        assertNotNull(taskService.createOrUpdate(PersistentObject.class));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class LmRuntimeBuilderTest {
 
         ITaskService taskService = runtime.service(ITaskService.class);
         assertNotNull(taskService);
-        assertNotNull(taskService.createOrUpdate(CayenneDataObject.class));
+        assertNotNull(taskService.createOrUpdate(PersistentObject.class));
     }
 
     @Test

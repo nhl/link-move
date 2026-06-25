@@ -99,13 +99,19 @@
             </dependency>
             <dependency>
                 <groupId>io.bootique.cayenne</groupId>
-                <artifactId>bootique-cayenne42-junit5</artifactId>
+                <artifactId>bootique-cayenne50-junit5</artifactId>
                 <version>${bootique.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.cayenne</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.cayenne</groupId>
-                <artifactId>cayenne-server</artifactId>
+                <artifactId>cayenne</artifactId>
                 <version>${cayenne.version}</version>
             </dependency>
             <dependency>

@@ -17,6 +17,7 @@ import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.map.ObjRelationship;
+import org.apache.cayenne.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,7 +109,12 @@ public class MapperBuilder {
             if (attributeOrRelationship instanceof ObjAttribute) {
                 type = ((ObjAttribute) attributeOrRelationship).getJavaClass();
             } else if (attributeOrRelationship instanceof ObjRelationship) {
-                type = ((ObjRelationship) attributeOrRelationship).getTargetEntity().getJavaClass();
+                String className = ((ObjRelationship) attributeOrRelationship).getTargetEntity().getJavaClassName();
+                try {
+                    type = Util.getJavaClass(className);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             } else if (attributeOrRelationship instanceof DbAttribute) {
                 DbAttribute dbAttribute = (DbAttribute) attributeOrRelationship;
                 String typeName = TypesMapping.getJavaBySqlType(dbAttribute.getType());

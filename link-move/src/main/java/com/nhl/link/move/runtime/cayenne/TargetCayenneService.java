@@ -3,9 +3,9 @@ package com.nhl.link.move.runtime.cayenne;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.access.DataNode;
-import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.cayenne.dba.DbAdapter;
 import org.apache.cayenne.map.EntityResolver;
+import org.apache.cayenne.runtime.CayenneRuntime;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class TargetCayenneService implements ITargetCayenneService {
 
-    private final ServerRuntime runtime;
+    private final CayenneRuntime runtime;
 
-    public TargetCayenneService(ServerRuntime runtime) {
+    public TargetCayenneService(CayenneRuntime runtime) {
         this.runtime = runtime;
     }
 

@@ -1,9 +1,10 @@
 package com.nhl.link.move.mapper;
 
-import org.dflib.Index;
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.exp.path.CayennePath;
+import org.dflib.Index;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -63,10 +64,10 @@ public class MultiPathMapperTest {
 	@Test
 	public void keyForTarget() {
 
-		DataObject target = mock(DataObject.class);
-		when(target.readNestedProperty("a")).thenReturn("a1");
-		when(target.readNestedProperty("b")).thenReturn(5);
-		when(target.readNestedProperty("c")).thenReturn(6);
+		Persistent target = mock(Persistent.class);
+		when(target.readNestedProperty(CayennePath.of("a"))).thenReturn("a1");
+		when(target.readNestedProperty(CayennePath.of("b"))).thenReturn(5);
+		when(target.readNestedProperty(CayennePath.of("c"))).thenReturn(6);
 
 		Object key = mapper.keyForTarget(target);
 		assertTrue(key instanceof Map);

@@ -5,8 +5,10 @@ import com.nhl.link.move.LmTask;
 import com.nhl.link.move.runtime.task.ITaskService;
 import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
-import org.apache.cayenne.*;
-import org.apache.cayenne.graph.GraphDiff;
+import org.apache.cayenne.DataChannelQueryFilter;
+import org.apache.cayenne.DataChannelQueryFilterChain;
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.QueryResponse;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.Query;
@@ -14,11 +16,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
@@ -27,7 +32,7 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
 
     @BeforeAll
     public static void initQueryCapture() {
-        targetCayenne.getRuntime().getDataDomain().addFilter(QUERY_CAPTURE);
+        targetCayenne.getRuntime().getDataDomain().addQueryFilter(QUERY_CAPTURE);
     }
 
     @BeforeEach
@@ -63,7 +68,7 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
         EntityResolver resolver = targetCayenne.getRuntime().getDataDomain().getEntityResolver();
         List<String> resolvedEntities = QUERY_CAPTURE.getOfType(ObjectSelect.class)
                 .map(q -> q.getMetaData(resolver).getClassDescriptor().getEntity().getName())
-                .collect(toList());
+                .toList();
 
         assertEquals(3, resolvedEntities.size(),
                 () -> "Each id (including root target) must have been resolved only once. Instead got " + resolvedEntities);
@@ -71,9 +76,9 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
         assertEquals(expectedRoots, new HashSet<>(resolvedEntities));
     }
 
-    static class QueryCapture implements DataChannelFilter {
+    static class QueryCapture implements DataChannelQueryFilter {
 
-        private Collection<Query> queries;
+        private final Collection<Query> queries = new ArrayList<>();
 
         public <T extends Query> Stream<T> getOfType(Class<T> type) {
             return queries.stream()
@@ -82,19 +87,9 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
         }
 
         @Override
-        public void init(DataChannel channel) {
-            queries = new ArrayList<>();
-        }
-
-        @Override
-        public QueryResponse onQuery(ObjectContext originatingContext, Query query, DataChannelFilterChain filterChain) {
+        public QueryResponse onQuery(ObjectContext originatingContext, Query query, DataChannelQueryFilterChain filterChain) {
             queries.add(query);
             return filterChain.onQuery(originatingContext, query);
-        }
-
-        @Override
-        public GraphDiff onSync(ObjectContext originatingContext, GraphDiff changes, int syncType, DataChannelFilterChain filterChain) {
-            return filterChain.onSync(originatingContext, changes, syncType);
         }
     }
 }
