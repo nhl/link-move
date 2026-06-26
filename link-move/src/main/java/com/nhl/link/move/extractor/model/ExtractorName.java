@@ -49,11 +49,9 @@ public class ExtractorName {
             return true;
         }
 
-        if (!(object instanceof ExtractorName)) {
+        if (!(object instanceof ExtractorName extractorName)) {
             return false;
         }
-
-        ExtractorName extractorName = (ExtractorName) object;
 
         if (!name.equals(extractorName.name)) {
             return false;

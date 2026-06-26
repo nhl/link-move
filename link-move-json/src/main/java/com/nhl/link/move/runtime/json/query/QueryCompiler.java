@@ -278,8 +278,7 @@ public class QueryCompiler {
         private void compactStack(Collection<String> ignoredOps) {
 
             Object rhsQueryObj = context.pollFromStack();
-            if (rhsQueryObj instanceof Token) {
-                Token t = (Token) rhsQueryObj;
+            if (rhsQueryObj instanceof Token t) {
                 throw new ParseException(String.format(
                         "Operator '%s' is missing right-hand side", t.getLiteral()), t.getPosition());
             }
@@ -305,8 +304,7 @@ public class QueryCompiler {
                 } else {
 
                     Object lhsQueryObj = context.pollFromStack();
-                    if (lhsQueryObj instanceof Token) {
-                        Token t = (Token) lhsQueryObj;
+                    if (lhsQueryObj instanceof Token t) {
                         throw new ParseException(String.format(
                                 "Operator '%s' is missing left-hand side", t.getLiteral()), t.getPosition());
                     }

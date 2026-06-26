@@ -27,26 +27,17 @@ public class ClassNameResolver {
             // classes and VOID that we will not support (yet?)
 
             if (!className.endsWith("[]")) {
-                switch (className) {
-                    case "byte":
-                        return Byte.TYPE;
-                    case "int":
-                        return Integer.TYPE;
-                    case "short":
-                        return Short.TYPE;
-                    case "char":
-                        return Character.TYPE;
-                    case "double":
-                        return Double.TYPE;
-                    case "long":
-                        return Long.TYPE;
-                    case "float":
-                        return Float.TYPE;
-                    case "boolean":
-                        return Boolean.TYPE;
-                }
-
-                throw e;
+                return switch (className) {
+                    case "byte" -> Byte.TYPE;
+                    case "int" -> Integer.TYPE;
+                    case "short" -> Short.TYPE;
+                    case "char" -> Character.TYPE;
+                    case "double" -> Double.TYPE;
+                    case "long" -> Long.TYPE;
+                    case "float" -> Float.TYPE;
+                    case "boolean" -> Boolean.TYPE;
+                    default -> throw e;
+                };
             }
 
             if (className.length() < 3) {
@@ -56,27 +47,18 @@ public class ClassNameResolver {
             // TODO: support for multi-dim arrays
             className = className.substring(0, className.length() - 2);
 
-            switch (className) {
-                case "byte":
-                    return byte[].class;
-                case "int":
-                    return int[].class;
-                case "long":
-                    return long[].class;
-                case "short":
-                    return short[].class;
-                case "char":
-                    return char[].class;
-                case "double":
-                    return double[].class;
-                case "float":
-                    return float[].class;
-                case "boolean":
-                    return boolean[].class;
-                default:
-                    // Object[]?
-                    return Class.forName("[L" + className + ";");
-            }
+            return switch (className) {
+                case "byte" -> byte[].class;
+                case "int" -> int[].class;
+                case "long" -> long[].class;
+                case "short" -> short[].class;
+                case "char" -> char[].class;
+                case "double" -> double[].class;
+                case "float" -> float[].class;
+                case "boolean" -> boolean[].class;
+                // Object[]?
+                default -> Class.forName("[L" + className + ";");
+            };
         }
     }
 }

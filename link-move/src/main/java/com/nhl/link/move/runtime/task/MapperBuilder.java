@@ -104,24 +104,22 @@ public class MapperBuilder {
 
             Object attributeOrRelationship = ExpressionFactory.exp(paths.iterator().next()).evaluate(entity);
 
-            Class<?> type;
-
-            if (attributeOrRelationship instanceof ObjAttribute) {
-                type = ((ObjAttribute) attributeOrRelationship).getJavaClass();
-            } else if (attributeOrRelationship instanceof ObjRelationship) {
-                String className = ((ObjRelationship) attributeOrRelationship).getTargetEntity().getJavaClassName();
-                try {
-                    type = Util.getJavaClass(className);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+            Class<?> type = switch (attributeOrRelationship) {
+                case ObjAttribute objAttribute -> objAttribute.getJavaClass();
+                case ObjRelationship objRelationship -> {
+                    String className = objRelationship.getTargetEntity().getJavaClassName();
+                    try {
+                        yield Util.getJavaClass(className);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-            } else if (attributeOrRelationship instanceof DbAttribute) {
-                DbAttribute dbAttribute = (DbAttribute) attributeOrRelationship;
-                String typeName = TypesMapping.getJavaBySqlType(dbAttribute.getType());
-                type = ClassNameResolver.typeForName(typeName);
-            } else {
-                type = null;
-            }
+                case DbAttribute dbAttribute -> {
+                    String typeName = TypesMapping.getJavaBySqlType(dbAttribute.getType());
+                    yield ClassNameResolver.typeForName(typeName);
+                }
+                case null, default -> null;
+            };
 
             keyAdapter = keyAdapterFactory.adapter(type);
         }

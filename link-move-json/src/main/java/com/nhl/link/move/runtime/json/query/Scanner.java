@@ -187,57 +187,22 @@ class Scanner {
             // prediction block -
             // if we're here, then current token's type is unknown yet
             switch (c) {
-                case '$': {
-                    tokenType = TokenType.ROOT_NODE_REF;
-                    return true;
-                }
-                case '@': {
-                    tokenType = TokenType.CURRENT_NODE_REF;
-                    return true;
-                }
-                case '.': {
-                    tokenType = TokenType.CHILD_ACCESS;
-                    return true;
-                }
-                case '*': {
-                    tokenType = TokenType.WILDCARD;
-                    return true;
-                }
-                case '[': {
-                    tokenType = TokenType.FILTER_START;
-                    return true;
-                }
-                case ']': {
-                    tokenType = TokenType.FILTER_END;
-                    return true;
-                }
-                case '?': {
-                    tokenType = TokenType.PREDICATE_START;
-                    return true;
-                }
-                case '(': {
-                    tokenType = TokenType.SCRIPT_START;
-                    return true;
-                }
-                case ')': {
-                    tokenType = TokenType.SCRIPT_END;
-                    return true;
-                }
-                case ',': {
-                    tokenType = TokenType.UNION;
-                    return true;
-                }
-                case '#': {
-                    tokenType = TokenType.META;
-                    return true;
-                }
-                case '\'':
-                case '\"': {
+                case '$' -> tokenType = TokenType.ROOT_NODE_REF;
+                case '@' -> tokenType = TokenType.CURRENT_NODE_REF;
+                case '.' -> tokenType = TokenType.CHILD_ACCESS;
+                case '*' -> tokenType = TokenType.WILDCARD;
+                case '[' -> tokenType = TokenType.FILTER_START;
+                case ']' -> tokenType = TokenType.FILTER_END;
+                case '?' -> tokenType = TokenType.PREDICATE_START;
+                case '(' -> tokenType = TokenType.SCRIPT_START;
+                case ')' -> tokenType = TokenType.SCRIPT_END;
+                case ',' -> tokenType = TokenType.UNION;
+                case '#' -> tokenType = TokenType.META;
+                case '\'', '\"' -> {
                     tokenType = TokenType.QUOTED_IDENTIFIER;
                     identifierBuilder = new IdentifierBuilder(true);
-                    return true;
                 }
-                default: {
+                default -> {
                     if (Character.isDigit(c)) {
                         tokenType = TokenType.NUMERIC_VALUE;
                     } else {
@@ -245,9 +210,9 @@ class Scanner {
                     }
                     identifierBuilder = new IdentifierBuilder(false);
                     identifierBuilder.acceptCharacter(c);
-                    return true;
                 }
             }
+            return true;
         }
 
         private static boolean isQuote(char c) {
@@ -255,24 +220,10 @@ class Scanner {
         }
 
         private static boolean isReserved(char c) {
-            switch (c) {
-                case '$':
-                case '@':
-                case '.':
-                case '*':
-                case '[':
-                case ']':
-                case '?':
-                case '(':
-                case ')':
-                case ',':
-                case '#':
-                case '\'':
-                case '\"':
-                    return true;
-                default:
-                    return false;
-            }
+            return switch (c) {
+                case '$', '@', '.', '*', '[', ']', '?', '(', ')', ',', '#', '\'', '\"' -> true;
+                default -> false;
+            };
         }
 
         Token build() {
@@ -292,55 +243,23 @@ class Scanner {
 
     static String getTokenLiteral(TokenType tokenType) {
 
-        switch (tokenType) {
-            case ROOT_NODE_REF: {
-                return "$";
-            }
-            case CURRENT_NODE_REF: {
-                return "@";
-            }
-            case CHILD_ACCESS: {
-                return ".";
-            }
-            case RECURSIVE_DESCENT: {
-                return "..";
-            }
-            case WILDCARD: {
-                return "*";
-            }
-            case UNION: {
-                return ",";
-            }
-            case META: {
-                return "#";
-            }
-            case FILTER_START: {
-                return "[";
-            }
-            case FILTER_END: {
-                return "]";
-            }
-            case PREDICATE_START: {
-                return "?";
-            }
-            case SCRIPT_START: {
-                return "(";
-            }
-            case SCRIPT_END: {
-                return ")";
-            }
-            case NUMERIC_VALUE: {
-                return "numeric";
-            }
-            case IDENTIFIER: {
-                return "identifier";
-            }
-            case QUOTED_IDENTIFIER: {
-                return "\"";
-            }
-            default: {
-                throw new RuntimeException("Unknown token type: " + tokenType.name());
-            }
-        }
+        return switch (tokenType) {
+            case ROOT_NODE_REF -> "$";
+            case CURRENT_NODE_REF -> "@";
+            case CHILD_ACCESS -> ".";
+            case RECURSIVE_DESCENT -> "..";
+            case WILDCARD -> "*";
+            case UNION -> ",";
+            case META -> "#";
+            case FILTER_START -> "[";
+            case FILTER_END -> "]";
+            case PREDICATE_START -> "?";
+            case SCRIPT_START -> "(";
+            case SCRIPT_END -> ")";
+            case NUMERIC_VALUE -> "numeric";
+            case IDENTIFIER -> "identifier";
+            case QUOTED_IDENTIFIER -> "\"";
+            default -> throw new RuntimeException("Unknown token type: " + tokenType.name());
+        };
     }
 }

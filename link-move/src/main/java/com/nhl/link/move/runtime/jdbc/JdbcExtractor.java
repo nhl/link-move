@@ -36,14 +36,10 @@ public class JdbcExtractor implements Extractor {
         SQLSelect<DataRow> select = SQLSelect.dataRowQuery(sqlTemplate).params(exec.getParameters());
 
         switch (capsStrategy) {
-            case LOWER:
-                select.lowerColumnNames();
-                break;
-            case UPPER:
-                select.upperColumnNames();
-                break;
-            case DEFAULT:
-                break;
+            case LOWER -> select.lowerColumnNames();
+            case UPPER -> select.upperColumnNames();
+            case DEFAULT -> {
+            }
         }
 
         DataRowIterator it = new DataRowIterator(context.iterator(select));

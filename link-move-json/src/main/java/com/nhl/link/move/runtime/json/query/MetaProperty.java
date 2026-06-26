@@ -21,16 +21,10 @@ public class MetaProperty extends BaseQuery {
     @Override
     public List<JsonNodeWrapper> doExecute(JsonNode rootNode, JsonNodeWrapper currentNode) {
 
-        JsonNodeWrapper node;
-        switch (propertyName) {
-            case NODE_PARENT: {
-                node = currentNode.getParent();
-                break;
-            }
-            default: {
-                throw new LmRuntimeException("Unknown meta property: " + propertyName);
-            }
-        }
+        JsonNodeWrapper node = switch (propertyName) {
+            case NODE_PARENT -> currentNode.getParent();
+            default -> throw new LmRuntimeException("Unknown meta property: " + propertyName);
+        };
 
         if (node == null) {
             return Collections.emptyList();

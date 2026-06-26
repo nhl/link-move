@@ -52,14 +52,14 @@ public class Utils {
 
         if (hasComparableType(node1) && hasComparableType(node2) && ofEqualTypes(node1, node2)) {
             switch (node1.getNodeType()) {
-                case STRING: {
+                case STRING -> {
                     return node1.textValue().compareTo(node2.textValue());
                 }
-                case BOOLEAN: {
+                case BOOLEAN -> {
                     Boolean left = node1.asBoolean(), right = node2.asBoolean();
                     return left.compareTo(right);
                 }
-                case NUMBER: {
+                case NUMBER -> {
                     if (node1.isIntegralNumber()) {
                         Integer left = node1.asInt(), right = node2.asInt();
                         return left.compareTo(right);
@@ -67,10 +67,10 @@ public class Utils {
                         Double left = node1.asDouble(), right = node2.asDouble();
                         return left.compareTo(right);
                     }
-                    // fall through
+                    // fall through to the exception below
                 }
-                default: {
-                    // fall through
+                default -> {
+                    // fall through to the exception below
                 }
             }
         }

@@ -23,8 +23,8 @@ public class ByteArrayKeyAdapter implements KeyAdapter {
 		@Override
 		public boolean equals(Object object) {
 
-			if (object instanceof ByteArrayKey) {
-				return equals(bytes, ((ByteArrayKey) object).bytes);
+			if (object instanceof ByteArrayKey other) {
+				return equals(bytes, other.bytes);
 			} else {
 				return false;
 			}
