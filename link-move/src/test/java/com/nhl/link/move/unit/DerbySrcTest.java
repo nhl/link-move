@@ -15,7 +15,7 @@ public abstract class DerbySrcTest {
     @BQTestTool(BQTestScope.GLOBAL)
     protected static final DerbyTester srcDb = DerbyTester.db()
             .initDB("classpath:com/nhl/link/move/itest/src-schema-derby.sql")
-            .deleteBeforeEachTest("etl1", "etl2", "etl4", "etl5", "etl3", "etl6", "etl7", "etl8", "etl9", "etl11", "etl_sub1");
+            .deleteBeforeEachTest("etl1", "etl2", "etl4", "etl5", "etl3", "etl6", "etl7", "etl8", "etl9", "etl11", "etl_sub1", "etl14");
 
     @BQApp(value = BQTestScope.GLOBAL, skipRun = true)
     protected static final BQRuntime srcApp = Bootique.app()
@@ -61,6 +61,10 @@ public abstract class DerbySrcTest {
 
     protected Table srcEtl11() {
         return srcDb.getTable("etl11");
+    }
+
+    protected Table srcEtl14() {
+        return srcDb.getTable("etl14");
     }
 
     protected Table srcEtlSub1() {

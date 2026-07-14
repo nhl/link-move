@@ -2,6 +2,8 @@ package com.nhl.link.move.unit;
 
 import com.nhl.link.move.unit.cayenne.t.Etl10t;
 import com.nhl.link.move.unit.cayenne.t.Etl11t;
+import com.nhl.link.move.unit.cayenne.t.Etl13t;
+import com.nhl.link.move.unit.cayenne.t.Etl14t;
 import com.nhl.link.move.unit.cayenne.t.Etl1t;
 import com.nhl.link.move.unit.cayenne.t.Etl2t;
 import com.nhl.link.move.unit.cayenne.t.Etl3t;
@@ -46,7 +48,9 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
                     Etl8t.class,
                     Etl9t.class,
                     Etl10t.class,
-                    Etl11t.class);
+                    Etl11t.class,
+                    Etl13t.class,
+                    Etl14t.class);
 
     @BQApp(value = BQTestScope.GLOBAL, skipRun = true)
     protected static final BQRuntime targetApp = Bootique.app()
@@ -86,6 +90,14 @@ public abstract class DerbySrcTargetTest extends DerbySrcTest {
 
     protected Table etl11t() {
         return targetDb.getTable("etl11t");
+    }
+
+    protected Table etl13t() {
+        return targetDb.getTable("etl13t");
+    }
+
+    protected Table etl14t() {
+        return targetDb.getTable("etl14t");
     }
 
     protected Table tiSuper() {
