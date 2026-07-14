@@ -3,7 +3,6 @@ package com.nhl.link.move.writer;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.exp.parser.ASTDbPath;
 import org.apache.cayenne.map.DbAttribute;
-import org.apache.cayenne.map.DbJoin;
 import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.AttributeProperty;
@@ -83,17 +82,13 @@ public class TargetPropertyWriterFactory {
         }
 
         DbRelationship dbRelationship = dbRelationships.get(0);
-        List<DbJoin> joins = dbRelationship.getJoins();
 
-        if (joins.size() > 1) {
-            // TODO: support for multi-key to-one relationships
-            LOGGER.info("TODO: not mapping db: path for a multi-key relationship: {}", property.getName());
-            return;
-        }
-
+        // The writer is keyed on a column named after the relationship (regardless of how many
+        // columns its FK spans). FkResolver appends that same column holding the resolved related
+        // object; the raw FK source columns have no writer and are ignored.
         getOrCreateWriter(
                 property.getName(),
-                ASTDbPath.DB_PREFIX + joins.get(0).getSourceName(),
+                ASTDbPath.DB_PREFIX + dbRelationship.getName(),
                 () -> new TargetToOnePropertyWriter(property)
         );
     }

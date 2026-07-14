@@ -94,7 +94,7 @@ public class DefaultTargetEntity implements TargetEntity {
 
         Optional<ForeignKey> fk = findAllRelationships(attribute)
                 .stream()
-                .map(this::createFk)
+                .map(r -> createFk(r, attribute))
                 .filter(Optional::isPresent)
                 .findFirst()
                 .orElse(Optional.empty());
@@ -121,8 +121,11 @@ public class DefaultTargetEntity implements TargetEntity {
         List<DbJoin> joins = relationship.getJoins();
 
         if (joins.size() > 1) {
-            // TODO: support for multi-key to-one relationships, resolved to multiple TargetAttributes
-            throw new LmRuntimeException("Multi-column FKs are not yet supported. Relationship: "
+            // A multi-column FK has no single-column source representation when mapped via the bare
+            // relationship name. Map its FK columns explicitly instead (e.g. via their "db:" paths),
+            // which is handled by "createAttributeForAttribute" above.
+            throw new LmRuntimeException("Can't map a multi-column FK via a relationship name."
+                    + " Map its FK columns instead. Relationship: "
                     + relationship.getSourceEntityName()
                     + "."
                     + relationship.getName());
@@ -132,14 +135,13 @@ public class DefaultTargetEntity implements TargetEntity {
 
         return new TargetAttribute(
                 this,
-                // TODO:
                 ASTDbPath.DB_PREFIX + firstJoin.getSourceName(),
                 firstJoin.getSource().getScale(),
                 javaType(firstJoin.getSource()),
-                createFk(relationship));
+                createFk(relationship, firstJoin.getSource()));
     }
 
-    private Optional<ForeignKey> createFk(DbRelationship relationship) {
+    private Optional<ForeignKey> createFk(DbRelationship relationship, DbAttribute attribute) {
 
         // What we decide to be a FK or not must roughly match the algorithm in
         // TargetPropertyWriterService.createWriterFactory(..), or we won't be able to match the data columns with
@@ -148,10 +150,24 @@ public class DefaultTargetEntity implements TargetEntity {
         // TODO: there's no full correspondence, as TargetPropertyWriterService checks for object properties
 
         DbEntity targetDbEntity = relationship.getTargetEntity();
+        List<DbJoin> joins = relationship.getJoins();
 
-        if (relationship.isSourceIndependentFromTargetChange()
-                || relationship.getJoins().size() > 1
-                || targetDbEntity.getPrimaryKeys().size() > 1) {
+        // only the FK side of a to-one (i.e. the entity that actually holds the FK columns)
+        if (relationship.isSourceIndependentFromTargetChange()) {
+            return Optional.empty();
+        }
+
+        // A multi-column FK is detected once, on the first join's source column, so that a single
+        // TargetAttribute owns the whole FK (it knows all of its source columns). The other component
+        // columns stay plain. The resolved object is later placed in a separate, relationship-named
+        // column (see ForeignKey.getResultColumn()), not in any of these FK columns.
+        if (!attribute.getName().equals(joins.get(0).getSourceName())) {
+            return Optional.empty();
+        }
+
+        // The relationship is resolved by matching FK values against the target's PK, so the FK
+        // column count must line up with the target PK column count.
+        if (joins.size() != targetDbEntity.getPrimaryKeys().size()) {
             return Optional.empty();
         }
 
@@ -161,9 +177,16 @@ public class DefaultTargetEntity implements TargetEntity {
             case 0:
                 return Optional.empty();
             case 1:
-                return Optional.of(new ForeignKey(entityMap,
-                        targetEntities.iterator().next(),
-                        ASTDbPath.DB_PREFIX + relationship.getJoins().get(0).getTargetName()));
+                List<String> sourceColumns = new ArrayList<>(joins.size());
+                List<String> targetPaths = new ArrayList<>(joins.size());
+                for (DbJoin join : joins) {
+                    sourceColumns.add(ASTDbPath.DB_PREFIX + join.getSourceName());
+                    targetPaths.add(ASTDbPath.DB_PREFIX + join.getTargetName());
+                }
+                // the resolved object lands in a column named after the relationship, matching the
+                // writer registration in TargetPropertyWriterFactory.initWriter(ToOneProperty)
+                String resultColumn = ASTDbPath.DB_PREFIX + relationship.getName();
+                return Optional.of(new ForeignKey(entityMap, targetEntities.iterator().next(), sourceColumns, targetPaths, resultColumn));
             default:
                 throw new LmRuntimeException("Unsupported FK: DbEntity "
                         + targetDbEntity.getName()

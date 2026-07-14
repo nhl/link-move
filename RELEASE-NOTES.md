@@ -1,3 +1,7 @@
+## Release 4.0.0-M2
+
+* #257 Auto-map multi-column relationships
+
 ## Release 4.0.0-M1
 
 * #239 Remove APIs deprecated in 3.0.0 
