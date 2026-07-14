@@ -7,11 +7,6 @@ import com.nhl.link.move.unit.LmIntegrationTest;
 import com.nhl.link.move.unit.cayenne.t.Etl14t;
 import org.junit.jupiter.api.Test;
 
-/**
- * Verifies syncing a to-one relationship backed by a multi-column (composite) FK. The source
- * provides both FK columns directly, and they match the composite PK of the already-loaded
- * parent. Mirrors the "nhl_playoff_series_game" -> "nhl_playoff_series" case.
- */
 public class CreateOrUpdate_MultiKeyFkIT extends LmIntegrationTest {
 
     @Test
