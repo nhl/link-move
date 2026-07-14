@@ -70,7 +70,7 @@ public class FkResolver {
         for (Map.Entry<TargetAttribute, Map<Object, Object>> e : related.entrySet()) {
 
             ForeignKey fk = e.getKey().getForeignKey().get();
-            List<String> sourceColumns = fk.getSourceColumns();
+            List<String> sourceColumns = fk.sourceColumns();
             Map<Object, Object> fks = e.getValue();
 
             // Append a column named after the relationship holding the resolved related object, leaving
@@ -79,7 +79,7 @@ public class FkResolver {
             // TODO: do we care if an FK is invalid (i.e. "get" returns null) ?
             //  For now quietly setting the relationship to null.
             df = df
-                    .colsAppend(fk.getResultColumn())
+                    .colsAppend(fk.resultColumn())
                     .merge(row -> {
                         Object key = keyForRow(sourceColumns, row);
                         return key != null ? fks.get(key) : null;
@@ -100,7 +100,7 @@ public class FkResolver {
                         .ifPresent(a -> {
                             // for a multi-column FK the FK-owning column's value alone is not enough -
                             // build a key across all of the FK's source columns
-                            Object key = keyForRow(a.getForeignKey().get().getSourceColumns(), row);
+                            Object key = keyForRow(a.getForeignKey().get().sourceColumns(), row);
                             if (key != null) {
                                 fks.computeIfAbsent(a, ak -> new HashSet<>()).add(key);
                             }
@@ -134,7 +134,7 @@ public class FkResolver {
             ObjectContext context,
             Map<TargetAttribute, Map<Object, Object>> related) {
 
-        TargetAttribute relatedPk = fk.getTargets().getFirst();
+        TargetAttribute relatedPk = fk.targets().getFirst();
         String relatedPath = relatedPk.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length());
         String relatedEntityName = relatedPk.getEntity().getName();
 
@@ -157,7 +157,7 @@ public class FkResolver {
             ObjectContext context,
             Map<TargetAttribute, Map<Object, Object>> related) {
 
-        List<TargetAttribute> targets = fk.getTargets();
+        List<TargetAttribute> targets = fk.targets();
         List<String> targetPkColumns = new ArrayList<>(targets.size());
         for (TargetAttribute t : targets) {
             targetPkColumns.add(t.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length()));

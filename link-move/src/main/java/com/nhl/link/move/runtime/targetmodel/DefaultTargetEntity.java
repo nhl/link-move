@@ -177,16 +177,17 @@ public class DefaultTargetEntity implements TargetEntity {
             case 0:
                 return Optional.empty();
             case 1:
+                TargetEntity targetEntity = entityMap.get(targetEntities.iterator().next());
                 List<String> sourceColumns = new ArrayList<>(joins.size());
-                List<String> targetPaths = new ArrayList<>(joins.size());
+                List<TargetAttribute> targets = new ArrayList<>(joins.size());
                 for (DbJoin join : joins) {
                     sourceColumns.add(ASTDbPath.DB_PREFIX + join.getSourceName());
-                    targetPaths.add(ASTDbPath.DB_PREFIX + join.getTargetName());
+                    targets.add(targetEntity.getAttribute(ASTDbPath.DB_PREFIX + join.getTargetName()).get());
                 }
                 // the resolved object lands in a column named after the relationship, matching the
                 // writer registration in TargetPropertyWriterFactory.initWriter(ToOneProperty)
                 String resultColumn = ASTDbPath.DB_PREFIX + relationship.getName();
-                return Optional.of(new ForeignKey(entityMap, targetEntities.iterator().next(), sourceColumns, targetPaths, resultColumn));
+                return Optional.of(new ForeignKey(sourceColumns, targets, resultColumn));
             default:
                 throw new LmRuntimeException("Unsupported FK: DbEntity "
                         + targetDbEntity.getName()

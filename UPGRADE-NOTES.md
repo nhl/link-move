@@ -1,6 +1,21 @@
 _This document contains upgrade notes for LinkMove 3.x and newer. Older versions are documented in
 [UPGRADE-NOTES-1-2](./UPGRADE-NOTES-1-to-2.md)._
 
+## Upgrading to 4.0.0-M2
+
+### To-one relationships resolve into a relationship-named DataFrame column [#257](https://github.com/nhl/link-move/issues/257)
+LinkMove now supports to-one relationships backed by multi-column (composite) foreign keys. As part of this,
+the `RESOLVE_FK_VALUES` stage changed how it represents a resolved relationship in the working `DataFrame`:
+
+* **Before:** the resolved related object replaced the raw FK value *in place*, in the column named after the
+  FK column (e.g. `db:e2_id`).
+* **Now:** the resolved related object is placed in a *new* column named after the relationship
+  (e.g. `db:e2`). The raw FK source columns are left untouched.
+
+If you have custom stage callbacks (e.g. on `RESOLVE_FK_VALUES` or `MERGE_TARGET`)
+that inspect `DataFrame` columns for resolved relationships by name, update them to look for the
+relationship-named column (`db:<relationshipName>`) instead of the FK column (`db:<fkColumn>`).
+
 ## Upgrading to 4.0.0-M1
 
 ### Java 21 is required [#251](https://github.com/nhl/link-move/issues/251)
