@@ -1,6 +1,7 @@
 ## Release 4.0.0-M2
 
 * #257 Auto-map multi-column relationships
+* #260 Upgrade Jackson to 2.22.1
 
 ## Release 4.0.0-M1
 
