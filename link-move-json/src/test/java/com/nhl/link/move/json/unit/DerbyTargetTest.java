@@ -4,13 +4,13 @@ import com.nhl.link.move.json.unit.cayenne.t.Etlt1;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
 import io.bootique.cayenne.v50.CayenneModule;
-import io.bootique.cayenne.v50.junit5.CayenneTester;
-import io.bootique.jdbc.junit5.Table;
-import io.bootique.jdbc.junit5.derby.DerbyTester;
-import io.bootique.junit5.BQApp;
-import io.bootique.junit5.BQTest;
-import io.bootique.junit5.BQTestScope;
-import io.bootique.junit5.BQTestTool;
+import io.bootique.cayenne.v50.junit.CayenneTester;
+import io.bootique.jdbc.junit.Table;
+import io.bootique.jdbc.junit.derby.DerbyTester;
+import io.bootique.junit.BQApp;
+import io.bootique.junit.BQTest;
+import io.bootique.junit.BQTestScope;
+import io.bootique.junit.BQTestTool;
 
 @BQTest
 public abstract class DerbyTargetTest {
