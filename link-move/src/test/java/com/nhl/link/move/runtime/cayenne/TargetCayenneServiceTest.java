@@ -2,11 +2,12 @@ package com.nhl.link.move.runtime.cayenne;
 
 import org.apache.cayenne.access.DataDomain;
 import org.apache.cayenne.access.DataNode;
-import org.apache.cayenne.configuration.server.ServerRuntime;
+import org.apache.cayenne.runtime.CayenneRuntime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,11 +35,10 @@ public class TargetCayenneServiceTest {
 		when(dn2.getName()).thenReturn("dn2");
 		when(dn2.getDataSource()).thenReturn(ds2);
 
-		DataDomain domain = new DataDomain("dd");
-		domain.addNode(dn1);
-		domain.addNode(dn2);
+		DataDomain domain = mock(DataDomain.class);
+		when(domain.getDataNodes()).thenReturn(List.of(dn1, dn2));
 
-		ServerRuntime runtime = mock(ServerRuntime.class);
+		CayenneRuntime runtime = mock(CayenneRuntime.class);
 		when(runtime.getDataDomain()).thenReturn(domain);
 
 		cayenneService = new TargetCayenneService(runtime);

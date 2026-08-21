@@ -2,6 +2,7 @@
 
 * #257 Auto-map multi-column relationships
 * #260 Upgrade Jackson to 2.22.1
+* #261 Upgrade to Cayenne 5.0-M3
 
 ## Release 4.0.0-M1
 

@@ -13,7 +13,6 @@ import org.apache.cayenne.dba.derby.DerbyAdapter;
 import org.apache.cayenne.dba.h2.H2Adapter;
 import org.apache.cayenne.dba.hsqldb.HSQLDBAdapter;
 import org.apache.cayenne.dba.mysql.MySQLAdapter;
-import org.apache.cayenne.dba.oracle.Oracle8Adapter;
 import org.apache.cayenne.dba.oracle.OracleAdapter;
 import org.apache.cayenne.dba.postgres.PostgresAdapter;
 import org.apache.cayenne.dba.sqlserver.SQLServerAdapter;
@@ -43,7 +42,6 @@ public class DeleteAllTask extends BaseTask {
     private static final Set<Class<?>> TRUNCATE_AWARE_ADAPTERS = Set.of(
             DerbyAdapter.class,
             PostgresAdapter.class,
-            Oracle8Adapter.class,
             OracleAdapter.class,
             SQLServerAdapter.class,
             MySQLAdapter.class,
@@ -122,7 +120,8 @@ public class DeleteAllTask extends BaseTask {
         DbAdapter adapter = targetCayenneService.dbAdapter(dbEntity.getDataMap().getName());
 
         SQLTemplate query = new SQLTemplate(dbEntity.getDataMap(), "DELETE FROM $tableName", false);
-        query.setParams(Map.of("tableName", adapter.getQuotingStrategy().quotedFullyQualifiedName(dbEntity)));
+        query.setParams(Map.of("tableName", adapter.getQuotingStrategy()
+                .quotedFQN(dbEntity.getCatalog(), dbEntity.getSchema(), dbEntity.getName())));
 
         TRUNCATE_AWARE_ADAPTERS.forEach(a -> query.setTemplate(a.getName(), "TRUNCATE TABLE $tableName"));
 
