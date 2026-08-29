@@ -265,6 +265,7 @@
                     <version>${release.plugin.version}</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                     </configuration>
                 </plugin>
                 <plugin>
