@@ -51,7 +51,15 @@
         <commons.csv.version>1.11.0</commons.csv.version>
         <dflib.version>1.3.0</dflib.version>
         <junit5.version>5.14.1</junit5.version>
-        <bootique.version>4.0-SNAPSHOT</bootique.version>
+        <!--
+        Keep these until Bootique 4.0-M6 is released
+        -->
+        <bootique.version>4.0-20260829.004058-90</bootique.version>
+        <bootique.junit.version>4.0-20260829.004058-38</bootique.junit.version>
+        <bootique.jdbc.version>4.0-20260829.005318-33</bootique.jdbc.version>
+        <bootique.jdbc.junit.version>4.0-20260829.005318-13</bootique.jdbc.junit.version>
+        <bootique.cayenne.version>4.0-20260825.234135-32</bootique.cayenne.version>
+        <bootique.cayenne.junit.version>4.0-20260825.234135-9</bootique.cayenne.junit.version>
         <mockito.version>3.9.0</mockito.version>
 
         <!-- Plugin Versions -->
@@ -109,12 +117,50 @@
             <dependency>
                 <groupId>io.bootique.jdbc</groupId>
                 <artifactId>bootique-jdbc-junit-derby</artifactId>
-                <version>${bootique.version}</version>
+                <version>${bootique.jdbc.junit.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.bootique.cayenne</groupId>
                 <artifactId>bootique-cayenne50-junit</artifactId>
+                <version>${bootique.cayenne.junit.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.cayenne</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Transitive Bootique modules, pinned so that their "4.0-SNAPSHOT" refs don't float -->
+            <dependency>
+                <groupId>io.bootique</groupId>
+                <artifactId>bootique</artifactId>
                 <version>${bootique.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique</groupId>
+                <artifactId>bootique-junit</artifactId>
+                <version>${bootique.junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique.jdbc</groupId>
+                <artifactId>bootique-jdbc</artifactId>
+                <version>${bootique.jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique.jdbc</groupId>
+                <artifactId>bootique-jdbc-liquibase-internal</artifactId>
+                <version>${bootique.jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique.jdbc</groupId>
+                <artifactId>bootique-jdbc-junit</artifactId>
+                <version>${bootique.jdbc.junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique.cayenne</groupId>
+                <artifactId>bootique-cayenne50</artifactId>
+                <version>${bootique.cayenne.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.cayenne</groupId>
