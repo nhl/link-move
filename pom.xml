@@ -47,7 +47,7 @@
         <cayenne.version>5.0-M3</cayenne.version>
         <jackson.version>2.22.1</jackson.version>
         <jackson.annotations.version>2.22</jackson.annotations.version>
-        <jackson.databind.version>2.22.1</jackson.databind.version>
+        <jackson.databind.version>2.22.2</jackson.databind.version>
         <commons.csv.version>1.11.0</commons.csv.version>
         <dflib.version>1.3.0</dflib.version>
         <junit5.version>5.14.1</junit5.version>
