@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A parser of {@link ExtractorModelContainer} XML for schema version 2.
+ * A parser of {@link ExtractorModelContainer} XML for schema version 3.
  *
  * @since 3.0.0
  */

@@ -134,7 +134,7 @@ public class DeleteAllTask extends BaseTask {
     }
 
     /**
-     * Truncate query does not return count of deleted rows, so additional select required to get statistics
+     * Truncate query does not return count of deleted rows, so an additional select is required to get statistics
      */
     private Optional<Long> prefetchCountIfRequired(DbAdapter adapter, ObjectContext context) {
         if (!skipExecutionStats && TRUNCATE_AWARE_ADAPTERS.contains(adapter.getClass())) {
