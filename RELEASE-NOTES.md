@@ -1,6 +1,7 @@
 ## Release 4.0.0-M3
 
 * #263 Bump com.fasterxml.jackson.core:jackson-databind from 2.22.1 to 2.22.3
+* #264 Bump com.fasterxml.jackson.core:jackson-core from 2.22.1 to 2.22.3
 
 ## Release 4.0.0-M2
 
