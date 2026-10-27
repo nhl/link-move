@@ -1,3 +1,7 @@
+## Release 4.0.0-M3
+
+* #263 Bump com.fasterxml.jackson.core:jackson-databind from 2.22.1 to 2.22.3
+
 ## Release 4.0.0-M2
 
 * #257 Auto-map multi-column relationships
