@@ -88,7 +88,7 @@ public class DefaultTargetEntity implements TargetEntity {
     protected TargetAttribute createAttributeForAttribute(Expression dbExp, List<PathComponent<DbAttribute, DbRelationship>> components) {
 
         // there can be more than one join for an attribute, only some being straight FKs
-        // TODO: still kinda undeterministic.
+        // TODO: still kinda nondeterministic.
 
         DbAttribute attribute = components.get(components.size() - 1).getAttribute();
 
