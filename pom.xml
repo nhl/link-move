@@ -44,7 +44,7 @@
 
         <!-- Framework versions -->
         <slf4j.version>2.0.17</slf4j.version>
-        <cayenne.version>5.0-M3</cayenne.version>
+        <cayenne.version>5.0-RC1</cayenne.version>
         <jackson.version>2.22.3</jackson.version>
         <jackson.annotations.version>2.22</jackson.annotations.version>
         <jackson.databind.version>2.22.3</jackson.databind.version>
@@ -58,8 +58,8 @@
         <bootique.junit.version>4.0-20260829.004058-38</bootique.junit.version>
         <bootique.jdbc.version>4.0-20260829.005318-33</bootique.jdbc.version>
         <bootique.jdbc.junit.version>4.0-20260829.005318-13</bootique.jdbc.junit.version>
-        <bootique.cayenne.version>4.0-20260825.234135-32</bootique.cayenne.version>
-        <bootique.cayenne.junit.version>4.0-20260825.234135-9</bootique.cayenne.junit.version>
+        <bootique.cayenne.version>4.0-20261104.190905-37</bootique.cayenne.version>
+        <bootique.cayenne.junit.version>4.0-20261104.190905-14</bootique.cayenne.junit.version>
         <mockito.version>3.9.0</mockito.version>
 
         <!-- Plugin Versions -->

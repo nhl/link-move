@@ -1,9 +1,5 @@
 package com.nhl.link.move.unit.cayenne.t.auto;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import org.apache.cayenne.PersistentObject;
 import org.apache.cayenne.exp.property.BaseIdProperty;
 import org.apache.cayenne.exp.property.NumericIdProperty;
@@ -21,8 +17,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl13t;
  */
 public abstract class _Etl13t extends PersistentObject {
 
-    private static final long serialVersionUID = 1L;
-
     public static final SelfProperty<Etl13t> SELF = PropertyFactory.createSelf(Etl13t.class);
 
     public static final NumericIdProperty<Integer> K1_PK_PROPERTY = PropertyFactory.createNumericId("k1", "Etl13t", Integer.class);
@@ -33,6 +27,7 @@ public abstract class _Etl13t extends PersistentObject {
     public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
 
     protected String name;
+
 
     public void setName(String name) {
         beforePropertyWrite("name", this.name, name);
@@ -71,26 +66,6 @@ public abstract class _Etl13t extends PersistentObject {
             default:
                 super.writePropertyDirectly(propName, val);
         }
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        writeSerialized(out);
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        readSerialized(in);
-    }
-
-    @Override
-    protected void writeState(ObjectOutputStream out) throws IOException {
-        super.writeState(out);
-        out.writeObject(this.name);
-    }
-
-    @Override
-    protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        super.readState(in);
-        this.name = (String)in.readObject();
     }
 
 }

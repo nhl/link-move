@@ -2,14 +2,14 @@ package com.nhl.link.move.runtime;
 
 import com.nhl.link.move.resource.ResourceResolver;
 import com.nhl.link.move.runtime.task.ITaskService;
-import org.apache.cayenne.DataChannel;
+import org.apache.cayenne.access.DataDomain;
 import org.apache.cayenne.PersistentObject;
 import org.apache.cayenne.di.Binder;
 import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.ClassDescriptor;
-import org.apache.cayenne.runtime.CayenneRuntime;
+import org.apache.cayenne.CayenneRuntime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,11 +41,11 @@ public class LmRuntimeBuilderTest {
         when(resolver.getObjEntity(any(Class.class))).thenReturn(mockEntity);
         when(resolver.getClassDescriptor(any(String.class))).thenReturn(mockDescriptor);
 
-        DataChannel channel = mock(DataChannel.class);
-        when(channel.getEntityResolver()).thenReturn(resolver);
+        DataDomain domain = mock(DataDomain.class);
+        when(domain.getEntityResolver()).thenReturn(resolver);
 
         this.cayenneRuntime = mock(CayenneRuntime.class);
-        when(cayenneRuntime.getChannel()).thenReturn(channel);
+        when(cayenneRuntime.getDataDomain()).thenReturn(domain);
     }
 
     @Test

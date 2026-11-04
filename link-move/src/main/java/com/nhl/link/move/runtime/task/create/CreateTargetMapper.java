@@ -1,6 +1,7 @@
 package com.nhl.link.move.runtime.task.create;
 
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.Persistent;
 import org.dflib.DataFrame;
 
 import static org.dflib.Exp.$val;
@@ -10,10 +11,10 @@ import static org.dflib.Exp.$val;
  */
 public class CreateTargetMapper {
 
-    private final Class<?> type;
+    private final Class<? extends Persistent> type;
 
     public CreateTargetMapper(Class<?> type) {
-        this.type = type;
+        this.type = type.asSubclass(Persistent.class);
     }
 
     public DataFrame map(ObjectContext cayenneContext, DataFrame sources) {

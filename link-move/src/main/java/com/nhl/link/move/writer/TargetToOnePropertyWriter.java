@@ -1,7 +1,8 @@
 package com.nhl.link.move.writer;
 
 import org.apache.cayenne.reflect.ToOneProperty;
-import org.apache.cayenne.util.Util;
+
+import java.util.Objects;
 
 /**
  * @since 1.4
@@ -22,6 +23,6 @@ public class TargetToOnePropertyWriter implements TargetPropertyWriter {
 	@Override
 	public boolean willWrite(Object target, Object value) {
 		Object oldValue = property.readProperty(target);
-		return !Util.nullSafeEquals(oldValue, value);
+		return !Objects.equals(oldValue, value);
 	}
 }

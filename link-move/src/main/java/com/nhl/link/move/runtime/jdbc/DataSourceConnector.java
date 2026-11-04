@@ -2,7 +2,7 @@ package com.nhl.link.move.runtime.jdbc;
 
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.di.BeforeScopeEnd;
-import org.apache.cayenne.runtime.CayenneRuntime;
+import org.apache.cayenne.CayenneRuntime;
 
 import javax.sql.DataSource;
 
@@ -28,7 +28,7 @@ public class DataSourceConnector implements JdbcConnector {
 		// assigning explicit name to the Cayenne runtime to avoid transaction
 		// conflicts for similarly named DataNodes between this runtime and
 		// other Cayenne stacks present in the system.
-		this.runtime = CayenneRuntime.builder(name).dataSource(dataSource).build();
+		this.runtime = CayenneRuntime.of(name).defaultDataNode(dataSource).build();
 		this.sharedContext = runtime.newContext();
 	}
 

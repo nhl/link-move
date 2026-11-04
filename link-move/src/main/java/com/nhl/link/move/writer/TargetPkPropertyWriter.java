@@ -3,11 +3,11 @@ package com.nhl.link.move.writer;
 import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.Persistent;
 import org.apache.cayenne.map.DbAttribute;
-import org.apache.cayenne.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @since 1.4
@@ -49,12 +49,12 @@ public class TargetPkPropertyWriter implements TargetPropertyWriter {
         Persistent pt = (Persistent) target;
 
         Map<String, Object> idSnapshot = pt.getObjectId().getIdSnapshot();
-        if (Util.nullSafeEquals(idSnapshot.get(pk.getName()), value)) {
+        if (Objects.equals(idSnapshot.get(pk.getName()), value)) {
             return false;
         }
 
         Map<String, Object> replacementMap = pt.getObjectId().getReplacementIdMap();
-        if (Util.nullSafeEquals(replacementMap.get(pk.getName()), value)) {
+        if (Objects.equals(replacementMap.get(pk.getName()), value)) {
             return false;
         }
 

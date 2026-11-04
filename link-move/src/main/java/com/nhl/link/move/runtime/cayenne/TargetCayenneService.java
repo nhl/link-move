@@ -5,7 +5,7 @@ import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.access.DataNode;
 import org.apache.cayenne.dba.DbAdapter;
 import org.apache.cayenne.map.EntityResolver;
-import org.apache.cayenne.runtime.CayenneRuntime;
+import org.apache.cayenne.CayenneRuntime;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class TargetCayenneService implements ITargetCayenneService {
 
     @Override
     public EntityResolver entityResolver() {
-        return runtime.getChannel().getEntityResolver();
+        return runtime.getDataDomain().getEntityResolver();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.nhl.link.move.extractor.model;
 
-import org.apache.cayenne.util.HashCodeBuilder;
+import java.util.Objects;
 
 /**
  * Encapsulates a fully-qualified name of an {@link ExtractorModel}.
@@ -66,8 +66,7 @@ public class ExtractorName {
 
     @Override
     public int hashCode() {
-        HashCodeBuilder builder = new HashCodeBuilder(13, 19);
-        return builder.append(location.hashCode()).append(name.hashCode()).toHashCode();
+        return Objects.hash(location, name);
     }
 
     @Override

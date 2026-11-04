@@ -4,7 +4,7 @@ import com.nhl.link.move.BaseRowAttribute;
 import com.nhl.link.move.RowAttribute;
 import org.apache.cayenne.DataRow;
 import org.apache.cayenne.ResultIterator;
-import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.apache.cayenne.exp.DbPathExp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class DataRowIterator implements Iterator<DataRow>, AutoCloseable {
         RowAttribute[] header = new RowAttribute[currentRow.size()];
         for (int i = 0; i < header.length; i++) {
             String name = names.get(i);
-            header[i] = new BaseRowAttribute(Object.class, name, ASTDbPath.DB_PREFIX + name, i);
+            header[i] = new BaseRowAttribute(Object.class, name, DbPathExp.DB_PREFIX + name, i);
         }
 
         return header;

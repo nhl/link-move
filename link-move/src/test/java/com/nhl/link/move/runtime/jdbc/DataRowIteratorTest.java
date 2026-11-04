@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.jdbc;
 
 import com.nhl.link.move.RowAttribute;
 import org.apache.cayenne.DataRow;
+import org.apache.cayenne.DataRowLayout;
 import org.apache.cayenne.ResultIterator;
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +15,11 @@ public class DataRowIteratorTest {
     @Test
     public void calculateHeader() {
 
-        DataRow row = new DataRow(5);
-        row.put("A1", new Object());
-        row.put("A2", null);
-        row.put("A0", "aaaa");
+        DataRow row = DataRow.of(
+                "E",
+                DataRowLayout.of("A1", "A2", "A0"),
+                new Object[]{new Object(), null, "aaaa"},
+                0L);
 
         ResultIterator<DataRow> rows = mock(ResultIterator.class);
         when(rows.hasNextRow()).thenReturn(true, false);

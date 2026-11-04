@@ -1,8 +1,9 @@
 package com.nhl.link.move.runtime.task.delete;
 
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.Persistent;
 import org.dflib.DataFrame;
 import org.dflib.Series;
-import org.apache.cayenne.ObjectContext;
 
 /**
  * @since 1.3
@@ -10,7 +11,8 @@ import org.apache.cayenne.ObjectContext;
 public class DeleteTargetStage {
 
 	public void delete(ObjectContext context, DataFrame df) {
-		Series<?> toDelete = df.getColumn(DeleteSegment.TARGET_COLUMN);
+		// "unsafe" cast, as the column type is often inferred as Object, while the elements are Persistent
+		Series<Persistent> toDelete = df.getColumn(DeleteSegment.TARGET_COLUMN).unsafeCastAs(Persistent.class);
 		context.deleteObjects(toDelete.toList());
 	}
 }

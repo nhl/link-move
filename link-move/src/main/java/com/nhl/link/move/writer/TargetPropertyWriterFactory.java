@@ -1,7 +1,7 @@
 package com.nhl.link.move.writer;
 
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.apache.cayenne.exp.DbPathExp;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjEntity;
@@ -50,7 +50,7 @@ public class TargetPropertyWriterFactory {
 
         getOrCreateWriter(
                 pkAttribute.getName(),
-                ASTDbPath.DB_PREFIX + pkAttribute.getName(),
+                DbPathExp.DB_PREFIX + pkAttribute.getName(),
                 () -> new TargetPkPropertyWriter(pkAttribute)
         );
     }
@@ -63,7 +63,7 @@ public class TargetPropertyWriterFactory {
 
         getOrCreateWriter(
                 property.getName(),
-                ASTDbPath.DB_PREFIX + property.getAttribute().getDbAttributePath(),
+                DbPathExp.DB_PREFIX + property.getAttribute().getDbAttributePath(),
                 () -> new TargetAttributePropertyWriter(property)
         );
     }
@@ -88,7 +88,7 @@ public class TargetPropertyWriterFactory {
         // object; the raw FK source columns have no writer and are ignored.
         getOrCreateWriter(
                 property.getName(),
-                ASTDbPath.DB_PREFIX + dbRelationship.getName(),
+                DbPathExp.DB_PREFIX + dbRelationship.getName(),
                 () -> new TargetToOnePropertyWriter(property)
         );
     }

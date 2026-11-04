@@ -8,7 +8,7 @@ import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.apache.cayenne.exp.DbPathExp;
 import org.apache.cayenne.query.ObjectSelect;
 import org.dflib.DataFrame;
 import org.dflib.Index;
@@ -135,7 +135,7 @@ public class FkResolver {
             Map<TargetAttribute, Map<Object, Object>> related) {
 
         TargetAttribute relatedPk = fk.targets().getFirst();
-        String relatedPath = relatedPk.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length());
+        String relatedPath = relatedPk.getNormalizedPath().substring(DbPathExp.DB_PREFIX.length());
         String relatedEntityName = relatedPk.getEntity().getName();
 
         Map<Object, Object> relatedFetched = new HashMap<>((int) (fks.size() / 0.75));
@@ -160,7 +160,7 @@ public class FkResolver {
         List<TargetAttribute> targets = fk.targets();
         List<String> targetPkColumns = new ArrayList<>(targets.size());
         for (TargetAttribute t : targets) {
-            targetPkColumns.add(t.getNormalizedPath().substring(ASTDbPath.DB_PREFIX.length()));
+            targetPkColumns.add(t.getNormalizedPath().substring(DbPathExp.DB_PREFIX.length()));
         }
         String relatedEntityName = targets.getFirst().getEntity().getName();
 

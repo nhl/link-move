@@ -4,18 +4,17 @@ import com.nhl.link.move.LmRuntimeException;
 import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.apache.cayenne.exp.DbPathExp;
+import org.apache.cayenne.exp.PathExp;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.DbEntity;
 import org.apache.cayenne.map.DbJoin;
 import org.apache.cayenne.map.DbRelationship;
 import org.apache.cayenne.map.ObjAttribute;
 import org.apache.cayenne.map.ObjEntity;
-import org.apache.cayenne.map.PathComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,16 +58,14 @@ public class DefaultTargetEntity implements TargetEntity {
         // this "normalizes" the path
         Expression dbExp = entity.translateToDbPath(ExpressionFactory.exp(path));
 
-        List<PathComponent<DbAttribute, DbRelationship>> components = new ArrayList<>(2);
-        entity.getDbEntity().resolvePath(dbExp, Collections.emptyMap()).forEach(components::add);
+        // a list of DbAttribute / DbRelationship path components
+        List<Object> components = entity.getDbEntity().resolvePath(((PathExp) dbExp).getPath());
 
         if (components.isEmpty()) {
             throw new LmRuntimeException("Null path. Entity: " + entity.getName());
         }
 
-        PathComponent<DbAttribute, DbRelationship> c = components.get(components.size() - 1);
-
-        TargetAttribute attribute = c.getAttribute() != null
+        TargetAttribute attribute = components.getLast() instanceof DbAttribute
                 ? createAttributeForAttribute(dbExp, components)
                 : createAttributeForRelationship(dbExp, components);
 
@@ -76,8 +73,8 @@ public class DefaultTargetEntity implements TargetEntity {
     }
 
     private boolean hasAttributeOrRelationship(String path) {
-        if (path.startsWith(ASTDbPath.DB_PREFIX)) {
-            String dbPath = path.substring(ASTDbPath.DB_PREFIX.length());
+        if (path.startsWith(DbPathExp.DB_PREFIX)) {
+            String dbPath = path.substring(DbPathExp.DB_PREFIX.length());
             DbEntity dbEntity = entity.getDbEntity();
             return dbEntity.getAttribute(dbPath) != null || dbEntity.getRelationship(dbPath) != null;
         } else {
@@ -85,12 +82,12 @@ public class DefaultTargetEntity implements TargetEntity {
         }
     }
 
-    protected TargetAttribute createAttributeForAttribute(Expression dbExp, List<PathComponent<DbAttribute, DbRelationship>> components) {
+    protected TargetAttribute createAttributeForAttribute(Expression dbExp, List<Object> components) {
 
         // there can be more than one join for an attribute, only some being straight FKs
         // TODO: still kinda nondeterministic.
 
-        DbAttribute attribute = components.get(components.size() - 1).getAttribute();
+        DbAttribute attribute = (DbAttribute) components.getLast();
 
         Optional<ForeignKey> fk = findAllRelationships(attribute)
                 .stream()
@@ -107,7 +104,7 @@ public class DefaultTargetEntity implements TargetEntity {
                 fk);
     }
 
-    protected TargetAttribute createAttributeForRelationship(Expression dbExp, List<PathComponent<DbAttribute, DbRelationship>> components) {
+    protected TargetAttribute createAttributeForRelationship(Expression dbExp, List<Object> components) {
 
         // TODO: support flattened relationships. We already support flattened attributes
         //  (see "createAttributeForAttribute" above). Do they make sense in the context of an ETL though?
@@ -116,7 +113,7 @@ public class DefaultTargetEntity implements TargetEntity {
             throw new LmRuntimeException("Flattened relationships not supported. Path: " + dbExp);
         }
 
-        DbRelationship relationship = components.get(components.size() - 1).getRelationship();
+        DbRelationship relationship = (DbRelationship) components.getLast();
 
         List<DbJoin> joins = relationship.getJoins();
 
@@ -135,7 +132,7 @@ public class DefaultTargetEntity implements TargetEntity {
 
         return new TargetAttribute(
                 this,
-                ASTDbPath.DB_PREFIX + firstJoin.getSourceName(),
+                DbPathExp.DB_PREFIX + firstJoin.getSourceName(),
                 firstJoin.getSource().getScale(),
                 javaType(firstJoin.getSource()),
                 createFk(relationship, firstJoin.getSource()));
@@ -153,7 +150,7 @@ public class DefaultTargetEntity implements TargetEntity {
         List<DbJoin> joins = relationship.getJoins();
 
         // only the FK side of a to-one (i.e. the entity that actually holds the FK columns)
-        if (relationship.isSourceIndependentFromTargetChange()) {
+        if (!relationship.isFromFK()) {
             return Optional.empty();
         }
 
@@ -181,12 +178,12 @@ public class DefaultTargetEntity implements TargetEntity {
                 List<String> sourceColumns = new ArrayList<>(joins.size());
                 List<TargetAttribute> targets = new ArrayList<>(joins.size());
                 for (DbJoin join : joins) {
-                    sourceColumns.add(ASTDbPath.DB_PREFIX + join.getSourceName());
-                    targets.add(targetEntity.getAttribute(ASTDbPath.DB_PREFIX + join.getTargetName()).get());
+                    sourceColumns.add(DbPathExp.DB_PREFIX + join.getSourceName());
+                    targets.add(targetEntity.getAttribute(DbPathExp.DB_PREFIX + join.getTargetName()).get());
                 }
                 // the resolved object lands in a column named after the relationship, matching the
                 // writer registration in TargetPropertyWriterFactory.initWriter(ToOneProperty)
-                String resultColumn = ASTDbPath.DB_PREFIX + relationship.getName();
+                String resultColumn = DbPathExp.DB_PREFIX + relationship.getName();
                 return Optional.of(new ForeignKey(sourceColumns, targets, resultColumn));
             default:
                 throw new LmRuntimeException("Unsupported FK: DbEntity "

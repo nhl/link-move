@@ -11,7 +11,7 @@ import com.nhl.link.move.runtime.targetmodel.TargetAttribute;
 import com.nhl.link.move.runtime.targetmodel.TargetEntity;
 import org.apache.cayenne.dba.TypesMapping;
 import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.parser.ASTDbPath;
+import org.apache.cayenne.exp.DbPathExp;
 import org.apache.cayenne.exp.property.Property;
 import org.apache.cayenne.map.DbAttribute;
 import org.apache.cayenne.map.ObjAttribute;
@@ -78,7 +78,7 @@ public class MapperBuilder {
     public MapperBuilder matchById() {
 
         int before = paths.size();
-        entity.getDbEntity().getPrimaryKeys().forEach(pk -> this.paths.add(ASTDbPath.DB_PREFIX + pk.getName()));
+        entity.getDbEntity().getPrimaryKeys().forEach(pk -> this.paths.add(DbPathExp.DB_PREFIX + pk.getName()));
 
         if (before == paths.size()) {
             throw new IllegalStateException("Target entity has no PKs defined: " + entity.getDbEntityName());

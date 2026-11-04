@@ -2,12 +2,13 @@ package com.nhl.link.move.runtime.task.deleteall;
 
 import com.nhl.link.move.Execution;
 import com.nhl.link.move.ExecutionStats;
-import com.nhl.link.move.LmRuntimeException;
 import com.nhl.link.move.log.LmLogger;
 import com.nhl.link.move.runtime.cayenne.ITargetCayenneService;
 import com.nhl.link.move.runtime.task.BaseTask;
 import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.QueryResponse;
+import org.apache.cayenne.Persistent;
+import org.apache.cayenne.QueryResult;
+import org.apache.cayenne.UpdateResult;
 import org.apache.cayenne.dba.DbAdapter;
 import org.apache.cayenne.dba.derby.DerbyAdapter;
 import org.apache.cayenne.dba.h2.H2Adapter;
@@ -17,13 +18,13 @@ import org.apache.cayenne.dba.oracle.OracleAdapter;
 import org.apache.cayenne.dba.postgres.PostgresAdapter;
 import org.apache.cayenne.dba.sqlserver.SQLServerAdapter;
 import org.apache.cayenne.dba.sybase.SybaseAdapter;
+import org.apache.cayenne.access.translator.select.LmDeleteTranslator;
 import org.apache.cayenne.exp.Expression;
 import org.apache.cayenne.map.DbEntity;
-import org.apache.cayenne.query.EJBQLQuery;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.SQLTemplate;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -50,7 +51,7 @@ public class DeleteAllTask extends BaseTask {
             SybaseAdapter.class
     );
 
-    private final Class<?> type;
+    private final Class<? extends Persistent> type;
     private final Expression targetFilter;
     private final DbEntity dbEntity;
     private final boolean skipExecutionStats;
@@ -67,7 +68,7 @@ public class DeleteAllTask extends BaseTask {
         //"deleteAll" task doesn't use extractor and doesn't support batches
         super(null, 0, logger);
 
-        this.type = type;
+        this.type = type.asSubclass(Persistent.class);
         this.targetFilter = targetFilter;
         this.targetCayenneService = targetCayenneService;
         this.dbEntity = dbEntity;
@@ -101,35 +102,33 @@ public class DeleteAllTask extends BaseTask {
 
         exec.getLogger().targetFilterApplied(targetFilter);
 
-        StringBuilder queryBuilder = new StringBuilder("DELETE FROM " + type.getName() + " e WHERE ");
+        // Cayenne 5.0 has no bulk delete query driven by an Expression (EJBQL "DELETE" is gone), so we use
+        // Cayenne's own SQL translator to render the filter as a "DELETE ... WHERE" and run it as a SQLTemplate
+        DbAdapter adapter = targetCayenneService.dbAdapter(dbEntity.getDataMap().getName());
+        SQLTemplate delete = LmDeleteTranslator.deleteTemplate(
+                ObjectSelect.query(type).where(targetFilter),
+                adapter,
+                targetCayenneService.entityResolver());
 
-        try {
-            targetFilter.appendAsEJBQL(queryBuilder, "e");
-        } catch (IOException e) {
-            throw new LmRuntimeException("Error while applying target filter expression", e);
-        }
+        List<QueryResult> result = context.execute(delete);
 
-        EJBQLQuery delete = new EJBQLQuery(queryBuilder.toString());
-
-        QueryResponse result = context.performGenericQuery(delete);
-
-        incrementTaskResult(result.firstUpdateCount()[0], exec.getStats());
+        incrementTaskResult(((UpdateResult) result.getFirst()).count(), exec.getStats());
     }
 
     private void deleteAllData(ObjectContext context, Execution execution) {
         DbAdapter adapter = targetCayenneService.dbAdapter(dbEntity.getDataMap().getName());
 
         SQLTemplate query = new SQLTemplate(dbEntity.getDataMap(), "DELETE FROM $tableName", false);
-        query.setParams(Map.of("tableName", adapter.getQuotingStrategy()
+        query.setParams(Map.of("tableName", adapter.getQuotingStrategy(dbEntity)
                 .quotedFQN(dbEntity.getCatalog(), dbEntity.getSchema(), dbEntity.getName())));
 
         TRUNCATE_AWARE_ADAPTERS.forEach(a -> query.setTemplate(a.getName(), "TRUNCATE TABLE $tableName"));
 
         Optional<Long> prefetchedOverallCount = prefetchCountIfRequired(adapter.unwrap(), context);
 
-        QueryResponse result = context.performGenericQuery(query);
+        List<QueryResult> result = context.execute(query);
 
-        long deletedCount = prefetchedOverallCount.orElse((long) result.firstUpdateCount()[0]);
+        long deletedCount = prefetchedOverallCount.orElse((long) ((UpdateResult) result.getFirst()).count());
         incrementTaskResult(deletedCount, execution.getStats());
     }
 

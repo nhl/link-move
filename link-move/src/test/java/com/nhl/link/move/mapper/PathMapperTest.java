@@ -2,7 +2,7 @@ package com.nhl.link.move.mapper;
 
 import org.dflib.Index;
 import com.nhl.link.move.LmRuntimeException;
-import org.apache.cayenne.DataObject;
+import org.apache.cayenne.Persistent;
 import org.apache.cayenne.exp.path.CayennePath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class PathMapperTest {
     @Test
     public void keyForTarget() {
 
-        DataObject t = mock(DataObject.class);
+        Persistent t = mock(Persistent.class);
         when(t.readProperty("abc")).thenReturn(44);
         when(t.readNestedProperty(CayennePath.of("abc"))).thenReturn(44);
 

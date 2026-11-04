@@ -8,7 +8,7 @@ import com.nhl.link.move.unit.cayenne.t.Etl3t;
 import org.apache.cayenne.DataChannelQueryFilter;
 import org.apache.cayenne.DataChannelQueryFilterChain;
 import org.apache.cayenne.ObjectContext;
-import org.apache.cayenne.QueryResponse;
+import org.apache.cayenne.QueryResult;
 import org.apache.cayenne.map.EntityResolver;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.Query;
@@ -87,9 +87,9 @@ public class CreateOrUpdate_PerformanceIT extends LmIntegrationTest {
         }
 
         @Override
-        public QueryResponse onQuery(ObjectContext originatingContext, Query query, DataChannelQueryFilterChain filterChain) {
+        public List<QueryResult> onQuery(ObjectContext originatingContext, Query query, boolean iteratedResult, DataChannelQueryFilterChain filterChain) {
             queries.add(query);
-            return filterChain.onQuery(originatingContext, query);
+            return filterChain.onQuery(originatingContext, query, iteratedResult);
         }
     }
 }

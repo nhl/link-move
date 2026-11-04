@@ -46,7 +46,7 @@ import org.apache.cayenne.di.Injector;
 import org.apache.cayenne.di.ListBuilder;
 import org.apache.cayenne.di.MapBuilder;
 import org.apache.cayenne.di.Module;
-import org.apache.cayenne.runtime.CayenneRuntime;
+import org.apache.cayenne.CayenneRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

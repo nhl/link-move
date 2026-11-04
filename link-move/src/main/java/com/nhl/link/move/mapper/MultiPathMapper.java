@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.apache.cayenne.exp.ExpressionFactory.joinExp;
+import static org.apache.cayenne.exp.ExpressionFactory.and;
 
 public class MultiPathMapper implements Mapper {
 
@@ -31,7 +31,7 @@ public class MultiPathMapper implements Mapper {
             clauses.add(e.getValue().expressionForKey(value));
         }
 
-        return joinExp(Expression.AND, clauses);
+        return and(clauses);
     }
 
     @Override

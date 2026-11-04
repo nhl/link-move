@@ -1,8 +1,5 @@
 package com.nhl.link.move.unit.cayenne.t.auto;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 
 import org.apache.cayenne.PersistentObject;
@@ -20,8 +17,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl8t;
  * If you need to make any customizations, please use subclass.
  */
 public abstract class _Etl8t extends PersistentObject {
-
-    private static final long serialVersionUID = 1L;
 
     public static final SelfProperty<Etl8t> SELF = PropertyFactory.createSelf(Etl8t.class);
 
@@ -104,30 +99,6 @@ public abstract class _Etl8t extends PersistentObject {
             default:
                 super.writePropertyDirectly(propName, val);
         }
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        writeSerialized(out);
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        readSerialized(in);
-    }
-
-    @Override
-    protected void writeState(ObjectOutputStream out) throws IOException {
-        super.writeState(out);
-        out.writeObject(this.cDecimal1);
-        out.writeObject(this.cDecimal2);
-        out.writeObject(this.cDecimal3);
-    }
-
-    @Override
-    protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        super.readState(in);
-        this.cDecimal1 = (BigDecimal)in.readObject();
-        this.cDecimal2 = (BigDecimal)in.readObject();
-        this.cDecimal3 = (BigDecimal)in.readObject();
     }
 
 }

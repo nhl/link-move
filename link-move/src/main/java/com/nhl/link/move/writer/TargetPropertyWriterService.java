@@ -6,7 +6,7 @@ import org.apache.cayenne.di.Inject;
 import org.apache.cayenne.map.ObjEntity;
 import org.apache.cayenne.reflect.AttributeProperty;
 import org.apache.cayenne.reflect.ClassDescriptor;
-import org.apache.cayenne.reflect.PropertyVisitor;
+import org.apache.cayenne.reflect.PropertyDescriptor;
 import org.apache.cayenne.reflect.ToManyProperty;
 import org.apache.cayenne.reflect.ToOneProperty;
 
@@ -44,28 +44,22 @@ public class TargetPropertyWriterService implements ITargetPropertyWriterService
         // precompile all possible obj: and db: invariants
         // TODO: should we normalize the source map instead of doing this?
 
-        descriptor.visitProperties(new PropertyVisitor() {
-
-            @Override
-            public boolean visitAttribute(AttributeProperty property) {
-                writerFactory.initWriter(property);
-                return true;
-            }
-
-            @Override
-            public boolean visitToOne(ToOneProperty property) {
-                if (!property.getRelationship().isSourceIndependentFromTargetChange()) {
-                    writerFactory.initWriter(property);
+        for (PropertyDescriptor property : descriptor.getProperties()) {
+            switch (property) {
+                case AttributeProperty attribute -> writerFactory.initWriter(attribute);
+                case ToOneProperty toOne -> {
+                    if (toOne.getRelationship().isFromFK()) {
+                        writerFactory.initWriter(toOne);
+                    }
                 }
-                return true;
+                case ToManyProperty ignored -> {
+                    // nothing for ToMany
+                }
+                default -> {
+                    // ignoring unknown property types
+                }
             }
-
-            @Override
-            public boolean visitToMany(ToManyProperty property) {
-                // nothing for ToMany
-                return true;
-            }
-        });
+        }
 
         entity.getDbEntity().getPrimaryKeys().forEach(writerFactory::initPkWriter);
 

@@ -2,6 +2,7 @@ package com.nhl.link.move.runtime.task.createorupdate;
 
 import com.nhl.link.move.mapper.Mapper;
 import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.Persistent;
 import org.dflib.DataFrame;
 import org.dflib.Hasher;
 
@@ -12,12 +13,12 @@ import static org.dflib.Exp.*;
  */
 public class CreateOrUpdateTargetMapper {
 
-    private final Class<?> type;
+    private final Class<? extends Persistent> type;
     private final Mapper mapper;
 
     public CreateOrUpdateTargetMapper(Class<?> type, Mapper mapper) {
         this.mapper = mapper;
-        this.type = type;
+        this.type = type.asSubclass(Persistent.class);
     }
 
     public DataFrame map(

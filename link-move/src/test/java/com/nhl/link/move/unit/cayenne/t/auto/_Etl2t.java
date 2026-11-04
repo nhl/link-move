@@ -1,8 +1,5 @@
 package com.nhl.link.move.unit.cayenne.t.auto;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.PersistentObject;
@@ -22,8 +19,6 @@ import com.nhl.link.move.unit.cayenne.t.Etl3t;
  * If you need to make any customizations, please use subclass.
  */
 public abstract class _Etl2t extends PersistentObject {
-
-    private static final long serialVersionUID = 1L;
 
     public static final SelfProperty<Etl2t> SELF = PropertyFactory.createSelf(Etl2t.class);
 
@@ -109,30 +104,6 @@ public abstract class _Etl2t extends PersistentObject {
             default:
                 super.writePropertyDirectly(propName, val);
         }
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        writeSerialized(out);
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        readSerialized(in);
-    }
-
-    @Override
-    protected void writeState(ObjectOutputStream out) throws IOException {
-        super.writeState(out);
-        out.writeObject(this.address);
-        out.writeObject(this.name);
-        out.writeObject(this.e3s);
-    }
-
-    @Override
-    protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        super.readState(in);
-        this.address = (String)in.readObject();
-        this.name = (String)in.readObject();
-        this.e3s = in.readObject();
     }
 
 }
